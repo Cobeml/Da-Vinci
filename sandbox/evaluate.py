@@ -2,6 +2,7 @@
 
 import json
 import math
+import resource
 from pathlib import Path
 
 import cadquery as cq
@@ -126,6 +127,7 @@ for i, solid in enumerate(solids):
     )
 assembly.export("/output/model.glb")
 result = {
+    "peak_rss_mb": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024,
     "outcome": "passed" if not violations else "failed",
     "metrics": metrics,
     "violations": violations,

@@ -1,7 +1,7 @@
 import json
 import re
 
-from davinci.models import document
+from davinci.models import SPECIFICATION, document
 
 
 class Memory:
@@ -58,29 +58,32 @@ class Memory:
         filters = {
             "project_id": "uas-demo",
             "subsystem": subsystem,
-            "specification_id": "spec-demo-v1",
+            "specification_id": SPECIFICATION["_id"],
             "evaluator_version": self.evaluator_version,
         }
         recent = self.store.list("memories", filters, limit=200, reverse=True)
         if self.embed and self.store.db is not None and run_id:
             try:
                 vector = self.embed(query, run_id)
-                hits = list(
-                    self.store.db.memories.aggregate(
-                        [
-                            {
-                                "$vectorSearch": {
-                                    "index": "memory_vector",
-                                    "path": "embedding",
-                                    "queryVector": vector,
-                                    "numCandidates": 100,
-                                    "limit": 16,
-                                    "filter": {**filters, "embedding_version": 1},
-                                }
-                            }
-                        ]
+                hits = []
+                for outcome in ("passed", "failed"):
+                    hits.extend(
+                        self.store.db.memories.aggregate(
+                            [
+                                {
+                                    "$vectorSearch": {
+                                        "index": "memory_vector",
+                                        "path": "embedding",
+                                        "queryVector": vector,
+                                        "numCandidates": 100,
+                                        "limit": 8,
+                                        "filter": {**filters, "outcome": outcome, "embedding_version": 1},
+                                    }
+                                },
+                                {"$addFields": {"semantic_score": {"$meta": "vectorSearchScore"}}},
+                            ]
+                        )
                     )
-                )
                 recent = list({m["_id"]: m for m in hits + recent[:8]}.values())
             except Exception as exc:
                 self.store.event(
@@ -97,7 +100,7 @@ class Memory:
                 abs(float(v) - float(item["parameters"].get(k, v))) / max(abs(float(v)), 1)
                 for k, v in (parameters or {}).items()
             )
-            return semantic - distance
+            return item.get("semantic_score", 0) * 10 + semantic * 0.1 - distance
 
         chosen = []
         for outcome in ("passed", "failed"):

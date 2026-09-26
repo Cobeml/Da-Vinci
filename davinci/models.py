@@ -96,3 +96,6 @@ SPECIFICATION = {
         "flap_fraction": 0.25,
     },
 }
+
+# Editing fixture assumptions creates a new specification, never overwrites history.
+SPECIFICATION["_id"] = "spec-demo-" + digest({k: v for k, v in SPECIFICATION.items() if k != "_id"})[:12]

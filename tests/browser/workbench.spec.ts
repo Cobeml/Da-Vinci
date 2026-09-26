@@ -72,3 +72,55 @@ test("run can be started and stopped through the interface", async ({
       .first(),
   ).toBeVisible();
 });
+
+test("two-worker replay completes and browser inspection archives screenshots", async ({
+  page,
+  request,
+}) => {
+  const started = await request.post("/api/projects/uas-demo/runs", {
+    data: { mode: "replay", rounds: 3, budget_usd: 10 },
+  });
+  expect(started.status()).toBe(201);
+  const run = await started.json();
+  await expect
+    .poll(
+      async () =>
+        (await (await request.get(`/api/runs/${run._id}`)).json()).status,
+      { timeout: 90000, intervals: [1000] },
+    )
+    .toBe("completed");
+  const state = await (await request.get("/api/workbench")).json();
+  const assembly = state.assemblies.find(
+    (a: any) => a.run_id === run._id && a.outcome === "passed",
+  );
+  expect(assembly.artifacts["assembly.glb"]).toBeTruthy();
+  await page.goto("/");
+  await expect(page.getByTestId("cad-canvas")).toHaveAttribute(
+    "data-geometry-ready",
+    "true",
+  );
+  await page.screenshot({
+    path: "runtime/workbench-assembly.png",
+    fullPage: true,
+  });
+  const candidate = state.candidates.find(
+    (c: any) => c.run_id === run._id && c.subsystem === "aerodynamic",
+  );
+  const inspect = await request.post(
+    `/api/candidates/${candidate._id}/inspect`,
+  );
+  expect(inspect.ok()).toBeTruthy();
+  await expect
+    .poll(
+      async () => {
+        const data = await (await request.get("/api/workbench")).json();
+        return data.events.some(
+          (e: any) =>
+            e.kind === "inspection_completed" &&
+            e.data.candidate_id === candidate._id,
+        );
+      },
+      { timeout: 60000, intervals: [1000] },
+    )
+    .toBe(true);
+});

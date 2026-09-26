@@ -84,6 +84,24 @@ class Engine:
             release_id=self.improvements.active()["_id"],
             assembly_revision_id=None,
         )
+        root = Path(__file__).resolve().parent.parent
+        paths = [
+            root / "uv.lock",
+            root / "pyproject.toml",
+            root / "package-lock.json",
+            *sorted((root / "sandbox").glob("*.py")),
+            root / "sandbox/Dockerfile",
+            root / "sandbox/requirements.lock",
+            root / "sandbox/ui/check.cjs",
+            root / "sandbox/ui/package-lock.json",
+        ]
+        environment = {str(path.relative_to(root)): path.read_text() for path in paths}
+        run["environment_bundle_artifact_id"] = self.artifacts.put(
+            self.repository.bundle(environment), "environment.json", "application/json"
+        )
+        run["environment_source_commit"] = self.repository.commit(
+            "environment-" + digest(environment)[:16], environment
+        )
         self.store.insert("runs", run)
         if not self.store.update("pointers", "active-run", {"run_id": run["_id"]}, {"run_id": None}):
             self.store.update("runs", run["_id"], {"status": "rejected"})

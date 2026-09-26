@@ -5,6 +5,7 @@ import pytest
 
 from davinci.budget import Budget, BudgetExceeded
 from davinci.memory import Memory
+from davinci.models import SPECIFICATION
 from davinci.store import Store
 
 
@@ -81,7 +82,7 @@ def test_memory_scopes_and_exact_repeat_detection(store):
             "project_id": "uas-demo",
             "run_id": "run-a",
             "subsystem": subsystem,
-            "specification_id": "spec-demo-v1",
+            "specification_id": SPECIFICATION["_id"],
             "evaluator_version": "screening-v1",
             "parameters": {"thickness_mm": 1.5},
             "fingerprint": subsystem,

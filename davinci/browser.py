@@ -26,6 +26,8 @@ def inspect_candidate(settings, candidate_id):
                 timeout=60000,
             )
             page.get_by_test_id("cad-canvas").wait_for()
+            page.locator('[data-testid="cad-canvas"][data-geometry-ready="true"]').wait_for(timeout=30000)
+            page.wait_for_timeout(400)
             inputs = []
             provider = engine.provider(run)
             for step in range(4):

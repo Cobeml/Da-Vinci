@@ -3,7 +3,6 @@ import io
 import json
 import secrets
 import zipfile
-from pathlib import Path
 
 from fastapi import BackgroundTasks, Depends, FastAPI, HTTPException, Request
 from fastapi.responses import HTMLResponse, Response, StreamingResponse
@@ -240,18 +239,10 @@ def create_app(settings=None):
                 "artifact-manifest.json",
                 json.dumps([engine.store.get("artifacts", key) for key in artifact_ids], indent=2),
             )
-            root = Path(__file__).resolve().parent.parent
-            for path in [
-                root / "uv.lock",
-                root / "pyproject.toml",
-                root / "package-lock.json",
-                *sorted((root / "sandbox").glob("*.py")),
-                root / "sandbox/Dockerfile",
-                root / "sandbox/requirements.lock",
-                root / "sandbox/ui/package-lock.json",
-                root / "sandbox/ui/check.cjs",
-            ]:
-                archive.writestr("environment/" + str(path.relative_to(root)), path.read_bytes())
+            if run.get("environment_bundle_artifact_id"):
+                environment = json.loads(engine.artifacts.read(run["environment_bundle_artifact_id"]))
+                for name, content in environment.items():
+                    archive.writestr("environment/" + name, content)
         return Response(
             buffer.getvalue(),
             media_type="application/zip",

@@ -1,5 +1,5 @@
 "use client";
-import { Suspense, useEffect, useMemo, memo } from "react";
+import { Suspense, useEffect, useMemo, useState, memo } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import {
   Grid,
@@ -10,9 +10,18 @@ import {
 } from "@react-three/drei";
 import * as THREE from "three";
 
-function Model({ url }: { url: string }) {
+function Model({
+  url,
+  onReady,
+}: {
+  url: string;
+  onReady: (value: boolean) => void;
+}) {
   const { scene } = useGLTF(url);
   const object = useMemo(() => scene.clone(), [scene]);
+  useEffect(() => {
+    onReady(true);
+  }, [onReady, object]);
   return <primitive object={object} />;
 }
 function Reference() {
@@ -66,8 +75,13 @@ function Viewer({
   view: string;
   wireframe: boolean;
 }) {
+  const [ready, setReady] = useState(!url);
   return (
-    <div data-testid="cad-canvas" className="canvas-wrap">
+    <div
+      data-testid="cad-canvas"
+      data-geometry-ready={ready}
+      className="canvas-wrap"
+    >
       <Canvas
         camera={{ position: [0.55, 0.5, 0.7], fov: 38, near: 0.001, far: 100 }}
         gl={{ antialias: true, preserveDrawingBuffer: true }}
@@ -84,7 +98,7 @@ function Viewer({
           <Bounds fit clip observe margin={1.5}>
             <Center key={url || "reference"}>
               <group scale={url ? 0.001 : 1}>
-                {url ? <Model url={url} /> : <Reference />}
+                {url ? <Model url={url} onReady={setReady} /> : <Reference />}
               </group>
             </Center>
           </Bounds>

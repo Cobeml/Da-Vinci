@@ -10,7 +10,7 @@ mkdir -p runtime
 api_pid=$!
 .venv/bin/python -m davinci.worker --workers 2 &
 worker_pid=$!
-.venv/bin/python -m scripts.web &
+.venv/bin/python -m scripts.web "$@" &
 web_pid=$!
 trap 'kill "$api_pid" "$worker_pid" "$web_pid" 2>/dev/null || true' EXIT INT TERM
 wait -n "$api_pid" "$worker_pid" "$web_pid"

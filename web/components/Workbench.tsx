@@ -121,8 +121,21 @@ export default function Workbench() {
   const componentEvaluation = data.evaluations.find(
     (e) => e.candidate_id === candidate?._id,
   );
-  const assembly = !selected ? data.assemblies.find(a => a.outcome === 'passed' && a.artifacts?.['assembly.glb']) : undefined;
-  const evaluation = assembly ? {...assembly, metrics: {mass_kg: {value:assembly.mass_kg,unit:'kg'}}, artifacts:{'model.glb':assembly.artifacts['assembly.glb'],'model.step':assembly.artifacts['assembly.step']}} : componentEvaluation;
+  const assembly = !selected
+    ? data.assemblies.find(
+        (a) => a.outcome === "passed" && a.artifacts?.["assembly.glb"],
+      )
+    : undefined;
+  const evaluation = assembly
+    ? {
+        ...assembly,
+        metrics: { mass_kg: { value: assembly.mass_kg, unit: "kg" } },
+        artifacts: {
+          "model.glb": assembly.artifacts["assembly.glb"],
+          "model.step": assembly.artifacts["assembly.step"],
+        },
+      }
+    : componentEvaluation;
   const glb = evaluation?.artifacts?.["model.glb"];
   const champion = [...data.champions].sort(
     (a, b) => a.objective - b.objective,
@@ -352,15 +365,23 @@ export default function Workbench() {
                     <h2>Design workbench</h2>
                     <span className="muted">
                       /{" "}
-                      {assembly ? "Shared assembly" : candidate?.subsystem === "structural"
-                        ? "Sensor mount"
-                        : candidate
-                          ? "Control surface"
-                          : "Assembly preview"}
+                      {assembly
+                        ? "Shared assembly"
+                        : candidate?.subsystem === "structural"
+                          ? "Sensor mount"
+                          : candidate
+                            ? "Control surface"
+                            : "Assembly preview"}
                     </span>
                   </div>
                   <div className="viewer-tools">
-                    <button aria-label="View shared assembly" title="View shared assembly" onClick={() => setSelected('')}><Layers3 size={16}/></button>
+                    <button
+                      aria-label="View shared assembly"
+                      title="View shared assembly"
+                      onClick={() => setSelected("")}
+                    >
+                      <Layers3 size={16} />
+                    </button>
                     <button
                       aria-label="Toggle wireframe"
                       title="Toggle wireframe"
@@ -382,6 +403,7 @@ export default function Workbench() {
                 </div>
                 <div className="viewport">
                   <Viewer
+                    key={glb || "reference"}
                     url={glb ? `/api/artifacts/${glb}` : undefined}
                     view={view}
                     wireframe={wireframe}
@@ -591,15 +613,26 @@ export default function Workbench() {
                 </div>
                 {detail === "Source" ? (
                   <pre className="code">
-                    {assembly ? JSON.stringify({components:assembly.candidate_ids,transform_mm:assembly.mount_translation_mm},null,2) : candidate?.source ||
-                      "# Generated CadQuery source will appear here."}
+                    {assembly
+                      ? JSON.stringify(
+                          {
+                            components: assembly.candidate_ids,
+                            transform_mm: assembly.mount_translation_mm,
+                          },
+                          null,
+                          2,
+                        )
+                      : candidate?.source ||
+                        "# Generated CadQuery source will appear here."}
                   </pre>
                 ) : (
                   <div className="evaluation-body">
                     <div className="evaluation-caption">
-                      {assembly ? `SHARED ASSEMBLY / ROUND ${assembly.round + 1}` : candidate
-                        ? `${candidate.subsystem.toUpperCase()} / ROUND ${candidate.round + 1}`
-                        : "AWAITING FIRST CANDIDATE"}
+                      {assembly
+                        ? `SHARED ASSEMBLY / ROUND ${assembly.round + 1}`
+                        : candidate
+                          ? `${candidate.subsystem.toUpperCase()} / ROUND ${candidate.round + 1}`
+                          : "AWAITING FIRST CANDIDATE"}
                     </div>
                     {evaluation ? (
                       Object.entries(evaluation.metrics || {})

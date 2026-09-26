@@ -70,8 +70,21 @@ class AstraProvider:
     def _response(self, **kwargs):
         # Conservative text reservation; output budget includes reasoning tokens.
         # Byte length upper-bounds text token count; images get an additional allowance.
-        input_allowance = len(json.dumps(kwargs).encode()) + 16000
-        reserved = input_allowance * 10 / 1_000_000 + 6000 * 50 / 1_000_000
+        def estimated_tokens(value):
+            if isinstance(value, dict):
+                if value.get("type") == "input_image":
+                    return 16000
+                return sum(len(str(k).encode()) + estimated_tokens(v) for k, v in value.items())
+            if isinstance(value, list):
+                return sum(estimated_tokens(v) for v in value)
+            return len(str(value).encode())
+
+        input_allowance = estimated_tokens(kwargs) + 16000
+        long_context = input_allowance > 272000
+        reserved = (
+            input_allowance * (20 if long_context else 10) / 1_000_000
+            + 6000 * (75 if long_context else 50) / 1_000_000
+        )
         reservation = self.budget.reserve(self.run_id, reserved)
         try:
             response = self.client.responses.create(
@@ -85,7 +98,15 @@ class AstraProvider:
             self.budget.settle(reservation, reserved)
             raise
         usage = response.usage
-        cost = (usage.input_tokens * 10 + usage.output_tokens * 50) / 1_000_000 if usage else reserved
+        cost = (
+            (
+                usage.input_tokens * (20 if usage.input_tokens > 272000 else 10)
+                + usage.output_tokens * (75 if usage.input_tokens > 272000 else 50)
+            )
+            / 1_000_000
+            if usage
+            else reserved
+        )
         self.budget.settle(reservation, cost)
         self.store.event(
             self.run_id,

@@ -82,3 +82,38 @@ def test_bad_patch_cannot_promote_and_rollback(engine):
         engine.improvements.propose_release(
             PatchProposal(summary="escape", files={"../../evaluate.py": "pass"}), run["_id"], "fixture"
         )
+
+
+def test_shared_geometry_collision_is_rejected(engine):
+    from copy import deepcopy
+
+    _, mount, _ = engine.runner.evaluate(MOUNT_SOURCE, {"thickness_mm": 3}, "structural", SPECIFICATION)
+    _, wing, _ = engine.runner.evaluate(
+        WING_SOURCE, {"span_mm": 600, "hinge_gap_mm": 2, "flap_fraction": 0.25}, "aerodynamic", SPECIFICATION
+    )
+    result, artifacts = engine.runner.integrate(mount["model.step"], wing["model.step"], SPECIFICATION)
+    assert result["outcome"] == "passed"
+    assert artifacts["assembly.glb"][:4] == b"glTF"
+    collision = deepcopy(SPECIFICATION)
+    collision["assembly"]["mount_translation_mm"] = [40, 0, 0]
+    result, _ = engine.runner.integrate(mount["model.step"], wing["model.step"], collision)
+    assert result["outcome"] == "failed"
+    assert "ASSEMBLY_COLLISION" in [v["code"] for v in result["violations"]]
+
+
+def test_forged_geometry_cannot_report_its_own_metrics(engine):
+    changed = MOUNT_SOURCE.replace(".hole(4)", ".hole(8)")
+    result, _, _ = engine.runner.evaluate(changed, {"thickness_mm": 3}, "structural", SPECIFICATION)
+    assert result["outcome"] == "failed"
+    assert "UNSUPPORTED_ANALYSIS" in [v["code"] for v in result["violations"]]
+
+
+def test_validated_release_rolls_back_to_predecessor(engine):
+    from davinci.providers import ReplayProvider
+
+    run = engine.start(RunRequest(rounds=1))
+    patch = ReplayProvider().patch({"release": engine.improvements.active()})
+    release = engine.improvements.propose_release(patch, run["_id"], "fixture")
+    assert engine.improvements.activate(release["_id"], run["_id"])
+    assert engine.improvements.rollback(release["_id"], run["_id"], "Forced canary failure")
+    assert engine.improvements.active()["_id"] == "release-baseline"
