@@ -469,6 +469,31 @@ class Engine:
             self.store.get("runs", job["run_id"])["status"] != "running" or not self.store.owns(job)
         )
         try:
+            source_collection = {
+                "evaluate_candidate": "candidates",
+                "reflect_on_evaluation": "evaluations",
+            }.get(job["kind"])
+            if source_collection:
+                source = self.store.get(source_collection, job["subject_id"])
+                if not source or source.get("run_id") != job["run_id"]:
+                    self.store.update(
+                        "jobs",
+                        job["_id"],
+                        {
+                            "status": "dead",
+                            "last_error": "Missing or mismatched source document",
+                            "finished_at": now(),
+                        },
+                        {"status": "running", "lease_token": job["lease_token"]},
+                    )
+                    self.store.event(
+                        job["run_id"],
+                        "job_rejected",
+                        "Invalid job source; check Atlas trigger collection/function pairing",
+                        job_id=job["_id"],
+                        subject_id=job["subject_id"],
+                    )
+                    return
             {
                 "generate_round": self.generate,
                 "evaluate_candidate": self.evaluate,

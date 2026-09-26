@@ -1,6 +1,7 @@
 import importlib
 import subprocess
 
+import pytest
 from pymongo.errors import OperationFailure
 
 from davinci.config import Settings
@@ -35,6 +36,22 @@ def test_validation_run_resumes_without_new_allocation(tmp_path):
 def test_external_provider_errors_are_redacted():
     secret = "mongodb://user:synthetic-secret@example.invalid"
     assert safe_error(OperationFailure(secret)) == "OperationFailure"
+
+
+@pytest.mark.parametrize("foreign_evaluation", [False, True])
+def test_wrong_trigger_source_is_quarantined_without_failing_run(tmp_path, foreign_evaluation):
+    engine = Engine(Settings(davinci_data_dir=tmp_path, _env_file=None))
+    run = engine.start(RunRequest(rounds=1))
+    for queued in engine.store.list("jobs"):
+        engine.store.update("jobs", queued["_id"], {"status": "cancelled"})
+    if foreign_evaluation:
+        engine.store.insert("evaluations", {"_id": "wrong-source", "run_id": "another-run"})
+    engine.store.enqueue("reflect_on_evaluation", "wrong-source", run["_id"])
+    job = engine.store.claim()
+    engine.execute_job(job)
+    assert engine.store.get("jobs", job["_id"])["status"] == "dead"
+    assert engine.store.get("runs", run["_id"])["status"] == "running"
+    assert engine.store.list("events", {"kind": "job_rejected"})
 
 
 def test_trigger_functions_ignore_updates_and_deduplicate_insert_delivery():

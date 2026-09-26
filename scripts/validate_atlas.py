@@ -214,7 +214,16 @@ class Validation:
         deadline = time.monotonic() + 120
         while not all(self.store.get("jobs", job_id) for job_id in ids):
             if time.monotonic() >= deadline:
-                self.save("triggers", passed=False, reason="delivery_timeout", diagnostic_run_id=run_id)
+                self.save(
+                    "triggers",
+                    passed=False,
+                    reason="delivery_timeout",
+                    diagnostic_run_id=run_id,
+                    observed_jobs=[
+                        {"kind": j["kind"], "subject_id": j["subject_id"]}
+                        for j in self.store.list("jobs", {"run_id": run_id})
+                    ],
+                )
                 return False
             time.sleep(2)
         assert all(self.store.db.jobs.count_documents({"_id": job_id}) == 1 for job_id in ids)
@@ -482,6 +491,31 @@ class Validation:
         self.save("budget", passed=spent + held <= 25, spent_usd=spent, held_usd=held, limit_usd=25)
         emit(checks=self.record()["checks"], runs=record["runs"])
 
+    def diagnose(self, slot):
+        run_id = self.record()["runs"][slot]["run_id"]
+        run = self.store.get("runs", run_id)
+        emit(
+            run_id=run_id,
+            status=run["status"],
+            error=run.get("error"),
+            errors=[
+                {"message": e["message"], "data": e["data"]}
+                for e in self.store.list("events", {"run_id": run_id, "kind": "job_error"})
+            ],
+            candidates=[
+                {"id": c["_id"], "subsystem": c["subsystem"], "release_id": c["release_id"]}
+                for c in self.store.list("candidates", {"run_id": run_id})
+            ],
+        )
+        probe = self.record()["checks"].get("triggers", {}).get("diagnostic_run_id")
+        if probe:
+            emit(
+                trigger_probe_jobs=[
+                    {"kind": j["kind"], "subject_id": j["subject_id"]}
+                    for j in self.store.list("jobs", {"run_id": probe})
+                ]
+            )
+
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
@@ -500,6 +534,7 @@ def main():
             "reuse",
             "export",
             "report",
+            "diagnose",
         ],
     )
     parser.add_argument("--slot", choices=["replay", *ALLOCATIONS], default="replay")
@@ -512,7 +547,7 @@ def main():
             validation.run(args.slot, args.rounds)
         elif args.stage == "monitor":
             return 0 if validation.monitor(args.slot, args.seconds) else 1
-        elif args.stage in ("vector", "reflection", "inspect", "reuse", "export"):
+        elif args.stage in ("vector", "reflection", "inspect", "reuse", "export", "diagnose"):
             getattr(validation, args.stage)(args.slot)
         else:
             result = getattr(validation, args.stage)()
