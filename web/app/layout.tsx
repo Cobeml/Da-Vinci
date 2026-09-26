@@ -3,7 +3,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Da Vinci: recursive improvement CAD harness",
   description:
-    "Interactive sensor-mount iterations with measured mass, screening results and VTOL context.",
+    "Interactive robotic gripper iterations with measured mass, frame analysis and jaw travel controls.",
 };
 export default function RootLayout({
   children,

@@ -60,7 +60,7 @@ class Study:
             raise ValueError('Frozen evaluator changed; use a new study ID')
         self.provider = AstraProvider(self.settings, Budget(self.store, self.settings.davinci_daily_budget_usd),
                                       self.store, STUDY)
-        self.provider.client = self.provider.client.with_options(timeout=300)
+        self.provider.client = self.provider.client.with_options(timeout=600)
         self.memory = Memory(self.store, self.provider.embed, self.version)
         self.store.insert('specifications', {**SPECIFICATION, 'evaluator_version': self.version})
 
@@ -183,7 +183,9 @@ class Study:
                 'State a short concrete lesson and next_focus for the next graph design. Prioritize correcting '
                 'failures and meaningful topology changes over tiny trims. Do not invent success or measurements. '
                 'Explain which members or load case control when relevant. Keep each field under 300 characters.',
-                {'proposal': proposal.model_dump(), 'evaluation': evaluation, 'history': history}, Reflection, 6000)
+                {'proposal': proposal.model_dump(), 'evaluation': evaluation, 'history': history,
+                 'specification': SPECIFICATION, 'geometry_contract': (SANDBOX/'gripper_family.py').read_text()},
+                Reflection, 6000)
             files = {'candidate.py': proposal.source, 'parameters.json': json.dumps(proposal.parameters),
                      'context.json': json.dumps(context), 'policy.json': reflection.model_dump_json()}
             artifact_ids = {name: self.artifacts.put(payload, name, 'model/gltf-binary' if name.endswith('glb') else 'application/step')

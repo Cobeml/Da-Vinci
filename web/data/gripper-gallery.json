@@ -1,0 +1,3529 @@
+{
+  "study_id": "parallel-gripper-study-v1",
+  "generated_at": "2026-09-26T21:18:25.368775+00:00",
+  "specification": {
+    "_id": "parallel-gripper-frame-v1",
+    "material": "Aluminium (nominal)",
+    "density_g_mm3": 0.0027,
+    "youngs_modulus_mpa": 69000,
+    "allowable_stress_mpa": 80,
+    "max_deflection_mm": 0.25,
+    "min_buckling_factor": 2,
+    "min_clearance_mm": 0.25,
+    "gap_range_mm": [
+      20,
+      60
+    ],
+    "load_cases": {
+      "pinch": [
+        100,
+        0,
+        0
+      ],
+      "payload": [
+        0,
+        0,
+        -25
+      ],
+      "lateral": [
+        0,
+        15,
+        0
+      ],
+      "combined": [
+        100,
+        15,
+        -25
+      ]
+    },
+    "objective": "minimize moving jaw-pair STEP mass; fixed guide base excluded from objective"
+  },
+  "designs": [
+    {
+      "_id": "parallel-gripper-study-v1-00",
+      "iteration": 1,
+      "title": "Conservative baseline frame",
+      "change": "Use the exact supplied conservative baseline for initial four-load-case screening, preserving the fixed carriage, pad, and running clearances.",
+      "parameters": {
+        "depth_mm": 24,
+        "nodes": [
+          [
+            8,
+            0
+          ],
+          [
+            36,
+            0
+          ],
+          [
+            8,
+            70
+          ],
+          [
+            36,
+            70
+          ],
+          [
+            8,
+            35
+          ],
+          [
+            36,
+            35
+          ]
+        ],
+        "edges": [
+          [
+            0,
+            4,
+            12
+          ],
+          [
+            4,
+            2,
+            12
+          ],
+          [
+            1,
+            5,
+            12
+          ],
+          [
+            5,
+            3,
+            12
+          ],
+          [
+            0,
+            1,
+            12
+          ],
+          [
+            4,
+            5,
+            12
+          ],
+          [
+            2,
+            3,
+            12
+          ],
+          [
+            0,
+            5,
+            12
+          ],
+          [
+            4,
+            3,
+            12
+          ]
+        ]
+      },
+      "evaluation": {
+        "outcome": "passed",
+        "metrics": {
+          "mass_g": {
+            "value": 523.5714496886798,
+            "unit": "g",
+            "fidelity": "STEP_volume_moving_pair"
+          },
+          "total_mass_g": {
+            "value": 887.4523637125849,
+            "unit": "g",
+            "fidelity": "STEP_volume_three_parts"
+          },
+          "stress_mpa": {
+            "value": 1.8906804238364767,
+            "unit": "MPa",
+            "fidelity": "linear_3d_frame"
+          },
+          "deflection_mm": {
+            "value": 0.0024221772814481783,
+            "unit": "mm",
+            "fidelity": "linear_3d_frame"
+          },
+          "buckling_factor": {
+            "value": 9541.625066212893,
+            "unit": "ratio",
+            "fidelity": "Euler_pinned_member"
+          },
+          "clearance_mm": {
+            "value": 0.3000000000000007,
+            "unit": "mm",
+            "fidelity": "BRep_distance"
+          },
+          "travel_mm": {
+            "value": 40,
+            "unit": "mm",
+            "fidelity": "BRep_9_positions"
+          }
+        },
+        "violations": [],
+        "fidelity": "linear_3d_frame_and_BRep_travel",
+        "reference_residual_mm3": 0.0,
+        "load_cases": [
+          {
+            "name": "pinch",
+            "load_n": [
+              100,
+              0,
+              0
+            ],
+            "deflection_mm": 0.002305635958061013,
+            "stress_mpa": 1.5840358077093466,
+            "buckling_factor": 9541.625066212893,
+            "tip_displacement_mm": [
+              0.002289561661007678,
+              0.0,
+              0.00027178037373527423
+            ],
+            "displacements": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.002289561661007678,
+                0.0,
+                0.00027178037373527423
+              ],
+              [
+                0.002174133400660512,
+                0.0,
+                -0.0005285983626164958
+              ],
+              [
+                0.0008606885627852193,
+                0.0,
+                0.00023424751544373404
+              ],
+              [
+                0.0007755001385652871,
+                0.0,
+                -0.00035464235312180926
+              ]
+            ],
+            "members": [
+              {
+                "stress_mpa": 1.4558593116156788,
+                "compression_n": 0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 0.654768083800109,
+                "compression_n": 0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 1.5840358077093466,
+                "compression_n": 201.35579546390267,
+                "buckling_factor": 9541.625066212893
+              },
+              {
+                "stress_mpa": 0.9892406419089441,
+                "compression_n": 98.76725201938314,
+                "buckling_factor": 19452.414296679646
+              },
+              {
+                "stress_mpa": 0.0,
+                "compression_n": 0.0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 1.081681358355417,
+                "compression_n": 60.459441646374785,
+                "buckling_factor": 49652.643494021046
+              },
+              {
+                "stress_mpa": 0.8025846750243075,
+                "compression_n": 81.92108534353156,
+                "buckling_factor": 36644.66955395446
+              },
+              {
+                "stress_mpa": 0.8051729250134221,
+                "compression_n": 0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 0.39422339073016016,
+                "compression_n": 0,
+                "buckling_factor": 1000000.0
+              }
+            ],
+            "free_residual_n": 6.821210263296962e-13
+          },
+          {
+            "name": "payload",
+            "load_n": [
+              0,
+              0,
+              -25
+            ],
+            "deflection_mm": 0.00010657940339152783,
+            "stress_mpa": 0.11640402843526215,
+            "buckling_factor": 82074.53871545011,
+            "tip_displacement_mm": [
+              -6.794509343381867e-05,
+              0.0,
+              -8.21135403302261e-05
+            ],
+            "displacements": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                -6.794509343381867e-05,
+                0.0,
+                -8.21135403302261e-05
+              ],
+              [
+                -6.712048693967651e-05,
+                0.0,
+                1.8263976689317816e-07
+              ],
+              [
+                -1.055589418542669e-05,
+                0.0,
+                -4.088437938642192e-05
+              ],
+              [
+                -9.52637676871292e-06,
+                0.0,
+                6.601346287625503e-07
+              ]
+            ],
+            "members": [
+              {
+                "stress_mpa": 0.1139442013389912,
+                "compression_n": 23.212982490485036,
+                "buckling_factor": 82766.68049929096
+              },
+              {
+                "stress_mpa": 0.11640402843526215,
+                "compression_n": 23.408739607865048,
+                "buckling_factor": 82074.53871545011
+              },
+              {
+                "stress_mpa": 0.02833805440236264,
+                "compression_n": 0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 0.02008334211622925,
+                "compression_n": 0.2711079398590904,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 0.0,
+                "compression_n": 0.0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 0.042005340184967745,
+                "compression_n": 0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 0.04426131915758474,
+                "compression_n": 0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 0.034856405574081845,
+                "compression_n": 2.4099012539289393,
+                "buckling_factor": 486119.88392078655
+              },
+              {
+                "stress_mpa": 0.028117592519205273,
+                "compression_n": 1.4487363267471132,
+                "buckling_factor": 808636.3931046698
+              }
+            ],
+            "free_residual_n": 2.842170943040401e-14
+          },
+          {
+            "name": "lateral",
+            "load_n": [
+              0,
+              15,
+              0
+            ],
+            "deflection_mm": 0.0009462500207403645,
+            "stress_mpa": 0.5094523461681298,
+            "buckling_factor": 1000000.0,
+            "tip_displacement_mm": [
+              -0.0,
+              0.0009462500207403645,
+              -0.0
+            ],
+            "displacements": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                -0.0,
+                0.0009462500207403645,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0006225112092098028,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0003016085732463499,
+                0.0
+              ],
+              [
+                0.0,
+                0.00016234995366321508,
+                0.0
+              ]
+            ],
+            "members": [
+              {
+                "stress_mpa": 0.5094523461681298,
+                "compression_n": 0.0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 0.2521003996346541,
+                "compression_n": 0.0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 0.25525796106287185,
+                "compression_n": 0.0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 0.21001203409765642,
+                "compression_n": 0.0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 0.0,
+                "compression_n": 0.0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 0.04710832250991754,
+                "compression_n": 0.0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 0.10090748238452107,
+                "compression_n": 0.0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 0.22100412803678096,
+                "compression_n": 0.0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 0.07353669920083404,
+                "compression_n": 0.0,
+                "buckling_factor": 1000000.0
+              }
+            ],
+            "free_residual_n": 9.094947017729282e-13
+          },
+          {
+            "name": "combined",
+            "load_n": [
+              100,
+              15,
+              -25
+            ],
+            "deflection_mm": 0.0024221772814481783,
+            "stress_mpa": 1.8906804238364767,
+            "buckling_factor": 9559.41905922105,
+            "tip_displacement_mm": [
+              0.0022216165675738577,
+              0.0009462500207403645,
+              0.00018966683340504827
+            ],
+            "displacements": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0022216165675738577,
+                0.0009462500207403645,
+                0.00018966683340504827
+              ],
+              [
+                0.002107012913720835,
+                0.0006225112092098028,
+                -0.0005284157228496023
+              ],
+              [
+                0.0008501326685997925,
+                0.0003016085732463499,
+                0.000193363136057312
+              ],
+              [
+                0.0007659737617965742,
+                0.00016234995366321508,
+                -0.00035398221849304665
+              ]
+            ],
+            "members": [
+              {
+                "stress_mpa": 1.8906804238364767,
+                "compression_n": 0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 0.8405996033740182,
+                "compression_n": 2.0986550373081485,
+                "buckling_factor": 915472.7532972388
+              },
+              {
+                "stress_mpa": 1.8418521040228413,
+                "compression_n": 200.98098988268063,
+                "buckling_factor": 9559.41905922105
+              },
+              {
+                "stress_mpa": 1.1861369991212904,
+                "compression_n": 99.03835995924211,
+                "buckling_factor": 19399.1651923182
+              },
+              {
+                "stress_mpa": 0.0,
+                "compression_n": 0.0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 1.1604743892053042,
+                "compression_n": 59.72877842834123,
+                "buckling_factor": 50260.045172639664
+              },
+              {
+                "stress_mpa": 0.9436893445595662,
+                "compression_n": 81.33585033454551,
+                "buckling_factor": 36908.33856863237
+              },
+              {
+                "stress_mpa": 1.0261999128978547,
+                "compression_n": 0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 0.4631704486889754,
+                "compression_n": 0,
+                "buckling_factor": 1000000.0
+              }
+            ],
+            "free_residual_n": 1.3642420526593924e-12
+          }
+        ],
+        "travel_samples": [
+          {
+            "gap_mm": 20,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 25,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 30,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 35,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 40,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 45,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 50,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 55,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 60,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          }
+        ],
+        "limitations": "Nominal aluminium; rigid beam joints and fixed carriage roots. Normal stress only; no local joint, shear, torsional stress, fatigue or bearing analysis. External actuator and friction pads not designed."
+      },
+      "reflection": {
+        "lesson": "Baseline passes at 523.6 g moving mass. Combined loading controls stress (1.891 MPa in 0\u20134) and deflection (0.00242 mm); pinch controls buckling (factor 9542 in 1\u20135). These results support testing a substantially simpler topology.",
+        "next_focus": "Test one full-height braced bay: retain nodes 0\u20133 with edges 0\u20132, 1\u20133, 2\u20133, 0\u20133 at current sections. Preserve fixed interfaces; recheck all four loads, longer-member buckling, STEP mass and travel clearance before claiming improvement."
+      },
+      "tool_id": null,
+      "source_commit": "9a71df272e614c15259aeb22d4b58bfe46de81ee",
+      "retrieved_memory": [],
+      "generator": "gpt-6-astra",
+      "assets": {
+        "model.step": "/models/gripper/01-model.step",
+        "left.glb": "/models/gripper/01-left.glb",
+        "model.glb": "/models/gripper/01-model.glb",
+        "base.glb": "/models/gripper/01-base.glb",
+        "right.glb": "/models/gripper/01-right.glb"
+      }
+    },
+    {
+      "_id": "parallel-gripper-study-v1-01",
+      "iteration": 2,
+      "title": "Tapered triangular frame",
+      "change": "Replace the heavy ladder with a 10-mm-deep tapered triangle using 4-mm uprights, 5-mm diagonals and a 3-mm midpoint tie, preserving fixed interfaces pending four-load-case and clearance screening.",
+      "parameters": {
+        "depth_mm": 10,
+        "nodes": [
+          [
+            8,
+            0
+          ],
+          [
+            36,
+            0
+          ],
+          [
+            8,
+            70
+          ],
+          [
+            8,
+            35
+          ],
+          [
+            22,
+            35
+          ]
+        ],
+        "edges": [
+          [
+            0,
+            3,
+            4
+          ],
+          [
+            3,
+            2,
+            4
+          ],
+          [
+            1,
+            4,
+            5
+          ],
+          [
+            4,
+            2,
+            5
+          ],
+          [
+            3,
+            4,
+            3
+          ]
+        ]
+      },
+      "evaluation": {
+        "outcome": "passed",
+        "metrics": {
+          "mass_g": {
+            "value": 207.05384646942684,
+            "unit": "g",
+            "fidelity": "STEP_volume_moving_pair"
+          },
+          "total_mass_g": {
+            "value": 570.934760493332,
+            "unit": "g",
+            "fidelity": "STEP_volume_three_parts"
+          },
+          "stress_mpa": {
+            "value": 15.937784223186586,
+            "unit": "MPa",
+            "fidelity": "linear_3d_frame"
+          },
+          "deflection_mm": {
+            "value": 0.04701291873077259,
+            "unit": "mm",
+            "fidelity": "linear_3d_frame"
+          },
+          "buckling_factor": {
+            "value": 188.85802648607378,
+            "unit": "ratio",
+            "fidelity": "Euler_pinned_member"
+          },
+          "clearance_mm": {
+            "value": 0.3000000000000007,
+            "unit": "mm",
+            "fidelity": "BRep_distance"
+          },
+          "travel_mm": {
+            "value": 40,
+            "unit": "mm",
+            "fidelity": "BRep_9_positions"
+          }
+        },
+        "violations": [],
+        "fidelity": "linear_3d_frame_and_BRep_travel",
+        "reference_residual_mm3": 0.0,
+        "load_cases": [
+          {
+            "name": "pinch",
+            "load_n": [
+              100,
+              0,
+              0
+            ],
+            "deflection_mm": 0.030923416569589607,
+            "stress_mpa": 9.504133507556569,
+            "buckling_factor": 189.0496825260051,
+            "tip_displacement_mm": [
+              0.03032443467183851,
+              0.0,
+              0.006056926132104264
+            ],
+            "displacements": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.03032443467183851,
+                0.0,
+                0.006056926132104264
+              ],
+              [
+                0.007624815835222056,
+                0.0,
+                0.0031066563001532787
+              ],
+              [
+                0.007613281304061096,
+                0.0,
+                -6.22116201576223e-05
+              ]
+            ],
+            "members": [
+              {
+                "stress_mpa": 8.474078463074774,
+                "compression_n": 0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 9.504133507556569,
+                "compression_n": 0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 7.149632001577013,
+                "compression_n": 264.06301204798297,
+                "buckling_factor": 189.0496825260051
+              },
+              {
+                "stress_mpa": 8.508992042179013,
+                "compression_n": 251.97946803520506,
+                "buckling_factor": 198.11546148496979
+              },
+              {
+                "stress_mpa": 5.819001016947017,
+                "compression_n": 1.7054628216562833,
+                "buckling_factor": 45838.777478077696
+              }
+            ],
+            "free_residual_n": 2.2737367544323206e-13
+          },
+          {
+            "name": "payload",
+            "load_n": [
+              0,
+              0,
+              -25
+            ],
+            "deflection_mm": 0.0016359848861713974,
+            "stress_mpa": 0.7892019437074842,
+            "buckling_factor": 1198.631073575701,
+            "tip_displacement_mm": [
+              -0.0015142315330260666,
+              0.0,
+              -0.0006193136621864309
+            ],
+            "displacements": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                -0.0015142315330260666,
+                0.0,
+                -0.0006193136621864309
+              ],
+              [
+                -0.00036437936929034485,
+                0.0,
+                -0.00031367861041987503
+              ],
+              [
+                -0.00036378610390748765,
+                0.0,
+                -0.00014866800502061597
+              ]
+            ],
+            "members": [
+              {
+                "stress_mpa": 0.7271981221033822,
+                "compression_n": 24.735798993110144,
+                "buckling_factor": 1198.631073575701
+              },
+              {
+                "stress_mpa": 0.7892019437074842,
+                "compression_n": 24.10150693930555,
+                "buckling_factor": 1230.176078928559
+              },
+              {
+                "stress_mpa": 0.1132685667720031,
+                "compression_n": 0.26797521992098794,
+                "buckling_factor": 186289.71965859746
+              },
+              {
+                "stress_mpa": 0.20021810443388077,
+                "compression_n": 0.8894784492222243,
+                "buckling_factor": 56123.93266883945
+              },
+              {
+                "stress_mpa": 0.31407678967230984,
+                "compression_n": 0,
+                "buckling_factor": 1000000.0
+              }
+            ],
+            "free_residual_n": 2.2648549702353193e-14
+          },
+          {
+            "name": "lateral",
+            "load_n": [
+              0,
+              15,
+              0
+            ],
+            "deflection_mm": 0.03675076996898955,
+            "stress_mpa": 8.190903882215196,
+            "buckling_factor": 1000000.0,
+            "tip_displacement_mm": [
+              -0.0,
+              0.03675076996898955,
+              0.0
+            ],
+            "displacements": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                -0.0,
+                0.03675076996898955,
+                0.0
+              ],
+              [
+                0.0,
+                0.01178050987751515,
+                -0.0
+              ],
+              [
+                -0.0,
+                0.011193721193351738,
+                0.0
+              ]
+            ],
+            "members": [
+              {
+                "stress_mpa": 8.190903882215196,
+                "compression_n": 0.0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 3.582190872962617,
+                "compression_n": 0.0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 6.357012279849562,
+                "compression_n": 0.0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 3.6600438125495436,
+                "compression_n": 0.0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 0.4960446981334644,
+                "compression_n": 0.0,
+                "buckling_factor": 1000000.0
+              }
+            ],
+            "free_residual_n": 7.958078640513122e-13
+          },
+          {
+            "name": "combined",
+            "load_n": [
+              100,
+              15,
+              -25
+            ],
+            "deflection_mm": 0.04701291873077259,
+            "stress_mpa": 15.937784223186586,
+            "buckling_factor": 188.85802648607378,
+            "tip_displacement_mm": [
+              0.028810203138812444,
+              0.03675076996898955,
+              0.005437612469917834
+            ],
+            "displacements": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.028810203138812444,
+                0.03675076996898955,
+                0.005437612469917834
+              ],
+              [
+                0.00726043646593171,
+                0.01178050987751515,
+                0.002792977689733404
+              ],
+              [
+                0.007249495200153608,
+                0.011193721193351738,
+                -0.00021087962517823828
+              ]
+            ],
+            "members": [
+              {
+                "stress_mpa": 15.937784223186586,
+                "compression_n": 0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 12.297122436811701,
+                "compression_n": 0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 13.404094723451411,
+                "compression_n": 264.330987267904,
+                "buckling_factor": 188.85802648607378
+              },
+              {
+                "stress_mpa": 12.00439688826356,
+                "compression_n": 252.86894648442717,
+                "buckling_factor": 197.41858100241745
+              },
+              {
+                "stress_mpa": 6.017008233475974,
+                "compression_n": 1.6177442971909386,
+                "buckling_factor": 48324.28147933066
+              }
+            ],
+            "free_residual_n": 7.958078640513122e-13
+          }
+        ],
+        "travel_samples": [
+          {
+            "gap_mm": 20,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 25,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 30,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 35,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 40,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 45,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 50,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 55,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 60,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          }
+        ],
+        "limitations": "Nominal aluminium; rigid beam joints and fixed carriage roots. Normal stress only; no local joint, shear, torsional stress, fatigue or bearing analysis. External actuator and friction pads not designed."
+      },
+      "reflection": {
+        "lesson": "Triangle passes at 207.1 g moving mass versus 523.6 g baseline. Combined loading controls: 15.94 MPa in lower upright 0\u20133, 0.0470 mm tip deflection, and buckling factor 188.9 in lower diagonal 1\u20134. Clearance is 0.30 mm at all nine travel samples.",
+        "next_focus": "Test two unsplit root-to-tip legs: remove tie 3\u20134 and midpoint nodes; use edges 0\u20132 (4 mm) and 1\u20132 (5 mm), retaining 10 mm depth and fixed interfaces. Recheck all four loads, full-length buckling, lateral stiffness, STEP mass and travel clearance."
+      },
+      "tool_id": null,
+      "source_commit": "645e317764c1d53de55c0d5e27ba468c2571e8ee",
+      "retrieved_memory": [
+        {
+          "_id": "memory-parallel-gripper-study-v1-00-evaluation",
+          "summary": "{\"fidelity\": \"linear_3d_frame_and_BRep_travel\", \"metrics\": {\"buckling_factor\": {\"fidelity\": \"Euler_pinned_member\", \"unit\": \"ratio\", \"value\": 9541.625066212893}, \"clearance_mm\": {\"fidelity\": \"BRep_distance\", \"unit\": \"mm\", \"value\": 0.3000000000000007}, \"deflection_mm\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"mm\", \"value\": 0.0024221772814481783}, \"mass_g\": {\"fidelity\": \"STEP_volume_moving_pair\", \"unit\": \"g\", \"value\": 523.5714496886798}, \"stress_mpa\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"MPa\", \"value\": 1.8906804238364767}, \"total_mass_g\": {\"fidelity\": \"STEP_volume_three_parts\", \"unit\": \"g\", \"value\": 887.4523637125849}, \"travel_mm\": {\"fidelity\": \"BRep_9_positions\", \"unit\": \"mm\", \"value\": 40}}, \"outcome\": \"passed\", \"parameters\": {\"depth_mm\": 24, \"edges\": [[0, 4, 12], [4, 2, 12], [1, 5, 12], [5, 3, 12], [0, 1, 12], [4, 5, 12], [2, 3, 12], [0, 5, 12], [4, 3, 12]], \"nodes\": [[8, 0], [36, 0], [8, 70], [36, 70], [8, 35], [36, 35]]}, \"subsystem\": \"parallel_gripper\", \"violations\": []}",
+          "score": 0.7567004561424255
+        }
+      ],
+      "generator": "gpt-6-astra",
+      "assets": {
+        "model.step": "/models/gripper/02-model.step",
+        "left.glb": "/models/gripper/02-left.glb",
+        "model.glb": "/models/gripper/02-model.glb",
+        "base.glb": "/models/gripper/02-base.glb",
+        "right.glb": "/models/gripper/02-right.glb"
+      }
+    },
+    {
+      "_id": "parallel-gripper-study-v1-02",
+      "iteration": 3,
+      "title": "Slim two-leg triangle",
+      "change": "Use the prior 15.94-MPa combined-load stress margin to replace the tied, split frame with direct 3-mm upright and 4-mm diagonal ribs, preserving fixed interfaces pending four-load-case, full-length buckling and travel screening.",
+      "parameters": {
+        "depth_mm": 10,
+        "nodes": [
+          [
+            8,
+            0
+          ],
+          [
+            36,
+            0
+          ],
+          [
+            8,
+            70
+          ]
+        ],
+        "edges": [
+          [
+            0,
+            2,
+            3
+          ],
+          [
+            1,
+            2,
+            4
+          ]
+        ]
+      },
+      "evaluation": {
+        "outcome": "passed",
+        "metrics": {
+          "mass_g": {
+            "value": 198.45453324735132,
+            "unit": "g",
+            "fidelity": "STEP_volume_moving_pair"
+          },
+          "total_mass_g": {
+            "value": 562.3354472712565,
+            "unit": "g",
+            "fidelity": "STEP_volume_three_parts"
+          },
+          "stress_mpa": {
+            "value": 20.27555956179173,
+            "unit": "MPa",
+            "fidelity": "linear_3d_frame"
+          },
+          "deflection_mm": {
+            "value": 0.06160277768867148,
+            "unit": "mm",
+            "fidelity": "linear_3d_frame"
+          },
+          "buckling_factor": {
+            "value": 24.079192271935373,
+            "unit": "ratio",
+            "fidelity": "Euler_pinned_member"
+          },
+          "clearance_mm": {
+            "value": 0.3000000000000007,
+            "unit": "mm",
+            "fidelity": "BRep_distance"
+          },
+          "travel_mm": {
+            "value": 40,
+            "unit": "mm",
+            "fidelity": "BRep_9_positions"
+          }
+        },
+        "violations": [],
+        "fidelity": "linear_3d_frame_and_BRep_travel",
+        "reference_residual_mm3": 0.0,
+        "load_cases": [
+          {
+            "name": "pinch",
+            "load_n": [
+              100,
+              0,
+              0
+            ],
+            "deflection_mm": 0.04113291174704219,
+            "stress_mpa": 10.864025692835593,
+            "buckling_factor": 24.09919638061477,
+            "tip_displacement_mm": [
+              0.04028414620806002,
+              0.0,
+              0.008312881153824165
+            ],
+            "displacements": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.04028414620806002,
+                0.0,
+                0.008312881153824165
+              ]
+            ],
+            "members": [
+              {
+                "stress_mpa": 10.864025692835593,
+                "compression_n": 0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 9.511960788986054,
+                "compression_n": 265.14957425053655,
+                "buckling_factor": 24.09919638061477
+              }
+            ],
+            "free_residual_n": 6.328271240363392e-14
+          },
+          {
+            "name": "payload",
+            "load_n": [
+              0,
+              0,
+              -25
+            ],
+            "deflection_mm": 0.0022407266648820645,
+            "stress_mpa": 0.957394530373505,
+            "buckling_factor": 126.2230966402426,
+            "tip_displacement_mm": [
+              -0.002078220288456042,
+              0.0,
+              -0.0008377687147197522
+            ],
+            "displacements": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                -0.002078220288456042,
+                0.0,
+                -0.0008377687147197522
+              ]
+            ],
+            "members": [
+              {
+                "stress_mpa": 0.957394530373505,
+                "compression_n": 24.774017706712673,
+                "buckling_factor": 126.2230966402426
+              },
+              {
+                "stress_mpa": 0.16876672984747712,
+                "compression_n": 0.22027652920006702,
+                "buckling_factor": 29008.499831121062
+              }
+            ],
+            "free_residual_n": 4.496403249731884e-15
+          },
+          {
+            "name": "lateral",
+            "load_n": [
+              0,
+              15,
+              0
+            ],
+            "deflection_mm": 0.047742351613723,
+            "stress_mpa": 10.368928399329643,
+            "buckling_factor": 1000000.0,
+            "tip_displacement_mm": [
+              -0.0,
+              0.047742351613723,
+              -0.0
+            ],
+            "displacements": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                -0.0,
+                0.047742351613723,
+                -0.0
+              ]
+            ],
+            "members": [
+              {
+                "stress_mpa": 10.368928399329643,
+                "compression_n": 0.0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 8.504861220958395,
+                "compression_n": 0.0,
+                "buckling_factor": 1000000.0
+              }
+            ],
+            "free_residual_n": 1.2789769243681803e-13
+          },
+          {
+            "name": "combined",
+            "load_n": [
+              100,
+              15,
+              -25
+            ],
+            "deflection_mm": 0.06160277768867148,
+            "stress_mpa": 20.27555956179173,
+            "buckling_factor": 24.079192271935373,
+            "tip_displacement_mm": [
+              0.038205925919603985,
+              0.047742351613723,
+              0.007475112439104413
+            ],
+            "displacements": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.038205925919603985,
+                0.047742351613723,
+                0.007475112439104413
+              ]
+            ],
+            "members": [
+              {
+                "stress_mpa": 20.27555956179173,
+                "compression_n": 0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 17.859069106556973,
+                "compression_n": 265.3698507797366,
+                "buckling_factor": 24.079192271935373
+              }
+            ],
+            "free_residual_n": 1.2789769243681803e-13
+          }
+        ],
+        "travel_samples": [
+          {
+            "gap_mm": 20,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 25,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 30,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 35,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 40,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 45,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 50,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 55,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 60,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          }
+        ],
+        "limitations": "Nominal aluminium; rigid beam joints and fixed carriage roots. Normal stress only; no local joint, shear, torsional stress, fatigue or bearing analysis. External actuator and friction pads not designed."
+      },
+      "reflection": {
+        "lesson": "Direct legs pass at 198.45 g, saving only 8.60 g over the tied frame. Combined load controls upright 0\u20132 stress (20.28 MPa), deflection (0.0616 mm) and diagonal 1\u20132 buckling (24.08). Clearance stays 0.30 mm at nine samples.",
+        "next_focus": "Benchmark a Y graph: retain roots/tip and join both roots at (8,35), with one shared trunk to the tip. Size the trunk for combined bending, not the former upright\u2019s axial role. Compare four loads, buckling, STEP mass and nine-position travel; do not assume savings."
+      },
+      "tool_id": "parallel-gripper-study-v1-sizing",
+      "source_commit": "dd2a93e78a7b96fcc48c5014f633d11f2c001858",
+      "retrieved_memory": [
+        {
+          "_id": "memory-parallel-gripper-study-v1-00-evaluation",
+          "summary": "{\"fidelity\": \"linear_3d_frame_and_BRep_travel\", \"metrics\": {\"buckling_factor\": {\"fidelity\": \"Euler_pinned_member\", \"unit\": \"ratio\", \"value\": 9541.625066212893}, \"clearance_mm\": {\"fidelity\": \"BRep_distance\", \"unit\": \"mm\", \"value\": 0.3000000000000007}, \"deflection_mm\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"mm\", \"value\": 0.0024221772814481783}, \"mass_g\": {\"fidelity\": \"STEP_volume_moving_pair\", \"unit\": \"g\", \"value\": 523.5714496886798}, \"stress_mpa\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"MPa\", \"value\": 1.8906804238364767}, \"total_mass_g\": {\"fidelity\": \"STEP_volume_three_parts\", \"unit\": \"g\", \"value\": 887.4523637125849}, \"travel_mm\": {\"fidelity\": \"BRep_9_positions\", \"unit\": \"mm\", \"value\": 40}}, \"outcome\": \"passed\", \"parameters\": {\"depth_mm\": 24, \"edges\": [[0, 4, 12], [4, 2, 12], [1, 5, 12], [5, 3, 12], [0, 1, 12], [4, 5, 12], [2, 3, 12], [0, 5, 12], [4, 3, 12]], \"nodes\": [[8, 0], [36, 0], [8, 70], [36, 70], [8, 35], [36, 35]]}, \"subsystem\": \"parallel_gripper\", \"violations\": []}",
+          "score": 0.7567004561424255
+        },
+        {
+          "_id": "memory-parallel-gripper-study-v1-01-evaluation",
+          "summary": "{\"fidelity\": \"linear_3d_frame_and_BRep_travel\", \"metrics\": {\"buckling_factor\": {\"fidelity\": \"Euler_pinned_member\", \"unit\": \"ratio\", \"value\": 188.85802648607378}, \"clearance_mm\": {\"fidelity\": \"BRep_distance\", \"unit\": \"mm\", \"value\": 0.3000000000000007}, \"deflection_mm\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"mm\", \"value\": 0.04701291873077259}, \"mass_g\": {\"fidelity\": \"STEP_volume_moving_pair\", \"unit\": \"g\", \"value\": 207.05384646942684}, \"stress_mpa\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"MPa\", \"value\": 15.937784223186586}, \"total_mass_g\": {\"fidelity\": \"STEP_volume_three_parts\", \"unit\": \"g\", \"value\": 570.934760493332}, \"travel_mm\": {\"fidelity\": \"BRep_9_positions\", \"unit\": \"mm\", \"value\": 40}}, \"outcome\": \"passed\", \"parameters\": {\"depth_mm\": 10, \"edges\": [[0, 3, 4], [3, 2, 4], [1, 4, 5], [4, 2, 5], [3, 4, 3]], \"nodes\": [[8, 0], [36, 0], [8, 70], [8, 35], [22, 35]]}, \"subsystem\": \"parallel_gripper\", \"violations\": []}",
+          "score": 0.7512508630752563
+        }
+      ],
+      "generator": "gpt-6-astra",
+      "assets": {
+        "model.step": "/models/gripper/03-model.step",
+        "left.glb": "/models/gripper/03-left.glb",
+        "model.glb": "/models/gripper/03-model.glb",
+        "base.glb": "/models/gripper/03-base.glb",
+        "right.glb": "/models/gripper/03-right.glb"
+      }
+    },
+    {
+      "_id": "parallel-gripper-study-v1-03",
+      "iteration": 4,
+      "title": "High-junction Y frame",
+      "change": "Target lower mass than the 198.45-g passing frame with 3-mm root ribs merging at (8,60) into a 4-mm shared trunk, limiting its new bending span to 10 mm while retaining fixed interfaces pending four-load stress, deflection, buckling and STEP/travel screening.",
+      "parameters": {
+        "depth_mm": 10,
+        "nodes": [
+          [
+            8,
+            0
+          ],
+          [
+            36,
+            0
+          ],
+          [
+            8,
+            70
+          ],
+          [
+            8,
+            60
+          ]
+        ],
+        "edges": [
+          [
+            0,
+            3,
+            3
+          ],
+          [
+            1,
+            3,
+            3
+          ],
+          [
+            3,
+            2,
+            4
+          ]
+        ]
+      },
+      "evaluation": {
+        "outcome": "passed",
+        "metrics": {
+          "mass_g": {
+            "value": 193.51968486744587,
+            "unit": "g",
+            "fidelity": "STEP_volume_moving_pair"
+          },
+          "total_mass_g": {
+            "value": 557.400598891351,
+            "unit": "g",
+            "fidelity": "STEP_volume_three_parts"
+          },
+          "stress_mpa": {
+            "value": 54.390315006132255,
+            "unit": "MPa",
+            "fidelity": "linear_3d_frame"
+          },
+          "deflection_mm": {
+            "value": 0.11957808784081699,
+            "unit": "mm",
+            "fidelity": "linear_3d_frame"
+          },
+          "buckling_factor": {
+            "value": 12.161066815228136,
+            "unit": "ratio",
+            "fidelity": "Euler_pinned_member"
+          },
+          "clearance_mm": {
+            "value": 0.3000000000000007,
+            "unit": "mm",
+            "fidelity": "BRep_distance"
+          },
+          "travel_mm": {
+            "value": 40,
+            "unit": "mm",
+            "fidelity": "BRep_9_positions"
+          }
+        },
+        "violations": [],
+        "fidelity": "linear_3d_frame_and_BRep_travel",
+        "reference_residual_mm3": 0.0,
+        "load_cases": [
+          {
+            "name": "pinch",
+            "load_n": [
+              100,
+              0,
+              0
+            ],
+            "deflection_mm": 0.10726597422695747,
+            "stress_mpa": 43.47719899160257,
+            "buckling_factor": 12.16684427412032,
+            "tip_displacement_mm": [
+              0.10699131311760399,
+              0.0,
+              0.007671254410402774
+            ],
+            "displacements": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.10699131311760399,
+                0.0,
+                0.007671254410402774
+              ],
+              [
+                0.03816666623942885,
+                0.0,
+                0.007671254410402774
+              ]
+            ],
+            "members": [
+              {
+                "stress_mpa": 43.47719899160257,
+                "compression_n": 0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 41.5869134211855,
+                "compression_n": 287.26509522474254,
+                "buckling_factor": 12.16684427412032
+              },
+              {
+                "stress_mpa": 37.5,
+                "compression_n": 0.0,
+                "buckling_factor": 1000000.0
+              }
+            ],
+            "free_residual_n": 3.637978807091713e-12
+          },
+          {
+            "name": "payload",
+            "load_n": [
+              0,
+              0,
+              -25
+            ],
+            "deflection_mm": 0.002082357969685388,
+            "stress_mpa": 0.9610652316241597,
+            "buckling_factor": 171.1763450101727,
+            "tip_displacement_mm": [
+              -0.0019178136026006985,
+              0.0,
+              -0.0008112987733208899
+            ],
+            "displacements": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                -0.0019178136026006985,
+                0.0,
+                -0.0008112987733208899
+              ],
+              [
+                -0.0015340753659305194,
+                0.0,
+                -0.0007207190631759623
+              ]
+            ],
+            "members": [
+              {
+                "stress_mpa": 0.9610652316241597,
+                "compression_n": 24.8648076795707,
+                "buckling_factor": 171.1763450101727
+              },
+              {
+                "stress_mpa": 0.12466980288797633,
+                "compression_n": 0.13647341175219196,
+                "buckling_factor": 25610.187611753987
+              },
+              {
+                "stress_mpa": 0.6250000000000021,
+                "compression_n": 25.0,
+                "buckling_factor": 14528.057678403535
+              }
+            ],
+            "free_residual_n": 5.684341886080802e-14
+          },
+          {
+            "name": "lateral",
+            "load_n": [
+              0,
+              15,
+              0
+            ],
+            "deflection_mm": 0.05666939032664825,
+            "stress_mpa": 11.742094319861458,
+            "buckling_factor": 1000000.0,
+            "tip_displacement_mm": [
+              -0.0,
+              0.05666939032664825,
+              0.0
+            ],
+            "displacements": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                -0.0,
+                0.05666939032664825,
+                0.0
+              ],
+              [
+                -0.0,
+                0.044441677214786625,
+                0.0
+              ]
+            ],
+            "members": [
+              {
+                "stress_mpa": 11.742094319861458,
+                "compression_n": 0.0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 10.057979524505534,
+                "compression_n": 0.0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 2.25,
+                "compression_n": 0.0,
+                "buckling_factor": 1000000.0
+              }
+            ],
+            "free_residual_n": 7.275957614183426e-12
+          },
+          {
+            "name": "combined",
+            "load_n": [
+              100,
+              15,
+              -25
+            ],
+            "deflection_mm": 0.11957808784081699,
+            "stress_mpa": 54.390315006132255,
+            "buckling_factor": 12.161066815228136,
+            "tip_displacement_mm": [
+              0.10507349951500329,
+              0.05666939032664825,
+              0.006859955637081883
+            ],
+            "displacements": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.10507349951500329,
+                0.05666939032664825,
+                0.006859955637081883
+              ],
+              [
+                0.03663259087349832,
+                0.044441677214786625,
+                0.0069505353472268105
+              ]
+            ],
+            "members": [
+              {
+                "stress_mpa": 54.390315006132255,
+                "compression_n": 0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 51.6495934420955,
+                "compression_n": 287.40156863649474,
+                "buckling_factor": 12.161066815228136
+              },
+              {
+                "stress_mpa": 40.375,
+                "compression_n": 25.0,
+                "buckling_factor": 14528.057678403535
+              }
+            ],
+            "free_residual_n": 7.275957614183426e-12
+          }
+        ],
+        "travel_samples": [
+          {
+            "gap_mm": 20,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 25,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 30,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 35,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 40,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 45,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 50,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 55,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 60,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          }
+        ],
+        "limitations": "Nominal aluminium; rigid beam joints and fixed carriage roots. Normal stress only; no local joint, shear, torsional stress, fatigue or bearing analysis. External actuator and friction pads not designed."
+      },
+      "reflection": {
+        "lesson": "Y passes screening at 193.52 g, saving 4.93 g but nearly doubling deflection versus prior direct legs. Combined load controls root 0\u20133 stress (54.39 MPa), tip deflection (0.1196 mm) and diagonal 1\u20133 buckling (factor 12.16).",
+        "next_focus": "Benchmark two direct 3-mm root-to-tip legs at 10-mm depth, removing the junction and shared bending span. Compare mass\u2013stiffness tradeoffs without assuming savings; preserve interfaces and recheck four loads, full-length buckling and STEP/travel."
+      },
+      "tool_id": "parallel-gripper-study-v1-sizing",
+      "source_commit": "e480e5b843477931d5bf71ccfbe4a31341b746b0",
+      "retrieved_memory": [
+        {
+          "_id": "memory-parallel-gripper-study-v1-00-evaluation",
+          "summary": "{\"fidelity\": \"linear_3d_frame_and_BRep_travel\", \"metrics\": {\"buckling_factor\": {\"fidelity\": \"Euler_pinned_member\", \"unit\": \"ratio\", \"value\": 9541.625066212893}, \"clearance_mm\": {\"fidelity\": \"BRep_distance\", \"unit\": \"mm\", \"value\": 0.3000000000000007}, \"deflection_mm\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"mm\", \"value\": 0.0024221772814481783}, \"mass_g\": {\"fidelity\": \"STEP_volume_moving_pair\", \"unit\": \"g\", \"value\": 523.5714496886798}, \"stress_mpa\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"MPa\", \"value\": 1.8906804238364767}, \"total_mass_g\": {\"fidelity\": \"STEP_volume_three_parts\", \"unit\": \"g\", \"value\": 887.4523637125849}, \"travel_mm\": {\"fidelity\": \"BRep_9_positions\", \"unit\": \"mm\", \"value\": 40}}, \"outcome\": \"passed\", \"parameters\": {\"depth_mm\": 24, \"edges\": [[0, 4, 12], [4, 2, 12], [1, 5, 12], [5, 3, 12], [0, 1, 12], [4, 5, 12], [2, 3, 12], [0, 5, 12], [4, 3, 12]], \"nodes\": [[8, 0], [36, 0], [8, 70], [36, 70], [8, 35], [36, 35]]}, \"subsystem\": \"parallel_gripper\", \"violations\": []}",
+          "score": 0.7567004561424255
+        },
+        {
+          "_id": "memory-parallel-gripper-study-v1-02-evaluation",
+          "summary": "{\"fidelity\": \"linear_3d_frame_and_BRep_travel\", \"metrics\": {\"buckling_factor\": {\"fidelity\": \"Euler_pinned_member\", \"unit\": \"ratio\", \"value\": 24.079192271935373}, \"clearance_mm\": {\"fidelity\": \"BRep_distance\", \"unit\": \"mm\", \"value\": 0.3000000000000007}, \"deflection_mm\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"mm\", \"value\": 0.06160277768867148}, \"mass_g\": {\"fidelity\": \"STEP_volume_moving_pair\", \"unit\": \"g\", \"value\": 198.45453324735132}, \"stress_mpa\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"MPa\", \"value\": 20.27555956179173}, \"total_mass_g\": {\"fidelity\": \"STEP_volume_three_parts\", \"unit\": \"g\", \"value\": 562.3354472712565}, \"travel_mm\": {\"fidelity\": \"BRep_9_positions\", \"unit\": \"mm\", \"value\": 40}}, \"outcome\": \"passed\", \"parameters\": {\"depth_mm\": 10, \"edges\": [[0, 2, 3], [1, 2, 4]], \"nodes\": [[8, 0], [36, 0], [8, 70]]}, \"subsystem\": \"parallel_gripper\", \"violations\": []}",
+          "score": 0.7528363466262817
+        },
+        {
+          "_id": "memory-parallel-gripper-study-v1-01-evaluation",
+          "summary": "{\"fidelity\": \"linear_3d_frame_and_BRep_travel\", \"metrics\": {\"buckling_factor\": {\"fidelity\": \"Euler_pinned_member\", \"unit\": \"ratio\", \"value\": 188.85802648607378}, \"clearance_mm\": {\"fidelity\": \"BRep_distance\", \"unit\": \"mm\", \"value\": 0.3000000000000007}, \"deflection_mm\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"mm\", \"value\": 0.04701291873077259}, \"mass_g\": {\"fidelity\": \"STEP_volume_moving_pair\", \"unit\": \"g\", \"value\": 207.05384646942684}, \"stress_mpa\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"MPa\", \"value\": 15.937784223186586}, \"total_mass_g\": {\"fidelity\": \"STEP_volume_three_parts\", \"unit\": \"g\", \"value\": 570.934760493332}, \"travel_mm\": {\"fidelity\": \"BRep_9_positions\", \"unit\": \"mm\", \"value\": 40}}, \"outcome\": \"passed\", \"parameters\": {\"depth_mm\": 10, \"edges\": [[0, 3, 4], [3, 2, 4], [1, 4, 5], [4, 2, 5], [3, 4, 3]], \"nodes\": [[8, 0], [36, 0], [8, 70], [8, 35], [22, 35]]}, \"subsystem\": \"parallel_gripper\", \"violations\": []}",
+          "score": 0.7512508630752563
+        }
+      ],
+      "generator": "gpt-6-astra",
+      "assets": {
+        "model.step": "/models/gripper/04-model.step",
+        "left.glb": "/models/gripper/04-left.glb",
+        "model.glb": "/models/gripper/04-model.glb",
+        "base.glb": "/models/gripper/04-base.glb",
+        "right.glb": "/models/gripper/04-right.glb"
+      }
+    },
+    {
+      "_id": "parallel-gripper-study-v1-04",
+      "iteration": 5,
+      "title": "Minimum-section direct legs",
+      "change": "Replace the Y junction and shared bending span with direct 3-mm root-to-tip ribs to address the prior 54.39-MPa combined-load root stress and benchmark mass against the 193.52-g best design, preserving fixed interfaces pending four-load stress, deflection, buckling and STEP/trave",
+      "parameters": {
+        "depth_mm": 10,
+        "nodes": [
+          [
+            8,
+            0
+          ],
+          [
+            36,
+            0
+          ],
+          [
+            8,
+            70
+          ]
+        ],
+        "edges": [
+          [
+            0,
+            2,
+            3
+          ],
+          [
+            1,
+            2,
+            3
+          ]
+        ]
+      },
+      "evaluation": {
+        "outcome": "passed",
+        "metrics": {
+          "mass_g": {
+            "value": 194.55520311404612,
+            "unit": "g",
+            "fidelity": "STEP_volume_moving_pair"
+          },
+          "total_mass_g": {
+            "value": 558.4361171379513,
+            "unit": "g",
+            "fidelity": "STEP_volume_three_parts"
+          },
+          "stress_mpa": {
+            "value": 22.146008192633214,
+            "unit": "MPa",
+            "fidelity": "linear_3d_frame"
+          },
+          "deflection_mm": {
+            "value": 0.0713733668276937,
+            "unit": "mm",
+            "fidelity": "linear_3d_frame"
+          },
+          "buckling_factor": {
+            "value": 10.11983275249059,
+            "unit": "ratio",
+            "fidelity": "Euler_pinned_member"
+          },
+          "clearance_mm": {
+            "value": 0.3000000000000007,
+            "unit": "mm",
+            "fidelity": "BRep_distance"
+          },
+          "travel_mm": {
+            "value": 40,
+            "unit": "mm",
+            "fidelity": "BRep_9_positions"
+          }
+        },
+        "violations": [],
+        "fidelity": "linear_3d_frame_and_BRep_travel",
+        "reference_residual_mm3": 0.0,
+        "load_cases": [
+          {
+            "name": "pinch",
+            "load_n": [
+              100,
+              0,
+              0
+            ],
+            "deflection_mm": 0.04773141127091362,
+            "stress_mpa": 11.322366621436533,
+            "buckling_factor": 10.125059744599808,
+            "tip_displacement_mm": [
+              0.04699467898670109,
+              0.0,
+              0.008353907400134076
+            ],
+            "displacements": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.04699467898670109,
+                0.0,
+                0.008353907400134076
+              ]
+            ],
+            "members": [
+              {
+                "stress_mpa": 11.322366621436533,
+                "compression_n": 0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 11.317974584066157,
+                "compression_n": 266.2439148117114,
+                "buckling_factor": 10.125059744599808
+              }
+            ],
+            "free_residual_n": 5.684341886080802e-14
+          },
+          {
+            "name": "payload",
+            "load_n": [
+              0,
+              0,
+              -25
+            ],
+            "deflection_mm": 0.0022513674111938873,
+            "stress_mpa": 0.9610584195984064,
+            "buckling_factor": 125.77025360759237,
+            "tip_displacement_mm": [
+              -0.002088476850033519,
+              0.0,
+              -0.0008407851491670967
+            ],
+            "displacements": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                -0.002088476850033519,
+                0.0,
+                -0.0008407851491670967
+              ]
+            ],
+            "members": [
+              {
+                "stress_mpa": 0.9610584195984064,
+                "compression_n": 24.863217982512715,
+                "buckling_factor": 125.77025360759237
+              },
+              {
+                "stress_mpa": 0.12762586490338973,
+                "compression_n": 0.1375175732529108,
+                "buckling_factor": 19602.844060860123
+              }
+            ],
+            "free_residual_n": 4.440892098500626e-15
+          },
+          {
+            "name": "lateral",
+            "load_n": [
+              0,
+              15,
+              0
+            ],
+            "deflection_mm": 0.05496492969178897,
+            "stress_mpa": 11.784699990795088,
+            "buckling_factor": 1000000.0,
+            "tip_displacement_mm": [
+              -0.0,
+              0.05496492969178897,
+              -0.0
+            ],
+            "displacements": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                -0.0,
+                0.05496492969178897,
+                -0.0
+              ]
+            ],
+            "members": [
+              {
+                "stress_mpa": 11.784699990795088,
+                "compression_n": 0.0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 9.85529075549534,
+                "compression_n": 0.0,
+                "buckling_factor": 1000000.0
+              }
+            ],
+            "free_residual_n": 2.4513724383723456e-13
+          },
+          {
+            "name": "combined",
+            "load_n": [
+              100,
+              15,
+              -25
+            ],
+            "deflection_mm": 0.0713733668276937,
+            "stress_mpa": 22.146008192633214,
+            "buckling_factor": 10.11983275249059,
+            "tip_displacement_mm": [
+              0.04490620213666757,
+              0.05496492969178897,
+              0.0075131222509669795
+            ],
+            "displacements": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.04490620213666757,
+                0.05496492969178897,
+                0.0075131222509669795
+              ]
+            ],
+            "members": [
+              {
+                "stress_mpa": 22.146008192633214,
+                "compression_n": 0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 21.054807312874967,
+                "compression_n": 266.38143238496434,
+                "buckling_factor": 10.11983275249059
+              }
+            ],
+            "free_residual_n": 2.4513724383723456e-13
+          }
+        ],
+        "travel_samples": [
+          {
+            "gap_mm": 20,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 25,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 30,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 35,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 40,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 45,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 50,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 55,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 60,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          }
+        ],
+        "limitations": "Nominal aluminium; rigid beam joints and fixed carriage roots. Normal stress only; no local joint, shear, torsional stress, fatigue or bearing analysis. External actuator and friction pads not designed."
+      },
+      "reflection": {
+        "lesson": "Direct 3-mm legs pass at 194.56 g, 1.04 g above the Y, but reduce combined-load stress to 22.15 MPa (0\u20132) and deflection to 0.0714 mm. Combined compression in diagonal 1\u20132 controls buckling at 10.12; sampled travel clearance remains 0.30 mm.",
+        "next_focus": "Test a 6-mm-deep tied triangle: split both 3-mm legs at mid-height and add a 3-mm midpoint tie. Seek mass savings without a shared bending trunk. Preserve interfaces; recheck lateral/combined deflection, effective buckling lengths and STEP/travel."
+      },
+      "tool_id": "parallel-gripper-study-v1-sizing",
+      "source_commit": "6428784a58e7e50c4f332e0add3333ee7453c066",
+      "retrieved_memory": [
+        {
+          "_id": "memory-parallel-gripper-study-v1-00-evaluation",
+          "summary": "{\"fidelity\": \"linear_3d_frame_and_BRep_travel\", \"metrics\": {\"buckling_factor\": {\"fidelity\": \"Euler_pinned_member\", \"unit\": \"ratio\", \"value\": 9541.625066212893}, \"clearance_mm\": {\"fidelity\": \"BRep_distance\", \"unit\": \"mm\", \"value\": 0.3000000000000007}, \"deflection_mm\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"mm\", \"value\": 0.0024221772814481783}, \"mass_g\": {\"fidelity\": \"STEP_volume_moving_pair\", \"unit\": \"g\", \"value\": 523.5714496886798}, \"stress_mpa\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"MPa\", \"value\": 1.8906804238364767}, \"total_mass_g\": {\"fidelity\": \"STEP_volume_three_parts\", \"unit\": \"g\", \"value\": 887.4523637125849}, \"travel_mm\": {\"fidelity\": \"BRep_9_positions\", \"unit\": \"mm\", \"value\": 40}}, \"outcome\": \"passed\", \"parameters\": {\"depth_mm\": 24, \"edges\": [[0, 4, 12], [4, 2, 12], [1, 5, 12], [5, 3, 12], [0, 1, 12], [4, 5, 12], [2, 3, 12], [0, 5, 12], [4, 3, 12]], \"nodes\": [[8, 0], [36, 0], [8, 70], [36, 70], [8, 35], [36, 35]]}, \"subsystem\": \"parallel_gripper\", \"violations\": []}",
+          "score": 0.7567004561424255
+        },
+        {
+          "_id": "memory-parallel-gripper-study-v1-02-evaluation",
+          "summary": "{\"fidelity\": \"linear_3d_frame_and_BRep_travel\", \"metrics\": {\"buckling_factor\": {\"fidelity\": \"Euler_pinned_member\", \"unit\": \"ratio\", \"value\": 24.079192271935373}, \"clearance_mm\": {\"fidelity\": \"BRep_distance\", \"unit\": \"mm\", \"value\": 0.3000000000000007}, \"deflection_mm\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"mm\", \"value\": 0.06160277768867148}, \"mass_g\": {\"fidelity\": \"STEP_volume_moving_pair\", \"unit\": \"g\", \"value\": 198.45453324735132}, \"stress_mpa\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"MPa\", \"value\": 20.27555956179173}, \"total_mass_g\": {\"fidelity\": \"STEP_volume_three_parts\", \"unit\": \"g\", \"value\": 562.3354472712565}, \"travel_mm\": {\"fidelity\": \"BRep_9_positions\", \"unit\": \"mm\", \"value\": 40}}, \"outcome\": \"passed\", \"parameters\": {\"depth_mm\": 10, \"edges\": [[0, 2, 3], [1, 2, 4]], \"nodes\": [[8, 0], [36, 0], [8, 70]]}, \"subsystem\": \"parallel_gripper\", \"violations\": []}",
+          "score": 0.7528363466262817
+        },
+        {
+          "_id": "memory-parallel-gripper-study-v1-01-evaluation",
+          "summary": "{\"fidelity\": \"linear_3d_frame_and_BRep_travel\", \"metrics\": {\"buckling_factor\": {\"fidelity\": \"Euler_pinned_member\", \"unit\": \"ratio\", \"value\": 188.85802648607378}, \"clearance_mm\": {\"fidelity\": \"BRep_distance\", \"unit\": \"mm\", \"value\": 0.3000000000000007}, \"deflection_mm\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"mm\", \"value\": 0.04701291873077259}, \"mass_g\": {\"fidelity\": \"STEP_volume_moving_pair\", \"unit\": \"g\", \"value\": 207.05384646942684}, \"stress_mpa\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"MPa\", \"value\": 15.937784223186586}, \"total_mass_g\": {\"fidelity\": \"STEP_volume_three_parts\", \"unit\": \"g\", \"value\": 570.934760493332}, \"travel_mm\": {\"fidelity\": \"BRep_9_positions\", \"unit\": \"mm\", \"value\": 40}}, \"outcome\": \"passed\", \"parameters\": {\"depth_mm\": 10, \"edges\": [[0, 3, 4], [3, 2, 4], [1, 4, 5], [4, 2, 5], [3, 4, 3]], \"nodes\": [[8, 0], [36, 0], [8, 70], [8, 35], [22, 35]]}, \"subsystem\": \"parallel_gripper\", \"violations\": []}",
+          "score": 0.7512508630752563
+        },
+        {
+          "_id": "memory-parallel-gripper-study-v1-03-evaluation",
+          "summary": "{\"fidelity\": \"linear_3d_frame_and_BRep_travel\", \"metrics\": {\"buckling_factor\": {\"fidelity\": \"Euler_pinned_member\", \"unit\": \"ratio\", \"value\": 12.161066815228136}, \"clearance_mm\": {\"fidelity\": \"BRep_distance\", \"unit\": \"mm\", \"value\": 0.3000000000000007}, \"deflection_mm\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"mm\", \"value\": 0.11957808784081699}, \"mass_g\": {\"fidelity\": \"STEP_volume_moving_pair\", \"unit\": \"g\", \"value\": 193.51968486744587}, \"stress_mpa\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"MPa\", \"value\": 54.390315006132255}, \"total_mass_g\": {\"fidelity\": \"STEP_volume_three_parts\", \"unit\": \"g\", \"value\": 557.400598891351}, \"travel_mm\": {\"fidelity\": \"BRep_9_positions\", \"unit\": \"mm\", \"value\": 40}}, \"outcome\": \"passed\", \"parameters\": {\"depth_mm\": 10, \"edges\": [[0, 3, 3], [1, 3, 3], [3, 2, 4]], \"nodes\": [[8, 0], [36, 0], [8, 70], [8, 60]]}, \"subsystem\": \"parallel_gripper\", \"violations\": []}",
+          "score": 0.7508937120437622
+        }
+      ],
+      "generator": "gpt-6-astra",
+      "assets": {
+        "model.step": "/models/gripper/05-model.step",
+        "left.glb": "/models/gripper/05-left.glb",
+        "model.glb": "/models/gripper/05-model.glb",
+        "base.glb": "/models/gripper/05-base.glb",
+        "right.glb": "/models/gripper/05-right.glb"
+      }
+    },
+    {
+      "_id": "parallel-gripper-study-v1-05",
+      "iteration": 6,
+      "title": "Canted minimum-width Y",
+      "change": "Replace the direct legs with an all-3-mm Y merging at (10,59), retaining the contract-required 10-mm depth rather than 6 mm and limiting the shared bending rise to 11 mm to target the 193.52-g best while preserving fixed interfaces, pending four-load and travel screening.",
+      "parameters": {
+        "depth_mm": 10,
+        "nodes": [
+          [
+            8,
+            0
+          ],
+          [
+            36,
+            0
+          ],
+          [
+            8,
+            70
+          ],
+          [
+            10,
+            59
+          ]
+        ],
+        "edges": [
+          [
+            0,
+            3,
+            3
+          ],
+          [
+            1,
+            3,
+            3
+          ],
+          [
+            3,
+            2,
+            3
+          ]
+        ]
+      },
+      "evaluation": {
+        "outcome": "passed",
+        "metrics": {
+          "mass_g": {
+            "value": 193.38034470644092,
+            "unit": "g",
+            "fidelity": "STEP_volume_moving_pair"
+          },
+          "total_mass_g": {
+            "value": 557.261258730346,
+            "unit": "g",
+            "fidelity": "STEP_volume_three_parts"
+          },
+          "stress_mpa": {
+            "value": 74.77027835199976,
+            "unit": "MPa",
+            "fidelity": "linear_3d_frame"
+          },
+          "deflection_mm": {
+            "value": 0.14274130787020917,
+            "unit": "mm",
+            "fidelity": "linear_3d_frame"
+          },
+          "buckling_factor": {
+            "value": 12.886213589087268,
+            "unit": "ratio",
+            "fidelity": "Euler_pinned_member"
+          },
+          "clearance_mm": {
+            "value": 0.3000000000000007,
+            "unit": "mm",
+            "fidelity": "BRep_distance"
+          },
+          "travel_mm": {
+            "value": 40,
+            "unit": "mm",
+            "fidelity": "BRep_9_positions"
+          }
+        },
+        "violations": [],
+        "fidelity": "linear_3d_frame_and_BRep_travel",
+        "reference_residual_mm3": 0.0,
+        "load_cases": [
+          {
+            "name": "pinch",
+            "load_n": [
+              100,
+              0,
+              0
+            ],
+            "deflection_mm": 0.13747487345569706,
+            "stress_mpa": 73.9296181273332,
+            "buckling_factor": 12.886213589087268,
+            "tip_displacement_mm": [
+              0.13532394194032488,
+              0.0,
+              0.024223368250338433
+            ],
+            "displacements": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.13532394194032488,
+                0.0,
+                0.024223368250338433
+              ],
+              [
+                0.0365189486914032,
+                0.0,
+                0.0063570263938151125
+              ]
+            ],
+            "members": [
+              {
+                "stress_mpa": 46.8697208649504,
+                "compression_n": 0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 44.87030519727573,
+                "compression_n": 286.03949605356763,
+                "buckling_factor": 12.886213589087268
+              },
+              {
+                "stress_mpa": 73.9296181273332,
+                "compression_n": 17.88854381999772,
+                "buckling_factor": 6852.457522254901
+              }
+            ],
+            "free_residual_n": 9.094947017729282e-13
+          },
+          {
+            "name": "payload",
+            "load_n": [
+              0,
+              0,
+              -25
+            ],
+            "deflection_mm": 0.006270771203902653,
+            "stress_mpa": 4.153224925083255,
+            "buckling_factor": 170.79669770668647,
+            "tip_displacement_mm": [
+              -0.006055842062584608,
+              0.0,
+              -0.001627681911408287
+            ],
+            "displacements": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                -0.006055842062584608,
+                0.0,
+                -0.001627681911408287
+              ],
+              [
+                -0.0015899218256038837,
+                0.0,
+                -0.0006806681542645712
+              ]
+            ],
+            "members": [
+              {
+                "stress_mpa": 2.5996596648859898,
+                "compression_n": 25.74240402821583,
+                "buckling_factor": 170.79669770668647
+              },
+              {
+                "stress_mpa": 1.6113159146101423,
+                "compression_n": 0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 4.153224925083255,
+                "compression_n": 24.596747752497606,
+                "buckling_factor": 4983.605470730688
+              }
+            ],
+            "free_residual_n": 5.684341886080802e-14
+          },
+          {
+            "name": "lateral",
+            "load_n": [
+              0,
+              15,
+              0
+            ],
+            "deflection_mm": 0.056162926253615825,
+            "stress_mpa": 12.0259269995405,
+            "buckling_factor": 1000000.0,
+            "tip_displacement_mm": [
+              -0.0,
+              0.056162926253615825,
+              0.0
+            ],
+            "displacements": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                -0.0,
+                0.056162926253615825,
+                0.0
+              ],
+              [
+                -0.0,
+                0.04289832155435285,
+                0.0
+              ]
+            ],
+            "members": [
+              {
+                "stress_mpa": 12.0259269995405,
+                "compression_n": 0.0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 9.709963543867667,
+                "compression_n": 0.0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 3.354101966249873,
+                "compression_n": 0.0,
+                "buckling_factor": 1000000.0
+              }
+            ],
+            "free_residual_n": 7.275957614183426e-12
+          },
+          {
+            "name": "combined",
+            "load_n": [
+              100,
+              15,
+              -25
+            ],
+            "deflection_mm": 0.14274130787020917,
+            "stress_mpa": 74.77027835199976,
+            "buckling_factor": 12.912706413799318,
+            "tip_displacement_mm": [
+              0.12926809987774027,
+              0.056162926253615825,
+              0.02259568633893014
+            ],
+            "displacements": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.12926809987774027,
+                0.056162926253615825,
+                0.02259568633893014
+              ],
+              [
+                0.03492902686579931,
+                0.04289832155435285,
+                0.005676358239550539
+              ]
+            ],
+            "members": [
+              {
+                "stress_mpa": 56.29598819960491,
+                "compression_n": 0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 52.968952826533254,
+                "compression_n": 285.4526326968996,
+                "buckling_factor": 12.912706413799318
+              },
+              {
+                "stress_mpa": 74.77027835199976,
+                "compression_n": 42.48529157249686,
+                "buckling_factor": 2885.245272528225
+              }
+            ],
+            "free_residual_n": 7.275957614183426e-12
+          }
+        ],
+        "travel_samples": [
+          {
+            "gap_mm": 20,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 25,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 30,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 35,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 40,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 45,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 50,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 55,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 60,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          }
+        ],
+        "limitations": "Nominal aluminium; rigid beam joints and fixed carriage roots. Normal stress only; no local joint, shear, torsional stress, fatigue or bearing analysis. External actuator and friction pads not designed."
+      },
+      "reflection": {
+        "lesson": "Passes at 193.38 g, just 0.14 g below the prior Y. Combined loading controls trunk 3\u20132 stress (74.77 MPa) and deflection (0.1427 mm); pinch controls diagonal 1\u20133 buckling (12.89). The tiny saving comes with substantially higher bending stress.",
+        "next_focus": "Use the proven direct 3-mm legs as the next baseline: 1.17 g more mass halves deflection and lowers peak stress to 22.15 MPa. Avoid further Y-junction nudges; retain 10-mm depth and require a meaningful load-path change before repeating four-load and CAD travel screening."
+      },
+      "tool_id": "parallel-gripper-study-v1-sizing",
+      "source_commit": "5cea2dfbd12149ca0aa911fd934b269c9f72d4c7",
+      "retrieved_memory": [
+        {
+          "_id": "memory-parallel-gripper-study-v1-00-evaluation",
+          "summary": "{\"fidelity\": \"linear_3d_frame_and_BRep_travel\", \"metrics\": {\"buckling_factor\": {\"fidelity\": \"Euler_pinned_member\", \"unit\": \"ratio\", \"value\": 9541.625066212893}, \"clearance_mm\": {\"fidelity\": \"BRep_distance\", \"unit\": \"mm\", \"value\": 0.3000000000000007}, \"deflection_mm\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"mm\", \"value\": 0.0024221772814481783}, \"mass_g\": {\"fidelity\": \"STEP_volume_moving_pair\", \"unit\": \"g\", \"value\": 523.5714496886798}, \"stress_mpa\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"MPa\", \"value\": 1.8906804238364767}, \"total_mass_g\": {\"fidelity\": \"STEP_volume_three_parts\", \"unit\": \"g\", \"value\": 887.4523637125849}, \"travel_mm\": {\"fidelity\": \"BRep_9_positions\", \"unit\": \"mm\", \"value\": 40}}, \"outcome\": \"passed\", \"parameters\": {\"depth_mm\": 24, \"edges\": [[0, 4, 12], [4, 2, 12], [1, 5, 12], [5, 3, 12], [0, 1, 12], [4, 5, 12], [2, 3, 12], [0, 5, 12], [4, 3, 12]], \"nodes\": [[8, 0], [36, 0], [8, 70], [36, 70], [8, 35], [36, 35]]}, \"subsystem\": \"parallel_gripper\", \"violations\": []}",
+          "score": 0.7567004561424255
+        },
+        {
+          "_id": "memory-parallel-gripper-study-v1-02-evaluation",
+          "summary": "{\"fidelity\": \"linear_3d_frame_and_BRep_travel\", \"metrics\": {\"buckling_factor\": {\"fidelity\": \"Euler_pinned_member\", \"unit\": \"ratio\", \"value\": 24.079192271935373}, \"clearance_mm\": {\"fidelity\": \"BRep_distance\", \"unit\": \"mm\", \"value\": 0.3000000000000007}, \"deflection_mm\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"mm\", \"value\": 0.06160277768867148}, \"mass_g\": {\"fidelity\": \"STEP_volume_moving_pair\", \"unit\": \"g\", \"value\": 198.45453324735132}, \"stress_mpa\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"MPa\", \"value\": 20.27555956179173}, \"total_mass_g\": {\"fidelity\": \"STEP_volume_three_parts\", \"unit\": \"g\", \"value\": 562.3354472712565}, \"travel_mm\": {\"fidelity\": \"BRep_9_positions\", \"unit\": \"mm\", \"value\": 40}}, \"outcome\": \"passed\", \"parameters\": {\"depth_mm\": 10, \"edges\": [[0, 2, 3], [1, 2, 4]], \"nodes\": [[8, 0], [36, 0], [8, 70]]}, \"subsystem\": \"parallel_gripper\", \"violations\": []}",
+          "score": 0.7528363466262817
+        },
+        {
+          "_id": "memory-parallel-gripper-study-v1-04-evaluation",
+          "summary": "{\"fidelity\": \"linear_3d_frame_and_BRep_travel\", \"metrics\": {\"buckling_factor\": {\"fidelity\": \"Euler_pinned_member\", \"unit\": \"ratio\", \"value\": 10.11983275249059}, \"clearance_mm\": {\"fidelity\": \"BRep_distance\", \"unit\": \"mm\", \"value\": 0.3000000000000007}, \"deflection_mm\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"mm\", \"value\": 0.0713733668276937}, \"mass_g\": {\"fidelity\": \"STEP_volume_moving_pair\", \"unit\": \"g\", \"value\": 194.55520311404612}, \"stress_mpa\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"MPa\", \"value\": 22.146008192633214}, \"total_mass_g\": {\"fidelity\": \"STEP_volume_three_parts\", \"unit\": \"g\", \"value\": 558.4361171379513}, \"travel_mm\": {\"fidelity\": \"BRep_9_positions\", \"unit\": \"mm\", \"value\": 40}}, \"outcome\": \"passed\", \"parameters\": {\"depth_mm\": 10, \"edges\": [[0, 2, 3], [1, 2, 3]], \"nodes\": [[8, 0], [36, 0], [8, 70]]}, \"subsystem\": \"parallel_gripper\", \"violations\": []}",
+          "score": 0.7520136833190918
+        },
+        {
+          "_id": "memory-parallel-gripper-study-v1-01-evaluation",
+          "summary": "{\"fidelity\": \"linear_3d_frame_and_BRep_travel\", \"metrics\": {\"buckling_factor\": {\"fidelity\": \"Euler_pinned_member\", \"unit\": \"ratio\", \"value\": 188.85802648607378}, \"clearance_mm\": {\"fidelity\": \"BRep_distance\", \"unit\": \"mm\", \"value\": 0.3000000000000007}, \"deflection_mm\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"mm\", \"value\": 0.04701291873077259}, \"mass_g\": {\"fidelity\": \"STEP_volume_moving_pair\", \"unit\": \"g\", \"value\": 207.05384646942684}, \"stress_mpa\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"MPa\", \"value\": 15.937784223186586}, \"total_mass_g\": {\"fidelity\": \"STEP_volume_three_parts\", \"unit\": \"g\", \"value\": 570.934760493332}, \"travel_mm\": {\"fidelity\": \"BRep_9_positions\", \"unit\": \"mm\", \"value\": 40}}, \"outcome\": \"passed\", \"parameters\": {\"depth_mm\": 10, \"edges\": [[0, 3, 4], [3, 2, 4], [1, 4, 5], [4, 2, 5], [3, 4, 3]], \"nodes\": [[8, 0], [36, 0], [8, 70], [8, 35], [22, 35]]}, \"subsystem\": \"parallel_gripper\", \"violations\": []}",
+          "score": 0.7512508630752563
+        },
+        {
+          "_id": "memory-parallel-gripper-study-v1-03-evaluation",
+          "summary": "{\"fidelity\": \"linear_3d_frame_and_BRep_travel\", \"metrics\": {\"buckling_factor\": {\"fidelity\": \"Euler_pinned_member\", \"unit\": \"ratio\", \"value\": 12.161066815228136}, \"clearance_mm\": {\"fidelity\": \"BRep_distance\", \"unit\": \"mm\", \"value\": 0.3000000000000007}, \"deflection_mm\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"mm\", \"value\": 0.11957808784081699}, \"mass_g\": {\"fidelity\": \"STEP_volume_moving_pair\", \"unit\": \"g\", \"value\": 193.51968486744587}, \"stress_mpa\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"MPa\", \"value\": 54.390315006132255}, \"total_mass_g\": {\"fidelity\": \"STEP_volume_three_parts\", \"unit\": \"g\", \"value\": 557.400598891351}, \"travel_mm\": {\"fidelity\": \"BRep_9_positions\", \"unit\": \"mm\", \"value\": 40}}, \"outcome\": \"passed\", \"parameters\": {\"depth_mm\": 10, \"edges\": [[0, 3, 3], [1, 3, 3], [3, 2, 4]], \"nodes\": [[8, 0], [36, 0], [8, 70], [8, 60]]}, \"subsystem\": \"parallel_gripper\", \"violations\": []}",
+          "score": 0.7508937120437622
+        }
+      ],
+      "generator": "gpt-6-astra",
+      "assets": {
+        "model.step": "/models/gripper/06-model.step",
+        "left.glb": "/models/gripper/06-left.glb",
+        "model.glb": "/models/gripper/06-model.glb",
+        "base.glb": "/models/gripper/06-base.glb",
+        "right.glb": "/models/gripper/06-right.glb"
+      }
+    },
+    {
+      "_id": "parallel-gripper-study-v1-06",
+      "iteration": 7,
+      "title": "Stepped knee-braced mast",
+      "change": "Replace the Y\u2019s 74.77-MPa combined-load trunk with a lower knee brace and selectively reinforced mast, targeting lower mass than 193.38 g while preserving fixed interfaces, pending four-load stress, deflection, buckling and STEP/travel screening rather than certification.",
+      "parameters": {
+        "depth_mm": 10,
+        "nodes": [
+          [
+            8,
+            0
+          ],
+          [
+            36,
+            0
+          ],
+          [
+            8,
+            70
+          ],
+          [
+            8,
+            38
+          ],
+          [
+            8,
+            50
+          ],
+          [
+            8,
+            60
+          ]
+        ],
+        "edges": [
+          [
+            0,
+            3,
+            3
+          ],
+          [
+            3,
+            4,
+            4
+          ],
+          [
+            1,
+            4,
+            3
+          ],
+          [
+            4,
+            5,
+            4.5
+          ],
+          [
+            5,
+            2,
+            3
+          ]
+        ]
+      },
+      "evaluation": {
+        "outcome": "passed",
+        "metrics": {
+          "mass_g": {
+            "value": 193.18519885637102,
+            "unit": "g",
+            "fidelity": "STEP_volume_moving_pair"
+          },
+          "total_mass_g": {
+            "value": 557.0661128802761,
+            "unit": "g",
+            "fidelity": "STEP_volume_three_parts"
+          },
+          "stress_mpa": {
+            "value": 77.10858701364015,
+            "unit": "MPa",
+            "fidelity": "linear_3d_frame"
+          },
+          "deflection_mm": {
+            "value": 0.24634415264435577,
+            "unit": "mm",
+            "fidelity": "linear_3d_frame"
+          },
+          "buckling_factor": {
+            "value": 14.969298770519039,
+            "unit": "ratio",
+            "fidelity": "Euler_pinned_member"
+          },
+          "clearance_mm": {
+            "value": 0.3000000000000007,
+            "unit": "mm",
+            "fidelity": "BRep_distance"
+          },
+          "travel_mm": {
+            "value": 40,
+            "unit": "mm",
+            "fidelity": "BRep_9_positions"
+          }
+        },
+        "violations": [],
+        "fidelity": "linear_3d_frame_and_BRep_travel",
+        "reference_residual_mm3": 0.0,
+        "load_cases": [
+          {
+            "name": "pinch",
+            "load_n": [
+              100,
+              0,
+              0
+            ],
+            "deflection_mm": 0.240787339659152,
+            "stress_mpa": 66.66666666666667,
+            "buckling_factor": 14.975401931394112,
+            "tip_displacement_mm": [
+              0.2407030596697071,
+              0.0,
+              0.006370243776596122
+            ],
+            "displacements": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.2407030596697071,
+                0.0,
+                0.006370243776596122
+              ],
+              [
+                -0.035977434356163886,
+                -0.0,
+                0.005150409861928779
+              ],
+              [
+                0.029028677933593396,
+                0.0,
+                0.006370243776596121
+              ],
+              [
+                0.1177687931967915,
+                0.0,
+                0.006370243776596122
+              ]
+            ],
+            "members": [
+              {
+                "stress_mpa": 66.11400024790754,
+                "compression_n": 0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 55.440889643781894,
+                "compression_n": 0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 57.62669028873145,
+                "compression_n": 311.565755832331,
+                "buckling_factor": 14.975401931394112
+              },
+              {
+                "stress_mpa": 59.25925925925916,
+                "compression_n": 0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 66.66666666666667,
+                "compression_n": 0.0,
+                "buckling_factor": 1000000.0
+              }
+            ],
+            "free_residual_n": 3.637978807091713e-12
+          },
+          {
+            "name": "payload",
+            "load_n": [
+              0,
+              0,
+              -25
+            ],
+            "deflection_mm": 0.001767234285941868,
+            "stress_mpa": 0.9527482976730695,
+            "buckling_factor": 426.5886541111402,
+            "tip_displacement_mm": [
+              -0.001592560944149029,
+              0.0,
+              -0.0007660722293489157
+            ],
+            "displacements": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                -0.001592560944149029,
+                0.0,
+                -0.0007660722293489157
+              ],
+              [
+                -0.0006505539258715399,
+                -0.0,
+                -0.00045663385987514013
+              ],
+              [
+                -0.001001345392956768,
+                0.0,
+                -0.0005647839845824101
+              ],
+              [
+                -0.001296953168552899,
+                0.0,
+                -0.0006452992824890124
+              ]
+            ],
+            "members": [
+              {
+                "stress_mpa": 0.9527482976730695,
+                "compression_n": 24.874528682672107,
+                "buckling_factor": 426.5886541111402
+              },
+              {
+                "stress_mpa": 0.6401892120999059,
+                "compression_n": 24.874528682672107,
+                "buckling_factor": 10139.819202246692
+              },
+              {
+                "stress_mpa": 0.11485008604884966,
+                "compression_n": 0.12702905861911518,
+                "buckling_factor": 36730.35502559922
+              },
+              {
+                "stress_mpa": 0.5555555555555612,
+                "compression_n": 25.00000000000003,
+                "buckling_factor": 20685.457124133132
+              },
+              {
+                "stress_mpa": 0.8333333333333334,
+                "compression_n": 25.0,
+                "buckling_factor": 6129.024333076491
+              }
+            ],
+            "free_residual_n": 1.1368683772161603e-13
+          },
+          {
+            "name": "lateral",
+            "load_n": [
+              0,
+              15,
+              0
+            ],
+            "deflection_mm": 0.05899325556832392,
+            "stress_mpa": 11.856317268547162,
+            "buckling_factor": 1000000.0,
+            "tip_displacement_mm": [
+              -0.0,
+              0.05899325556832392,
+              0.0
+            ],
+            "displacements": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                -0.0,
+                0.05899325556832392,
+                0.0
+              ],
+              [
+                0.0,
+                0.02108577999935225,
+                0.0
+              ],
+              [
+                0.0,
+                0.034157902061494716,
+                0.0
+              ],
+              [
+                -0.0,
+                0.0462374145637016,
+                0.0
+              ]
+            ],
+            "members": [
+              {
+                "stress_mpa": 11.856317268547162,
+                "compression_n": 0.0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 4.885658064626896,
+                "compression_n": 0.0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 10.22212167708255,
+                "compression_n": 0.0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 3.999999999999612,
+                "compression_n": 0.0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 3.0,
+                "compression_n": 0.0,
+                "buckling_factor": 1000000.0
+              }
+            ],
+            "free_residual_n": 3.637978807091713e-12
+          },
+          {
+            "name": "combined",
+            "load_n": [
+              100,
+              15,
+              -25
+            ],
+            "deflection_mm": 0.24634415264435577,
+            "stress_mpa": 77.10858701364015,
+            "buckling_factor": 14.969298770519039,
+            "tip_displacement_mm": [
+              0.23911049872555806,
+              0.05899325556832392,
+              0.005604171547247205
+            ],
+            "displacements": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.23911049872555806,
+                0.05899325556832392,
+                0.005604171547247205
+              ],
+              [
+                -0.03662798828203544,
+                0.02108577999935225,
+                0.004693776002053639
+              ],
+              [
+                0.028027332540636635,
+                0.034157902061494716,
+                0.0058054597920137105
+              ],
+              [
+                0.1164718400282386,
+                0.0462374145637016,
+                0.005724944494107109
+              ]
+            ],
+            "members": [
+              {
+                "stress_mpa": 77.10858701364015,
+                "compression_n": 0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 59.70252613092179,
+                "compression_n": 0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 67.85688335295923,
+                "compression_n": 311.6927848909502,
+                "buckling_factor": 14.969298770519039
+              },
+              {
+                "stress_mpa": 63.81481481481432,
+                "compression_n": 25.0,
+                "buckling_factor": 20685.457124133158
+              },
+              {
+                "stress_mpa": 70.5,
+                "compression_n": 25.0,
+                "buckling_factor": 6129.024333076491
+              }
+            ],
+            "free_residual_n": 3.637978807091713e-12
+          }
+        ],
+        "travel_samples": [
+          {
+            "gap_mm": 20,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 25,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 30,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 35,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 40,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 45,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 50,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 55,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 60,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          }
+        ],
+        "limitations": "Nominal aluminium; rigid beam joints and fixed carriage roots. Normal stress only; no local joint, shear, torsional stress, fatigue or bearing analysis. External actuator and friction pads not designed."
+      },
+      "reflection": {
+        "lesson": "Screening passes at 193.19 g, only 0.20 g below the Y. Combined loading controls lower mast 0\u20133 stress (77.11 MPa), deflection (0.2463 mm) and diagonal 1\u20134 buckling (14.97). Lowering the brace worsened bending despite selective reinforcement.",
+        "next_focus": "Restore two direct 3-mm root-to-tip legs at 10-mm depth, eliminating the shared cantilever. Prior screening gave 22.15 MPa and 0.0714 mm for just 1.37 g more. Preserve interfaces; recheck four loads, full-length buckling and STEP/travel rather than trim another Y."
+      },
+      "tool_id": "parallel-gripper-study-v1-sizing",
+      "source_commit": "cabd793c4646af7d008888efa0a79d884fc56954",
+      "retrieved_memory": [
+        {
+          "_id": "memory-parallel-gripper-study-v1-00-evaluation",
+          "summary": "{\"fidelity\": \"linear_3d_frame_and_BRep_travel\", \"metrics\": {\"buckling_factor\": {\"fidelity\": \"Euler_pinned_member\", \"unit\": \"ratio\", \"value\": 9541.625066212893}, \"clearance_mm\": {\"fidelity\": \"BRep_distance\", \"unit\": \"mm\", \"value\": 0.3000000000000007}, \"deflection_mm\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"mm\", \"value\": 0.0024221772814481783}, \"mass_g\": {\"fidelity\": \"STEP_volume_moving_pair\", \"unit\": \"g\", \"value\": 523.5714496886798}, \"stress_mpa\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"MPa\", \"value\": 1.8906804238364767}, \"total_mass_g\": {\"fidelity\": \"STEP_volume_three_parts\", \"unit\": \"g\", \"value\": 887.4523637125849}, \"travel_mm\": {\"fidelity\": \"BRep_9_positions\", \"unit\": \"mm\", \"value\": 40}}, \"outcome\": \"passed\", \"parameters\": {\"depth_mm\": 24, \"edges\": [[0, 4, 12], [4, 2, 12], [1, 5, 12], [5, 3, 12], [0, 1, 12], [4, 5, 12], [2, 3, 12], [0, 5, 12], [4, 3, 12]], \"nodes\": [[8, 0], [36, 0], [8, 70], [36, 70], [8, 35], [36, 35]]}, \"subsystem\": \"parallel_gripper\", \"violations\": []}",
+          "score": 0.7567004561424255
+        },
+        {
+          "_id": "memory-parallel-gripper-study-v1-02-evaluation",
+          "summary": "{\"fidelity\": \"linear_3d_frame_and_BRep_travel\", \"metrics\": {\"buckling_factor\": {\"fidelity\": \"Euler_pinned_member\", \"unit\": \"ratio\", \"value\": 24.079192271935373}, \"clearance_mm\": {\"fidelity\": \"BRep_distance\", \"unit\": \"mm\", \"value\": 0.3000000000000007}, \"deflection_mm\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"mm\", \"value\": 0.06160277768867148}, \"mass_g\": {\"fidelity\": \"STEP_volume_moving_pair\", \"unit\": \"g\", \"value\": 198.45453324735132}, \"stress_mpa\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"MPa\", \"value\": 20.27555956179173}, \"total_mass_g\": {\"fidelity\": \"STEP_volume_three_parts\", \"unit\": \"g\", \"value\": 562.3354472712565}, \"travel_mm\": {\"fidelity\": \"BRep_9_positions\", \"unit\": \"mm\", \"value\": 40}}, \"outcome\": \"passed\", \"parameters\": {\"depth_mm\": 10, \"edges\": [[0, 2, 3], [1, 2, 4]], \"nodes\": [[8, 0], [36, 0], [8, 70]]}, \"subsystem\": \"parallel_gripper\", \"violations\": []}",
+          "score": 0.7528363466262817
+        },
+        {
+          "_id": "memory-parallel-gripper-study-v1-04-evaluation",
+          "summary": "{\"fidelity\": \"linear_3d_frame_and_BRep_travel\", \"metrics\": {\"buckling_factor\": {\"fidelity\": \"Euler_pinned_member\", \"unit\": \"ratio\", \"value\": 10.11983275249059}, \"clearance_mm\": {\"fidelity\": \"BRep_distance\", \"unit\": \"mm\", \"value\": 0.3000000000000007}, \"deflection_mm\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"mm\", \"value\": 0.0713733668276937}, \"mass_g\": {\"fidelity\": \"STEP_volume_moving_pair\", \"unit\": \"g\", \"value\": 194.55520311404612}, \"stress_mpa\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"MPa\", \"value\": 22.146008192633214}, \"total_mass_g\": {\"fidelity\": \"STEP_volume_three_parts\", \"unit\": \"g\", \"value\": 558.4361171379513}, \"travel_mm\": {\"fidelity\": \"BRep_9_positions\", \"unit\": \"mm\", \"value\": 40}}, \"outcome\": \"passed\", \"parameters\": {\"depth_mm\": 10, \"edges\": [[0, 2, 3], [1, 2, 3]], \"nodes\": [[8, 0], [36, 0], [8, 70]]}, \"subsystem\": \"parallel_gripper\", \"violations\": []}",
+          "score": 0.7520136833190918
+        },
+        {
+          "_id": "memory-parallel-gripper-study-v1-01-evaluation",
+          "summary": "{\"fidelity\": \"linear_3d_frame_and_BRep_travel\", \"metrics\": {\"buckling_factor\": {\"fidelity\": \"Euler_pinned_member\", \"unit\": \"ratio\", \"value\": 188.85802648607378}, \"clearance_mm\": {\"fidelity\": \"BRep_distance\", \"unit\": \"mm\", \"value\": 0.3000000000000007}, \"deflection_mm\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"mm\", \"value\": 0.04701291873077259}, \"mass_g\": {\"fidelity\": \"STEP_volume_moving_pair\", \"unit\": \"g\", \"value\": 207.05384646942684}, \"stress_mpa\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"MPa\", \"value\": 15.937784223186586}, \"total_mass_g\": {\"fidelity\": \"STEP_volume_three_parts\", \"unit\": \"g\", \"value\": 570.934760493332}, \"travel_mm\": {\"fidelity\": \"BRep_9_positions\", \"unit\": \"mm\", \"value\": 40}}, \"outcome\": \"passed\", \"parameters\": {\"depth_mm\": 10, \"edges\": [[0, 3, 4], [3, 2, 4], [1, 4, 5], [4, 2, 5], [3, 4, 3]], \"nodes\": [[8, 0], [36, 0], [8, 70], [8, 35], [22, 35]]}, \"subsystem\": \"parallel_gripper\", \"violations\": []}",
+          "score": 0.7512508630752563
+        },
+        {
+          "_id": "memory-parallel-gripper-study-v1-03-evaluation",
+          "summary": "{\"fidelity\": \"linear_3d_frame_and_BRep_travel\", \"metrics\": {\"buckling_factor\": {\"fidelity\": \"Euler_pinned_member\", \"unit\": \"ratio\", \"value\": 12.161066815228136}, \"clearance_mm\": {\"fidelity\": \"BRep_distance\", \"unit\": \"mm\", \"value\": 0.3000000000000007}, \"deflection_mm\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"mm\", \"value\": 0.11957808784081699}, \"mass_g\": {\"fidelity\": \"STEP_volume_moving_pair\", \"unit\": \"g\", \"value\": 193.51968486744587}, \"stress_mpa\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"MPa\", \"value\": 54.390315006132255}, \"total_mass_g\": {\"fidelity\": \"STEP_volume_three_parts\", \"unit\": \"g\", \"value\": 557.400598891351}, \"travel_mm\": {\"fidelity\": \"BRep_9_positions\", \"unit\": \"mm\", \"value\": 40}}, \"outcome\": \"passed\", \"parameters\": {\"depth_mm\": 10, \"edges\": [[0, 3, 3], [1, 3, 3], [3, 2, 4]], \"nodes\": [[8, 0], [36, 0], [8, 70], [8, 60]]}, \"subsystem\": \"parallel_gripper\", \"violations\": []}",
+          "score": 0.7508937120437622
+        }
+      ],
+      "generator": "gpt-6-astra",
+      "assets": {
+        "model.step": "/models/gripper/07-model.step",
+        "left.glb": "/models/gripper/07-left.glb",
+        "model.glb": "/models/gripper/07-model.glb",
+        "base.glb": "/models/gripper/07-base.glb",
+        "right.glb": "/models/gripper/07-right.glb"
+      }
+    },
+    {
+      "_id": "parallel-gripper-study-v1-07",
+      "iteration": 8,
+      "title": "Inclined Shared Spine",
+      "change": "Replace the stepped mast, whose combined-load stress reached 77.11 MPa and deflection 0.2463 mm, with two inclined 3-mm root branches feeding a 4-mm shared spine, targeting lower mass than 193.19 g while preserving fixed interfaces pending four-load, buckling and STEP/travel scre",
+      "parameters": {
+        "depth_mm": 10,
+        "nodes": [
+          [
+            8,
+            0
+          ],
+          [
+            36,
+            0
+          ],
+          [
+            8,
+            70
+          ],
+          [
+            12,
+            52
+          ]
+        ],
+        "edges": [
+          [
+            0,
+            3,
+            3
+          ],
+          [
+            1,
+            3,
+            3
+          ],
+          [
+            3,
+            2,
+            4
+          ]
+        ]
+      },
+      "evaluation": {
+        "outcome": "passed",
+        "metrics": {
+          "mass_g": {
+            "value": 193.2664344321406,
+            "unit": "g",
+            "fidelity": "STEP_volume_moving_pair"
+          },
+          "total_mass_g": {
+            "value": 557.1473484560457,
+            "unit": "g",
+            "fidelity": "STEP_volume_three_parts"
+          },
+          "stress_mpa": {
+            "value": 79.70631065442512,
+            "unit": "MPa",
+            "fidelity": "linear_3d_frame"
+          },
+          "deflection_mm": {
+            "value": 0.24633893499723208,
+            "unit": "mm",
+            "fidelity": "linear_3d_frame"
+          },
+          "buckling_factor": {
+            "value": 15.726617177169626,
+            "unit": "ratio",
+            "fidelity": "Euler_pinned_member"
+          },
+          "clearance_mm": {
+            "value": 0.3000000000000007,
+            "unit": "mm",
+            "fidelity": "BRep_distance"
+          },
+          "travel_mm": {
+            "value": 40,
+            "unit": "mm",
+            "fidelity": "BRep_9_positions"
+          }
+        },
+        "violations": [],
+        "fidelity": "linear_3d_frame_and_BRep_travel",
+        "reference_residual_mm3": 0.0,
+        "load_cases": [
+          {
+            "name": "pinch",
+            "load_n": [
+              100,
+              0,
+              0
+            ],
+            "deflection_mm": 0.24633893499723208,
+            "stress_mpa": 71.74533096662059,
+            "buckling_factor": 15.726617177169626,
+            "tip_displacement_mm": [
+              0.2409007647303095,
+              0.0,
+              0.05147516340841081
+            ],
+            "displacements": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.2409007647303095,
+                0.0,
+                0.05147516340841081
+              ],
+              [
+                0.029841938115864473,
+                0.0,
+                0.004721664812242571
+              ]
+            ],
+            "members": [
+              {
+                "stress_mpa": 71.74533096662059,
+                "compression_n": 0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 67.41267825880087,
+                "compression_n": 297.04496500193795,
+                "buckling_factor": 15.726617177169626
+              },
+              {
+                "stress_mpa": 68.04232614454659,
+                "compression_n": 21.693045781865294,
+                "buckling_factor": 4924.340942799951
+              }
+            ],
+            "free_residual_n": 3.637978807091713e-12
+          },
+          {
+            "name": "payload",
+            "load_n": [
+              0,
+              0,
+              -25
+            ],
+            "deflection_mm": 0.013286285086289698,
+            "stress_mpa": 4.379971293596692,
+            "buckling_factor": 211.76915290986207,
+            "tip_displacement_mm": [
+              -0.012868790852102699,
+              0.0,
+              -0.003304480806269261
+            ],
+            "displacements": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                -0.012868790852102699,
+                0.0,
+                -0.003304480806269261
+              ],
+              [
+                -0.0013186426306834133,
+                0.0,
+                -0.0005707604685874475
+              ]
+            ],
+            "members": [
+              {
+                "stress_mpa": 4.379971293596692,
+                "compression_n": 26.601109492945405,
+                "buckling_factor": 211.76915290986207
+              },
+              {
+                "stress_mpa": 3.2147964725664973,
+                "compression_n": 0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 4.360116912614958,
+                "compression_n": 24.404676504598854,
+                "buckling_factor": 4377.191949155441
+              }
+            ],
+            "free_residual_n": 1.1368683772161603e-13
+          },
+          {
+            "name": "lateral",
+            "load_n": [
+              0,
+              15,
+              0
+            ],
+            "deflection_mm": 0.05728643874526044,
+            "stress_mpa": 12.340950981401223,
+            "buckling_factor": 1000000.0,
+            "tip_displacement_mm": [
+              -0.0,
+              0.05728643874526044,
+              0.0
+            ],
+            "displacements": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                -0.0,
+                0.05728643874526044,
+                0.0
+              ],
+              [
+                -0.0,
+                0.035347087757122524,
+                0.0
+              ]
+            ],
+            "members": [
+              {
+                "stress_mpa": 12.340950981401223,
+                "compression_n": 0.0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 9.457620329944712,
+                "compression_n": 0.0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 4.148795005781758,
+                "compression_n": 0.0,
+                "buckling_factor": 1000000.0
+              }
+            ],
+            "free_residual_n": 9.094947017729282e-13
+          },
+          {
+            "name": "combined",
+            "load_n": [
+              100,
+              15,
+              -25
+            ],
+            "deflection_mm": 0.24000152465611949,
+            "stress_mpa": 79.70631065442512,
+            "buckling_factor": 15.792645082838023,
+            "tip_displacement_mm": [
+              0.2280319738782068,
+              0.05728643874526044,
+              0.04817068260214156
+            ],
+            "displacements": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.2280319738782068,
+                0.05728643874526044,
+                0.04817068260214156
+              ],
+              [
+                0.028523295485181056,
+                0.035347087757122524,
+                0.004150904343655124
+              ]
+            ],
+            "members": [
+              {
+                "stress_mpa": 79.70631065442512,
+                "compression_n": 0,
+                "buckling_factor": 1000000.0
+              },
+              {
+                "stress_mpa": 73.6555021161791,
+                "compression_n": 295.803041509987,
+                "buckling_factor": 15.792645082838023
+              },
+              {
+                "stress_mpa": 69.0512380629433,
+                "compression_n": 46.09772228646398,
+                "buckling_factor": 2317.3369142587894
+              }
+            ],
+            "free_residual_n": 1.8189894035458565e-12
+          }
+        ],
+        "travel_samples": [
+          {
+            "gap_mm": 20,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 25,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 30,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 35,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 40,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 45,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 50,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 55,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          },
+          {
+            "gap_mm": 60,
+            "collision_mm3": 0.0,
+            "clearance_mm": 0.3000000000000007
+          }
+        ],
+        "limitations": "Nominal aluminium; rigid beam joints and fixed carriage roots. Normal stress only; no local joint, shear, torsional stress, fatigue or bearing analysis. External actuator and friction pads not designed."
+      },
+      "reflection": {
+        "lesson": "Screening passes but misses the mass target: 193.27 g, up 0.08 g. Combined stress in root 0\u20133 reaches 79.71/80 MPa. Pinch controls deflection (0.24634/0.25 mm) and diagonal 1\u20133 buckling (15.73). The inclined Y leaves little stress or stiffness margin.",
+        "next_focus": "Remove the shared cantilever: restore direct 3-mm edges 0\u20132 and 1\u20132 at 10-mm depth. Prior screening gave 194.56 g, 22.15 MPa and 0.0714 mm\u2014a stronger tradeoff than junction nudges. Preserve interfaces; recheck four loads, full-length buckling and STEP/travel."
+      },
+      "tool_id": "parallel-gripper-study-v1-sizing",
+      "source_commit": "8e5ef6dbe835a4bbae6b52d250a8ac975e135359",
+      "retrieved_memory": [
+        {
+          "_id": "memory-parallel-gripper-study-v1-00-evaluation",
+          "summary": "{\"fidelity\": \"linear_3d_frame_and_BRep_travel\", \"metrics\": {\"buckling_factor\": {\"fidelity\": \"Euler_pinned_member\", \"unit\": \"ratio\", \"value\": 9541.625066212893}, \"clearance_mm\": {\"fidelity\": \"BRep_distance\", \"unit\": \"mm\", \"value\": 0.3000000000000007}, \"deflection_mm\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"mm\", \"value\": 0.0024221772814481783}, \"mass_g\": {\"fidelity\": \"STEP_volume_moving_pair\", \"unit\": \"g\", \"value\": 523.5714496886798}, \"stress_mpa\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"MPa\", \"value\": 1.8906804238364767}, \"total_mass_g\": {\"fidelity\": \"STEP_volume_three_parts\", \"unit\": \"g\", \"value\": 887.4523637125849}, \"travel_mm\": {\"fidelity\": \"BRep_9_positions\", \"unit\": \"mm\", \"value\": 40}}, \"outcome\": \"passed\", \"parameters\": {\"depth_mm\": 24, \"edges\": [[0, 4, 12], [4, 2, 12], [1, 5, 12], [5, 3, 12], [0, 1, 12], [4, 5, 12], [2, 3, 12], [0, 5, 12], [4, 3, 12]], \"nodes\": [[8, 0], [36, 0], [8, 70], [36, 70], [8, 35], [36, 35]]}, \"subsystem\": \"parallel_gripper\", \"violations\": []}",
+          "score": 0.7567004561424255
+        },
+        {
+          "_id": "memory-parallel-gripper-study-v1-02-evaluation",
+          "summary": "{\"fidelity\": \"linear_3d_frame_and_BRep_travel\", \"metrics\": {\"buckling_factor\": {\"fidelity\": \"Euler_pinned_member\", \"unit\": \"ratio\", \"value\": 24.079192271935373}, \"clearance_mm\": {\"fidelity\": \"BRep_distance\", \"unit\": \"mm\", \"value\": 0.3000000000000007}, \"deflection_mm\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"mm\", \"value\": 0.06160277768867148}, \"mass_g\": {\"fidelity\": \"STEP_volume_moving_pair\", \"unit\": \"g\", \"value\": 198.45453324735132}, \"stress_mpa\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"MPa\", \"value\": 20.27555956179173}, \"total_mass_g\": {\"fidelity\": \"STEP_volume_three_parts\", \"unit\": \"g\", \"value\": 562.3354472712565}, \"travel_mm\": {\"fidelity\": \"BRep_9_positions\", \"unit\": \"mm\", \"value\": 40}}, \"outcome\": \"passed\", \"parameters\": {\"depth_mm\": 10, \"edges\": [[0, 2, 3], [1, 2, 4]], \"nodes\": [[8, 0], [36, 0], [8, 70]]}, \"subsystem\": \"parallel_gripper\", \"violations\": []}",
+          "score": 0.7528363466262817
+        },
+        {
+          "_id": "memory-parallel-gripper-study-v1-04-evaluation",
+          "summary": "{\"fidelity\": \"linear_3d_frame_and_BRep_travel\", \"metrics\": {\"buckling_factor\": {\"fidelity\": \"Euler_pinned_member\", \"unit\": \"ratio\", \"value\": 10.11983275249059}, \"clearance_mm\": {\"fidelity\": \"BRep_distance\", \"unit\": \"mm\", \"value\": 0.3000000000000007}, \"deflection_mm\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"mm\", \"value\": 0.0713733668276937}, \"mass_g\": {\"fidelity\": \"STEP_volume_moving_pair\", \"unit\": \"g\", \"value\": 194.55520311404612}, \"stress_mpa\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"MPa\", \"value\": 22.146008192633214}, \"total_mass_g\": {\"fidelity\": \"STEP_volume_three_parts\", \"unit\": \"g\", \"value\": 558.4361171379513}, \"travel_mm\": {\"fidelity\": \"BRep_9_positions\", \"unit\": \"mm\", \"value\": 40}}, \"outcome\": \"passed\", \"parameters\": {\"depth_mm\": 10, \"edges\": [[0, 2, 3], [1, 2, 3]], \"nodes\": [[8, 0], [36, 0], [8, 70]]}, \"subsystem\": \"parallel_gripper\", \"violations\": []}",
+          "score": 0.7520136833190918
+        },
+        {
+          "_id": "memory-parallel-gripper-study-v1-06-evaluation",
+          "summary": "{\"fidelity\": \"linear_3d_frame_and_BRep_travel\", \"metrics\": {\"buckling_factor\": {\"fidelity\": \"Euler_pinned_member\", \"unit\": \"ratio\", \"value\": 14.969298770519039}, \"clearance_mm\": {\"fidelity\": \"BRep_distance\", \"unit\": \"mm\", \"value\": 0.3000000000000007}, \"deflection_mm\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"mm\", \"value\": 0.24634415264435577}, \"mass_g\": {\"fidelity\": \"STEP_volume_moving_pair\", \"unit\": \"g\", \"value\": 193.18519885637102}, \"stress_mpa\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"MPa\", \"value\": 77.10858701364015}, \"total_mass_g\": {\"fidelity\": \"STEP_volume_three_parts\", \"unit\": \"g\", \"value\": 557.0661128802761}, \"travel_mm\": {\"fidelity\": \"BRep_9_positions\", \"unit\": \"mm\", \"value\": 40}}, \"outcome\": \"passed\", \"parameters\": {\"depth_mm\": 10, \"edges\": [[0, 3, 3], [3, 4, 4], [1, 4, 3], [4, 5, 4.5], [5, 2, 3]], \"nodes\": [[8, 0], [36, 0], [8, 70], [8, 38], [8, 50], [8, 60]]}, \"subsystem\": \"parallel_gripper\", \"violations\": []}",
+          "score": 0.7513306736946106
+        },
+        {
+          "_id": "memory-parallel-gripper-study-v1-01-evaluation",
+          "summary": "{\"fidelity\": \"linear_3d_frame_and_BRep_travel\", \"metrics\": {\"buckling_factor\": {\"fidelity\": \"Euler_pinned_member\", \"unit\": \"ratio\", \"value\": 188.85802648607378}, \"clearance_mm\": {\"fidelity\": \"BRep_distance\", \"unit\": \"mm\", \"value\": 0.3000000000000007}, \"deflection_mm\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"mm\", \"value\": 0.04701291873077259}, \"mass_g\": {\"fidelity\": \"STEP_volume_moving_pair\", \"unit\": \"g\", \"value\": 207.05384646942684}, \"stress_mpa\": {\"fidelity\": \"linear_3d_frame\", \"unit\": \"MPa\", \"value\": 15.937784223186586}, \"total_mass_g\": {\"fidelity\": \"STEP_volume_three_parts\", \"unit\": \"g\", \"value\": 570.934760493332}, \"travel_mm\": {\"fidelity\": \"BRep_9_positions\", \"unit\": \"mm\", \"value\": 40}}, \"outcome\": \"passed\", \"parameters\": {\"depth_mm\": 10, \"edges\": [[0, 3, 4], [3, 2, 4], [1, 4, 5], [4, 2, 5], [3, 4, 3]], \"nodes\": [[8, 0], [36, 0], [8, 70], [8, 35], [22, 35]]}, \"subsystem\": \"parallel_gripper\", \"violations\": []}",
+          "score": 0.7512508630752563
+        }
+      ],
+      "generator": "gpt-6-astra",
+      "assets": {
+        "model.step": "/models/gripper/08-model.step",
+        "left.glb": "/models/gripper/08-left.glb",
+        "model.glb": "/models/gripper/08-model.glb",
+        "base.glb": "/models/gripper/08-base.glb",
+        "right.glb": "/models/gripper/08-right.glb"
+      }
+    }
+  ],
+  "best_id": "parallel-gripper-study-v1-06",
+  "reduction_percent": 63.102419169104685,
+  "publishable": true,
+  "spent_usd": 4.385007819999999,
+  "tool": {
+    "_id": "parallel-gripper-study-v1-sizing",
+    "schema_version": 1,
+    "created_at": "2026-09-26T20:53:30.008998+00:00",
+    "study_id": "parallel-gripper-study-v1",
+    "explanation": "Call run(arguments) with all six named inputs, using N, mm, and MPa (N/mm\u00b2). It returns minimum_width_mm, the greater of the stress-controlled width sqrt(6\u00b7F\u00b7L/(depth\u00b7allowable_stress)) and deflection-controlled width (4\u00b7F\u00b7L\u00b3/(E\u00b7depth\u00b7max_deflection))^(1/3). Missing, nonnumeric, nonfinite, nonpositive, and Boolean inputs raise ValueError. The result is a continuous theoretical minimum; practical dimensions should be rounded upward.\n\nThe history reports that the triangular frame passed at 207.1 g moving mass, compared with 523.6 g for the baseline. Its reported 15.94 MPa stress and 0.0470 mm deflection are frame results, not allowable limits or inputs from which this utility can infer member loads. Supply independently justified member forces, material properties, and design limits to use this tool for preliminary width selection.\n\nFor the proposed unsplit legs, removing the tie changes load paths and unsupported lengths. This ideal tip-loaded cantilever calculation does not certify whole-frame behavior or reproduce the trusted multi-member frame evaluator. Recheck all four load cases, combined member stresses, frame deflection, full-length buckling, lateral stiffness, STEP mass, fixed interfaces, and clearance throughout travel using the appropriate frame and geometry evaluations.",
+    "validation": [
+      {
+        "arguments": {
+          "force_n": 100,
+          "length_mm": 70,
+          "depth_mm": 24,
+          "modulus_mpa": 69000,
+          "allowable_stress_mpa": 80,
+          "max_deflection_mm": 0.25
+        },
+        "actual": 6.920188483898321,
+        "expected": 6.920188483898314,
+        "passed": true
+      },
+      {
+        "arguments": {
+          "force_n": 40,
+          "length_mm": 35,
+          "depth_mm": 12,
+          "modulus_mpa": 69000,
+          "allowable_stress_mpa": 80,
+          "max_deflection_mm": 0.25
+        },
+        "actual": 3.212066959335816,
+        "expected": 3.2120669593358158,
+        "passed": true
+      },
+      {
+        "arguments": {
+          "force_n": 15,
+          "length_mm": 60,
+          "depth_mm": 10,
+          "modulus_mpa": 69000,
+          "allowable_stress_mpa": 80,
+          "max_deflection_mm": 0.25
+        },
+        "actual": 4.2196066430035115,
+        "expected": 4.2196066430035115,
+        "passed": true
+      },
+      {
+        "arguments": {
+          "force_n": 120,
+          "length_mm": 25,
+          "depth_mm": 18,
+          "modulus_mpa": 69000,
+          "allowable_stress_mpa": 80,
+          "max_deflection_mm": 0.25
+        },
+        "actual": 3.5355339059327395,
+        "expected": 3.5355339059327378,
+        "passed": true
+      },
+      {
+        "invalid_force_n": 0,
+        "passed": true
+      },
+      {
+        "invalid_force_n": -1,
+        "passed": true
+      }
+    ],
+    "source_commit": "3707b479bd3866b58faa260993c2c7ea48343204"
+  }
+}

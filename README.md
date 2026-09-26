@@ -1,46 +1,50 @@
 # Da Vinci: Recursive Improvement CAD Harness
 
-A CAD harness for the MongoDB Atlas Hackathon. GPT-6 Astra generates drone sensor mounts. The harness evaluates each attempt and carries reusable tools and lessons into subsequent designs.
+A CAD harness for the MongoDB Atlas Hackathon. GPT-6 Astra generates physical components, reviews independent evaluations, creates reusable tools and carries lessons into subsequent designs. Model weights stay fixed.
 
-The Next.js page shows eight interactive models, their measured characteristics and the best passing design. Each model can be viewed alone or mounted on an illustrative VTOL.
+The main demo is a **three-part parallel-jaw gripper**. The agent chooses rib connectivity, node locations and section sizes for the moving fingers. An independent evaluator checks four structural load cases and actual CAD clearance at nine jaw openings. The Next.js page shows every attempt with interactive opening controls, a frame-stress view and quantitative comparisons.
 
 **Stack:** Next.js / React · Python · CadQuery · GPT-6 Astra · MongoDB Atlas
 
-[Open the demo on the configured Tailscale network](http://100.99.98.39:8086) · [Sensor study guide](docs/sensor-gallery.md)
+[Open the demo on the configured Tailscale network](http://100.99.98.39:8086) · [Gripper plan and evaluation guide](docs/studies/gripper.md) · [Earlier sensor-mount study](docs/sensor-gallery.md)
 
 ## Self-improvement methods
 
-The agent improves its tools and working context between CAD attempts. Model weights stay fixed.
-
-1. **Reflect and remember.** Retrieve prior designs and measurements; carry lessons into the next attempt.
-2. **Create and reuse tools.** Write, test and save a wall-thickness utility for subsequent designs. After two attempts, Astra created the utility; five validation cases passed before it was reused from iteration 3 onward.
-3. **Evaluate and revise.** Use independent CAD checks to guide revisions; retain the lightest passing design.
+1. **Reflect and remember.** A review-agent call interprets measured stress, displacement, buckling and clearance after each attempt. Atlas Vector Search retrieves relevant prior outcomes; saved lessons become the next working policy.
+2. **Create and reuse tools.** Astra writes a member-sizing utility after the first two designs. It passes six independent checks, then runs before subsequent proposals.
+3. **Evaluate and revise.** Change rib topology and dimensions, evaluate the actual CAD and keep the lightest passing jaw pair. Every attempt remains visible, including heavier alternatives and failed checks.
 
 ## MongoDB Atlas
 
 - **Documents** store designs, evaluations, tools and policies.
-- **Vector Search** retrieves prior results for the next attempt, scoped to the relevant specification and evaluator.
-- **GridFS** stores CAD files and source snapshots.
-- **Database Triggers** enqueue evaluation and reflection jobs in the full multi-agent workbench. The sensor study below uses a sequential Python loop with Atlas storage and memory.
+- **Vector Search** retrieves prior results within the matching specification and evaluator cohort.
+- **GridFS** preserves CAD files and source snapshots.
+- **Database Triggers** enqueue evaluation and reflection in the full two-specialist workbench. The gripper study uses a sequential Python loop with the same Atlas archive and memory services.
 
 ## Improvement by model
 
-**83.5 → 30.3 g: 63.7% mass reduction.** All eight designs passed the same screening checks: nominal PA12, a 20 N load, deflection ≤ 0.65 mm and stress ≤ 28 MPa. The mounting footprint remains 100 × 72 mm with an 80 × 52 mm bolt pattern.
+<!-- gripper-results:start -->
 
-| Iteration / STEP | Design | Mass (g) | Reduction vs. baseline | Deflection est. (mm) | Stress est. (MPa) | Result |
+**523.6 → 193.2 g: 63.1% less moving jaw mass.** Total three-part mass falls from 887.5 to 557.1 g. The guide base is unchanged.
+
+| Iteration / STEP | Rib layout | Moving mass (g) | Total mass (g) | Tip displacement est. (mm) | Stress est. (MPa) | Result |
 | --- | --- | ---: | ---: | ---: | ---: | --- |
-| [01](web/public/models/sensor/01.step) | Solid cradle | 83.535 | — | 0.053 | 0.66 | Baseline |
-| [02](web/public/models/sensor/02.step) | Open-window cradle | 30.362 | 63.7% | 0.647 | 4.51 | Improved |
-| [03](web/public/models/sensor/03.step) | Open-window refinement | 30.333 | 63.7% | 0.650 | 4.52 | Improved |
-| [04](web/public/models/sensor/04.step) | Open-window refinement | 30.332 | 63.7% | 0.650 | 4.52 | Passed |
-| [05](web/public/models/sensor/05.step) | Open-window refinement | 30.332 | 63.7% | 0.650 | 4.52 | Passed |
-| **[06](web/public/models/sensor/06.step)** | **Open-window refinement** | **30.332** | **63.7%** | **0.650** | **4.52** | **Best passing** |
-| [07](web/public/models/sensor/07.step) | Ribbed cradle, three slots | 31.666 | 62.1% | 0.650 | 4.49 | Passed |
-| [08](web/public/models/sensor/08.step) | Ribbed cradle, two slots | 31.211 | 62.6% | 0.650 | 4.49 | Passed |
+| [01](web/public/models/gripper/01-model.step) | Conservative baseline frame | 523.6 | 887.5 | 0.002 | 1.9 | Baseline |
+| [02](web/public/models/gripper/02-model.step) | Tapered triangular frame | 207.1 | 570.9 | 0.047 | 15.9 | Passed |
+| [03](web/public/models/gripper/03-model.step) | Slim two-leg triangle | 198.5 | 562.3 | 0.062 | 20.3 | Passed |
+| [04](web/public/models/gripper/04-model.step) | High-junction Y frame | 193.5 | 557.4 | 0.120 | 54.4 | Passed |
+| [05](web/public/models/gripper/05-model.step) | Minimum-section direct legs | 194.6 | 558.4 | 0.071 | 22.1 | Passed |
+| [06](web/public/models/gripper/06-model.step) | Canted minimum-width Y | 193.4 | 557.3 | 0.143 | 74.8 | Passed |
+| [07](web/public/models/gripper/07-model.step) | Stepped knee-braced mast | 193.2 | 557.1 | 0.246 | 77.1 | Best passing |
+| [08](web/public/models/gripper/08-model.step) | Inclined Shared Spine | 193.3 | 557.1 | 0.246 | 79.7 | Passed |
 
-The largest reduction came from replacing the solid baseline with thinner walls, oval windows and a base slot. Iterations 3–6 reused the saved thickness tool for small refinements; the final differences are below the table's displayed precision. Iterations 7–8 tested diagonal ribs and gussets but remained heavier than iteration 6.
+The study changes topology as well as section sizes: a heavily braced baseline becomes a tied triangle, direct legs and Y-shaped alternatives. Lighter designs can have higher stress or displacement. All attempts and their review notes remain visible; the best label uses unrounded measurements.
 
-Values come from the [exported study records](web/data/sensor-gallery.json). Ranking uses unrounded measurements. Every attempt remains in the gallery, including alternatives that did not improve the best result.
+All eight attempts passed the fixed screen. Recorded API accounting was $4.39 within the $25 cap, including a conservative reservation charged for one timed-out request.
+
+Values come from the [exported study records](web/data/gripper-gallery.json). Research context and measurement scope are expandable below.
+
+<!-- gripper-results:end -->
 
 <details>
 <summary><strong>Research evidence</strong></summary>
@@ -58,40 +62,25 @@ These are recent preprints. Their results come from other tasks; they do not val
 <details>
 <summary><strong>Agent harness setup</strong></summary>
 
-### This sensor-mount study
+### Graph design and independent evaluation
 
-1. **Set the design contract.** A Python runner fixes the mounting footprint, material assumptions, load and acceptance limits. Astra writes CadQuery wrappers and chooses dimensions within the supplied cradle family.
-2. **Build and measure.** Candidate code runs without credentials or network access in an isolated Docker container and exports STEP and GLB. A separate evaluator checks the exported STEP against the supported geometry family, measures volume and applies the same stress and deflection screen to every attempt. It never imports candidate code.
-3. **Reflect and reuse.** Previous results, scoped Atlas Vector Search matches and accumulated lessons enter the next prompt. The generated wall-thickness utility passes four numeric cases and an invalid-input case before activation; subsequent attempts receive actual executions of that saved tool.
-4. **Archive and select.** Git versions source, tools and context. Atlas stores records and GridFS stores artifacts. The runner retains the lightest passing design. The gallery reads an exported snapshot, so browsing it makes no model calls or database requests.
+Astra uses high reasoning to choose a graph of rectangular ribs within fixed carriage and gripping-pad interfaces. CadQuery builds the guide base and two mirrored jaws in a container without network access or credentials. A separate trusted container verifies the exported STEP against the graph and fixed interfaces; it never imports candidate code.
 
-The eight-attempt study resumes under one $3 total API budget cap. Recorded API usage was approximately $0.77. The first six attempts refined the open-window design; two additional comparisons tested ribbed alternatives. Records are stored in `design_iterations` and `design_tools`, with scoped memories in `memories`.
+A linear 3D beam-frame solver checks pinch, payload, lateral and combined loads. Fixed limits are 80 MPa nominal normal stress, 0.25 mm tip displacement and a pinned-member buckling factor of 2. BRep checks test collisions at nine openings between 20 and 60 mm, with 0.25 mm minimum running clearance and sample gauges at both endpoints.
+
+After each evaluation, a separate review call records lessons and the next design focus. The validated sizing tool, actual tool executions, prior measurements and retrieved Atlas memories enter later prompts. Git versions source and context; Atlas and GridFS retain the evidence. The study resumes under a $25 total API cap with cached responses. The gallery reads a static export without making model or database calls.
 
 ### Full multi-agent workbench
 
-The workbench at `/harness` coordinates **structural** and **aerodynamic** specialists against a shared vehicle specification. Two Python workers process durable jobs. Atlas candidate-insert triggers enqueue evaluation; evaluation-insert triggers enqueue reflection. A recovery loop repairs missed trigger delivery.
+The workbench at `/harness` coordinates structural and aerodynamic specialists against a shared vehicle specification. Two Python workers process durable jobs. Atlas triggers enqueue evaluation and reflection; a recovery loop repairs missed delivery. A meta-agent proposes tested tools and versions of `orchestrator.py`, `policy.json` and an isolated React `PolicyNote.tsx` panel. Independent tests and CAD checks gate activation. The evaluator, acceptance limits, permissions and API budget remain outside the editable release.
 
-The structural specialist produces a sensor-mount plate; the aerodynamic specialist produces fixed and moving NACA0012 surfaces. Independent checks cover component geometry, structural screening, hinge clearance and an induced-drag estimate. Shared-assembly checks cover collisions, control-surface travel and combined mass.
+The gripper study uses a sequential loop rather than that two-specialist queue. Its richer graph family has a separate evaluator and scoring cohort.
 
-A meta-agent proposes reusable tools and versioned changes to three files:
+### Measurement scope
 
-| Editable file | Role |
-| --- | --- |
-| `orchestrator.py` | Adapts parameters before subsequent CAD generation |
-| `policy.json` | Carries heuristics and lessons into future context |
-| `PolicyNote.tsx` | Renders an isolated React policy panel in the workbench |
+The objective is moving jaw-pair mass. Total assembly mass also includes the unchanged guide base; both are measured from STEP volume using nominal aluminium density. Frame results assume rigid beam joints and fixed carriage roots, with loads applied at the defined tip node; pad compliance and offset force couples are not modeled. They do not model local joint, bearing, contact, shear, torsional stress or fatigue behavior. An external actuator and friction pads are required; those are outside this passive mechanism study. The opening slider is continuous, while collision validation samples nine positions.
 
-Independent tool tests, adaptation fixtures, React compilation and CAD checks run before activation. Passing releases activate at round boundaries; orchestration execution failures restore the previous active version. The trusted evaluator, acceptance limits, permissions and API budget remain outside the editable snapshot. UI self-editing targets the policy panel, not the entire Next.js application.
-
-The sensor study in this gallery uses a sequential Python loop with the same sandbox, archive and memory services; it does not use the full workbench's two-specialist trigger queue.
-
-### Measurement scope and reproducibility
-
-Mass uses STEP volume and nominal PA12 density. Stress and deflection are wall-strip estimates, not FEA. The VTOL is illustrative; measurements cover the mount only. The study demonstrates improvement within a supplied geometry family, not unrestricted topology generation or flight validation.
-
-Candidate code, tools, releases and environment snapshots are versioned in `runtime/repository`. Artifacts are content-addressed and stored locally plus in GridFS when Atlas is configured. Changing the specification or evaluator creates a separate scoring cohort. The full workbench can export ledger records, source, CAD, logs, screenshots and hashes as a run bundle.
-
-See [architecture and data flow](docs/architecture.md), [sensor study details](docs/sensor-gallery.md) and [verification results](docs/verification.md).
+See [the build plan and reproducibility commands](docs/studies/gripper.md), [system architecture](docs/architecture.md) and [earlier verification results](docs/verification.md). The original sensor study remains at `/sensor`, with its 83.5 → 30.3 g result and archived assets intact.
 
 </details>
 
@@ -122,14 +111,14 @@ For live use, copy `.env.example` to `.env` if a project environment file does n
 
 Set `DAVINCI_USE_ATLAS_TRIGGERS=true`, restart the stack and choose **Astra live** in the workbench. See [live validation](docs/live-validation.md) for setup checks.
 
-To resume the sensor study or republish its archived results:
+To resume the gripper study or republish its archived results:
 
 ```bash
 # Live generation: resumes the same study and its existing budget cap.
-.venv/bin/python -m scripts.sensor_study --count 8
+.venv/bin/python -m scripts.gripper_study --count 8
 
 # Export completed records without new model calls.
-.venv/bin/python -m scripts.sensor_study --export-only
+.venv/bin/python -m scripts.gripper_study --export-only
 npm run build
 # Stop the existing development stack before starting production.
 bash scripts/dev.sh --production
@@ -139,12 +128,12 @@ Relevant checks:
 
 ```bash
 .venv/bin/python -m pytest -q -m 'not integration'
-DAVINCI_INTEGRATION=1 .venv/bin/python -m pytest -q tests/test_sensor.py
+DAVINCI_INTEGRATION=1 .venv/bin/python -m pytest -q tests/test_gripper.py
 DAVINCI_INTEGRATION=1 .venv/bin/python -m pytest -q tests/test_integration.py
 npm run typecheck
 npm run build
 # With the application running:
-node_modules/.bin/playwright test tests/browser/sensor-gallery.spec.ts
+node_modules/.bin/playwright test tests/browser/gripper-gallery.spec.ts
 ```
 
 See the [laptop-access guide](docs/demo/README.md) for private Tailscale access and startup after reboot. The earlier Quarto report remains available separately; the Next.js gallery is the main presentation.

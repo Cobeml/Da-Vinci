@@ -4,7 +4,7 @@ import data from "../../web/data/sensor-gallery.json";
 test("gallery shows every measured design and independent VTOL controls", async ({ page }) => {
   const errors: string[] = [];
   page.on("pageerror", e => errors.push(e.message));
-  await page.goto("/");
+  await page.goto("/sensor");
   await expect(page.getByRole("heading", { name: /Da Vinci/ })).toBeVisible();
   const overview = page.getByRole("region", { name: "Project overview" });
   const selected = overview.getByTestId("sensor-canvas");
@@ -54,7 +54,7 @@ test("gallery shows every measured design and independent VTOL controls", async 
 });
 
 test("gallery is usable at laptop and mobile widths and exports actual STEP", async ({ page, request }) => {
-  await page.goto("/");
+  await page.goto("/sensor");
   for (const width of [1280, 390]) {
     await page.setViewportSize({ width, height: 900 });
     await expect(page.getByTestId("design-card").first()).toBeVisible();
