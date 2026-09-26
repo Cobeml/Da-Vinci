@@ -17,7 +17,7 @@
     "camera": "Top view",
     "zoom_wheel_delta": -100,
     "zoom_wheel_events": 12,
-    "sha256": "3c57605da8161d49193d5525ba5136c6a8c852d3710e83c7bc004f51400bd55a",
+    "sha256": "5019cd6e02b5ab91209be07c901540b803c31a9e0ee17463d0b28504e06d0864",
     "archive": "live3",
     "capture_method": "Real workbench viewer with hash-verified archive responses"
   },
@@ -50,7 +50,7 @@
     "camera": "Side view",
     "zoom_wheel_delta": -100,
     "zoom_wheel_events": 12,
-    "sha256": "b35595ecb4343c8e69c6799348e079eb74b0ebd1bf7b8122f0967cde4e85298f",
+    "sha256": "6e8955bc8b978669ec74ceea2e5f230c7e2f66051edd994d18aca66fce9baa8d",
     "archive": "live3",
     "capture_method": "Real workbench viewer with hash-verified archive responses"
   },

@@ -87,6 +87,9 @@ def main():
             page.goto(args.url + "/" + target, wait_until="domcontentloaded", timeout=60000)
             expect(page.locator(".viewport-label")).to_contain_text("EVALUATED CAD GEOMETRY", timeout=60000)
             expect(page.get_by_test_id("cad-canvas")).to_have_attribute("data-geometry-ready", "true")
+            # Bounds animates the initial fit after GLB readiness; let it finish
+            # before selecting a camera, otherwise it overwrites the selected view.
+            page.wait_for_timeout(1500)
             page.get_by_role("button", name=camera, exact=True).click()
             page.wait_for_timeout(1200)
             page.get_by_test_id("cad-canvas").hover()
