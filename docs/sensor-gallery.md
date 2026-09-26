@@ -2,6 +2,18 @@
 
 The Next.js root page displays every recorded sensor-cradle attempt, its real GLB, mass, wall-strip stress/deflection estimates, and whether it improved the best passing mass. Each viewer has an independent Mount / On VTOL toggle, orbit/zoom controls, reset, and an expanded view. The original workbench remains at `/harness`.
 
+The opening presentation section shows the lightest passing mount on the illustrative VTOL by default, beside the self-improvement methods and Atlas usage. Its expanded view preserves the selected mode. A link jumps to all chronological attempts below the overview.
+
+## Research context
+
+The methods section links to these primary sources (checked 2026-09-26):
+
+- [Reflexion (Shinn et al., 2023)](https://arxiv.org/abs/2303.11366): 91% HumanEval pass@1 versus the cited 80% GPT-4 baseline. The agent stores linguistic reflections from task feedback for subsequent trials; this result includes iterative feedback, not a single unassisted generation.
+- [Voyager (Wang et al., 2023)](https://voyager.minedojo.org/): 3.3 times as many unique Minecraft items as previous baselines. The complete system combines a retrieved executable skill library, iterative feedback and an automatic curriculum; the ratio does not isolate the skill library's contribution.
+- [Self-Refine (Madaan et al., 2023)](https://arxiv.org/abs/2303.17651): approximately 20 percentage points average improvement across seven tasks over conventional one-step generation. Its feedback is model-generated; this harness additionally uses an independent geometry evaluator.
+
+These are results for related methods in other domains, not validation of this CAD harness, guarantees of CAD performance, or controlled measurements of each mechanism's contribution to this study. No model weights are trained in the sensor study.
+
 ## Geometry and measurements
 
 The new supported family is a 100 × 72 mm PA12 cradle with four 4.5 mm holes on an 80 × 52 mm pattern, two pivot walls, optional oval/triangular cutouts, base slots and gussets. Astra writes candidate CadQuery wrappers and selects parameters within this contract. The fixed family implementation is supplied by the harness; the agent does not invent an unrestricted topology or change its independent evaluator.

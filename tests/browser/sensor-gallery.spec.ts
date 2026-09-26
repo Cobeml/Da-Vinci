@@ -6,6 +6,23 @@ test("gallery shows every measured design and independent VTOL controls", async 
   page.on("pageerror", e => errors.push(e.message));
   await page.goto("/");
   await expect(page.getByRole("heading", { name: /Da Vinci/ })).toBeVisible();
+  const overview = page.getByRole("region", { name: "Project overview" });
+  const selected = overview.getByTestId("sensor-canvas");
+  await expect(selected).toHaveAttribute("data-loaded", "true", { timeout: 30000 });
+  await expect(selected).toHaveAttribute("data-mounted", "true");
+  await expect(overview.getByRole("heading", { name: "MongoDB Atlas" })).toBeVisible();
+  for (const [name, url] of [
+    ["Reflexion (2023)", "https://arxiv.org/abs/2303.11366"],
+    ["Voyager (2023)", "https://voyager.minedojo.org/"],
+    ["Self-Refine (2023)", "https://arxiv.org/abs/2303.17651"],
+  ]) await expect(overview.getByRole("link", { name: new RegExp(name.replace(/[()]/g, "\\$&")) })).toHaveAttribute("href", url);
+  await overview.getByRole("button", { name: /Expand iteration/ }).click();
+  await expect(page.getByRole("dialog").getByTestId("sensor-canvas")).toHaveAttribute("data-mounted", "true");
+  await page.keyboard.press("Escape");
+  await page.waitForTimeout(700);
+  await page.screenshot({ path: "runtime/sensor-overview.png" });
+  await overview.getByRole("link", { name: "View all 8 iterations" }).click();
+  await expect(page).toHaveURL(/#designs$/);
   const cards = page.getByTestId("design-card");
   await expect(cards).toHaveCount(data.designs.length);
   await expect(page.getByText("From constraints to possibility.")).toHaveCount(0);
