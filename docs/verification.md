@@ -4,7 +4,7 @@ Verified on the current Linux host: AMD Ryzen 7 7700X (8 cores / 16 threads), ap
 
 ## Checks completed
 
-- **17 API/ledger/provider/validation tests passed:** durable storage, atomic job claims, stale leases, stopped jobs, concurrent budget reservations, scoped memory, authentication/origin validation, concurrent run admission, portable export, image-budget estimation, cancellation without release rollback, import isolation, resumable validation IDs, external-error redaction, and trigger duplicate-delivery behavior.
+- **19 API/ledger/provider/validation tests passed:** durable storage, atomic job claims, stale leases, stopped jobs, concurrent budget reservations, scoped memory, authentication/origin validation, concurrent run admission, portable export, image-budget estimation, cancellation without release rollback, import isolation, resumable validation IDs, external-error redaction, trigger duplicate-delivery behavior, and quarantine of missing/cross-run job sources.
 - **7 Docker/CAD integration tests passed:** measured mass and unit conversion, minimum thickness, hinge clearance, full reflection/tool-reuse loop, rejected patches, shared-assembly collision detection, unsupported geometry rejection, and validated release rollback. Some tests cover multiple scenarios.
 - **4 Playwright tests passed against Atlas:** measured CAD rendering and navigation, mobile containment, starting/stopping runs, a full two-worker replay, and archived browser inspection screenshots.
 - Next.js production build and TypeScript validation passed.
@@ -60,17 +60,61 @@ These measurements cover the bundled screening fixtures, not arbitrary CAD, mesh
   specification, and evaluator cohort with semantic scores. Lexical fallback
   was not counted as a vector-search pass.
 
-## Validation still in progress
+## Trigger configuration and self-improvement
 
-The first independent trigger probe timed out with workers stopped; neither
-trigger created its job. Trigger configuration is being diagnosed separately.
-The live CAD run used the existing reconciliation path and does not establish
-successful trigger delivery.
+Both Database Triggers passed independent insertion probes with all workers
+stopped. Correct jobs were observed for both candidate and evaluation records.
+The linked service is `Cluster0`, and the two triggers must use distinct matching
+candidate/evaluation handlers. Earlier probes exposed an incorrect service name
+and the evaluation handler attached to the candidate trigger.
 
-Astra-generated diagnostic tool/release validation, visual inspection, final
-live export, and a subsequent run using the generated release remain pending.
-The validation session has fixed $10/$10/$5 live allocations, totalling at most
-$25; run IDs and spending persist across command restarts. See
+That handler mismatch caused `live2` to fail before evaluation after $0.16401028
+of model/embedding usage. Its records remain archived. The worker now quarantines
+jobs whose source document is missing or belongs to another run, without failing
+the valid run. Two regression cases and the full replay integration test passed
+after this fix. The successful first live run relied on reconciliation while
+trigger configuration was being repaired; it was not used as trigger proof.
+
+Because live1 had no geometric failures, explicit diagnostic reflection used
+archived replay failures, clearly labelled as such. Astra generated tool
+`tool-area-49a71c05c68127e0`, which passed independent tests and executed after an
+engine restart. It generated release `release-705e594f50cb4728`, which passed
+adaptation fixtures, React compilation/rendering, and real structural/aerodynamic
+CAD canaries. A deliberately broken release was rejected without replacing it.
+
+Astra visual inspection passed and archived its screenshots. A final screenshot
+review caught an initial readiness check accepting the reference preview; both
+inspection and acceptance now wait for evaluated CAD geometry explicitly. The
+visual check was repeated on live3 and records the inspected geometry artifact.
+Validation requires a newly created inspection, so an older record cannot mask
+a failed retry. The live1 export
+contained 60 entries; all 33 manifest hashes passed, with 24 evaluation-artifact
+references downloaded directly from GridFS.
+
+## Final acceptance
+
+The final trigger-enabled run, `run-atlas-validation-20260926-live3`, completed
+two rounds: four passing evaluations and two accepted assemblies. All four
+candidates used the promoted Astra release, included the generated tool in their
+context, invoked that tool, and retrieved historical memory. Its ZIP contained
+49 entries, with all 22 artifact hashes verified and 12 evaluation-artifact
+references downloaded directly from GridFS.
+
+Final acceptance passed at **2026-09-26 17:58 UTC**. The API reports Atlas storage,
+CAD availability, and live-model availability; both triggers are enabled. The
+workbench rendered evaluated geometry without browser errors. No optimization
+run is active, and no API budget reservation remains outstanding.
+
+Total recorded model/embedding cost for this validation session, including the
+failed diagnostic run, reflection, and visual inspection, is **$1.30446780** of
+the approved **$25** limit. This uses the application's usage-based price ledger,
+not a provider billing invoice. The earlier standalone credential probes are
+outside this session. The fixed $10/$10/$5 allocations remain consumed as named
+slots; rerunning a slot cannot create a fresh allowance.
+
+The production stack remains available at **http://127.0.0.1:3215** with two
+workers and `DAVINCI_USE_ATLAS_TRIGGERS=true`. Final UI evidence is stored at
+`runtime/validation/final-workbench.png`. See
 [live validation procedure](live-validation.md). Runtime reports are stored in
 `runtime/validation/report.json` and Atlas `validations`.
 

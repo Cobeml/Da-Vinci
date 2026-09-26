@@ -28,6 +28,9 @@ In Atlas → Streaming Data → Triggers, create these Database Triggers:
 | `davinci_candidate_insert` | `candidates` | `runtime/validation/triggers/enqueue-candidate.js` |
 | `davinci_evaluation_insert` | `evaluations` | `runtime/validation/triggers/enqueue-reflection.js` |
 
+Each trigger must reference its own matching function. Do not bind both triggers
+to the evaluation handler: a candidate ID is not an evaluation ID.
+
 Select the configured cluster and database (default `da_vinci`). Use INSERT only,
 enabled triggers, event ordering disabled, and preimages disabled. Retain the
 full document. Prepared functions contain the configured database name directly;
@@ -80,7 +83,9 @@ Only invoke explicit diagnostic reflection if the normal live loop has not
 already demonstrated the required tool/release gates. It uses archived replay
 failures with diagnostic provenance, generates a real Astra tool and patch,
 tests them independently, and verifies reuse after restart. Run a subsequent
-candidate to verify the activated release is applied. Use live2/live3 only for
+candidate to verify the activated release is applied, then run
+`.venv/bin/python -m scripts.validate_atlas reuse --slot live3` (using the actual
+subsequent slot). Use live2/live3 only for
 targeted reruns or remaining checks; never reset existing run budgets.
 
 The vector check directly queries Atlas with real embeddings and verifies
@@ -88,9 +93,17 @@ semantic scores plus scoped application retrieval. It does not accept lexical
 fallback as success. Embedding backfills retain source evaluation provenance
 and record which validation run paid for them.
 
+Use `diagnose --slot live2` to inspect sanitized job errors and trigger probe
+job kinds. The worker quarantines missing or cross-run source references as dead
+jobs and emits `job_rejected`; it does not fail an otherwise valid design run.
+A failed trigger test also reports the jobs it actually observed.
+
 Reports and exports are in `runtime/validation/`; the session record is also
 stored in Atlas `validations`. A monitor timeout stops its run. Budget exhaustion
 or a failed gate is an incomplete check, never a reason to relax constraints.
 Run `report` last to include spending from inspection and memory checks made
-after CAD completion. Archive actual evidence and remaining limitations in
+after CAD completion. Once all checks and the subsequent reuse run are complete,
+run `acceptance` to verify service health, no active runs, no held reservations,
+and actual browser rendering; it also captures the final workbench screenshot.
+Archive actual evidence and remaining limitations in
 `docs/verification.md`.

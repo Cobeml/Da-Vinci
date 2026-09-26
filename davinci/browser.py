@@ -4,7 +4,7 @@ import base64
 import json
 from urllib.parse import urlencode
 
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import expect, sync_playwright
 
 from davinci.engine import Engine
 from davinci.errors import safe_error
@@ -17,6 +17,10 @@ def inspect_candidate(settings, candidate_id):
     run = engine.store.get("runs", candidate["run_id"])
     captures = []
     try:
+        evaluations = engine.store.list("evaluations", {"candidate_id": candidate_id})
+        geometry = next(
+            e["artifacts"]["model.glb"] for e in evaluations if e.get("artifacts", {}).get("model.glb")
+        )
         with sync_playwright() as playwright:
             browser = playwright.chromium.launch(headless=True, args=["--enable-unsafe-swiftshader"])
             page = browser.new_page(viewport={"width": 1440, "height": 1000}, device_scale_factor=1)
@@ -27,6 +31,9 @@ def inspect_candidate(settings, candidate_id):
                 timeout=60000,
             )
             page.get_by_test_id("cad-canvas").wait_for()
+            # The reference preview is also "ready". Wait for real ledger data
+            # before trusting the canvas flag or showing images to the model.
+            expect(page.locator(".viewport-label")).to_contain_text("EVALUATED CAD GEOMETRY", timeout=60000)
             page.locator('[data-testid="cad-canvas"][data-geometry-ready="true"]').wait_for(timeout=30000)
             page.wait_for_timeout(400)
             inputs = []
@@ -117,6 +124,7 @@ def inspect_candidate(settings, candidate_id):
                 candidate_id=candidate_id,
                 artifacts=captures,
                 mode=run["mode"],
+                geometry_artifact_id=geometry,
             ),
         )
         engine.store.event(

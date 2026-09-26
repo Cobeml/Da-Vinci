@@ -4,7 +4,7 @@ A multi-agent CAD workbench for the MongoDB Atlas Hackathon. Two specialists gen
 
 **Implemented:** Next.js/React 3D workbench, Python workers, real CadQuery STEP/GLB generation, structural/aerodynamic screening, shared-assembly checks, durable jobs, failure memory, generated Python tools, automatically tested releases, Git archives, browser inspection, and portable run exports.
 
-**Two explicit modes:** `replay` uses deterministic specialist/meta-agent fixtures and makes no model calls. `live` uses GPT-6 Astra through the Responses API. Both run actual CAD and evaluations. Local storage uses SQLite; configuring `MONGODB_URI` switches the repository to Atlas, GridFS, and vector retrieval. Astra-driven CAD, Atlas persistence, GridFS, and vector retrieval have passed live checks. See [verification](docs/verification.md) for evidence and remaining trigger validation.
+**Two explicit modes:** `replay` uses deterministic specialist/meta-agent fixtures and makes no model calls. `live` uses GPT-6 Astra through the Responses API. Both run actual CAD and evaluations. Local storage uses SQLite; configuring `MONGODB_URI` switches the repository to Atlas, GridFS, and vector retrieval. Astra-driven CAD, Atlas persistence, GridFS, and vector retrieval have passed live checks. Atlas Database Triggers also passed independent delivery checks. See [verification](docs/verification.md) for results and limitations.
 
 ## Start locally
 

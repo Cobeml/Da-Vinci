@@ -414,8 +414,13 @@ class Validation:
         run_id = self.record()["runs"][slot]["run_id"]
         evaluations = self.store.list("evaluations", {"run_id": run_id, "outcome": "passed"})
         candidate = next(e["candidate_id"] for e in evaluations if e.get("artifacts", {}).get("model.glb"))
+        existing = {i["_id"] for i in self.store.list("inspections", {"candidate_id": candidate})}
         inspect_candidate(self.settings, candidate)
-        inspections = self.store.list("inspections", {"candidate_id": candidate})
+        inspections = [
+            i
+            for i in self.store.list("inspections", {"candidate_id": candidate})
+            if i["_id"] not in existing and i.get("geometry_artifact_id")
+        ]
         assert inspections
         self.save(
             "inspection", passed=True, candidate_id=candidate, inspection_ids=[i["_id"] for i in inspections]
@@ -516,6 +521,64 @@ class Validation:
                 ]
             )
 
+    def acceptance(self):
+        import httpx
+        from playwright.sync_api import expect, sync_playwright
+
+        self.report()
+        record = self.record()
+        reuse = record["checks"].get("promoted_release_reuse", {})
+        slot = next(name for name, item in record["runs"].items() if item["run_id"] == reuse.get("run_id"))
+        required = [
+            "infrastructure",
+            "recovery",
+            "triggers",
+            "replay",
+            "live1",
+            "vector",
+            "reflection",
+            "inspection",
+            "promoted_release_reuse",
+            "export_live1",
+            "export_" + slot,
+            "budget",
+        ]
+        assert all(record["checks"].get(name, {}).get("passed") for name in required)
+        assert not self.store.list("runs", {"status": "running"})
+        assert record["checks"]["budget"]["held_usd"] == 0
+        headers = (
+            {"authorization": "Bearer " + self.settings.davinci_api_token}
+            if self.settings.davinci_api_token
+            else {}
+        )
+        response = httpx.get("http://127.0.0.1:8215/api/health", headers=headers, timeout=30)
+        response.raise_for_status()
+        health = response.json()
+        assert health["storage"] == "atlas" and health["cad_available"] and health["live_available"]
+        assert self.settings.davinci_use_atlas_triggers
+        screenshot = self.root / "final-workbench.png"
+        with sync_playwright() as playwright:
+            browser = playwright.chromium.launch(headless=True, args=["--enable-unsafe-swiftshader"])
+            page = browser.new_page(viewport={"width": 1440, "height": 1000}, device_scale_factor=1)
+            errors = []
+            page.on("pageerror", lambda error: errors.append(type(error).__name__))
+            page.goto(self.settings.davinci_web_url, wait_until="domcontentloaded", timeout=60000)
+            expect(page.locator(".viewport-label")).to_contain_text("EVALUATED CAD GEOMETRY", timeout=60000)
+            page.locator('[data-testid="cad-canvas"][data-geometry-ready="true"]').wait_for(timeout=30000)
+            page.screenshot(path=str(screenshot), full_page=True)
+            assert not errors
+            browser.close()
+        self.save(
+            "acceptance",
+            passed=True,
+            required_checks=required,
+            active_runs=0,
+            web_url=self.settings.davinci_web_url,
+            storage="atlas",
+            triggers_enabled=True,
+            final_screenshot=str(screenshot),
+        )
+
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
@@ -535,6 +598,7 @@ def main():
             "export",
             "report",
             "diagnose",
+            "acceptance",
         ],
     )
     parser.add_argument("--slot", choices=["replay", *ALLOCATIONS], default="replay")
