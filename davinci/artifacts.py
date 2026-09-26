@@ -1,9 +1,9 @@
 import fcntl
 import hashlib
 import json
-from pathlib import Path
 import subprocess
 import threading
+from pathlib import Path
 
 import gridfs
 
@@ -31,9 +31,19 @@ class Artifacts:
         file_id = None
         if self.fs is not None:
             file_id = str(self.fs.upload_from_stream(name, data, metadata={"sha256": sha}))
-        self.store.insert("artifacts", {**document("artifact"), "_id": id, "sha256": sha,
-            "name": Path(name).name, "media_type": media_type, "size": len(data), "gridfs_id": file_id,
-            **metadata})
+        self.store.insert(
+            "artifacts",
+            {
+                **document("artifact"),
+                "_id": id,
+                "sha256": sha,
+                "name": Path(name).name,
+                "media_type": media_type,
+                "size": len(data),
+                "gridfs_id": file_id,
+                **metadata,
+            },
+        )
         return id
 
     def read(self, id):
@@ -43,6 +53,7 @@ class Artifacts:
         path = self.root / record["sha256"]
         if not path.exists() and self.fs is not None:
             from bson import ObjectId
+
             data = self.fs.open_download_stream(ObjectId(record["gridfs_id"])).read()
         else:
             data = path.read_bytes()
@@ -53,14 +64,27 @@ class Artifacts:
 
 class Repository:
     """Permanent append-only source snapshots; all writes are serialized across processes."""
+
     def __init__(self, root):
         self.path = Path(root) / "repository"
         self.path.mkdir(parents=True, exist_ok=True)
         self.lock_path = Path(root) / "repository.lock"
 
     def _git(self, *args):
-        return subprocess.check_output(["git", "-C", str(self.path), "-c", "user.name=Da Vinci",
-                                        "-c", "user.email=harness@localhost", *args], stderr=subprocess.STDOUT, text=True).strip()
+        return subprocess.check_output(
+            [
+                "git",
+                "-C",
+                str(self.path),
+                "-c",
+                "user.name=Da Vinci",
+                "-c",
+                "user.email=harness@localhost",
+                *args,
+            ],
+            stderr=subprocess.STDOUT,
+            text=True,
+        ).strip()
 
     def commit(self, snapshot_id, files):
         with self.lock_path.open("a") as lock:

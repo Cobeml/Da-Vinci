@@ -1,5 +1,6 @@
 """Documented starting families. Live agents may rewrite source within the evaluator contract."""
-MOUNT_SOURCE = '''import cadquery as cq
+
+MOUNT_SOURCE = """import cadquery as cq
 
 def build(parameters, interfaces):
     t = parameters["thickness_mm"]
@@ -8,9 +9,9 @@ def build(parameters, interfaces):
     assembly = cq.Assembly(name="sensor_mount")
     assembly.add(part, name="mount", color=cq.Color(0.87, 0.48, 0.22))
     return assembly
-'''
+"""
 
-WING_SOURCE = '''import cadquery as cq
+WING_SOURCE = """import cadquery as cq
 import math
 
 def build(parameters, interfaces):
@@ -33,9 +34,9 @@ def build(parameters, interfaces):
     assembly.add(main, name="main_surface", color=cq.Color(0.75, 0.80, 0.78))
     assembly.add(flap, name="control_surface", color=cq.Color(0.26, 0.63, 0.56))
     return assembly
-'''
+"""
 
-TOOL_SOURCE = '''import math
+TOOL_SOURCE = """import math
 
 def run(arguments):
     # Orthographic projected area of an axis-aligned box. This is a geometric
@@ -48,28 +49,33 @@ def run(arguments):
     dx, dy, dz = [abs(v)/norm for v in direction]
     return {"projected_area_m2": y*z*dx + x*z*dy + x*y*dz,
             "fidelity": "bounding_box_proxy"}
-'''
+"""
 
-INITIAL_POLICY = {"minimum_mount_thickness_mm": 2.5, "minimum_hinge_gap_mm": 0.2,
-                  "lessons": [], "retrieval_successes": 4, "retrieval_failures": 4}
-INITIAL_ORCHESTRATOR = '''def adapt(parameters, policy, subsystem):
+INITIAL_POLICY = {
+    "minimum_mount_thickness_mm": 2.5,
+    "minimum_hinge_gap_mm": 0.2,
+    "lessons": [],
+    "retrieval_successes": 4,
+    "retrieval_failures": 4,
+}
+INITIAL_ORCHESTRATOR = """def adapt(parameters, policy, subsystem):
     return dict(parameters)
-'''
-IMPROVED_ORCHESTRATOR = '''def adapt(parameters, policy, subsystem):
+"""
+IMPROVED_ORCHESTRATOR = """def adapt(parameters, policy, subsystem):
     result = dict(parameters)
     if subsystem == "structural":
         result["thickness_mm"] = max(result["thickness_mm"], policy["minimum_mount_thickness_mm"])
     else:
         result["hinge_gap_mm"] = max(result["hinge_gap_mm"], policy["minimum_hinge_gap_mm"])
     return result
-'''
-INITIAL_UI = '''import React from "react";
+"""
+INITIAL_UI = """import React from "react";
 export default function PolicyNote() {
   return <div style={{fontFamily:"monospace",color:"#a5ada7",padding:"12px"}}>BASELINE POLICY · Geometry screening active</div>;
 }
-'''
-IMPROVED_UI = '''import React from "react";
+"""
+IMPROVED_UI = """import React from "react";
 export default function PolicyNote() {
   return <div style={{fontFamily:"monospace",color:"#8cd1bb",padding:"12px"}}>LEARNED POLICY · Thickness and hinge clearance checked before generation</div>;
 }
-'''
+"""

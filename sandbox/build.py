@@ -1,4 +1,5 @@
 """Untrusted code execution entry point. This container never produces scores."""
+
 import importlib.util
 import json
 from pathlib import Path
