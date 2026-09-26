@@ -86,7 +86,7 @@ test("two-worker replay completes and browser inspection archives screenshots", 
     .poll(
       async () =>
         (await (await request.get(`/api/runs/${run._id}`)).json()).status,
-      { timeout: 90000, intervals: [1000] },
+      { timeout: process.env.DAVINCI_E2E_ATLAS === "1" ? 300000 : 90000, intervals: [1000] },
     )
     .toBe("completed");
   const state = await (await request.get("/api/workbench")).json();

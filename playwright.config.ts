@@ -1,7 +1,7 @@
 import { defineConfig } from "@playwright/test";
 export default defineConfig({
   testDir: "./tests/browser",
-  timeout: 90000,
+  timeout: process.env.DAVINCI_E2E_ATLAS === "1" ? 420000 : 90000,
   workers: 1,
   use: {
     baseURL: "http://127.0.0.1:3215",

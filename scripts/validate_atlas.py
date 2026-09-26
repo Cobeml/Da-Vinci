@@ -36,10 +36,17 @@ class Validation:
         fcntl.flock(self.lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         self.engine = Engine(self.settings)
         self.store = self.engine.store
-        self.store.insert("validations", {
-            "_id": SESSION, "revision": 0, "created_at": now(),
-            "allocations": ALLOCATIONS, "runs": {}, "checks": {},
-        })
+        self.store.insert(
+            "validations",
+            {
+                "_id": SESSION,
+                "revision": 0,
+                "created_at": now(),
+                "allocations": ALLOCATIONS,
+                "runs": {},
+                "checks": {},
+            },
+        )
         if self.record()["allocations"] != ALLOCATIONS:
             raise RuntimeError("Validation allocation mismatch")
 
@@ -48,9 +55,11 @@ class Validation:
 
     def save(self, name, **result):
         result = {"checked_at": now(), **result}
+
         def update(doc):
             doc["checks"][name] = result
             return doc
+
         self.store.mutate("validations", SESSION, update)
         (self.root / "report.json").write_text(json.dumps(self.record(), indent=2))
         emit(stage=name, **result)
@@ -64,23 +73,49 @@ class Validation:
         index = next(i for i in self.store.db.memories.list_search_indexes() if i["name"] == "memory_vector")
         assert index["queryable"] and index["status"] == "READY"
         assert index["latestDefinition"]["fields"][0]["numDimensions"] == 1536
-        self.save("infrastructure", passed=True, gridfs_remote_read=True, artifact_id=artifact,
-                  sha256=hashlib.sha256(downloaded).hexdigest(), vector_index_ready=True)
+        self.save(
+            "infrastructure",
+            passed=True,
+            gridfs_remote_read=True,
+            artifact_id=artifact,
+            sha256=hashlib.sha256(downloaded).hexdigest(),
+            vector_index_ready=True,
+        )
 
     def prepare(self):
         directory = self.root / "triggers"
         directory.mkdir(exist_ok=True)
         for name in ("enqueue-candidate.js", "enqueue-reflection.js"):
-            source = (Path("atlas") / name).read_text().replace(
-                'context.values.get("DAVINCI_DATABASE")', json.dumps(self.settings.mongodb_database))
+            source = (
+                (Path("atlas") / name)
+                .read_text()
+                .replace('context.values.get("DAVINCI_DATABASE")', json.dumps(self.settings.mongodb_database))
+            )
             (directory / name).write_text(source)
-        self.save("trigger_sources", passed=True, directory=str(directory), database=self.settings.mongodb_database)
+        self.save(
+            "trigger_sources", passed=True, directory=str(directory), database=self.settings.mongodb_database
+        )
 
     def recovery(self):
-        assert not self.store.list("runs", {"status": "running"}), "Run recovery checks while workers are stopped"
+        assert not self.store.list("runs", {"status": "running"}), (
+            "Run recovery checks while workers are stopped"
+        )
         run_id = document("recovery-probe")["_id"]
-        self.store.insert("runs", document("run", _id=run_id, status="running", mode="replay",
-            phase="generating", round=0, diagnostic=True, budget_usd=0.05, spent_usd=0, revision=0))
+        self.store.insert(
+            "runs",
+            document(
+                "run",
+                _id=run_id,
+                status="running",
+                mode="replay",
+                phase="generating",
+                round=0,
+                diagnostic=True,
+                budget_usd=0.05,
+                spent_usd=0,
+                revision=0,
+            ),
+        )
         try:
             self.engine.reconcile()
             job_id = "generate_round:" + run_id + ":0"
@@ -107,9 +142,17 @@ class Validation:
             restarted.stop(run_id)
             restarted.execute_job(new)
             assert self.store.get("jobs", job_id)["status"] == "cancelled"
-            self.save("recovery", passed=True, diagnostic_run_id=run_id,
-                      concurrent_claim=True, stale_lease_rejected=True, reconciler_created_job=True,
-                      restart=True, cancellation=True, budget_exhaustion=True)
+            self.save(
+                "recovery",
+                passed=True,
+                diagnostic_run_id=run_id,
+                concurrent_claim=True,
+                stale_lease_rejected=True,
+                reconciler_created_job=True,
+                restart=True,
+                cancellation=True,
+                budget_exhaustion=True,
+            )
         finally:
             self.engine.stop(run_id)
 
@@ -118,16 +161,47 @@ class Validation:
         # Store.enqueue is called here: only Atlas triggers can create these jobs.
         attempt = document("trigger-probe")["_id"]
         run_id = attempt + "-run"
-        self.store.insert("runs", document("run", _id=run_id, status="completed", mode="replay",
-                                          diagnostic=True, validation_session=SESSION))
+        self.store.insert(
+            "runs",
+            document(
+                "run",
+                _id=run_id,
+                status="completed",
+                mode="replay",
+                diagnostic=True,
+                validation_session=SESSION,
+            ),
+        )
         candidate_id, evaluation_id = attempt + "-candidate", attempt + "-evaluation"
-        self.store.insert("candidates", document("candidate", _id=candidate_id, run_id=run_id,
-            project_id="validation-diagnostic", source_commit="diagnostic-no-code",
-            source_bundle_artifact_id="diagnostic-no-artifact", specification_id=SPECIFICATION["_id"],
-            parameters={}, subsystem="structural", diagnostic=True))
-        self.store.insert("evaluations", document("evaluation", _id=evaluation_id,
-            candidate_id=candidate_id, run_id=run_id, evaluator_version="trigger-diagnostic",
-            outcome="failed", metrics={}, violations=[], diagnostic=True))
+        self.store.insert(
+            "candidates",
+            document(
+                "candidate",
+                _id=candidate_id,
+                run_id=run_id,
+                project_id="validation-diagnostic",
+                source_commit="diagnostic-no-code",
+                source_bundle_artifact_id="diagnostic-no-artifact",
+                specification_id=SPECIFICATION["_id"],
+                parameters={},
+                subsystem="structural",
+                diagnostic=True,
+            ),
+        )
+        self.store.insert(
+            "evaluations",
+            document(
+                "evaluation",
+                _id=evaluation_id,
+                candidate_id=candidate_id,
+                run_id=run_id,
+                evaluator_version="trigger-diagnostic",
+                outcome="failed",
+                metrics={},
+                violations=[],
+                diagnostic=True,
+            ),
+        )
         ids = ["evaluate_candidate:" + candidate_id, "reflect_on_evaluation:" + evaluation_id]
         deadline = time.monotonic() + 120
         while not all(self.store.get("jobs", job_id) for job_id in ids):
@@ -142,14 +216,17 @@ class Validation:
     def run(self, slot, rounds):
         run_id = f"run-{SESSION}-{slot}"
         allocation = ALLOCATIONS.get(slot, 0)
+
         # Reserve each named allocation before starting. Deterministic run IDs
         # prevent a crash between start and checkpoint from creating another run.
         def reserve(doc):
             doc["runs"].setdefault(slot, {"run_id": run_id, "budget_usd": allocation})
             return doc
+
         self.store.mutate("validations", SESSION, reserve)
-        request = RunRequest(mode="replay" if slot == "replay" else "live", rounds=rounds,
-                             budget_usd=allocation or 1)
+        request = RunRequest(
+            mode="replay" if slot == "replay" else "live", rounds=rounds, budget_usd=allocation or 1
+        )
         run = self.engine.start(request, run_id=run_id)
         emit(stage="run_started", slot=slot, run_id=run_id, budget_usd=run["budget_usd"])
         return run_id
@@ -162,7 +239,14 @@ class Validation:
             run = self.store.get("runs", run_id)
             state = (run["status"], run["round"], run["phase"], round(run["spent_usd"], 5))
             if state != previous:
-                emit(stage="run_progress", slot=slot, status=state[0], round=state[1], phase=state[2], spent_usd=state[3])
+                emit(
+                    stage="run_progress",
+                    slot=slot,
+                    status=state[0],
+                    round=state[1],
+                    phase=state[2],
+                    spent_usd=state[3],
+                )
                 previous = state
             if run["status"] != "running":
                 break
@@ -172,10 +256,16 @@ class Validation:
                 return False
             time.sleep(5)
         evaluations = self.store.list("evaluations", {"run_id": run_id})
-        self.save(slot, passed=run["status"] == "completed", run_id=run_id, status=run["status"],
-                  spent_usd=run["spent_usd"], evaluations=len(evaluations),
-                  passed_evaluations=sum(e["outcome"] == "passed" for e in evaluations),
-                  accepted_assemblies=len(self.store.list("champions", {"run_id": run_id})))
+        self.save(
+            slot,
+            passed=run["status"] == "completed",
+            run_id=run_id,
+            status=run["status"],
+            spent_usd=run["spent_usd"],
+            evaluations=len(evaluations),
+            passed_evaluations=sum(e["outcome"] == "passed" for e in evaluations),
+            accepted_assemblies=len(self.store.list("champions", {"run_id": run_id})),
+        )
         return run["status"] == "completed"
 
     def vector(self, slot):
@@ -188,19 +278,42 @@ class Validation:
             if memory.get("embedding_status") != "ready":
                 embedding = provider.embed(memory["summary"], run_id)
                 assert len(embedding) == 1536
-                self.store.update("memories", memory["_id"], {"embedding": embedding, "embedding_status": "ready",
-                                  "embedding_validation_run_id": run_id})
+                self.store.update(
+                    "memories",
+                    memory["_id"],
+                    {
+                        "embedding": embedding,
+                        "embedding_status": "ready",
+                        "embedding_validation_run_id": run_id,
+                    },
+                )
         vector = provider.embed("structural mount thickness failures and successful clearance", run_id)
         deadline = time.monotonic() + 120
         outcomes = {m["outcome"] for m in memories}
         hits = []
         while True:
-            hits = list(self.store.db.memories.aggregate([{"$vectorSearch": {
-                "index": "memory_vector", "path": "embedding", "queryVector": vector,
-                "numCandidates": 100, "limit": 20, "filter": {
-                    "project_id": "uas-demo", "specification_id": SPECIFICATION["_id"],
-                    "evaluator_version": self.engine.evaluator_version, "embedding_version": 1,
-                }}}, {"$project": {"_id": 1, "outcome": 1, "score": {"$meta": "vectorSearchScore"}}}]))
+            hits = list(
+                self.store.db.memories.aggregate(
+                    [
+                        {
+                            "$vectorSearch": {
+                                "index": "memory_vector",
+                                "path": "embedding",
+                                "queryVector": vector,
+                                "numCandidates": 100,
+                                "limit": 20,
+                                "filter": {
+                                    "project_id": "uas-demo",
+                                    "specification_id": SPECIFICATION["_id"],
+                                    "evaluator_version": self.engine.evaluator_version,
+                                    "embedding_version": 1,
+                                },
+                            }
+                        },
+                        {"$project": {"_id": 1, "outcome": 1, "score": {"$meta": "vectorSearchScore"}}},
+                    ]
+                )
+            )
             if hits and outcomes.issubset({h["outcome"] for h in hits}):
                 break
             if time.monotonic() >= deadline:
@@ -208,58 +321,98 @@ class Validation:
             time.sleep(3)
         selected = self.engine.memory(run).search("structural", "thin mount failure", run_id=run_id)
         assert any(m.get("semantic_score") is not None for m in selected)
-        assert all(m["subsystem"] == "structural" and m["specification_id"] == SPECIFICATION["_id"]
-                   and m["evaluator_version"] == self.engine.evaluator_version for m in selected)
+        assert all(
+            m["subsystem"] == "structural"
+            and m["specification_id"] == SPECIFICATION["_id"]
+            and m["evaluator_version"] == self.engine.evaluator_version
+            for m in selected
+        )
         self.save("vector", passed=True, direct_hits=hits, scoped_memory_ids=[m["_id"] for m in selected])
 
     def reflection(self, slot):
         run_id = self.record()["runs"][slot]["run_id"]
         run = self.store.get("runs", run_id)
-        failures = [e for e in self.store.list("evaluations", {"outcome": "failed"}) if not e.get("diagnostic")]
+        failures = [
+            e for e in self.store.list("evaluations", {"outcome": "failed"}) if not e.get("diagnostic")
+        ]
         assert failures, "A known failed replay evaluation is required"
-        context = {"evaluations": failures[:2], "specification": SPECIFICATION,
-                   "release": self.engine.improvements.active(),
-                   "diagnostic": "Explicit validation using archived real replay failures; not a live generation failure."}
+        context = {
+            "evaluations": failures[:2],
+            "specification": SPECIFICATION,
+            "release": self.engine.improvements.active(),
+            "diagnostic": "Explicit validation using archived real replay failures; not a live generation failure.",
+        }
         provider = self.engine.provider(run)
         prior = self.record()["checks"].get("reflection", {})
         tool = self.store.get("tools", prior.get("tool_id", ""))
         if not tool or tool["status"] != "active":
             proposal = provider.tool(context)
-            tool = self.engine.improvements.create_tool(proposal.source, proposal.summary, run_id, failures[0]["_id"])
-        self.save("reflection", passed=False, tool_id=tool["_id"], tool_status=tool["status"], diagnostic=True)
+            tool = self.engine.improvements.create_tool(
+                proposal.source, proposal.summary, run_id, failures[0]["_id"]
+            )
+        self.save(
+            "reflection", passed=False, tool_id=tool["_id"], tool_status=tool["status"], diagnostic=True
+        )
         assert tool["status"] == "active"
         patch = provider.patch(context)
         release = self.engine.improvements.propose_release(patch, run_id, failures[0]["_id"])
-        self.save("reflection", passed=False, tool_id=tool["_id"], release_id=release["_id"],
-                  release_status=release["status"], diagnostic=True)
+        self.save(
+            "reflection",
+            passed=False,
+            tool_id=tool["_id"],
+            release_id=release["_id"],
+            release_status=release["status"],
+            diagnostic=True,
+        )
         assert release["status"] == "validated"
         assert self.engine.improvements.activate(release["_id"], run_id)
         restarted = Engine(self.settings)
-        result = restarted.improvements.invoke_tool(tool["_id"], {"dimensions_m": [2, 3, 4], "direction": [0, 0, 1]}, run_id)
+        result = restarted.improvements.invoke_tool(
+            tool["_id"], {"dimensions_m": [2, 3, 4], "direction": [0, 0, 1]}, run_id
+        )
         assert result["projected_area_m2"] == 6
         bad = restarted.improvements.propose_release(
-            PatchProposal(summary="Explicit rejected-release diagnostic", files={"orchestrator.py": "raise RuntimeError('diagnostic')"}),
-            run_id, failures[0]["_id"])
+            PatchProposal(
+                summary="Explicit rejected-release diagnostic",
+                files={"orchestrator.py": "raise RuntimeError('diagnostic')"},
+            ),
+            run_id,
+            failures[0]["_id"],
+        )
         assert bad["status"] == "rejected"
         assert restarted.improvements.active()["_id"] == release["_id"]
-        self.save("reflection", passed=True, tool_id=tool["_id"], release_id=release["_id"],
-                  rejected_release_id=bad["_id"], reused_after_restart=True, diagnostic=True)
+        self.save(
+            "reflection",
+            passed=True,
+            tool_id=tool["_id"],
+            release_id=release["_id"],
+            rejected_release_id=bad["_id"],
+            reused_after_restart=True,
+            diagnostic=True,
+        )
 
     def inspect(self, slot):
         from davinci.browser import inspect_candidate
+
         run_id = self.record()["runs"][slot]["run_id"]
         evaluations = self.store.list("evaluations", {"run_id": run_id, "outcome": "passed"})
         candidate = next(e["candidate_id"] for e in evaluations if e.get("artifacts", {}).get("model.glb"))
         inspect_candidate(self.settings, candidate)
         inspections = self.store.list("inspections", {"candidate_id": candidate})
         assert inspections
-        self.save("inspection", passed=True, candidate_id=candidate,
-                  inspection_ids=[i["_id"] for i in inspections])
+        self.save(
+            "inspection", passed=True, candidate_id=candidate, inspection_ids=[i["_id"] for i in inspections]
+        )
 
     def export(self, slot):
         import httpx
+
         run_id = self.record()["runs"][slot]["run_id"]
-        headers = {"authorization": "Bearer " + self.settings.davinci_api_token} if self.settings.davinci_api_token else {}
+        headers = (
+            {"authorization": "Bearer " + self.settings.davinci_api_token}
+            if self.settings.davinci_api_token
+            else {}
+        )
         response = httpx.get(f"http://127.0.0.1:8215/api/runs/{run_id}/bundle", headers=headers, timeout=120)
         response.raise_for_status()
         path = self.root / f"{slot}.zip"
@@ -268,6 +421,10 @@ class Validation:
             assert archive.testzip() is None
             names = archive.namelist()
             assert "run.json" in names and "specification.json" in names
+            manifest = json.loads(archive.read("artifact-manifest.json"))
+            for item in manifest:
+                content = archive.read(f"artifacts/{item['_id']}/{item['name']}")
+                assert hashlib.sha256(content).hexdigest() == item["sha256"]
         # Verify all run evaluation artifacts independently through GridFS too.
         count = 0
         with tempfile.TemporaryDirectory(dir=self.root) as empty:
@@ -276,7 +433,14 @@ class Validation:
                 for artifact in evaluation.get("artifacts", {}).values():
                     remote.read(artifact)
                     count += 1
-        self.save("export_" + slot, passed=True, archive=str(path), entries=len(names), remote_artifacts_verified=count)
+        self.save(
+            "export_" + slot,
+            passed=True,
+            archive=str(path),
+            entries=len(names),
+            manifest_hashes_verified=len(manifest),
+            remote_artifacts_verified=count,
+        )
 
     def report(self):
         record = self.record()
@@ -290,7 +454,22 @@ class Validation:
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("stage", choices=["prepare", "infrastructure", "recovery", "triggers", "run", "monitor", "vector", "reflection", "inspect", "export", "report"])
+    parser.add_argument(
+        "stage",
+        choices=[
+            "prepare",
+            "infrastructure",
+            "recovery",
+            "triggers",
+            "run",
+            "monitor",
+            "vector",
+            "reflection",
+            "inspect",
+            "export",
+            "report",
+        ],
+    )
     parser.add_argument("--slot", choices=["replay", *ALLOCATIONS], default="replay")
     parser.add_argument("--rounds", type=int, default=4)
     parser.add_argument("--seconds", type=int, default=1800)

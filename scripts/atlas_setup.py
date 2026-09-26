@@ -50,7 +50,10 @@ def provision(settings, wait_seconds=600):
         }
         if name in db.list_collection_names():
             existing = db[name].options()
-            if existing.get("validator") != validator or existing.get("validationLevel", "strict") != "strict":
+            if (
+                existing.get("validator") != validator
+                or existing.get("validationLevel", "strict") != "strict"
+            ):
                 raise RuntimeError(f"Existing {name} validator differs; inspect before changing it")
         else:
             db.create_collection(name, validator=validator)
@@ -65,7 +68,10 @@ def provision(settings, wait_seconds=600):
     existing = {index["name"]: index for index in db.memories.list_search_indexes()}
     if definition["name"] in existing:
         actual = existing[definition["name"]]
-        if actual.get("latestDefinition") != definition["definition"] or actual.get("type") != definition["type"]:
+        if (
+            actual.get("latestDefinition") != definition["definition"]
+            or actual.get("type") != definition["type"]
+        ):
             raise RuntimeError("Existing memory_vector definition differs; inspect before changing it")
     else:
         db.memories.create_search_index(SearchIndexModel(**definition))
@@ -94,7 +100,10 @@ def main():
         provision(Settings(), args.wait_seconds)
     except Exception as exc:
         # Never print driver exceptions: they can contain the connection URI.
-        print(json.dumps({"stage": "atlas_setup", "status": "failed", "error_type": type(exc).__name__}), flush=True)
+        print(
+            json.dumps({"stage": "atlas_setup", "status": "failed", "error_type": type(exc).__name__}),
+            flush=True,
+        )
         return 1
     return 0
 
