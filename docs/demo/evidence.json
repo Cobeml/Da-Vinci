@@ -1,0 +1,2190 @@
+{
+  "schema_version": 1,
+  "accepted_at": "2026-09-26T17:58:07.327776+00:00",
+  "source_report_sha256": "c1a23342742fb0ee392a164ab536ed8be5dc63a097ac80c3225d2fdf43dd15fb",
+  "checks": {
+    "reflection": {
+      "checked_at": "2026-09-26T17:36:46.984141+00:00",
+      "passed": true,
+      "tool_id": "tool-area-49a71c05c68127e0",
+      "release_id": "release-705e594f50cb4728",
+      "rejected_release_id": "release-a330de64e3cd7e02",
+      "reused_after_restart": true,
+      "diagnostic": true
+    },
+    "promoted_release_reuse": {
+      "checked_at": "2026-09-26T17:52:53.074138+00:00",
+      "passed": true,
+      "run_id": "run-atlas-validation-20260926-live3",
+      "release_id": "release-705e594f50cb4728",
+      "tool_id": "tool-area-49a71c05c68127e0",
+      "candidates": 4,
+      "memory_retrieved": true
+    },
+    "budget": {
+      "checked_at": "2026-09-26T17:58:02.452014+00:00",
+      "passed": true,
+      "spent_usd": 1.3044678000000003,
+      "held_usd": 0,
+      "limit_usd": 25
+    },
+    "triggers": {
+      "checked_at": "2026-09-26T17:50:05.728133+00:00",
+      "passed": true,
+      "workers_stopped": true,
+      "job_ids": [
+        "evaluate_candidate:trigger-probe-469b63574b6d423b-candidate",
+        "reflect_on_evaluation:trigger-probe-469b63574b6d423b-evaluation"
+      ],
+      "diagnostic_run_id": "trigger-probe-469b63574b6d423b-run"
+    },
+    "vector": {
+      "checked_at": "2026-09-26T17:35:27.246775+00:00",
+      "passed": true,
+      "direct_hits": [
+        {
+          "_id": "memory-evaluation-candidate-run-atlas-validation-20260926-replay-0-structural",
+          "outcome": "failed",
+          "score": 0.700385570526123
+        },
+        {
+          "_id": "memory-evaluation-candidate-run-atlas-validation-20260926-replay-0-aerodynamic",
+          "outcome": "failed",
+          "score": 0.6942213773727417
+        },
+        {
+          "_id": "memory-evaluation-candidate-run-atlas-validation-20260926-replay-1-structural",
+          "outcome": "passed",
+          "score": 0.6845521330833435
+        },
+        {
+          "_id": "memory-evaluation-candidate-run-2e6b30296e67424f-1-structural",
+          "outcome": "passed",
+          "score": 0.6845521330833435
+        },
+        {
+          "_id": "memory-evaluation-candidate-run-atlas-validation-20260926-replay-3-structural",
+          "outcome": "passed",
+          "score": 0.681647002696991
+        },
+        {
+          "_id": "memory-evaluation-candidate-run-atlas-validation-20260926-live1-1-structural",
+          "outcome": "passed",
+          "score": 0.6816290020942688
+        },
+        {
+          "_id": "memory-evaluation-candidate-run-atlas-validation-20260926-live1-0-structural",
+          "outcome": "passed",
+          "score": 0.6816290020942688
+        },
+        {
+          "_id": "memory-evaluation-candidate-run-atlas-validation-20260926-live1-2-structural",
+          "outcome": "passed",
+          "score": 0.6816290020942688
+        },
+        {
+          "_id": "memory-evaluation-candidate-run-atlas-validation-20260926-replay-2-structural",
+          "outcome": "passed",
+          "score": 0.6816290020942688
+        },
+        {
+          "_id": "memory-evaluation-candidate-run-atlas-validation-20260926-live1-3-structural",
+          "outcome": "passed",
+          "score": 0.6816290020942688
+        },
+        {
+          "_id": "memory-evaluation-candidate-run-77daa3503c1d4923-0-structural",
+          "outcome": "passed",
+          "score": 0.6816290020942688
+        },
+        {
+          "_id": "memory-evaluation-candidate-run-2e6b30296e67424f-0-structural",
+          "outcome": "passed",
+          "score": 0.6816290020942688
+        },
+        {
+          "_id": "memory-evaluation-candidate-run-2e6b30296e67424f-2-structural",
+          "outcome": "passed",
+          "score": 0.6816290020942688
+        },
+        {
+          "_id": "memory-evaluation-candidate-run-77daa3503c1d4923-0-aerodynamic",
+          "outcome": "passed",
+          "score": 0.6663053631782532
+        },
+        {
+          "_id": "memory-evaluation-candidate-run-2e6b30296e67424f-0-aerodynamic",
+          "outcome": "passed",
+          "score": 0.6663053631782532
+        },
+        {
+          "_id": "memory-evaluation-candidate-run-atlas-validation-20260926-replay-2-aerodynamic",
+          "outcome": "passed",
+          "score": 0.6660708785057068
+        },
+        {
+          "_id": "memory-evaluation-candidate-run-atlas-validation-20260926-live1-2-aerodynamic",
+          "outcome": "passed",
+          "score": 0.6660708785057068
+        },
+        {
+          "_id": "memory-evaluation-candidate-run-atlas-validation-20260926-live1-3-aerodynamic",
+          "outcome": "passed",
+          "score": 0.6660708785057068
+        },
+        {
+          "_id": "memory-evaluation-candidate-run-2e6b30296e67424f-2-aerodynamic",
+          "outcome": "passed",
+          "score": 0.6660708785057068
+        },
+        {
+          "_id": "memory-evaluation-candidate-run-atlas-validation-20260926-live1-0-aerodynamic",
+          "outcome": "passed",
+          "score": 0.6660548448562622
+        }
+      ],
+      "scoped_memory_ids": [
+        "memory-evaluation-candidate-run-atlas-validation-20260926-replay-1-structural",
+        "memory-evaluation-candidate-run-atlas-validation-20260926-replay-3-structural",
+        "memory-evaluation-candidate-run-atlas-validation-20260926-replay-2-structural",
+        "memory-evaluation-candidate-run-2e6b30296e67424f-1-structural",
+        "memory-evaluation-candidate-run-atlas-validation-20260926-replay-0-structural"
+      ]
+    }
+  },
+  "runs": {
+    "replay": {
+      "run_id": "run-atlas-validation-20260926-replay",
+      "zip_sha256": "0c1f3a373bbe601adbf062b0162a9eff7121f917bae50fe1d81981cfbc38e613",
+      "evaluations": [
+        {
+          "_id": "evaluation-candidate-run-atlas-validation-20260926-replay-0-structural",
+          "schema_version": 1,
+          "created_at": "2026-09-26T17:22:41.300504+00:00",
+          "candidate_id": "candidate-run-atlas-validation-20260926-replay-0-structural",
+          "run_id": "run-atlas-validation-20260926-replay",
+          "round": 0,
+          "subsystem": "structural",
+          "evaluator_version": "screening-dfe5dcf5863f",
+          "runtime_image_digest": "sha256:7c793165d040ff00df45ffb952e5e590725027565bd9fa55011054f257cc1111",
+          "peak_rss_mb": 472.01171875,
+          "outcome": "failed",
+          "metrics": {
+            "mass_kg": {
+              "value": 0.012858212398023644,
+              "unit": "kg",
+              "fidelity": "analytic_screening"
+            },
+            "thickness_mm": {
+              "value": 1.5,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            },
+            "bending_stress_pa": {
+              "value": 80000000.0,
+              "unit": "Pa",
+              "fidelity": "analytic_screening"
+            },
+            "deflection_mm": {
+              "value": 1.8550724637681157,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            }
+          },
+          "violations": [
+            {
+              "code": "MINIMUM_THICKNESS",
+              "message": "Plate is below the fixed minimum thickness"
+            },
+            {
+              "code": "DEFLECTION_LIMIT",
+              "message": "Cantilever deflection exceeds the screening limit"
+            }
+          ],
+          "objective": 0.24803650459150547,
+          "fidelity": "analytic_screening",
+          "bounds_mm": {
+            "x": 80.0,
+            "y": 40.0,
+            "z": 1.5
+          },
+          "limitations": [
+            "Nominal beam screening excludes bolt bearing and stress concentrations"
+          ],
+          "artifacts": {
+            "model.step": "artifact-e115679150866489f80638c758b4c87e5191d34189c55fcbd9ccb5fa8410a9e3",
+            "model.glb": "artifact-c3145190751a29856e5913dd8b762d0c4a3072c295f49bf557a445b19bbadb4c",
+            "execution.log": "artifact-64a8ca6497bc60ba34bba39bd62b063529d120eb9d9a3625e8757dc920676da5"
+          },
+          "duration_seconds": 7.373126736958511
+        },
+        {
+          "_id": "evaluation-candidate-run-atlas-validation-20260926-replay-0-aerodynamic",
+          "schema_version": 1,
+          "created_at": "2026-09-26T17:22:42.324169+00:00",
+          "candidate_id": "candidate-run-atlas-validation-20260926-replay-0-aerodynamic",
+          "run_id": "run-atlas-validation-20260926-replay",
+          "round": 0,
+          "subsystem": "aerodynamic",
+          "evaluator_version": "screening-dfe5dcf5863f",
+          "runtime_image_digest": "sha256:7c793165d040ff00df45ffb952e5e590725027565bd9fa55011054f257cc1111",
+          "peak_rss_mb": 480.69921875,
+          "outcome": "failed",
+          "metrics": {
+            "mass_kg": {
+              "value": 0.042283119854491284,
+              "unit": "kg",
+              "fidelity": "analytic_screening"
+            },
+            "span_mm": {
+              "value": 600.0,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            },
+            "hinge_gap_mm": {
+              "value": 0.19999999999987494,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            },
+            "flap_fraction": {
+              "value": 0.2491666666666666,
+              "unit": "ratio",
+              "fidelity": "analytic_screening"
+            },
+            "required_cl": {
+              "value": 0.5668934240362801,
+              "unit": "ratio",
+              "fidelity": "analytic_screening"
+            },
+            "induced_drag_n": {
+              "value": 0.45111945320832003,
+              "unit": "N",
+              "fidelity": "analytic_screening"
+            },
+            "projected_area_m2": {
+              "value": 0.07200000000000013,
+              "unit": "m2",
+              "fidelity": "analytic_screening"
+            }
+          },
+          "violations": [
+            {
+              "code": "HINGE_CLEARANCE",
+              "message": "Hinge gap is below the fixed clearance limit"
+            },
+            {
+              "code": "TRAVEL_COLLISION",
+              "message": "Control surface collides at -20 degrees"
+            }
+          ],
+          "objective": 1.0,
+          "fidelity": "analytic_screening",
+          "bounds_mm": {
+            "x": 120.00000000000023,
+            "y": 600.0,
+            "z": 14.401247603004
+          },
+          "limitations": [
+            "Induced drag estimate excludes profile drag, stall and VTOL rotor interaction"
+          ],
+          "artifacts": {
+            "model.step": "artifact-f05081ba5c87e7538418bdde04eb01729111921f0075312ccc98b5189ed3910c",
+            "model.glb": "artifact-d208c371bd0dabf411c92720e30521f0afcca22edf409afe2b4f3707061a74e4",
+            "execution.log": "artifact-64a8ca6497bc60ba34bba39bd62b063529d120eb9d9a3625e8757dc920676da5"
+          },
+          "duration_seconds": 7.372744122054428
+        },
+        {
+          "_id": "evaluation-candidate-run-atlas-validation-20260926-replay-1-structural",
+          "schema_version": 1,
+          "created_at": "2026-09-26T17:23:20.240609+00:00",
+          "candidate_id": "candidate-run-atlas-validation-20260926-replay-1-structural",
+          "run_id": "run-atlas-validation-20260926-replay",
+          "round": 1,
+          "subsystem": "structural",
+          "evaluator_version": "screening-dfe5dcf5863f",
+          "runtime_image_digest": "sha256:7c793165d040ff00df45ffb952e5e590725027565bd9fa55011054f257cc1111",
+          "peak_rss_mb": 471.77734375,
+          "outcome": "passed",
+          "metrics": {
+            "mass_kg": {
+              "value": 0.030859709755256752,
+              "unit": "kg",
+              "fidelity": "analytic_screening"
+            },
+            "thickness_mm": {
+              "value": 3.6,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            },
+            "bending_stress_pa": {
+              "value": 13888888.88888889,
+              "unit": "Pa",
+              "fidelity": "analytic_screening"
+            },
+            "deflection_mm": {
+              "value": 0.13419216317767044,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            }
+          },
+          "violations": [],
+          "objective": 0.5952876110196132,
+          "fidelity": "analytic_screening",
+          "bounds_mm": {
+            "x": 80.0,
+            "y": 40.0,
+            "z": 3.6
+          },
+          "limitations": [
+            "Nominal beam screening excludes bolt bearing and stress concentrations"
+          ],
+          "artifacts": {
+            "model.step": "artifact-55567c82abb87117068b63233c49a0d3f0c9237705ef110cae18c0dd71aef5ac",
+            "model.glb": "artifact-cc727d56726b70f47e0c27514cda69a7415d84768aa1b28c420da23dfa25136e",
+            "execution.log": "artifact-64a8ca6497bc60ba34bba39bd62b063529d120eb9d9a3625e8757dc920676da5"
+          },
+          "duration_seconds": 6.172212751931511
+        },
+        {
+          "_id": "evaluation-candidate-run-atlas-validation-20260926-replay-1-aerodynamic",
+          "schema_version": 1,
+          "created_at": "2026-09-26T17:23:22.494157+00:00",
+          "candidate_id": "candidate-run-atlas-validation-20260926-replay-1-aerodynamic",
+          "run_id": "run-atlas-validation-20260926-replay",
+          "round": 1,
+          "subsystem": "aerodynamic",
+          "evaluator_version": "screening-dfe5dcf5863f",
+          "runtime_image_digest": "sha256:7c793165d040ff00df45ffb952e5e590725027565bd9fa55011054f257cc1111",
+          "peak_rss_mb": 480.05078125,
+          "outcome": "passed",
+          "metrics": {
+            "mass_kg": {
+              "value": 0.04388784152382034,
+              "unit": "kg",
+              "fidelity": "analytic_screening"
+            },
+            "span_mm": {
+              "value": 630.0,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            },
+            "hinge_gap_mm": {
+              "value": 1.9999999999999574,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            },
+            "flap_fraction": {
+              "value": 0.24166666666666645,
+              "unit": "ratio",
+              "fidelity": "analytic_screening"
+            },
+            "required_cl": {
+              "value": 0.5398984990821714,
+              "unit": "ratio",
+              "fidelity": "analytic_screening"
+            },
+            "induced_drag_n": {
+              "value": 0.40917864236582313,
+              "unit": "N",
+              "fidelity": "analytic_screening"
+            },
+            "projected_area_m2": {
+              "value": 0.07560000000000015,
+              "unit": "m2",
+              "fidelity": "analytic_screening"
+            }
+          },
+          "violations": [],
+          "objective": 0.9070294784580498,
+          "fidelity": "analytic_screening",
+          "bounds_mm": {
+            "x": 120.00000000000023,
+            "y": 630.0,
+            "z": 14.401247603004
+          },
+          "limitations": [
+            "Induced drag estimate excludes profile drag, stall and VTOL rotor interaction"
+          ],
+          "artifacts": {
+            "model.step": "artifact-5e987653df99d9b26295e80baeb312c4757e6a7ea1ea2f2b739a51ea28058107",
+            "model.glb": "artifact-fdefbb00390b2022fbf3bee770ed88b15291fa0f70022c137f2e71221ca1778e",
+            "execution.log": "artifact-64a8ca6497bc60ba34bba39bd62b063529d120eb9d9a3625e8757dc920676da5"
+          },
+          "duration_seconds": 7.607232161913998
+        },
+        {
+          "_id": "evaluation-candidate-run-atlas-validation-20260926-replay-2-structural",
+          "schema_version": 1,
+          "created_at": "2026-09-26T17:23:41.833801+00:00",
+          "candidate_id": "candidate-run-atlas-validation-20260926-replay-2-structural",
+          "run_id": "run-atlas-validation-20260926-replay",
+          "round": 2,
+          "subsystem": "structural",
+          "evaluator_version": "screening-dfe5dcf5863f",
+          "runtime_image_digest": "sha256:7c793165d040ff00df45ffb952e5e590725027565bd9fa55011054f257cc1111",
+          "peak_rss_mb": 471.91796875,
+          "outcome": "passed",
+          "metrics": {
+            "mass_kg": {
+              "value": 0.02571642479604729,
+              "unit": "kg",
+              "fidelity": "analytic_screening"
+            },
+            "thickness_mm": {
+              "value": 3.0,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            },
+            "bending_stress_pa": {
+              "value": 20000000.0,
+              "unit": "Pa",
+              "fidelity": "analytic_screening"
+            },
+            "deflection_mm": {
+              "value": 0.23188405797101447,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            }
+          },
+          "violations": [],
+          "objective": 0.49607300918301095,
+          "fidelity": "analytic_screening",
+          "bounds_mm": {
+            "x": 80.0,
+            "y": 40.0,
+            "z": 3.0
+          },
+          "limitations": [
+            "Nominal beam screening excludes bolt bearing and stress concentrations"
+          ],
+          "artifacts": {
+            "model.step": "artifact-7e673d82ef226b982be429c3c9b9a3dfe7f2c8a33504896dd4b6ddba1aa72225",
+            "model.glb": "artifact-c09df0f19f4505c0a60445b324c2571aad707ceb353c772e7526426d3e210789",
+            "execution.log": "artifact-64a8ca6497bc60ba34bba39bd62b063529d120eb9d9a3625e8757dc920676da5"
+          },
+          "duration_seconds": 5.650922731030732
+        },
+        {
+          "_id": "evaluation-candidate-run-atlas-validation-20260926-replay-2-aerodynamic",
+          "schema_version": 1,
+          "created_at": "2026-09-26T17:23:43.554892+00:00",
+          "candidate_id": "candidate-run-atlas-validation-20260926-replay-2-aerodynamic",
+          "run_id": "run-atlas-validation-20260926-replay",
+          "round": 2,
+          "subsystem": "aerodynamic",
+          "evaluator_version": "screening-dfe5dcf5863f",
+          "runtime_image_digest": "sha256:7c793165d040ff00df45ffb952e5e590725027565bd9fa55011054f257cc1111",
+          "peak_rss_mb": 480.8515625,
+          "outcome": "passed",
+          "metrics": {
+            "mass_kg": {
+              "value": 0.04597773873924032,
+              "unit": "kg",
+              "fidelity": "analytic_screening"
+            },
+            "span_mm": {
+              "value": 660.0,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            },
+            "hinge_gap_mm": {
+              "value": 1.9999999999999574,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            },
+            "flap_fraction": {
+              "value": 0.24166666666666645,
+              "unit": "ratio",
+              "fidelity": "analytic_screening"
+            },
+            "required_cl": {
+              "value": 0.5153576582148,
+              "unit": "ratio",
+              "fidelity": "analytic_screening"
+            },
+            "induced_drag_n": {
+              "value": 0.3728259943870413,
+              "unit": "N",
+              "fidelity": "analytic_screening"
+            },
+            "projected_area_m2": {
+              "value": 0.07920000000000016,
+              "unit": "m2",
+              "fidelity": "analytic_screening"
+            }
+          },
+          "violations": [],
+          "objective": 0.8264462809917353,
+          "fidelity": "analytic_screening",
+          "bounds_mm": {
+            "x": 120.00000000000023,
+            "y": 660.0,
+            "z": 14.401247603004
+          },
+          "limitations": [
+            "Induced drag estimate excludes profile drag, stall and VTOL rotor interaction"
+          ],
+          "artifacts": {
+            "model.step": "artifact-7e3e61640ad339bcfbc5c4c86436a4f4e831345b1118d7819f0d07f3a3eb5bfd",
+            "model.glb": "artifact-9c789342c51448448e1ebd2588eda1c264b3e9e346d0ae6bcf78347183272b18",
+            "execution.log": "artifact-64a8ca6497bc60ba34bba39bd62b063529d120eb9d9a3625e8757dc920676da5"
+          },
+          "duration_seconds": 7.100564026040956
+        },
+        {
+          "_id": "evaluation-candidate-run-atlas-validation-20260926-replay-3-structural",
+          "schema_version": 1,
+          "created_at": "2026-09-26T17:24:04.243642+00:00",
+          "candidate_id": "candidate-run-atlas-validation-20260926-replay-3-structural",
+          "run_id": "run-atlas-validation-20260926-replay",
+          "round": 3,
+          "subsystem": "structural",
+          "evaluator_version": "screening-dfe5dcf5863f",
+          "runtime_image_digest": "sha256:7c793165d040ff00df45ffb952e5e590725027565bd9fa55011054f257cc1111",
+          "peak_rss_mb": 471.69140625,
+          "outcome": "passed",
+          "metrics": {
+            "mass_kg": {
+              "value": 0.02571642479604729,
+              "unit": "kg",
+              "fidelity": "analytic_screening"
+            },
+            "thickness_mm": {
+              "value": 3.0,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            },
+            "bending_stress_pa": {
+              "value": 20000000.0,
+              "unit": "Pa",
+              "fidelity": "analytic_screening"
+            },
+            "deflection_mm": {
+              "value": 0.23188405797101447,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            }
+          },
+          "violations": [],
+          "objective": 0.49607300918301095,
+          "fidelity": "analytic_screening",
+          "bounds_mm": {
+            "x": 80.0,
+            "y": 40.0,
+            "z": 3.0
+          },
+          "limitations": [
+            "Nominal beam screening excludes bolt bearing and stress concentrations"
+          ],
+          "artifacts": {
+            "model.step": "artifact-1e17fc8d0641c951918ca8ae4281026b1ca07039da0fc632e3cecacd3c381c35",
+            "model.glb": "artifact-c09df0f19f4505c0a60445b324c2571aad707ceb353c772e7526426d3e210789",
+            "execution.log": "artifact-64a8ca6497bc60ba34bba39bd62b063529d120eb9d9a3625e8757dc920676da5"
+          },
+          "duration_seconds": 5.660397534025833
+        },
+        {
+          "_id": "evaluation-candidate-run-atlas-validation-20260926-replay-3-aerodynamic",
+          "schema_version": 1,
+          "created_at": "2026-09-26T17:24:07.315439+00:00",
+          "candidate_id": "candidate-run-atlas-validation-20260926-replay-3-aerodynamic",
+          "run_id": "run-atlas-validation-20260926-replay",
+          "round": 3,
+          "subsystem": "aerodynamic",
+          "evaluator_version": "screening-dfe5dcf5863f",
+          "runtime_image_digest": "sha256:7c793165d040ff00df45ffb952e5e590725027565bd9fa55011054f257cc1111",
+          "peak_rss_mb": 481.45703125,
+          "outcome": "passed",
+          "metrics": {
+            "mass_kg": {
+              "value": 0.04806763595466034,
+              "unit": "kg",
+              "fidelity": "analytic_screening"
+            },
+            "span_mm": {
+              "value": 690.0,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            },
+            "hinge_gap_mm": {
+              "value": 1.9999999999999574,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            },
+            "flap_fraction": {
+              "value": 0.24166666666666645,
+              "unit": "ratio",
+              "fidelity": "analytic_screening"
+            },
+            "required_cl": {
+              "value": 0.49295080350980874,
+              "unit": "ratio",
+              "fidelity": "analytic_screening"
+            },
+            "induced_drag_n": {
+              "value": 0.3411111177378602,
+              "unit": "N",
+              "fidelity": "analytic_screening"
+            },
+            "projected_area_m2": {
+              "value": 0.08280000000000015,
+              "unit": "m2",
+              "fidelity": "analytic_screening"
+            }
+          },
+          "violations": [],
+          "objective": 0.7561436672967865,
+          "fidelity": "analytic_screening",
+          "bounds_mm": {
+            "x": 120.00000000000023,
+            "y": 690.0,
+            "z": 14.401247603004
+          },
+          "limitations": [
+            "Induced drag estimate excludes profile drag, stall and VTOL rotor interaction"
+          ],
+          "artifacts": {
+            "model.step": "artifact-fe1eb5588c32ec5b7d12e5de0fbd9a8ab63a131dc5c87bbea32e7eacd7510e9e",
+            "model.glb": "artifact-c5d0a1c5506e8d53ea69d65054f7e7589ef4b4ce88b6bba3414c66a89931e347",
+            "execution.log": "artifact-64a8ca6497bc60ba34bba39bd62b063529d120eb9d9a3625e8757dc920676da5"
+          },
+          "duration_seconds": 7.27037127292715
+        }
+      ],
+      "assemblies": [
+        {
+          "_id": "assembly-run-atlas-validation-20260926-replay-1",
+          "schema_version": 1,
+          "created_at": "2026-09-26T17:23:27.698393+00:00",
+          "run_id": "run-atlas-validation-20260926-replay",
+          "round": 1,
+          "parent_id": null,
+          "candidate_ids": [
+            "candidate-run-atlas-validation-20260926-replay-1-structural",
+            "candidate-run-atlas-validation-20260926-replay-1-aerodynamic"
+          ],
+          "evaluation_ids": [
+            "evaluation-candidate-run-atlas-validation-20260926-replay-1-structural",
+            "evaluation-candidate-run-atlas-validation-20260926-replay-1-aerodynamic"
+          ],
+          "mass_kg": 0.0747475512790771,
+          "outcome": "passed",
+          "mount_translation_mm": [
+            150,
+            0,
+            25
+          ],
+          "violations": [],
+          "artifacts": {
+            "assembly.step": "artifact-3541b26d47761c72ac6a47592be597c256b46d5038880ca592d609e4f657ed6c",
+            "assembly.glb": "artifact-c82860e6f20508e89843adb7b94f1856f42e2fdb035fe67c180e0fcd8d87e509"
+          },
+          "interface_check": "BRep collision and sampled control-surface travel against shared mount"
+        },
+        {
+          "_id": "assembly-run-atlas-validation-20260926-replay-2",
+          "schema_version": 1,
+          "created_at": "2026-09-26T17:23:49.769425+00:00",
+          "run_id": "run-atlas-validation-20260926-replay",
+          "round": 2,
+          "parent_id": "assembly-run-atlas-validation-20260926-replay-1",
+          "candidate_ids": [
+            "candidate-run-atlas-validation-20260926-replay-2-structural",
+            "candidate-run-atlas-validation-20260926-replay-2-aerodynamic"
+          ],
+          "evaluation_ids": [
+            "evaluation-candidate-run-atlas-validation-20260926-replay-2-structural",
+            "evaluation-candidate-run-atlas-validation-20260926-replay-2-aerodynamic"
+          ],
+          "mass_kg": 0.07169416353528761,
+          "outcome": "passed",
+          "mount_translation_mm": [
+            150,
+            0,
+            25
+          ],
+          "violations": [],
+          "artifacts": {
+            "assembly.step": "artifact-735e34ff20c23197ff882f67d48e175e69e4eb13621c78dab44aef28dd44a9fa",
+            "assembly.glb": "artifact-1adf7d8d42c439d36b132b2b703856f6446c279fd4fd5edc74f7bf66d9e1d397"
+          },
+          "interface_check": "BRep collision and sampled control-surface travel against shared mount"
+        },
+        {
+          "_id": "assembly-run-atlas-validation-20260926-replay-3",
+          "schema_version": 1,
+          "created_at": "2026-09-26T17:24:13.504709+00:00",
+          "run_id": "run-atlas-validation-20260926-replay",
+          "round": 3,
+          "parent_id": "assembly-run-atlas-validation-20260926-replay-2",
+          "candidate_ids": [
+            "candidate-run-atlas-validation-20260926-replay-3-structural",
+            "candidate-run-atlas-validation-20260926-replay-3-aerodynamic"
+          ],
+          "evaluation_ids": [
+            "evaluation-candidate-run-atlas-validation-20260926-replay-3-structural",
+            "evaluation-candidate-run-atlas-validation-20260926-replay-3-aerodynamic"
+          ],
+          "mass_kg": 0.07378406075070763,
+          "outcome": "passed",
+          "mount_translation_mm": [
+            150,
+            0,
+            25
+          ],
+          "violations": [],
+          "artifacts": {
+            "assembly.step": "artifact-d726a9f042a9ab5928cae58746128f00922f180ce5136281a5746cf43b01b047",
+            "assembly.glb": "artifact-d1ea115b0b3dc00348fd3a49f6595148b873d8e1c631fced81bc9039542a90d9"
+          },
+          "interface_check": "BRep collision and sampled control-surface travel against shared mount"
+        }
+      ],
+      "candidates": [
+        {
+          "_id": "candidate-run-atlas-validation-20260926-replay-0-structural",
+          "parameters": {
+            "thickness_mm": 1.5
+          },
+          "subsystem": "structural",
+          "round": 0,
+          "source_commit": "0da756bba2aa1aacffac41ac986fe5caa69103d2",
+          "release_id": "release-baseline",
+          "tool_version_ids": [],
+          "specification_id": "spec-demo-c850351dc8bd",
+          "evaluator_version": "screening-dfe5dcf5863f"
+        },
+        {
+          "_id": "candidate-run-atlas-validation-20260926-replay-0-aerodynamic",
+          "parameters": {
+            "span_mm": 600.0,
+            "hinge_gap_mm": 0.2,
+            "flap_fraction": 0.25
+          },
+          "subsystem": "aerodynamic",
+          "round": 0,
+          "source_commit": "241f8fd6235ef17ed4050444e211311f6a5ce42e",
+          "release_id": "release-baseline",
+          "tool_version_ids": [],
+          "specification_id": "spec-demo-c850351dc8bd",
+          "evaluator_version": "screening-dfe5dcf5863f"
+        },
+        {
+          "_id": "candidate-run-atlas-validation-20260926-replay-1-structural",
+          "parameters": {
+            "thickness_mm": 3.6
+          },
+          "subsystem": "structural",
+          "round": 1,
+          "source_commit": "501f0bcbbfdec0cc28dda9a73877826bd0ee568f",
+          "release_id": "release-f4ceedc9d506a906",
+          "tool_version_ids": [
+            "tool-area-2dffe0de9373ecc1"
+          ],
+          "specification_id": "spec-demo-c850351dc8bd",
+          "evaluator_version": "screening-dfe5dcf5863f"
+        },
+        {
+          "_id": "candidate-run-atlas-validation-20260926-replay-1-aerodynamic",
+          "parameters": {
+            "span_mm": 630.0,
+            "hinge_gap_mm": 2.0,
+            "flap_fraction": 0.25
+          },
+          "subsystem": "aerodynamic",
+          "round": 1,
+          "source_commit": "4515f4e652c01242c6460c986be4fa9ec6581d20",
+          "release_id": "release-f4ceedc9d506a906",
+          "tool_version_ids": [
+            "tool-area-2dffe0de9373ecc1"
+          ],
+          "specification_id": "spec-demo-c850351dc8bd",
+          "evaluator_version": "screening-dfe5dcf5863f"
+        },
+        {
+          "_id": "candidate-run-atlas-validation-20260926-replay-2-structural",
+          "parameters": {
+            "thickness_mm": 3.0
+          },
+          "subsystem": "structural",
+          "round": 2,
+          "source_commit": "b65bb39a51c4973c0e4795f5f6dbf5ba1d67ca5b",
+          "release_id": "release-f4ceedc9d506a906",
+          "tool_version_ids": [
+            "tool-area-2dffe0de9373ecc1"
+          ],
+          "specification_id": "spec-demo-c850351dc8bd",
+          "evaluator_version": "screening-dfe5dcf5863f"
+        },
+        {
+          "_id": "candidate-run-atlas-validation-20260926-replay-2-aerodynamic",
+          "parameters": {
+            "span_mm": 660.0,
+            "hinge_gap_mm": 2.0,
+            "flap_fraction": 0.25
+          },
+          "subsystem": "aerodynamic",
+          "round": 2,
+          "source_commit": "72e94a8ff0e1e9b074369049f39d6e53b3793aba",
+          "release_id": "release-f4ceedc9d506a906",
+          "tool_version_ids": [
+            "tool-area-2dffe0de9373ecc1"
+          ],
+          "specification_id": "spec-demo-c850351dc8bd",
+          "evaluator_version": "screening-dfe5dcf5863f"
+        },
+        {
+          "_id": "candidate-run-atlas-validation-20260926-replay-3-aerodynamic",
+          "parameters": {
+            "span_mm": 690.0,
+            "hinge_gap_mm": 2.0,
+            "flap_fraction": 0.25
+          },
+          "subsystem": "aerodynamic",
+          "round": 3,
+          "source_commit": "7f697f9679631747b24cc840041f25fc5faca940",
+          "release_id": "release-f4ceedc9d506a906",
+          "tool_version_ids": [
+            "tool-area-2dffe0de9373ecc1"
+          ],
+          "specification_id": "spec-demo-c850351dc8bd",
+          "evaluator_version": "screening-dfe5dcf5863f"
+        },
+        {
+          "_id": "candidate-run-atlas-validation-20260926-replay-3-structural",
+          "parameters": {
+            "thickness_mm": 3.0
+          },
+          "subsystem": "structural",
+          "round": 3,
+          "source_commit": "5c42b8b2b6d1543ec1951dc3121844638f900154",
+          "release_id": "release-f4ceedc9d506a906",
+          "tool_version_ids": [
+            "tool-area-2dffe0de9373ecc1"
+          ],
+          "specification_id": "spec-demo-c850351dc8bd",
+          "evaluator_version": "screening-dfe5dcf5863f"
+        }
+      ]
+    },
+    "live1": {
+      "run_id": "run-atlas-validation-20260926-live1",
+      "zip_sha256": "0d7151c2c67d8533fe36ee1f81c6aaa64772f46bc47474bf592babbec678536b",
+      "evaluations": [
+        {
+          "_id": "evaluation-candidate-run-atlas-validation-20260926-live1-0-structural",
+          "schema_version": 1,
+          "created_at": "2026-09-26T17:31:12.494583+00:00",
+          "candidate_id": "candidate-run-atlas-validation-20260926-live1-0-structural",
+          "run_id": "run-atlas-validation-20260926-live1",
+          "round": 0,
+          "subsystem": "structural",
+          "evaluator_version": "screening-dfe5dcf5863f",
+          "runtime_image_digest": "sha256:7c793165d040ff00df45ffb952e5e590725027565bd9fa55011054f257cc1111",
+          "peak_rss_mb": 471.32421875,
+          "outcome": "passed",
+          "metrics": {
+            "mass_kg": {
+              "value": 0.02571642479604729,
+              "unit": "kg",
+              "fidelity": "analytic_screening"
+            },
+            "thickness_mm": {
+              "value": 3.0,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            },
+            "bending_stress_pa": {
+              "value": 20000000.0,
+              "unit": "Pa",
+              "fidelity": "analytic_screening"
+            },
+            "deflection_mm": {
+              "value": 0.23188405797101447,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            }
+          },
+          "violations": [],
+          "objective": 0.49607300918301095,
+          "fidelity": "analytic_screening",
+          "bounds_mm": {
+            "x": 80.0,
+            "y": 40.0,
+            "z": 3.0
+          },
+          "limitations": [
+            "Nominal beam screening excludes bolt bearing and stress concentrations"
+          ],
+          "artifacts": {
+            "model.step": "artifact-809c1f539736e87336cbb919b7d74d801cab8a5b99c3c709e1d4cc8408ee7fce",
+            "model.glb": "artifact-c09df0f19f4505c0a60445b324c2571aad707ceb353c772e7526426d3e210789",
+            "execution.log": "artifact-64a8ca6497bc60ba34bba39bd62b063529d120eb9d9a3625e8757dc920676da5"
+          },
+          "duration_seconds": 4.933007774059661
+        },
+        {
+          "_id": "evaluation-candidate-run-atlas-validation-20260926-live1-0-aerodynamic",
+          "schema_version": 1,
+          "created_at": "2026-09-26T17:31:14.729688+00:00",
+          "candidate_id": "candidate-run-atlas-validation-20260926-live1-0-aerodynamic",
+          "run_id": "run-atlas-validation-20260926-live1",
+          "round": 0,
+          "subsystem": "aerodynamic",
+          "evaluator_version": "screening-dfe5dcf5863f",
+          "runtime_image_digest": "sha256:7c793165d040ff00df45ffb952e5e590725027565bd9fa55011054f257cc1111",
+          "peak_rss_mb": 480.56640625,
+          "outcome": "passed",
+          "metrics": {
+            "mass_kg": {
+              "value": 0.04597773873924032,
+              "unit": "kg",
+              "fidelity": "analytic_screening"
+            },
+            "span_mm": {
+              "value": 660.0,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            },
+            "hinge_gap_mm": {
+              "value": 1.9999999999999574,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            },
+            "flap_fraction": {
+              "value": 0.24166666666666645,
+              "unit": "ratio",
+              "fidelity": "analytic_screening"
+            },
+            "required_cl": {
+              "value": 0.5153576582148,
+              "unit": "ratio",
+              "fidelity": "analytic_screening"
+            },
+            "induced_drag_n": {
+              "value": 0.3728259943870413,
+              "unit": "N",
+              "fidelity": "analytic_screening"
+            },
+            "projected_area_m2": {
+              "value": 0.07920000000000016,
+              "unit": "m2",
+              "fidelity": "analytic_screening"
+            }
+          },
+          "violations": [],
+          "objective": 0.8264462809917353,
+          "fidelity": "analytic_screening",
+          "bounds_mm": {
+            "x": 120.00000000000023,
+            "y": 660.0,
+            "z": 14.401247603004
+          },
+          "limitations": [
+            "Induced drag estimate excludes profile drag, stall and VTOL rotor interaction"
+          ],
+          "artifacts": {
+            "model.step": "artifact-c5a8f96b0902da14320d3d2dd6d30f86df1478a9593c6f098727881ea725b6b6",
+            "model.glb": "artifact-9c789342c51448448e1ebd2588eda1c264b3e9e346d0ae6bcf78347183272b18",
+            "execution.log": "artifact-64a8ca6497bc60ba34bba39bd62b063529d120eb9d9a3625e8757dc920676da5"
+          },
+          "duration_seconds": 6.246188545017503
+        },
+        {
+          "_id": "evaluation-candidate-run-atlas-validation-20260926-live1-1-structural",
+          "schema_version": 1,
+          "created_at": "2026-09-26T17:32:06.504788+00:00",
+          "candidate_id": "candidate-run-atlas-validation-20260926-live1-1-structural",
+          "run_id": "run-atlas-validation-20260926-live1",
+          "round": 1,
+          "subsystem": "structural",
+          "evaluator_version": "screening-dfe5dcf5863f",
+          "runtime_image_digest": "sha256:7c793165d040ff00df45ffb952e5e590725027565bd9fa55011054f257cc1111",
+          "peak_rss_mb": 472.56640625,
+          "outcome": "passed",
+          "metrics": {
+            "mass_kg": {
+              "value": 0.02571642479604729,
+              "unit": "kg",
+              "fidelity": "analytic_screening"
+            },
+            "thickness_mm": {
+              "value": 3.0,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            },
+            "bending_stress_pa": {
+              "value": 20000000.0,
+              "unit": "Pa",
+              "fidelity": "analytic_screening"
+            },
+            "deflection_mm": {
+              "value": 0.23188405797101447,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            }
+          },
+          "violations": [],
+          "objective": 0.49607300918301095,
+          "fidelity": "analytic_screening",
+          "bounds_mm": {
+            "x": 80.0,
+            "y": 40.0,
+            "z": 3.0
+          },
+          "limitations": [
+            "Nominal beam screening excludes bolt bearing and stress concentrations"
+          ],
+          "artifacts": {
+            "model.step": "artifact-51e73ba28b62ca18cd6537c72a427031115953b4a696c18af48d752a8f635118",
+            "model.glb": "artifact-c09df0f19f4505c0a60445b324c2571aad707ceb353c772e7526426d3e210789",
+            "execution.log": "artifact-64a8ca6497bc60ba34bba39bd62b063529d120eb9d9a3625e8757dc920676da5"
+          },
+          "duration_seconds": 6.924423913937062
+        },
+        {
+          "_id": "evaluation-candidate-run-atlas-validation-20260926-live1-1-aerodynamic",
+          "schema_version": 1,
+          "created_at": "2026-09-26T17:32:13.316713+00:00",
+          "candidate_id": "candidate-run-atlas-validation-20260926-live1-1-aerodynamic",
+          "run_id": "run-atlas-validation-20260926-live1",
+          "round": 1,
+          "subsystem": "aerodynamic",
+          "evaluator_version": "screening-dfe5dcf5863f",
+          "runtime_image_digest": "sha256:7c793165d040ff00df45ffb952e5e590725027565bd9fa55011054f257cc1111",
+          "peak_rss_mb": 481.234375,
+          "outcome": "passed",
+          "metrics": {
+            "mass_kg": {
+              "value": 0.04597773873924032,
+              "unit": "kg",
+              "fidelity": "analytic_screening"
+            },
+            "span_mm": {
+              "value": 660.0,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            },
+            "hinge_gap_mm": {
+              "value": 1.9999999999999574,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            },
+            "flap_fraction": {
+              "value": 0.24166666666666645,
+              "unit": "ratio",
+              "fidelity": "analytic_screening"
+            },
+            "required_cl": {
+              "value": 0.5153576582148,
+              "unit": "ratio",
+              "fidelity": "analytic_screening"
+            },
+            "induced_drag_n": {
+              "value": 0.3728259943870413,
+              "unit": "N",
+              "fidelity": "analytic_screening"
+            },
+            "projected_area_m2": {
+              "value": 0.07920000000000016,
+              "unit": "m2",
+              "fidelity": "analytic_screening"
+            }
+          },
+          "violations": [],
+          "objective": 0.8264462809917353,
+          "fidelity": "analytic_screening",
+          "bounds_mm": {
+            "x": 120.00000000000023,
+            "y": 660.0,
+            "z": 14.401247603004
+          },
+          "limitations": [
+            "Induced drag estimate excludes profile drag, stall and VTOL rotor interaction"
+          ],
+          "artifacts": {
+            "model.step": "artifact-e4b6d549d4d8e8d5a98ba668210785d16736fdd1086a305273fb1cd9aa1e0540",
+            "model.glb": "artifact-9c789342c51448448e1ebd2588eda1c264b3e9e346d0ae6bcf78347183272b18",
+            "execution.log": "artifact-64a8ca6497bc60ba34bba39bd62b063529d120eb9d9a3625e8757dc920676da5"
+          },
+          "duration_seconds": 6.423347855103202
+        },
+        {
+          "_id": "evaluation-candidate-run-atlas-validation-20260926-live1-2-structural",
+          "schema_version": 1,
+          "created_at": "2026-09-26T17:32:55.695267+00:00",
+          "candidate_id": "candidate-run-atlas-validation-20260926-live1-2-structural",
+          "run_id": "run-atlas-validation-20260926-live1",
+          "round": 2,
+          "subsystem": "structural",
+          "evaluator_version": "screening-dfe5dcf5863f",
+          "runtime_image_digest": "sha256:7c793165d040ff00df45ffb952e5e590725027565bd9fa55011054f257cc1111",
+          "peak_rss_mb": 473.4296875,
+          "outcome": "passed",
+          "metrics": {
+            "mass_kg": {
+              "value": 0.02571642479604729,
+              "unit": "kg",
+              "fidelity": "analytic_screening"
+            },
+            "thickness_mm": {
+              "value": 3.0,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            },
+            "bending_stress_pa": {
+              "value": 20000000.0,
+              "unit": "Pa",
+              "fidelity": "analytic_screening"
+            },
+            "deflection_mm": {
+              "value": 0.23188405797101447,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            }
+          },
+          "violations": [],
+          "objective": 0.49607300918301095,
+          "fidelity": "analytic_screening",
+          "bounds_mm": {
+            "x": 80.0,
+            "y": 40.0,
+            "z": 3.0
+          },
+          "limitations": [
+            "Nominal beam screening excludes bolt bearing and stress concentrations"
+          ],
+          "artifacts": {
+            "model.step": "artifact-fb869382ef4bcf52fa31c2d081be7b7e4e0f9179d35f7341ceb290d21afb92a4",
+            "model.glb": "artifact-c09df0f19f4505c0a60445b324c2571aad707ceb353c772e7526426d3e210789",
+            "execution.log": "artifact-64a8ca6497bc60ba34bba39bd62b063529d120eb9d9a3625e8757dc920676da5"
+          },
+          "duration_seconds": 5.941494022961706
+        },
+        {
+          "_id": "evaluation-candidate-run-atlas-validation-20260926-live1-2-aerodynamic",
+          "schema_version": 1,
+          "created_at": "2026-09-26T17:33:12.297188+00:00",
+          "candidate_id": "candidate-run-atlas-validation-20260926-live1-2-aerodynamic",
+          "run_id": "run-atlas-validation-20260926-live1",
+          "round": 2,
+          "subsystem": "aerodynamic",
+          "evaluator_version": "screening-dfe5dcf5863f",
+          "runtime_image_digest": "sha256:7c793165d040ff00df45ffb952e5e590725027565bd9fa55011054f257cc1111",
+          "peak_rss_mb": 480.84375,
+          "outcome": "passed",
+          "metrics": {
+            "mass_kg": {
+              "value": 0.04597773873924032,
+              "unit": "kg",
+              "fidelity": "analytic_screening"
+            },
+            "span_mm": {
+              "value": 660.0,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            },
+            "hinge_gap_mm": {
+              "value": 1.9999999999999574,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            },
+            "flap_fraction": {
+              "value": 0.24166666666666645,
+              "unit": "ratio",
+              "fidelity": "analytic_screening"
+            },
+            "required_cl": {
+              "value": 0.5153576582148,
+              "unit": "ratio",
+              "fidelity": "analytic_screening"
+            },
+            "induced_drag_n": {
+              "value": 0.3728259943870413,
+              "unit": "N",
+              "fidelity": "analytic_screening"
+            },
+            "projected_area_m2": {
+              "value": 0.07920000000000016,
+              "unit": "m2",
+              "fidelity": "analytic_screening"
+            }
+          },
+          "violations": [],
+          "objective": 0.8264462809917353,
+          "fidelity": "analytic_screening",
+          "bounds_mm": {
+            "x": 120.00000000000023,
+            "y": 660.0,
+            "z": 14.401247603004
+          },
+          "limitations": [
+            "Induced drag estimate excludes profile drag, stall and VTOL rotor interaction"
+          ],
+          "artifacts": {
+            "model.step": "artifact-010f048bb8d8dc8046dccd1c402a6e1189d1e18bb095dfdbe134590198be5e42",
+            "model.glb": "artifact-9c789342c51448448e1ebd2588eda1c264b3e9e346d0ae6bcf78347183272b18",
+            "execution.log": "artifact-64a8ca6497bc60ba34bba39bd62b063529d120eb9d9a3625e8757dc920676da5"
+          },
+          "duration_seconds": 6.0160632729530334
+        },
+        {
+          "_id": "evaluation-candidate-run-atlas-validation-20260926-live1-3-structural",
+          "schema_version": 1,
+          "created_at": "2026-09-26T17:34:06.863384+00:00",
+          "candidate_id": "candidate-run-atlas-validation-20260926-live1-3-structural",
+          "run_id": "run-atlas-validation-20260926-live1",
+          "round": 3,
+          "subsystem": "structural",
+          "evaluator_version": "screening-dfe5dcf5863f",
+          "runtime_image_digest": "sha256:7c793165d040ff00df45ffb952e5e590725027565bd9fa55011054f257cc1111",
+          "peak_rss_mb": 472.90234375,
+          "outcome": "passed",
+          "metrics": {
+            "mass_kg": {
+              "value": 0.02571642479604729,
+              "unit": "kg",
+              "fidelity": "analytic_screening"
+            },
+            "thickness_mm": {
+              "value": 3.0,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            },
+            "bending_stress_pa": {
+              "value": 20000000.0,
+              "unit": "Pa",
+              "fidelity": "analytic_screening"
+            },
+            "deflection_mm": {
+              "value": 0.23188405797101447,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            }
+          },
+          "violations": [],
+          "objective": 0.49607300918301095,
+          "fidelity": "analytic_screening",
+          "bounds_mm": {
+            "x": 80.0,
+            "y": 40.0,
+            "z": 3.0
+          },
+          "limitations": [
+            "Nominal beam screening excludes bolt bearing and stress concentrations"
+          ],
+          "artifacts": {
+            "model.step": "artifact-55d786afcfd99108a623d009982727385aba05e2bd19a0f5193c020db30d9ef4",
+            "model.glb": "artifact-c09df0f19f4505c0a60445b324c2571aad707ceb353c772e7526426d3e210789",
+            "execution.log": "artifact-64a8ca6497bc60ba34bba39bd62b063529d120eb9d9a3625e8757dc920676da5"
+          },
+          "duration_seconds": 5.632488869014196
+        },
+        {
+          "_id": "evaluation-candidate-run-atlas-validation-20260926-live1-3-aerodynamic",
+          "schema_version": 1,
+          "created_at": "2026-09-26T17:34:10.651614+00:00",
+          "candidate_id": "candidate-run-atlas-validation-20260926-live1-3-aerodynamic",
+          "run_id": "run-atlas-validation-20260926-live1",
+          "round": 3,
+          "subsystem": "aerodynamic",
+          "evaluator_version": "screening-dfe5dcf5863f",
+          "runtime_image_digest": "sha256:7c793165d040ff00df45ffb952e5e590725027565bd9fa55011054f257cc1111",
+          "peak_rss_mb": 480.23828125,
+          "outcome": "passed",
+          "metrics": {
+            "mass_kg": {
+              "value": 0.04597773873924032,
+              "unit": "kg",
+              "fidelity": "analytic_screening"
+            },
+            "span_mm": {
+              "value": 660.0,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            },
+            "hinge_gap_mm": {
+              "value": 1.9999999999999574,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            },
+            "flap_fraction": {
+              "value": 0.24166666666666645,
+              "unit": "ratio",
+              "fidelity": "analytic_screening"
+            },
+            "required_cl": {
+              "value": 0.5153576582148,
+              "unit": "ratio",
+              "fidelity": "analytic_screening"
+            },
+            "induced_drag_n": {
+              "value": 0.3728259943870413,
+              "unit": "N",
+              "fidelity": "analytic_screening"
+            },
+            "projected_area_m2": {
+              "value": 0.07920000000000016,
+              "unit": "m2",
+              "fidelity": "analytic_screening"
+            }
+          },
+          "violations": [],
+          "objective": 0.8264462809917353,
+          "fidelity": "analytic_screening",
+          "bounds_mm": {
+            "x": 120.00000000000023,
+            "y": 660.0,
+            "z": 14.401247603004
+          },
+          "limitations": [
+            "Induced drag estimate excludes profile drag, stall and VTOL rotor interaction"
+          ],
+          "artifacts": {
+            "model.step": "artifact-a23c85073b14758246f24d1b9a99b06814836db3f772adc5da1248550b487f62",
+            "model.glb": "artifact-9c789342c51448448e1ebd2588eda1c264b3e9e346d0ae6bcf78347183272b18",
+            "execution.log": "artifact-64a8ca6497bc60ba34bba39bd62b063529d120eb9d9a3625e8757dc920676da5"
+          },
+          "duration_seconds": 5.3248353759991005
+        }
+      ],
+      "assemblies": [
+        {
+          "_id": "assembly-run-atlas-validation-20260926-live1-0",
+          "schema_version": 1,
+          "created_at": "2026-09-26T17:31:29.622091+00:00",
+          "run_id": "run-atlas-validation-20260926-live1",
+          "round": 0,
+          "parent_id": null,
+          "candidate_ids": [
+            "candidate-run-atlas-validation-20260926-live1-0-structural",
+            "candidate-run-atlas-validation-20260926-live1-0-aerodynamic"
+          ],
+          "evaluation_ids": [
+            "evaluation-candidate-run-atlas-validation-20260926-live1-0-structural",
+            "evaluation-candidate-run-atlas-validation-20260926-live1-0-aerodynamic"
+          ],
+          "mass_kg": 0.07169416353528761,
+          "outcome": "passed",
+          "mount_translation_mm": [
+            150,
+            0,
+            25
+          ],
+          "violations": [],
+          "artifacts": {
+            "assembly.step": "artifact-bdc9592e6bdbf5f24f07b4d38d9ea1306dd9f62d556a1aaac80af4c2e6590b85",
+            "assembly.glb": "artifact-1adf7d8d42c439d36b132b2b703856f6446c279fd4fd5edc74f7bf66d9e1d397"
+          },
+          "interface_check": "BRep collision and sampled control-surface travel against shared mount"
+        },
+        {
+          "_id": "assembly-run-atlas-validation-20260926-live1-1",
+          "schema_version": 1,
+          "created_at": "2026-09-26T17:32:23.078770+00:00",
+          "run_id": "run-atlas-validation-20260926-live1",
+          "round": 1,
+          "parent_id": "assembly-run-atlas-validation-20260926-live1-0",
+          "candidate_ids": [
+            "candidate-run-atlas-validation-20260926-live1-1-structural",
+            "candidate-run-atlas-validation-20260926-live1-1-aerodynamic"
+          ],
+          "evaluation_ids": [
+            "evaluation-candidate-run-atlas-validation-20260926-live1-1-structural",
+            "evaluation-candidate-run-atlas-validation-20260926-live1-1-aerodynamic"
+          ],
+          "mass_kg": 0.07169416353528761,
+          "outcome": "passed",
+          "mount_translation_mm": [
+            150,
+            0,
+            25
+          ],
+          "violations": [],
+          "artifacts": {
+            "assembly.step": "artifact-5ee31bd57ddb23ba84ce71dc5f81ebb41b8517d3b5d1fcddebe42a08fab0398a",
+            "assembly.glb": "artifact-1adf7d8d42c439d36b132b2b703856f6446c279fd4fd5edc74f7bf66d9e1d397"
+          },
+          "interface_check": "BRep collision and sampled control-surface travel against shared mount"
+        },
+        {
+          "_id": "assembly-run-atlas-validation-20260926-live1-2",
+          "schema_version": 1,
+          "created_at": "2026-09-26T17:33:30.457694+00:00",
+          "run_id": "run-atlas-validation-20260926-live1",
+          "round": 2,
+          "parent_id": "assembly-run-atlas-validation-20260926-live1-1",
+          "candidate_ids": [
+            "candidate-run-atlas-validation-20260926-live1-2-structural",
+            "candidate-run-atlas-validation-20260926-live1-2-aerodynamic"
+          ],
+          "evaluation_ids": [
+            "evaluation-candidate-run-atlas-validation-20260926-live1-2-structural",
+            "evaluation-candidate-run-atlas-validation-20260926-live1-2-aerodynamic"
+          ],
+          "mass_kg": 0.07169416353528761,
+          "outcome": "passed",
+          "mount_translation_mm": [
+            150,
+            0,
+            25
+          ],
+          "violations": [],
+          "artifacts": {
+            "assembly.step": "artifact-33def2e0129984a9f8a4763e063c73f0d14b1f79b2a5cba356eae5ae4042ed66",
+            "assembly.glb": "artifact-1adf7d8d42c439d36b132b2b703856f6446c279fd4fd5edc74f7bf66d9e1d397"
+          },
+          "interface_check": "BRep collision and sampled control-surface travel against shared mount"
+        },
+        {
+          "_id": "assembly-run-atlas-validation-20260926-live1-3",
+          "schema_version": 1,
+          "created_at": "2026-09-26T17:34:24.942080+00:00",
+          "run_id": "run-atlas-validation-20260926-live1",
+          "round": 3,
+          "parent_id": "assembly-run-atlas-validation-20260926-live1-2",
+          "candidate_ids": [
+            "candidate-run-atlas-validation-20260926-live1-3-structural",
+            "candidate-run-atlas-validation-20260926-live1-3-aerodynamic"
+          ],
+          "evaluation_ids": [
+            "evaluation-candidate-run-atlas-validation-20260926-live1-3-structural",
+            "evaluation-candidate-run-atlas-validation-20260926-live1-3-aerodynamic"
+          ],
+          "mass_kg": 0.07169416353528761,
+          "outcome": "passed",
+          "mount_translation_mm": [
+            150,
+            0,
+            25
+          ],
+          "violations": [],
+          "artifacts": {
+            "assembly.step": "artifact-485617bb2a509124bb793778fca1424a9473bd0421a21db726b3599cca0b5500",
+            "assembly.glb": "artifact-1adf7d8d42c439d36b132b2b703856f6446c279fd4fd5edc74f7bf66d9e1d397"
+          },
+          "interface_check": "BRep collision and sampled control-surface travel against shared mount"
+        }
+      ],
+      "candidates": [
+        {
+          "_id": "candidate-run-atlas-validation-20260926-live1-0-structural",
+          "parameters": {
+            "thickness_mm": 3.0
+          },
+          "subsystem": "structural",
+          "round": 0,
+          "source_commit": "5e58a67ed299c8ed1917becf9f049c833a7e9640",
+          "release_id": "release-f4ceedc9d506a906",
+          "tool_version_ids": [
+            "tool-area-2dffe0de9373ecc1"
+          ],
+          "specification_id": "spec-demo-c850351dc8bd",
+          "evaluator_version": "screening-dfe5dcf5863f"
+        },
+        {
+          "_id": "candidate-run-atlas-validation-20260926-live1-0-aerodynamic",
+          "parameters": {
+            "span_mm": 660.0,
+            "hinge_gap_mm": 2.0,
+            "flap_fraction": 0.25
+          },
+          "subsystem": "aerodynamic",
+          "round": 0,
+          "source_commit": "ad816ccb1e7a433806789d876b22258dd99002eb",
+          "release_id": "release-f4ceedc9d506a906",
+          "tool_version_ids": [
+            "tool-area-2dffe0de9373ecc1"
+          ],
+          "specification_id": "spec-demo-c850351dc8bd",
+          "evaluator_version": "screening-dfe5dcf5863f"
+        },
+        {
+          "_id": "candidate-run-atlas-validation-20260926-live1-1-structural",
+          "parameters": {
+            "thickness_mm": 3.0
+          },
+          "subsystem": "structural",
+          "round": 1,
+          "source_commit": "ff89ee5788bba559534b3f6aa0e23b93c3df5555",
+          "release_id": "release-f4ceedc9d506a906",
+          "tool_version_ids": [
+            "tool-area-2dffe0de9373ecc1"
+          ],
+          "specification_id": "spec-demo-c850351dc8bd",
+          "evaluator_version": "screening-dfe5dcf5863f"
+        },
+        {
+          "_id": "candidate-run-atlas-validation-20260926-live1-1-aerodynamic",
+          "parameters": {
+            "span_mm": 660.0,
+            "hinge_gap_mm": 2.0,
+            "flap_fraction": 0.25
+          },
+          "subsystem": "aerodynamic",
+          "round": 1,
+          "source_commit": "48e72cafac4459047a373f26106ee7867f505231",
+          "release_id": "release-f4ceedc9d506a906",
+          "tool_version_ids": [
+            "tool-area-2dffe0de9373ecc1"
+          ],
+          "specification_id": "spec-demo-c850351dc8bd",
+          "evaluator_version": "screening-dfe5dcf5863f"
+        },
+        {
+          "_id": "candidate-run-atlas-validation-20260926-live1-2-structural",
+          "parameters": {
+            "thickness_mm": 3.0
+          },
+          "subsystem": "structural",
+          "round": 2,
+          "source_commit": "6cefb6ce0e488b73f8381655bf9bc12a880c414f",
+          "release_id": "release-f4ceedc9d506a906",
+          "tool_version_ids": [
+            "tool-area-2dffe0de9373ecc1"
+          ],
+          "specification_id": "spec-demo-c850351dc8bd",
+          "evaluator_version": "screening-dfe5dcf5863f"
+        },
+        {
+          "_id": "candidate-run-atlas-validation-20260926-live1-2-aerodynamic",
+          "parameters": {
+            "span_mm": 660.0,
+            "hinge_gap_mm": 2.0,
+            "flap_fraction": 0.25
+          },
+          "subsystem": "aerodynamic",
+          "round": 2,
+          "source_commit": "b7e642c0a017b79706c21a7c584e3b272d3596d2",
+          "release_id": "release-f4ceedc9d506a906",
+          "tool_version_ids": [
+            "tool-area-2dffe0de9373ecc1"
+          ],
+          "specification_id": "spec-demo-c850351dc8bd",
+          "evaluator_version": "screening-dfe5dcf5863f"
+        },
+        {
+          "_id": "candidate-run-atlas-validation-20260926-live1-3-structural",
+          "parameters": {
+            "thickness_mm": 3.0
+          },
+          "subsystem": "structural",
+          "round": 3,
+          "source_commit": "93b22eb9cda1c7ba38425f2e0bc8c7d9530d9cab",
+          "release_id": "release-f4ceedc9d506a906",
+          "tool_version_ids": [
+            "tool-area-2dffe0de9373ecc1"
+          ],
+          "specification_id": "spec-demo-c850351dc8bd",
+          "evaluator_version": "screening-dfe5dcf5863f"
+        },
+        {
+          "_id": "candidate-run-atlas-validation-20260926-live1-3-aerodynamic",
+          "parameters": {
+            "span_mm": 660.0,
+            "hinge_gap_mm": 2.0,
+            "flap_fraction": 0.25
+          },
+          "subsystem": "aerodynamic",
+          "round": 3,
+          "source_commit": "6c6a0d00d3be4d3e2686ef0355cacee3c08d5d8a",
+          "release_id": "release-f4ceedc9d506a906",
+          "tool_version_ids": [
+            "tool-area-2dffe0de9373ecc1"
+          ],
+          "specification_id": "spec-demo-c850351dc8bd",
+          "evaluator_version": "screening-dfe5dcf5863f"
+        }
+      ]
+    },
+    "live3": {
+      "run_id": "run-atlas-validation-20260926-live3",
+      "zip_sha256": "1af198f2c080d8f54ab415e0f17174c41c922942e8f7e6664017c30d185af4b8",
+      "evaluations": [
+        {
+          "_id": "evaluation-candidate-run-atlas-validation-20260926-live3-0-structural",
+          "schema_version": 1,
+          "created_at": "2026-09-26T17:50:54.983310+00:00",
+          "candidate_id": "candidate-run-atlas-validation-20260926-live3-0-structural",
+          "run_id": "run-atlas-validation-20260926-live3",
+          "round": 0,
+          "subsystem": "structural",
+          "evaluator_version": "screening-dfe5dcf5863f",
+          "runtime_image_digest": "sha256:7c793165d040ff00df45ffb952e5e590725027565bd9fa55011054f257cc1111",
+          "peak_rss_mb": 472.40234375,
+          "outcome": "passed",
+          "metrics": {
+            "mass_kg": {
+              "value": 0.02571642479604729,
+              "unit": "kg",
+              "fidelity": "analytic_screening"
+            },
+            "thickness_mm": {
+              "value": 3.0,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            },
+            "bending_stress_pa": {
+              "value": 20000000.0,
+              "unit": "Pa",
+              "fidelity": "analytic_screening"
+            },
+            "deflection_mm": {
+              "value": 0.23188405797101447,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            }
+          },
+          "violations": [],
+          "objective": 0.49607300918301095,
+          "fidelity": "analytic_screening",
+          "bounds_mm": {
+            "x": 80.0,
+            "y": 40.0,
+            "z": 3.0
+          },
+          "limitations": [
+            "Nominal beam screening excludes bolt bearing and stress concentrations"
+          ],
+          "artifacts": {
+            "model.step": "artifact-49f0da0e706e80d6b5dff8b9721425c568360527b612327ad0f0d741e03fb0ca",
+            "model.glb": "artifact-c09df0f19f4505c0a60445b324c2571aad707ceb353c772e7526426d3e210789",
+            "execution.log": "artifact-64a8ca6497bc60ba34bba39bd62b063529d120eb9d9a3625e8757dc920676da5"
+          },
+          "duration_seconds": 5.215711886063218
+        },
+        {
+          "_id": "evaluation-candidate-run-atlas-validation-20260926-live3-0-aerodynamic",
+          "schema_version": 1,
+          "created_at": "2026-09-26T17:51:06.768703+00:00",
+          "candidate_id": "candidate-run-atlas-validation-20260926-live3-0-aerodynamic",
+          "run_id": "run-atlas-validation-20260926-live3",
+          "round": 0,
+          "subsystem": "aerodynamic",
+          "evaluator_version": "screening-dfe5dcf5863f",
+          "runtime_image_digest": "sha256:7c793165d040ff00df45ffb952e5e590725027565bd9fa55011054f257cc1111",
+          "peak_rss_mb": 481.97265625,
+          "outcome": "passed",
+          "metrics": {
+            "mass_kg": {
+              "value": 0.04806763595466034,
+              "unit": "kg",
+              "fidelity": "analytic_screening"
+            },
+            "span_mm": {
+              "value": 690.0,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            },
+            "hinge_gap_mm": {
+              "value": 1.9999999999999574,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            },
+            "flap_fraction": {
+              "value": 0.24166666666666645,
+              "unit": "ratio",
+              "fidelity": "analytic_screening"
+            },
+            "required_cl": {
+              "value": 0.49295080350980874,
+              "unit": "ratio",
+              "fidelity": "analytic_screening"
+            },
+            "induced_drag_n": {
+              "value": 0.3411111177378602,
+              "unit": "N",
+              "fidelity": "analytic_screening"
+            },
+            "projected_area_m2": {
+              "value": 0.08280000000000015,
+              "unit": "m2",
+              "fidelity": "analytic_screening"
+            }
+          },
+          "violations": [],
+          "objective": 0.7561436672967865,
+          "fidelity": "analytic_screening",
+          "bounds_mm": {
+            "x": 120.00000000000023,
+            "y": 690.0,
+            "z": 14.401247603004
+          },
+          "limitations": [
+            "Induced drag estimate excludes profile drag, stall and VTOL rotor interaction"
+          ],
+          "artifacts": {
+            "model.step": "artifact-e24e95d2876d2280fb18ea4aa04d9d12bab8e9839ae2ea197ff60ee1fb1a1a94",
+            "model.glb": "artifact-c5d0a1c5506e8d53ea69d65054f7e7589ef4b4ce88b6bba3414c66a89931e347",
+            "execution.log": "artifact-64a8ca6497bc60ba34bba39bd62b063529d120eb9d9a3625e8757dc920676da5"
+          },
+          "duration_seconds": 5.7357311400119215
+        },
+        {
+          "_id": "evaluation-candidate-run-atlas-validation-20260926-live3-1-structural",
+          "schema_version": 1,
+          "created_at": "2026-09-26T17:51:39.131538+00:00",
+          "candidate_id": "candidate-run-atlas-validation-20260926-live3-1-structural",
+          "run_id": "run-atlas-validation-20260926-live3",
+          "round": 1,
+          "subsystem": "structural",
+          "evaluator_version": "screening-dfe5dcf5863f",
+          "runtime_image_digest": "sha256:7c793165d040ff00df45ffb952e5e590725027565bd9fa55011054f257cc1111",
+          "peak_rss_mb": 472.8125,
+          "outcome": "passed",
+          "metrics": {
+            "mass_kg": {
+              "value": 0.02571642479604729,
+              "unit": "kg",
+              "fidelity": "analytic_screening"
+            },
+            "thickness_mm": {
+              "value": 3.0,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            },
+            "bending_stress_pa": {
+              "value": 20000000.0,
+              "unit": "Pa",
+              "fidelity": "analytic_screening"
+            },
+            "deflection_mm": {
+              "value": 0.23188405797101447,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            }
+          },
+          "violations": [],
+          "objective": 0.49607300918301095,
+          "fidelity": "analytic_screening",
+          "bounds_mm": {
+            "x": 80.0,
+            "y": 40.0,
+            "z": 3.0
+          },
+          "limitations": [
+            "Nominal beam screening excludes bolt bearing and stress concentrations"
+          ],
+          "artifacts": {
+            "model.step": "artifact-1cafaf322f93da16be3f56eb7bbd080a37c83f9ceb22b307a4b2f5bd52d00bf2",
+            "model.glb": "artifact-c09df0f19f4505c0a60445b324c2571aad707ceb353c772e7526426d3e210789",
+            "execution.log": "artifact-64a8ca6497bc60ba34bba39bd62b063529d120eb9d9a3625e8757dc920676da5"
+          },
+          "duration_seconds": 4.506498051108792
+        },
+        {
+          "_id": "evaluation-candidate-run-atlas-validation-20260926-live3-1-aerodynamic",
+          "schema_version": 1,
+          "created_at": "2026-09-26T17:51:47.099750+00:00",
+          "candidate_id": "candidate-run-atlas-validation-20260926-live3-1-aerodynamic",
+          "run_id": "run-atlas-validation-20260926-live3",
+          "round": 1,
+          "subsystem": "aerodynamic",
+          "evaluator_version": "screening-dfe5dcf5863f",
+          "runtime_image_digest": "sha256:7c793165d040ff00df45ffb952e5e590725027565bd9fa55011054f257cc1111",
+          "peak_rss_mb": 479.30078125,
+          "outcome": "passed",
+          "metrics": {
+            "mass_kg": {
+              "value": 0.04806763595466034,
+              "unit": "kg",
+              "fidelity": "analytic_screening"
+            },
+            "span_mm": {
+              "value": 690.0,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            },
+            "hinge_gap_mm": {
+              "value": 1.9999999999999574,
+              "unit": "mm",
+              "fidelity": "analytic_screening"
+            },
+            "flap_fraction": {
+              "value": 0.24166666666666645,
+              "unit": "ratio",
+              "fidelity": "analytic_screening"
+            },
+            "required_cl": {
+              "value": 0.49295080350980874,
+              "unit": "ratio",
+              "fidelity": "analytic_screening"
+            },
+            "induced_drag_n": {
+              "value": 0.3411111177378602,
+              "unit": "N",
+              "fidelity": "analytic_screening"
+            },
+            "projected_area_m2": {
+              "value": 0.08280000000000015,
+              "unit": "m2",
+              "fidelity": "analytic_screening"
+            }
+          },
+          "violations": [],
+          "objective": 0.7561436672967865,
+          "fidelity": "analytic_screening",
+          "bounds_mm": {
+            "x": 120.00000000000023,
+            "y": 690.0,
+            "z": 14.401247603004
+          },
+          "limitations": [
+            "Induced drag estimate excludes profile drag, stall and VTOL rotor interaction"
+          ],
+          "artifacts": {
+            "model.step": "artifact-13bffa50f89bc411621b3cad26fc1cce01958a0b851d4090c86b3622f071f3b8",
+            "model.glb": "artifact-c5d0a1c5506e8d53ea69d65054f7e7589ef4b4ce88b6bba3414c66a89931e347",
+            "execution.log": "artifact-64a8ca6497bc60ba34bba39bd62b063529d120eb9d9a3625e8757dc920676da5"
+          },
+          "duration_seconds": 5.308420873014256
+        }
+      ],
+      "assemblies": [
+        {
+          "_id": "assembly-run-atlas-validation-20260926-live3-0",
+          "schema_version": 1,
+          "created_at": "2026-09-26T17:51:13.269428+00:00",
+          "run_id": "run-atlas-validation-20260926-live3",
+          "round": 0,
+          "parent_id": null,
+          "candidate_ids": [
+            "candidate-run-atlas-validation-20260926-live3-0-structural",
+            "candidate-run-atlas-validation-20260926-live3-0-aerodynamic"
+          ],
+          "evaluation_ids": [
+            "evaluation-candidate-run-atlas-validation-20260926-live3-0-structural",
+            "evaluation-candidate-run-atlas-validation-20260926-live3-0-aerodynamic"
+          ],
+          "mass_kg": 0.07378406075070763,
+          "outcome": "passed",
+          "mount_translation_mm": [
+            150,
+            0,
+            25
+          ],
+          "violations": [],
+          "artifacts": {
+            "assembly.step": "artifact-77e8fb1548cebc08b4316ff302ad056a66af73c1921fb9728a1fb587d85294be",
+            "assembly.glb": "artifact-d1ea115b0b3dc00348fd3a49f6595148b873d8e1c631fced81bc9039542a90d9"
+          },
+          "interface_check": "BRep collision and sampled control-surface travel against shared mount"
+        },
+        {
+          "_id": "assembly-run-atlas-validation-20260926-live3-1",
+          "schema_version": 1,
+          "created_at": "2026-09-26T17:51:52.798637+00:00",
+          "run_id": "run-atlas-validation-20260926-live3",
+          "round": 1,
+          "parent_id": "assembly-run-atlas-validation-20260926-live3-0",
+          "candidate_ids": [
+            "candidate-run-atlas-validation-20260926-live3-1-structural",
+            "candidate-run-atlas-validation-20260926-live3-1-aerodynamic"
+          ],
+          "evaluation_ids": [
+            "evaluation-candidate-run-atlas-validation-20260926-live3-1-structural",
+            "evaluation-candidate-run-atlas-validation-20260926-live3-1-aerodynamic"
+          ],
+          "mass_kg": 0.07378406075070763,
+          "outcome": "passed",
+          "mount_translation_mm": [
+            150,
+            0,
+            25
+          ],
+          "violations": [],
+          "artifacts": {
+            "assembly.step": "artifact-457c9471192ea6b57d2cfdea4765049f2fefa822c46c531688b85d3bfd2934f6",
+            "assembly.glb": "artifact-d1ea115b0b3dc00348fd3a49f6595148b873d8e1c631fced81bc9039542a90d9"
+          },
+          "interface_check": "BRep collision and sampled control-surface travel against shared mount"
+        }
+      ],
+      "candidates": [
+        {
+          "_id": "candidate-run-atlas-validation-20260926-live3-0-structural",
+          "parameters": {
+            "thickness_mm": 3.0
+          },
+          "subsystem": "structural",
+          "round": 0,
+          "source_commit": "813a26d49e6bfef6f7357f318be1595d6988809f",
+          "release_id": "release-705e594f50cb4728",
+          "tool_version_ids": [
+            "tool-area-49a71c05c68127e0",
+            "tool-area-2dffe0de9373ecc1"
+          ],
+          "specification_id": "spec-demo-c850351dc8bd",
+          "evaluator_version": "screening-dfe5dcf5863f"
+        },
+        {
+          "_id": "candidate-run-atlas-validation-20260926-live3-0-aerodynamic",
+          "parameters": {
+            "span_mm": 690.0,
+            "hinge_gap_mm": 2.0,
+            "flap_fraction": 0.25
+          },
+          "subsystem": "aerodynamic",
+          "round": 0,
+          "source_commit": "2085e2083e90d570693081173b7b5f81f8260b61",
+          "release_id": "release-705e594f50cb4728",
+          "tool_version_ids": [
+            "tool-area-49a71c05c68127e0",
+            "tool-area-2dffe0de9373ecc1"
+          ],
+          "specification_id": "spec-demo-c850351dc8bd",
+          "evaluator_version": "screening-dfe5dcf5863f"
+        },
+        {
+          "_id": "candidate-run-atlas-validation-20260926-live3-1-structural",
+          "parameters": {
+            "thickness_mm": 3.0
+          },
+          "subsystem": "structural",
+          "round": 1,
+          "source_commit": "8c4a11859fca825f97b06cb413322acc919f8aa9",
+          "release_id": "release-705e594f50cb4728",
+          "tool_version_ids": [
+            "tool-area-49a71c05c68127e0",
+            "tool-area-2dffe0de9373ecc1"
+          ],
+          "specification_id": "spec-demo-c850351dc8bd",
+          "evaluator_version": "screening-dfe5dcf5863f"
+        },
+        {
+          "_id": "candidate-run-atlas-validation-20260926-live3-1-aerodynamic",
+          "parameters": {
+            "span_mm": 690.0,
+            "hinge_gap_mm": 2.0,
+            "flap_fraction": 0.25
+          },
+          "subsystem": "aerodynamic",
+          "round": 1,
+          "source_commit": "c115d9ad5bf5979da3751b504b77e88906d4bf8c",
+          "release_id": "release-705e594f50cb4728",
+          "tool_version_ids": [
+            "tool-area-49a71c05c68127e0",
+            "tool-area-2dffe0de9373ecc1"
+          ],
+          "specification_id": "spec-demo-c850351dc8bd",
+          "evaluator_version": "screening-dfe5dcf5863f"
+        }
+      ]
+    }
+  },
+  "release": {
+    "_id": "release-705e594f50cb4728",
+    "schema_version": 1,
+    "created_at": "2026-09-26T17:36:40.572083+00:00",
+    "files": {
+      "orchestrator.py": "def adapt(parameters, policy, subsystem):\n    \"\"\"Apply pre-generation screening heuristics without mutating inputs.\"\"\"\n    result = dict(parameters)\n    if subsystem == \"structural\":\n        minimum = max(3.0, policy.get(\"minimum_mount_thickness_mm\", 3.0))\n        result[\"thickness_mm\"] = max(minimum, result[\"thickness_mm\"])\n    elif subsystem == \"aerodynamic\":\n        minimum = max(2.0, policy.get(\"minimum_hinge_gap_mm\", 2.0))\n        result[\"hinge_gap_mm\"] = max(minimum, result[\"hinge_gap_mm\"])\n    return result\n",
+      "policy.json": "{\n  \"minimum_mount_thickness_mm\": 3.0,\n  \"minimum_hinge_gap_mm\": 2.0,\n  \"lessons\": [\n    \"Screen structural proposals before CAD generation: raise mount thickness below 3 mm while preserving thicker proposals and all unrelated parameters. The archived 1.5 mm mount failed minimum thickness and deflection checks.\",\n    \"Screen aerodynamic proposals before CAD generation: raise hinge gaps below 2 mm while preserving larger gaps and all unrelated parameters. The archived 0.2 mm gap failed clearance and travel-collision checks.\",\n    \"These are working-policy screening heuristics, not evaluator thresholds or certification. Keep fixed evaluator limits unchanged and rerun structural and full-travel collision checks after adaptation.\",\n    \"Use explicit subsystem branches so unknown subsystems remain unchanged rather than being treated as aerodynamic.\"\n  ],\n  \"retrieval_successes\": 4,\n  \"retrieval_failures\": 4\n}\n",
+      "PolicyNote.tsx": "import React from \"react\";\n\nexport default function PolicyNote() {\n  return (\n    <section style={{ fontFamily: \"monospace\", color: \"#8cd1bb\", padding: \"12px\" }}>\n      <strong>LEARNED SCREENING POLICY</strong>\n      <ul>\n        <li>Structural mount thickness: at least 3 mm before generation.</li>\n        <li>Aerodynamic hinge gap: at least 2 mm before generation.</li>\n        <li>Larger values and unrelated parameters are preserved.</li>\n      </ul>\n      <p>\n        Addresses the archived thin-mount deflection and hinge-clearance/travel\n        failures. These are screening heuristics; fixed evaluator limits remain\n        unchanged. Structural and full-travel collision validation is still required.\n      </p>\n    </section>\n  );\n}\n"
+    },
+    "status": "validated",
+    "run_id": "run-atlas-validation-20260926-live1",
+    "predecessor_id": "release-f4ceedc9d506a906",
+    "summary": "Enforce screening floors of 3 mm mount thickness and 2 mm hinge gap, even if working policy values are lowered. Preserve all unrelated parameters and leave evaluator thresholds unchanged.",
+    "motivation": "evaluation-candidate-run-atlas-validation-20260926-replay-0-structural",
+    "validation": [
+      {
+        "name": "adapt structural 1.5",
+        "passed": true
+      },
+      {
+        "name": "adapt structural 3",
+        "passed": true
+      },
+      {
+        "name": "adapt structural 6",
+        "passed": true
+      },
+      {
+        "name": "adapt aerodynamic 0.2",
+        "passed": true
+      },
+      {
+        "name": "adapt aerodynamic 2",
+        "passed": true
+      },
+      {
+        "name": "adapt aerodynamic 4",
+        "passed": true
+      },
+      {
+        "name": "React component compiles and renders",
+        "passed": true
+      },
+      {
+        "name": "structural geometry canary",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "aerodynamic geometry canary",
+        "passed": true,
+        "violations": []
+      }
+    ],
+    "source_commit": "072553689d8c300c88cb2c9e911025b13b56e94b",
+    "tool_version_ids": [
+      "tool-area-2dffe0de9373ecc1",
+      "tool-area-49a71c05c68127e0"
+    ],
+    "bundle_artifact_id": "artifact-c77e17faee418120b509860acd4406bad3a893d1bb0768a1cbfa55e41adc2667",
+    "ui_artifact_id": "artifact-3e4b9eab0037afc0514bf6bd0171c30fc79810dc0002abb978ebb3cbeb7f754c",
+    "policy_version_id": "policy-6c88604812c3fcf9"
+  },
+  "tool": {
+    "_id": "tool-area-49a71c05c68127e0",
+    "schema_version": 1,
+    "created_at": "2026-09-26T17:36:14.925590+00:00",
+    "project_id": "uas-demo",
+    "name": "directional_projected_area",
+    "source": "import math\nfrom collections.abc import Mapping\nfrom numbers import Real\n\n\ndef _vector3(value, name, positive=False):\n    if not isinstance(value, (list, tuple)) or len(value) != 3:\n        raise ValueError(f'{name} must contain exactly three numbers')\n    result = []\n    for item in value:\n        if isinstance(item, bool) or not isinstance(item, Real):\n            raise ValueError(f'{name} must contain real numbers, not booleans')\n        try:\n            number = float(item)\n        except (OverflowError, ValueError) as exc:\n            raise ValueError(f'{name} contains an unsupported number') from exc\n        if not math.isfinite(number):\n            raise ValueError(f'{name} must contain finite numbers')\n        if positive and number <= 0:\n            raise ValueError(f'{name} entries must be strictly positive')\n        result.append(number)\n    return result\n\n\ndef run(arguments):\n    \"\"\"Project an axis-aligned box onto a plane normal to direction.\n\n    dimensions_m: three positive side lengths along X, Y, Z, in metres.\n    direction: three finite components of a nonzero viewing direction.\n    Raises ValueError for invalid inputs or unrepresentable output.\n    \"\"\"\n    if not isinstance(arguments, Mapping):\n        raise ValueError('arguments must be a mapping')\n    if 'dimensions_m' not in arguments or 'direction' not in arguments:\n        raise ValueError('dimensions_m and direction are required')\n\n    x, y, z = _vector3(arguments['dimensions_m'], 'dimensions_m', positive=True)\n    direction = _vector3(arguments['direction'], 'direction')\n    scale = max(abs(component) for component in direction)\n    if scale == 0:\n        raise ValueError('direction must be nonzero')\n\n    # Scale first so normalization cannot overflow for large components.\n    scaled = [abs(component) / scale for component in direction]\n    norm = math.hypot(*scaled)\n    nx, ny, nz = [component / norm for component in scaled]\n\n    # A = yz*|nx| + xz*|ny| + xy*|nz| for a unit direction n.\n    terms = []\n    for a, b, weight in ((y, z, nx), (x, z, ny), (x, y, nz)):\n        if weight != 0:\n            terms.append((a * weight) * b)\n    try:\n        area = math.fsum(terms)\n    except OverflowError as exc:\n        raise ValueError('projected area exceeds floating-point range') from exc\n    if not math.isfinite(area) or area <= 0:\n        raise ValueError('projected area is outside the supported numerical range')\n\n    return {'projected_area_m2': area, 'fidelity': 'bounding_box_proxy'}\n",
+    "source_commit": "9eb6536eba4091afc13bb9c0a9a9884f0bb5a922",
+    "version": "tool-area-49a71c05c68127e0",
+    "status": "active",
+    "summary": "Computes orthographic projected area of an axis-aligned bounding box in square metres, normalizing the supplied direction. Validates positive dimensions and a finite, nonzero direction. Uses only the Python standard library with no external I/O; this is a bounding-box proxy, not a detailed geometry projection.",
+    "entrypoint": "tool:run",
+    "motivation": "evaluation-candidate-run-atlas-validation-20260926-replay-0-structural",
+    "run_id": "run-atlas-validation-20260926-live1",
+    "validation": [
+      {
+        "arguments": {
+          "dimensions_m": [
+            2,
+            3,
+            4
+          ],
+          "direction": [
+            1,
+            0,
+            0
+          ]
+        },
+        "expected": 12,
+        "actual": {
+          "projected_area_m2": 12.0,
+          "fidelity": "bounding_box_proxy"
+        },
+        "passed": true
+      },
+      {
+        "arguments": {
+          "dimensions_m": [
+            2,
+            3,
+            4
+          ],
+          "direction": [
+            0,
+            1,
+            0
+          ]
+        },
+        "expected": 8,
+        "actual": {
+          "projected_area_m2": 8.0,
+          "fidelity": "bounding_box_proxy"
+        },
+        "passed": true
+      },
+      {
+        "arguments": {
+          "dimensions_m": [
+            2,
+            3,
+            4
+          ],
+          "direction": [
+            0,
+            0,
+            -2
+          ]
+        },
+        "expected": 6,
+        "actual": {
+          "projected_area_m2": 6.0,
+          "fidelity": "bounding_box_proxy"
+        },
+        "passed": true
+      },
+      {
+        "arguments": {
+          "dimensions_m": [
+            2,
+            3,
+            4
+          ],
+          "direction": [
+            1,
+            1,
+            0
+          ]
+        },
+        "expected": 14.14213562373095,
+        "actual": {
+          "projected_area_m2": 14.14213562373095,
+          "fidelity": "bounding_box_proxy"
+        },
+        "passed": true
+      },
+      {
+        "name": "zero direction rejected",
+        "passed": true
+      }
+    ],
+    "runtime_image": "sha256:7c793165d040ff00df45ffb952e5e590725027565bd9fa55011054f257cc1111",
+    "input_schema": {
+      "type": "object",
+      "required": [
+        "dimensions_m",
+        "direction"
+      ],
+      "properties": {
+        "dimensions_m": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "number"
+          }
+        },
+        "direction": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "number"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "projected_area_m2",
+        "fidelity"
+      ],
+      "properties": {
+        "projected_area_m2": {
+          "type": "number",
+          "minimum": 0
+        },
+        "fidelity": {
+          "const": "bounding_box_proxy"
+        }
+      },
+      "additionalProperties": false
+    },
+    "limitations": "Bounding-box area proxy only; does not predict drag",
+    "execution": {
+      "timeout_seconds": 60,
+      "network": false
+    },
+    "bundle_artifact_id": "artifact-8b006f83474648977a6c1af8a5b4db195445aaaa8d2f4177f72871de17a57110"
+  }
+}

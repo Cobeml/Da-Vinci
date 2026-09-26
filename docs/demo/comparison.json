@@ -1,0 +1,620 @@
+{
+  "created_at": "2026-09-26T18:25:07.172192+00:00",
+  "model_calls": 0,
+  "method": "Paired intervention on archived release files; identical source, input, specification and image",
+  "runtime_image_digest": "sha256:7c793165d040ff00df45ffb952e5e590725027565bd9fa55011054f257cc1111",
+  "specification": {
+    "_id": "spec-demo-c850351dc8bd",
+    "schema_version": 1,
+    "project_id": "uas-demo",
+    "name": "Passive sensor mount / VTOL surface screening fixture",
+    "fidelity": "analytic_screening",
+    "evaluator_version": "screening-v1",
+    "coordinate_frame": "X forward, Y right, Z down; CadQuery mm, metrics SI",
+    "material": {
+      "id": "aluminum-demo",
+      "density_kg_m3": 2700,
+      "youngs_modulus_pa": 69000000000.0,
+      "allowable_stress_pa": 95000000.0
+    },
+    "mount": {
+      "width_mm": 40,
+      "length_mm": 80,
+      "load_n": 20,
+      "minimum_thickness_mm": 2.5,
+      "max_deflection_mm": 0.8,
+      "max_mass_kg": 0.09,
+      "hole_spacing_mm": 28
+    },
+    "wing": {
+      "material_density_kg_m3": 60,
+      "span_mm": 600,
+      "chord_mm": 120,
+      "required_lift_n": 10,
+      "airspeed_m_s": 20,
+      "density_kg_m3": 1.225,
+      "oswald_efficiency": 0.8,
+      "min_hinge_gap_mm": 1.5,
+      "travel_deg": [
+        -20,
+        -10,
+        0,
+        10,
+        20
+      ],
+      "max_cl": 0.8,
+      "max_mass_kg": 0.65
+    },
+    "assembly": {
+      "max_mass_kg": 0.72,
+      "mount_translation_mm": [
+        150,
+        0,
+        25
+      ]
+    },
+    "baseline": {
+      "assembly_mass_kg": 0.093230793914711,
+      "mount_thickness_mm": 6.0,
+      "wing_thickness_mm": 2.0,
+      "hinge_gap_mm": 2.0,
+      "flap_fraction": 0.25
+    }
+  },
+  "release_files_sha256": {
+    "release-baseline": "bfc3e28117f0bfe1f5bcfc3af82d109c41a246aad24118aadad189e8bf1d4095",
+    "release-705e594f50cb4728": "c77e17faee418120b509860acd4406bad3a893d1bb0768a1cbfa55e41adc2667"
+  },
+  "results": [
+    {
+      "arm": "baseline",
+      "release_id": "release-baseline",
+      "candidate_id": "candidate-run-atlas-validation-20260926-replay-0-structural",
+      "subsystem": "structural",
+      "case": "failure",
+      "source_sha256": "dfe1fdad897fc2d6ed99302864cfbee0ca1c0830a3308b3328ed04a9b4728328",
+      "source_commit": "0da756bba2aa1aacffac41ac986fe5caa69103d2",
+      "input_parameters": {
+        "thickness_mm": 1.5
+      },
+      "adapted_parameters": {
+        "thickness_mm": 1.5
+      },
+      "evaluation": {
+        "peak_rss_mb": 471.2578125,
+        "outcome": "failed",
+        "metrics": {
+          "mass_kg": {
+            "value": 0.012858212398023644,
+            "unit": "kg",
+            "fidelity": "analytic_screening"
+          },
+          "thickness_mm": {
+            "value": 1.5,
+            "unit": "mm",
+            "fidelity": "analytic_screening"
+          },
+          "bending_stress_pa": {
+            "value": 80000000.0,
+            "unit": "Pa",
+            "fidelity": "analytic_screening"
+          },
+          "deflection_mm": {
+            "value": 1.8550724637681157,
+            "unit": "mm",
+            "fidelity": "analytic_screening"
+          }
+        },
+        "violations": [
+          {
+            "code": "MINIMUM_THICKNESS",
+            "message": "Plate is below the fixed minimum thickness"
+          },
+          {
+            "code": "DEFLECTION_LIMIT",
+            "message": "Cantilever deflection exceeds the screening limit"
+          }
+        ],
+        "objective": 0.24803650459150547,
+        "fidelity": "analytic_screening",
+        "bounds_mm": {
+          "x": 80.0,
+          "y": 40.0,
+          "z": 1.5
+        },
+        "limitations": [
+          "Nominal beam screening excludes bolt bearing and stress concentrations"
+        ]
+      },
+      "duration_seconds": 2.403292831964791,
+      "geometry_sha256": {
+        "model.step": "454e0b7a45729fdb4704ec0c3bd828edeecaa1df8ae733327880fdc725d0becf",
+        "model.glb": "c3145190751a29856e5913dd8b762d0c4a3072c295f49bf557a445b19bbadb4c"
+      }
+    },
+    {
+      "arm": "baseline",
+      "release_id": "release-baseline",
+      "candidate_id": "candidate-run-atlas-validation-20260926-replay-0-aerodynamic",
+      "subsystem": "aerodynamic",
+      "case": "failure",
+      "source_sha256": "c5432399dc4fe0211677f466769edc996cc3b62b220693ed661f9769f77fd4f8",
+      "source_commit": "241f8fd6235ef17ed4050444e211311f6a5ce42e",
+      "input_parameters": {
+        "span_mm": 600.0,
+        "hinge_gap_mm": 0.2,
+        "flap_fraction": 0.25
+      },
+      "adapted_parameters": {
+        "span_mm": 600.0,
+        "hinge_gap_mm": 0.2,
+        "flap_fraction": 0.25
+      },
+      "evaluation": {
+        "peak_rss_mb": 480.71875,
+        "outcome": "failed",
+        "metrics": {
+          "mass_kg": {
+            "value": 0.042283119854491284,
+            "unit": "kg",
+            "fidelity": "analytic_screening"
+          },
+          "span_mm": {
+            "value": 600.0,
+            "unit": "mm",
+            "fidelity": "analytic_screening"
+          },
+          "hinge_gap_mm": {
+            "value": 0.19999999999987494,
+            "unit": "mm",
+            "fidelity": "analytic_screening"
+          },
+          "flap_fraction": {
+            "value": 0.2491666666666666,
+            "unit": "ratio",
+            "fidelity": "analytic_screening"
+          },
+          "required_cl": {
+            "value": 0.5668934240362801,
+            "unit": "ratio",
+            "fidelity": "analytic_screening"
+          },
+          "induced_drag_n": {
+            "value": 0.45111945320832003,
+            "unit": "N",
+            "fidelity": "analytic_screening"
+          },
+          "projected_area_m2": {
+            "value": 0.07200000000000013,
+            "unit": "m2",
+            "fidelity": "analytic_screening"
+          }
+        },
+        "violations": [
+          {
+            "code": "HINGE_CLEARANCE",
+            "message": "Hinge gap is below the fixed clearance limit"
+          },
+          {
+            "code": "TRAVEL_COLLISION",
+            "message": "Control surface collides at -20 degrees"
+          }
+        ],
+        "objective": 1.0,
+        "fidelity": "analytic_screening",
+        "bounds_mm": {
+          "x": 120.00000000000023,
+          "y": 600.0,
+          "z": 14.401247603004
+        },
+        "limitations": [
+          "Induced drag estimate excludes profile drag, stall and VTOL rotor interaction"
+        ]
+      },
+      "duration_seconds": 2.8540980177931488,
+      "geometry_sha256": {
+        "model.step": "da1a413dfeacb6939e4c126855f4db7bc9b73bf34366a4b42b4ef44c749b6947",
+        "model.glb": "d208c371bd0dabf411c92720e30521f0afcca22edf409afe2b4f3707061a74e4"
+      }
+    },
+    {
+      "arm": "baseline",
+      "release_id": "release-baseline",
+      "candidate_id": "candidate-run-atlas-validation-20260926-replay-2-structural",
+      "subsystem": "structural",
+      "case": "control",
+      "source_sha256": "dfe1fdad897fc2d6ed99302864cfbee0ca1c0830a3308b3328ed04a9b4728328",
+      "source_commit": "b65bb39a51c4973c0e4795f5f6dbf5ba1d67ca5b",
+      "input_parameters": {
+        "thickness_mm": 3.0
+      },
+      "adapted_parameters": {
+        "thickness_mm": 3.0
+      },
+      "evaluation": {
+        "peak_rss_mb": 470.91015625,
+        "outcome": "passed",
+        "metrics": {
+          "mass_kg": {
+            "value": 0.02571642479604729,
+            "unit": "kg",
+            "fidelity": "analytic_screening"
+          },
+          "thickness_mm": {
+            "value": 3.0,
+            "unit": "mm",
+            "fidelity": "analytic_screening"
+          },
+          "bending_stress_pa": {
+            "value": 20000000.0,
+            "unit": "Pa",
+            "fidelity": "analytic_screening"
+          },
+          "deflection_mm": {
+            "value": 0.23188405797101447,
+            "unit": "mm",
+            "fidelity": "analytic_screening"
+          }
+        },
+        "violations": [],
+        "objective": 0.49607300918301095,
+        "fidelity": "analytic_screening",
+        "bounds_mm": {
+          "x": 80.0,
+          "y": 40.0,
+          "z": 3.0
+        },
+        "limitations": [
+          "Nominal beam screening excludes bolt bearing and stress concentrations"
+        ]
+      },
+      "duration_seconds": 2.403079244075343,
+      "geometry_sha256": {
+        "model.step": "02770ff2f3e38048d311379fc9e4107e4f87d7e9f897f3f0027e7bb15906b2d4",
+        "model.glb": "c09df0f19f4505c0a60445b324c2571aad707ceb353c772e7526426d3e210789"
+      }
+    },
+    {
+      "arm": "baseline",
+      "release_id": "release-baseline",
+      "candidate_id": "candidate-run-atlas-validation-20260926-replay-2-aerodynamic",
+      "subsystem": "aerodynamic",
+      "case": "control",
+      "source_sha256": "c5432399dc4fe0211677f466769edc996cc3b62b220693ed661f9769f77fd4f8",
+      "source_commit": "72e94a8ff0e1e9b074369049f39d6e53b3793aba",
+      "input_parameters": {
+        "span_mm": 660.0,
+        "hinge_gap_mm": 2.0,
+        "flap_fraction": 0.25
+      },
+      "adapted_parameters": {
+        "span_mm": 660.0,
+        "hinge_gap_mm": 2.0,
+        "flap_fraction": 0.25
+      },
+      "evaluation": {
+        "peak_rss_mb": 482.53515625,
+        "outcome": "passed",
+        "metrics": {
+          "mass_kg": {
+            "value": 0.04597773873924032,
+            "unit": "kg",
+            "fidelity": "analytic_screening"
+          },
+          "span_mm": {
+            "value": 660.0,
+            "unit": "mm",
+            "fidelity": "analytic_screening"
+          },
+          "hinge_gap_mm": {
+            "value": 1.9999999999999574,
+            "unit": "mm",
+            "fidelity": "analytic_screening"
+          },
+          "flap_fraction": {
+            "value": 0.24166666666666645,
+            "unit": "ratio",
+            "fidelity": "analytic_screening"
+          },
+          "required_cl": {
+            "value": 0.5153576582148,
+            "unit": "ratio",
+            "fidelity": "analytic_screening"
+          },
+          "induced_drag_n": {
+            "value": 0.3728259943870413,
+            "unit": "N",
+            "fidelity": "analytic_screening"
+          },
+          "projected_area_m2": {
+            "value": 0.07920000000000016,
+            "unit": "m2",
+            "fidelity": "analytic_screening"
+          }
+        },
+        "violations": [],
+        "objective": 0.8264462809917353,
+        "fidelity": "analytic_screening",
+        "bounds_mm": {
+          "x": 120.00000000000023,
+          "y": 660.0,
+          "z": 14.401247603004
+        },
+        "limitations": [
+          "Induced drag estimate excludes profile drag, stall and VTOL rotor interaction"
+        ]
+      },
+      "duration_seconds": 2.8536464939825237,
+      "geometry_sha256": {
+        "model.step": "4bff9c3a9672c89560375af7764765688997beda23855efabcf2255e3e2672d3",
+        "model.glb": "9c789342c51448448e1ebd2588eda1c264b3e9e346d0ae6bcf78347183272b18"
+      }
+    },
+    {
+      "arm": "promoted",
+      "release_id": "release-705e594f50cb4728",
+      "candidate_id": "candidate-run-atlas-validation-20260926-replay-0-structural",
+      "subsystem": "structural",
+      "case": "failure",
+      "source_sha256": "dfe1fdad897fc2d6ed99302864cfbee0ca1c0830a3308b3328ed04a9b4728328",
+      "source_commit": "0da756bba2aa1aacffac41ac986fe5caa69103d2",
+      "input_parameters": {
+        "thickness_mm": 1.5
+      },
+      "adapted_parameters": {
+        "thickness_mm": 3.0
+      },
+      "evaluation": {
+        "peak_rss_mb": 472.71875,
+        "outcome": "passed",
+        "metrics": {
+          "mass_kg": {
+            "value": 0.02571642479604729,
+            "unit": "kg",
+            "fidelity": "analytic_screening"
+          },
+          "thickness_mm": {
+            "value": 3.0,
+            "unit": "mm",
+            "fidelity": "analytic_screening"
+          },
+          "bending_stress_pa": {
+            "value": 20000000.0,
+            "unit": "Pa",
+            "fidelity": "analytic_screening"
+          },
+          "deflection_mm": {
+            "value": 0.23188405797101447,
+            "unit": "mm",
+            "fidelity": "analytic_screening"
+          }
+        },
+        "violations": [],
+        "objective": 0.49607300918301095,
+        "fidelity": "analytic_screening",
+        "bounds_mm": {
+          "x": 80.0,
+          "y": 40.0,
+          "z": 3.0
+        },
+        "limitations": [
+          "Nominal beam screening excludes bolt bearing and stress concentrations"
+        ]
+      },
+      "duration_seconds": 2.403163799084723,
+      "geometry_sha256": {
+        "model.step": "47189f504ded7e4c12607c16fc4a685c6322c75a9cc9cc270d2b48bfef98687c",
+        "model.glb": "c09df0f19f4505c0a60445b324c2571aad707ceb353c772e7526426d3e210789"
+      }
+    },
+    {
+      "arm": "promoted",
+      "release_id": "release-705e594f50cb4728",
+      "candidate_id": "candidate-run-atlas-validation-20260926-replay-0-aerodynamic",
+      "subsystem": "aerodynamic",
+      "case": "failure",
+      "source_sha256": "c5432399dc4fe0211677f466769edc996cc3b62b220693ed661f9769f77fd4f8",
+      "source_commit": "241f8fd6235ef17ed4050444e211311f6a5ce42e",
+      "input_parameters": {
+        "span_mm": 600.0,
+        "hinge_gap_mm": 0.2,
+        "flap_fraction": 0.25
+      },
+      "adapted_parameters": {
+        "span_mm": 600.0,
+        "hinge_gap_mm": 2.0,
+        "flap_fraction": 0.25
+      },
+      "evaluation": {
+        "peak_rss_mb": 480.37109375,
+        "outcome": "passed",
+        "metrics": {
+          "mass_kg": {
+            "value": 0.041797944308400274,
+            "unit": "kg",
+            "fidelity": "analytic_screening"
+          },
+          "span_mm": {
+            "value": 600.0,
+            "unit": "mm",
+            "fidelity": "analytic_screening"
+          },
+          "hinge_gap_mm": {
+            "value": 1.9999999999999574,
+            "unit": "mm",
+            "fidelity": "analytic_screening"
+          },
+          "flap_fraction": {
+            "value": 0.24166666666666645,
+            "unit": "ratio",
+            "fidelity": "analytic_screening"
+          },
+          "required_cl": {
+            "value": 0.5668934240362801,
+            "unit": "ratio",
+            "fidelity": "analytic_screening"
+          },
+          "induced_drag_n": {
+            "value": 0.45111945320832003,
+            "unit": "N",
+            "fidelity": "analytic_screening"
+          },
+          "projected_area_m2": {
+            "value": 0.07200000000000013,
+            "unit": "m2",
+            "fidelity": "analytic_screening"
+          }
+        },
+        "violations": [],
+        "objective": 1.0,
+        "fidelity": "analytic_screening",
+        "bounds_mm": {
+          "x": 120.00000000000023,
+          "y": 600.0,
+          "z": 14.401247603004
+        },
+        "limitations": [
+          "Induced drag estimate excludes profile drag, stall and VTOL rotor interaction"
+        ]
+      },
+      "duration_seconds": 2.8538026630412787,
+      "geometry_sha256": {
+        "model.step": "7234829428a61c891243cb985a9e59a0cad3f1da1b413a8ca0d6510eb7c83269",
+        "model.glb": "58abaea6caea97beadc9ecddf50ecf4d7711711f7d33ccd7209c7a155d332cf2"
+      }
+    },
+    {
+      "arm": "promoted",
+      "release_id": "release-705e594f50cb4728",
+      "candidate_id": "candidate-run-atlas-validation-20260926-replay-2-structural",
+      "subsystem": "structural",
+      "case": "control",
+      "source_sha256": "dfe1fdad897fc2d6ed99302864cfbee0ca1c0830a3308b3328ed04a9b4728328",
+      "source_commit": "b65bb39a51c4973c0e4795f5f6dbf5ba1d67ca5b",
+      "input_parameters": {
+        "thickness_mm": 3.0
+      },
+      "adapted_parameters": {
+        "thickness_mm": 3.0
+      },
+      "evaluation": {
+        "peak_rss_mb": 473.29296875,
+        "outcome": "passed",
+        "metrics": {
+          "mass_kg": {
+            "value": 0.02571642479604729,
+            "unit": "kg",
+            "fidelity": "analytic_screening"
+          },
+          "thickness_mm": {
+            "value": 3.0,
+            "unit": "mm",
+            "fidelity": "analytic_screening"
+          },
+          "bending_stress_pa": {
+            "value": 20000000.0,
+            "unit": "Pa",
+            "fidelity": "analytic_screening"
+          },
+          "deflection_mm": {
+            "value": 0.23188405797101447,
+            "unit": "mm",
+            "fidelity": "analytic_screening"
+          }
+        },
+        "violations": [],
+        "objective": 0.49607300918301095,
+        "fidelity": "analytic_screening",
+        "bounds_mm": {
+          "x": 80.0,
+          "y": 40.0,
+          "z": 3.0
+        },
+        "limitations": [
+          "Nominal beam screening excludes bolt bearing and stress concentrations"
+        ]
+      },
+      "duration_seconds": 2.403036816744134,
+      "geometry_sha256": {
+        "model.step": "2cef796ad2c71a98d38e1ea55d7cd49fe8bcdf022b0e29119652f962c77fd4c2",
+        "model.glb": "c09df0f19f4505c0a60445b324c2571aad707ceb353c772e7526426d3e210789"
+      }
+    },
+    {
+      "arm": "promoted",
+      "release_id": "release-705e594f50cb4728",
+      "candidate_id": "candidate-run-atlas-validation-20260926-replay-2-aerodynamic",
+      "subsystem": "aerodynamic",
+      "case": "control",
+      "source_sha256": "c5432399dc4fe0211677f466769edc996cc3b62b220693ed661f9769f77fd4f8",
+      "source_commit": "72e94a8ff0e1e9b074369049f39d6e53b3793aba",
+      "input_parameters": {
+        "span_mm": 660.0,
+        "hinge_gap_mm": 2.0,
+        "flap_fraction": 0.25
+      },
+      "adapted_parameters": {
+        "span_mm": 660.0,
+        "hinge_gap_mm": 2.0,
+        "flap_fraction": 0.25
+      },
+      "evaluation": {
+        "peak_rss_mb": 482.38671875,
+        "outcome": "passed",
+        "metrics": {
+          "mass_kg": {
+            "value": 0.04597773873924032,
+            "unit": "kg",
+            "fidelity": "analytic_screening"
+          },
+          "span_mm": {
+            "value": 660.0,
+            "unit": "mm",
+            "fidelity": "analytic_screening"
+          },
+          "hinge_gap_mm": {
+            "value": 1.9999999999999574,
+            "unit": "mm",
+            "fidelity": "analytic_screening"
+          },
+          "flap_fraction": {
+            "value": 0.24166666666666645,
+            "unit": "ratio",
+            "fidelity": "analytic_screening"
+          },
+          "required_cl": {
+            "value": 0.5153576582148,
+            "unit": "ratio",
+            "fidelity": "analytic_screening"
+          },
+          "induced_drag_n": {
+            "value": 0.3728259943870413,
+            "unit": "N",
+            "fidelity": "analytic_screening"
+          },
+          "projected_area_m2": {
+            "value": 0.07920000000000016,
+            "unit": "m2",
+            "fidelity": "analytic_screening"
+          }
+        },
+        "violations": [],
+        "objective": 0.8264462809917353,
+        "fidelity": "analytic_screening",
+        "bounds_mm": {
+          "x": 120.00000000000023,
+          "y": 660.0,
+          "z": 14.401247603004
+        },
+        "limitations": [
+          "Induced drag estimate excludes profile drag, stall and VTOL rotor interaction"
+        ]
+      },
+      "duration_seconds": 2.8538144370540977,
+      "geometry_sha256": {
+        "model.step": "f16790519c816c91f7ea5995aa93d66a9e1ae70048457d7ed7c30ec27a24154a",
+        "model.glb": "9c789342c51448448e1ebd2588eda1c264b3e9e346d0ae6bcf78347183272b18"
+      }
+    }
+  ]
+}
