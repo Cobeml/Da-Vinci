@@ -1,0 +1,102 @@
+[
+  {
+    "workers": 1,
+    "samples": [
+      {
+        "duration_seconds": 2.554,
+        "evaluator_peak_rss_mb": 471.8
+      },
+      {
+        "duration_seconds": 2.854,
+        "evaluator_peak_rss_mb": 480.7
+      },
+      {
+        "duration_seconds": 2.403,
+        "evaluator_peak_rss_mb": 471.7
+      },
+      {
+        "duration_seconds": 2.854,
+        "evaluator_peak_rss_mb": 480.4
+      },
+      {
+        "duration_seconds": 2.403,
+        "evaluator_peak_rss_mb": 473.1
+      },
+      {
+        "duration_seconds": 2.854,
+        "evaluator_peak_rss_mb": 480.6
+      },
+      {
+        "duration_seconds": 2.403,
+        "evaluator_peak_rss_mb": 472.4
+      },
+      {
+        "duration_seconds": 2.854,
+        "evaluator_peak_rss_mb": 482.0
+      },
+      {
+        "duration_seconds": 2.404,
+        "evaluator_peak_rss_mb": 473.0
+      },
+      {
+        "duration_seconds": 2.854,
+        "evaluator_peak_rss_mb": 479.7
+      }
+    ],
+    "wall_seconds": 26.542,
+    "container_limit": {
+      "cpus": 2,
+      "memory_gib": 4
+    }
+  },
+  {
+    "workers": 2,
+    "samples": [
+      {
+        "duration_seconds": 2.704,
+        "evaluator_peak_rss_mb": 468.3
+      },
+      {
+        "duration_seconds": 2.854,
+        "evaluator_peak_rss_mb": 478.0
+      },
+      {
+        "duration_seconds": 2.703,
+        "evaluator_peak_rss_mb": 471.6
+      },
+      {
+        "duration_seconds": 2.854,
+        "evaluator_peak_rss_mb": 479.3
+      },
+      {
+        "duration_seconds": 2.703,
+        "evaluator_peak_rss_mb": 471.7
+      },
+      {
+        "duration_seconds": 2.854,
+        "evaluator_peak_rss_mb": 481.4
+      },
+      {
+        "duration_seconds": 2.553,
+        "evaluator_peak_rss_mb": 473.6
+      },
+      {
+        "duration_seconds": 3.004,
+        "evaluator_peak_rss_mb": 481.7
+      },
+      {
+        "duration_seconds": 2.853,
+        "evaluator_peak_rss_mb": 470.3
+      },
+      {
+        "duration_seconds": 3.154,
+        "evaluator_peak_rss_mb": 480.2
+      }
+    ],
+    "wall_seconds": 14.771,
+    "container_limit": {
+      "cpus": 2,
+      "memory_gib": 4
+    }
+  }
+]

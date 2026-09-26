@@ -153,9 +153,11 @@ class Engine:
                     release["files"], [{"subsystem": subsystem, "parameters": proposal.parameters}]
                 )[0]
             except Exception:
-                self.improvements.rollback(
-                    release["_id"], run["_id"], "Orchestration failed during a live canary"
-                )
+                # Cancellation is not a regression in the active harness.
+                if self.store.get("runs", run["_id"])["status"] == "running" and self.store.owns(job):
+                    self.improvements.rollback(
+                        release["_id"], run["_id"], "Orchestration failed during a live canary"
+                    )
                 raise
             # Parameters are schema-constrained after executing editable orchestration.
             from davinci.models import Proposal
@@ -469,6 +471,11 @@ class Engine:
             self.store.update("runs", job["run_id"], {"status": "budget_exhausted", "error": str(exc)})
             self.store.finish(job)
         except Exception as exc:
+            if self.store.get("runs", job["run_id"])["status"] == "stopped":
+                self.store.update(
+                    "jobs", job["_id"], {"status": "cancelled"}, {"lease_token": job["lease_token"]}
+                )
+                return
             result = self.store.finish(job, error=exc)
             self.store.event(
                 job["run_id"], "job_error", str(exc)[:1000], job_id=job["_id"], attempt=job["attempt"]

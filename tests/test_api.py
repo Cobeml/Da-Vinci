@@ -69,3 +69,22 @@ def test_export_is_a_readable_reproducibility_bundle(app):
     archive = zipfile.ZipFile(io.BytesIO(response.content))
     assert "specification.json" in archive.namelist()
     assert "run.json" in archive.namelist()
+
+
+def test_cancellation_does_not_rollback_a_healthy_release(app, monkeypatch):
+    from davinci.runner import SandboxError
+
+    engine = app.state.engine
+    run = engine.start(RunRequest())
+    attempts = []
+    monkeypatch.setattr(engine.improvements, "rollback", lambda *args: attempts.append(args))
+
+    def cancel(*_):
+        engine.stop(run["_id"])
+        raise SandboxError("Run stopped")
+
+    monkeypatch.setattr(engine.runner, "adapt", cancel)
+    job = engine.store.claim()
+    engine.execute_job(job)
+    assert attempts == []
+    assert engine.store.get("jobs", job["_id"])["status"] == "cancelled"
