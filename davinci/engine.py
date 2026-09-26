@@ -5,6 +5,7 @@ from pathlib import Path
 
 from davinci.artifacts import Artifacts, Repository
 from davinci.budget import Budget, BudgetExceeded
+from davinci.errors import safe_error
 from davinci.improvement import Improvements
 from davinci.memory import Memory
 from davinci.models import SPECIFICATION, digest, document, now
@@ -57,7 +58,10 @@ class Engine:
         provider = self.provider(run)
         return Memory(self.store, provider.embed if run["mode"] == "live" else None, self.evaluator_version)
 
-    def start(self, request):
+    def start(self, request, run_id=None):
+        # Internal validation callers can resume a named run after a crash.
+        if run_id and (existing := self.store.get("runs", run_id)):
+            return existing
         if request.mode == "live" and not self.settings.openai_api_key:
             raise ValueError("Set OPENAI_API_KEY before starting a live run")
         slot = self.store.get("pointers", "active-run")
@@ -84,6 +88,8 @@ class Engine:
             release_id=self.improvements.active()["_id"],
             assembly_revision_id=None,
         )
+        if run_id:
+            run["_id"] = run_id
         root = Path(__file__).resolve().parent.parent
         paths = [
             root / "uv.lock",
@@ -478,9 +484,9 @@ class Engine:
                 return
             result = self.store.finish(job, error=exc)
             self.store.event(
-                job["run_id"], "job_error", str(exc)[:1000], job_id=job["_id"], attempt=job["attempt"]
+                job["run_id"], "job_error", safe_error(exc), job_id=job["_id"], attempt=job["attempt"]
             )
             if result and result["status"] == "dead":
-                self.store.update("runs", job["run_id"], {"status": "failed", "error": str(exc)[:2000]})
+                self.store.update("runs", job["run_id"], {"status": "failed", "error": safe_error(exc)})
         finally:
             self.runner.cancelled = lambda: False

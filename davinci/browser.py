@@ -7,6 +7,7 @@ from urllib.parse import urlencode
 from playwright.sync_api import sync_playwright
 
 from davinci.engine import Engine
+from davinci.errors import safe_error
 from davinci.models import document
 
 
@@ -126,4 +127,4 @@ def inspect_candidate(settings, candidate_id):
             screenshots=captures,
         )
     except Exception as exc:
-        engine.store.event(run["_id"], "inspection_failed", str(exc)[:1000], candidate_id=candidate_id)
+        engine.store.event(run["_id"], "inspection_failed", safe_error(exc), candidate_id=candidate_id)

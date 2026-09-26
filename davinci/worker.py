@@ -34,8 +34,8 @@ def work(stop, settings):
             finally:
                 heartbeat_stop.set()
                 pulse.join()
-        except Exception:
-            logging.exception("Worker loop failed; retrying")
+        except Exception as exc:
+            logging.error("Worker loop failed (%s); retrying", type(exc).__name__)
             stop.wait(2)
 
 

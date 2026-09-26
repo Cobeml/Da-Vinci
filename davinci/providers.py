@@ -3,6 +3,7 @@ import math
 
 from openai import OpenAI
 
+from davinci.errors import safe_error
 from davinci.models import PatchProposal, Proposal, ToolProposal
 from davinci.templates import IMPROVED_ORCHESTRATOR, IMPROVED_UI, MOUNT_SOURCE, TOOL_SOURCE, WING_SOURCE
 
@@ -201,7 +202,7 @@ class AstraProvider:
                         else {"error": "Tool unavailable"}
                     )
                 except Exception as exc:
-                    result = {"error": str(exc)[:1000]}
+                    result = {"error": safe_error(exc)}
                 inputs.append(
                     {"type": "function_call_output", "call_id": call.call_id, "output": json.dumps(result)}
                 )

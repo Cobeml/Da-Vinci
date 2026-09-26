@@ -42,11 +42,12 @@ def create_app(settings=None):
 
     @app.get("/api/workbench")
     def workbench():
-        runs = engine.store.list("runs", limit=20, reverse=True)
+        visible = {"diagnostic": {"$ne": True}}
+        runs = engine.store.list("runs", visible, limit=20, reverse=True)
         return {
             "runs": runs,
-            "candidates": engine.store.list("candidates", limit=100, reverse=True),
-            "evaluations": engine.store.list("evaluations", limit=100, reverse=True),
+            "candidates": engine.store.list("candidates", visible, limit=100, reverse=True),
+            "evaluations": engine.store.list("evaluations", visible, limit=100, reverse=True),
             "events": engine.store.list("events", limit=100, reverse=True),
             "tools": [{k: v for k, v in t.items() if k != "source"} for t in engine.store.list("tools")],
             "releases": engine.store.list("releases", limit=30, reverse=True),
@@ -262,4 +263,5 @@ def create_app(settings=None):
     return app
 
 
-app = create_app()
+# Uvicorn uses create_app with --factory. Importing this module must not connect
+# to Atlas or initialize persistent state (including during test collection).

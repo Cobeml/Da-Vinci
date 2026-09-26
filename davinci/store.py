@@ -10,6 +10,7 @@ from typing import Callable
 from pymongo import MongoClient, ReturnDocument
 from pymongo.errors import DuplicateKeyError
 
+from davinci.errors import safe_error
 from davinci.models import document, identity, now
 
 
@@ -184,7 +185,7 @@ class Store:
             job["_id"],
             {
                 "status": ("pending" if job["attempt"] < 3 else "dead") if error else "done",
-                "last_error": str(error)[:2000] if error else None,
+                "last_error": safe_error(error) if error else None,
                 "finished_at": now(),
             },
             {"lease_token": job["lease_token"], "status": "running"},
