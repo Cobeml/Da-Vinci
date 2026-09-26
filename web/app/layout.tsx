@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
 export const metadata: Metadata = {
-  title: "Da Vinci · Autonomous engineering",
+  title: "Da Vinci: recursive improvement CAD harness",
   description:
-    "A self-improving CAD workbench with traceable geometry, tools, and agent policies.",
+    "Interactive sensor-mount iterations with measured mass, screening results and VTOL context.",
 };
 export default function RootLayout({
   children,

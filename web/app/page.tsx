@@ -1,4 +1,5 @@
-import Workbench from "../components/Workbench";
+import SensorGallery from "../components/SensorGallery";
+import data from "../data/sensor-gallery.json";
 export default function Page() {
-  return <Workbench />;
+  return <SensorGallery data={data} />;
 }

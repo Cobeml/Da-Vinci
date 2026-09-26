@@ -84,7 +84,7 @@ def main():
                 target, subject_id = "", record["_id"]
                 artifact_id = record["artifacts"]["assembly.glb"]
             loaded.clear()
-            page.goto(args.url + "/" + target, wait_until="domcontentloaded", timeout=60000)
+            page.goto(args.url + "/harness" + target, wait_until="domcontentloaded", timeout=60000)
             expect(page.locator(".viewport-label")).to_contain_text("EVALUATED CAD GEOMETRY", timeout=60000)
             expect(page.get_by_test_id("cad-canvas")).to_have_attribute("data-geometry-ready", "true")
             # Bounds animates the initial fit after GLB readiness; let it finish

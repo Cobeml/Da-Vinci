@@ -221,7 +221,7 @@ export default function Workbench() {
             <div className="eyebrow">AUTONOMOUS ENGINEERING LAB</div>
             <h1>
               {tab === "Workbench"
-                ? "From constraints to possibility."
+                ? "CAD workbench"
                 : tab === "Memory"
                   ? "Every iteration leaves a lesson."
                   : tab === "Tools"
@@ -232,7 +232,7 @@ export default function Workbench() {
             </h1>
             <p>
               {tab === "Workbench"
-                ? "Two specialists. One vehicle. A harness that learns from every design."
+                ? "CAD generation, evaluation, tools and run history."
                 : tab === "Memory"
                   ? "Successful designs and geometric failures become context for the next attempt."
                   : tab === "Tools"

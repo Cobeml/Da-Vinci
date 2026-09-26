@@ -8,7 +8,7 @@ A multi-agent CAD workbench for the MongoDB Atlas Hackathon. Two specialists gen
 
 ## Start locally
 
-For the presentation, see the [Quarto demo and laptop-access guide](docs/demo/README.md). Rebuild the standalone HTML with `.venv/bin/python -m scripts.demo_report`. On the configured Tailscale network, open the [report](http://100.99.98.39:8085) or [live workbench](http://100.99.98.39:8086).
+The main page is an [interactive sensor-mount gallery](http://100.99.98.39:8086), with every Astra iteration, measured characteristics and a per-model VTOL view. See the [sensor gallery guide](docs/sensor-gallery.md) for its bounded generation workflow. The full workbench is at `/harness`. The earlier [Quarto report](http://100.99.98.39:8085) and [laptop-access guide](docs/demo/README.md) remain available.
 
 Requirements: Linux, Docker, Node 22+, and [uv](https://docs.astral.sh/uv/). Run from this directory:
 
@@ -21,7 +21,7 @@ docker compose --profile build build cad-image
 bash scripts/dev.sh
 ```
 
-Open **http://127.0.0.1:3215**. The Python API listens on **127.0.0.1:8215**; its OpenAPI explorer is at `/docs`. The dedicated ports avoid the existing applications on this workstation. Stop the development stack with Ctrl+C.
+Open **http://127.0.0.1:3215** for the gallery or **http://127.0.0.1:3215/harness** for run controls. The Python API listens on **127.0.0.1:8215**; its OpenAPI explorer is at `/docs`. The dedicated ports avoid the existing applications on this workstation. Stop the development stack with Ctrl+C.
 
 Click **Start replay run**. A fresh ledger demonstrates deliberately thin/poor-clearance candidates, independent failures, generated tool validation, a policy/orchestration/UI release, and improved geometry. Later runs start from the learned release and reuse the saved tool. To replay from an entirely fresh state without deleting history, use another data directory:
 

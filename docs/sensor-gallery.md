@@ -41,6 +41,8 @@ The existing `da-vinci-demo.service` user service forwards the private Tailscale
 
 ## Verification
 
+The published eight-attempt study reduced nominal mount mass from 83.535 g to 30.332 g (63.7%). All eight passed the fixed screen; the final two ribbed alternatives were heavier than the best oval-window design. Recorded API usage was approximately $0.77. These results demonstrate improvement within this parameterized family, not a controlled estimate of the causal benefit of any single memory or tool mechanism.
+
 ```bash
 DAVINCI_INTEGRATION=1 .venv/bin/python -m pytest -q tests/test_sensor.py
 .venv/bin/python -m pytest -q -m 'not integration'
@@ -50,3 +52,5 @@ node_modules/.bin/playwright test tests/browser/sensor-gallery.spec.ts
 ```
 
 The CAD tests cover feasible lightweighting, excessive deflection and unsupported exported geometry. Browser checks cover all model cards, per-card mounting toggles, expanded views, absence of the old headline, mobile containment and actual STEP downloads.
+
+Verified on 2026-09-26: two Docker/CAD tests, 19 non-integration Python tests, two gallery browser tests, and legacy navigation plus the two-worker replay/browser archive checks passed. TypeScript checking, Python lint and the production build passed. The running Tailscale endpoint returned the new page and all eight model references; its user service remained active.

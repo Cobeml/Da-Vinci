@@ -1,0 +1,729 @@
+{
+  "study_id": "sensor-cradle-study-v1",
+  "generated_at": "2026-09-26T19:19:41.435435+00:00",
+  "specification": {
+    "_id": "sensor-cradle-pa12-v1",
+    "material": "PA12 (nominal)",
+    "density_g_mm3": 0.00101,
+    "youngs_modulus_mpa": 1700,
+    "load_n": 20,
+    "allowable_stress_mpa": 28,
+    "max_deflection_mm": 0.65,
+    "max_mass_g": 100,
+    "footprint_mm": [
+      100,
+      72
+    ],
+    "bolt_pattern_mm": [
+      80,
+      52
+    ],
+    "sensor_diameter_mm": 32,
+    "sensor_width_mm": 48
+  },
+  "designs": [
+    {
+      "_id": "sensor-cradle-study-v1-00",
+      "iteration": 1,
+      "title": "Solid conservative PA12 cradle baseline",
+      "change": "Establish a reference cradle with 6 mm base and solid 6 mm walls, retaining all four mounting holes and the pivot interface.",
+      "lesson": "The prescribed wall screen predicts 0.0531 mm deflection and 0.663 MPa bending stress, comfortably below the limits; measure baseline STEP mass before progressively reducing thickness or adding cutouts.",
+      "parameters": {
+        "base_mm": 6.0,
+        "wall_mm": 6.0,
+        "window_mm": 0.0,
+        "window_style": 0.0,
+        "base_slots": 0.0,
+        "gusset_mm": 0.0
+      },
+      "evaluation": {
+        "outcome": "passed",
+        "metrics": {
+          "mass_g": {
+            "value": 83.5353604433992,
+            "unit": "g",
+            "fidelity": "STEP_volume"
+          },
+          "volume_cm3": {
+            "value": 82.70827766673189,
+            "unit": "cm\u00b3",
+            "fidelity": "STEP_volume"
+          },
+          "stress_mpa": {
+            "value": 0.6628787878787878,
+            "unit": "MPa",
+            "fidelity": "wall_strip_screen"
+          },
+          "deflection_mm": {
+            "value": 0.0530736284412755,
+            "unit": "mm",
+            "fidelity": "wall_strip_screen"
+          },
+          "safety_factor": {
+            "value": 42.24,
+            "unit": "ratio",
+            "fidelity": "wall_strip_screen"
+          }
+        },
+        "violations": [],
+        "reference_residual_mm3": 0.0,
+        "bounds_mm": [
+          100.0,
+          72.0,
+          48.000000000000725
+        ],
+        "fidelity": "wall_strip_screen",
+        "limitations": "Nominal PA12 properties. Strip model excludes joint compliance, stress concentrations, print anisotropy and vibration. Ribs receive no stiffness credit. Not FEA or flight validation."
+      },
+      "source_commit": "1b5a67be4dc092fe475ed686ec1ebecda80e22d4",
+      "tool_id": null,
+      "generator": "gpt-6-astra",
+      "evaluator_version": "sensor-a2961693b7da",
+      "retrieved_memory": [],
+      "model_url": "/models/sensor/01.glb",
+      "step_url": "/models/sensor/01.step",
+      "source_url": "/models/sensor/01.py"
+    },
+    {
+      "_id": "sensor-cradle-study-v1-01",
+      "iteration": 2,
+      "title": "Lightweight open-window cradle",
+      "change": "Replace the heavy solid baseline with a 2.5 mm base, one broad base slot and 3.35 mm walls with 46.5 mm open windows, retaining all four mounting holes and the pivot interface.",
+      "lesson": "The measured 83.535 g predecessor had substantial screening margin; this candidate targets lower mass with calculated wall-screen deflection of approximately 0.647 mm and stress of 4.51 MPa without rib credit. Confirm STEP mass and screening results before fur",
+      "parameters": {
+        "base_mm": 2.5,
+        "wall_mm": 3.35,
+        "window_mm": 46.5,
+        "window_style": 1.0,
+        "base_slots": 1.0,
+        "gusset_mm": 0.0
+      },
+      "evaluation": {
+        "outcome": "passed",
+        "metrics": {
+          "mass_g": {
+            "value": 30.361676502631543,
+            "unit": "g",
+            "fidelity": "STEP_volume"
+          },
+          "volume_cm3": {
+            "value": 30.061065844189645,
+            "unit": "cm\u00b3",
+            "fidelity": "STEP_volume"
+          },
+          "stress_mpa": {
+            "value": 4.509014002098838,
+            "unit": "MPa",
+            "fidelity": "wall_strip_screen"
+          },
+          "deflection_mm": {
+            "value": 0.6465955109828594,
+            "unit": "mm",
+            "fidelity": "wall_strip_screen"
+          },
+          "safety_factor": {
+            "value": 6.209783333333334,
+            "unit": "ratio",
+            "fidelity": "wall_strip_screen"
+          }
+        },
+        "violations": [],
+        "reference_residual_mm3": 0.0,
+        "bounds_mm": [
+          100.0,
+          72.0,
+          44.500000000000725
+        ],
+        "fidelity": "wall_strip_screen",
+        "limitations": "Nominal PA12 properties. Strip model excludes joint compliance, stress concentrations, print anisotropy and vibration. Ribs receive no stiffness credit. Not FEA or flight validation."
+      },
+      "source_commit": "c0f14468c1c64b523f69379b7613613e39869aaa",
+      "tool_id": null,
+      "generator": "gpt-6-astra",
+      "evaluator_version": "sensor-a2961693b7da",
+      "retrieved_memory": [
+        {
+          "_id": "memory-sensor-cradle-study-v1-00-evaluation",
+          "summary": "{\"fidelity\": \"wall_strip_screen\", \"metrics\": {\"deflection_mm\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"mm\", \"value\": 0.0530736284412755}, \"mass_g\": {\"fidelity\": \"STEP_volume\", \"unit\": \"g\", \"value\": 83.5353604433992}, \"safety_factor\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"ratio\", \"value\": 42.24}, \"stress_mpa\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"MPa\", \"value\": 0.6628787878787878}, \"volume_cm3\": {\"fidelity\": \"STEP_volume\", \"unit\": \"cm\\u00b3\", \"value\": 82.70827766673189}}, \"outcome\": \"passed\", \"parameters\": {\"base_mm\": 6.0, \"base_slots\": 0.0, \"gusset_mm\": 0.0, \"wall_mm\": 6.0, \"window_mm\": 0.0, \"window_style\": 0.0}, \"subsystem\": \"sensor_cradle\", \"violations\": []}",
+          "score": 0.7393476366996765
+        }
+      ],
+      "model_url": "/models/sensor/02.glb",
+      "step_url": "/models/sensor/02.step",
+      "source_url": "/models/sensor/02.py"
+    },
+    {
+      "_id": "sensor-cradle-study-v1-02",
+      "iteration": 3,
+      "title": "Deflection-limited open-window cradle",
+      "change": "Reduce wall thickness from 3.35 to 3.3443 mm while retaining the lightweight base slot, open windows, four mounting holes and pivot interface.",
+      "lesson": "The 30.3617 g passing predecessor is already near the minimum for this layout; this thickness trim removes material and gives calculated wall-screen deflection approximately 0.64991 mm and stress 4.524 MPa, but leaves negligible deflection margin. Confirm the ",
+      "parameters": {
+        "base_mm": 2.5,
+        "wall_mm": 3.3443,
+        "window_mm": 46.5,
+        "window_style": 1.0,
+        "base_slots": 1.0,
+        "gusset_mm": 0.0
+      },
+      "evaluation": {
+        "outcome": "passed",
+        "metrics": {
+          "mass_g": {
+            "value": 30.333004273274206,
+            "unit": "g",
+            "fidelity": "STEP_volume"
+          },
+          "volume_cm3": {
+            "value": 30.03267749829129,
+            "unit": "cm\u00b3",
+            "fidelity": "STEP_volume"
+          },
+          "stress_mpa": {
+            "value": 4.524397360309575,
+            "unit": "MPa",
+            "fidelity": "wall_strip_screen"
+          },
+          "deflection_mm": {
+            "value": 0.6499073068873088,
+            "unit": "mm",
+            "fidelity": "wall_strip_screen"
+          },
+          "safety_factor": {
+            "value": 6.188669511133334,
+            "unit": "ratio",
+            "fidelity": "wall_strip_screen"
+          }
+        },
+        "violations": [],
+        "reference_residual_mm3": 0.0,
+        "bounds_mm": [
+          100.0,
+          72.0,
+          44.500000000000725
+        ],
+        "fidelity": "wall_strip_screen",
+        "limitations": "Nominal PA12 properties. Strip model excludes joint compliance, stress concentrations, print anisotropy and vibration. Ribs receive no stiffness credit. Not FEA or flight validation."
+      },
+      "source_commit": "5606c8a8f168b9a31869ec06b716509647f1c2b5",
+      "tool_id": "sensor-cradle-study-v1-wall-tool",
+      "generator": "gpt-6-astra",
+      "evaluator_version": "sensor-a2961693b7da",
+      "retrieved_memory": [
+        {
+          "_id": "memory-sensor-cradle-study-v1-01-evaluation",
+          "summary": "{\"fidelity\": \"wall_strip_screen\", \"metrics\": {\"deflection_mm\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"mm\", \"value\": 0.6465955109828594}, \"mass_g\": {\"fidelity\": \"STEP_volume\", \"unit\": \"g\", \"value\": 30.361676502631543}, \"safety_factor\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"ratio\", \"value\": 6.209783333333334}, \"stress_mpa\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"MPa\", \"value\": 4.509014002098838}, \"volume_cm3\": {\"fidelity\": \"STEP_volume\", \"unit\": \"cm\\u00b3\", \"value\": 30.061065844189645}}, \"outcome\": \"passed\", \"parameters\": {\"base_mm\": 2.5, \"base_slots\": 1.0, \"gusset_mm\": 0.0, \"wall_mm\": 3.35, \"window_mm\": 46.5, \"window_style\": 1.0}, \"subsystem\": \"sensor_cradle\", \"violations\": []}",
+          "score": 0.7397757768630981
+        },
+        {
+          "_id": "memory-sensor-cradle-study-v1-00-evaluation",
+          "summary": "{\"fidelity\": \"wall_strip_screen\", \"metrics\": {\"deflection_mm\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"mm\", \"value\": 0.0530736284412755}, \"mass_g\": {\"fidelity\": \"STEP_volume\", \"unit\": \"g\", \"value\": 83.5353604433992}, \"safety_factor\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"ratio\", \"value\": 42.24}, \"stress_mpa\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"MPa\", \"value\": 0.6628787878787878}, \"volume_cm3\": {\"fidelity\": \"STEP_volume\", \"unit\": \"cm\\u00b3\", \"value\": 82.70827766673189}}, \"outcome\": \"passed\", \"parameters\": {\"base_mm\": 6.0, \"base_slots\": 0.0, \"gusset_mm\": 0.0, \"wall_mm\": 6.0, \"window_mm\": 0.0, \"window_style\": 0.0}, \"subsystem\": \"sensor_cradle\", \"violations\": []}",
+          "score": 0.7393206357955933
+        }
+      ],
+      "model_url": "/models/sensor/03.glb",
+      "step_url": "/models/sensor/03.step",
+      "source_url": "/models/sensor/03.py"
+    },
+    {
+      "_id": "sensor-cradle-study-v1-03",
+      "iteration": 4,
+      "title": "Minimum-mass open-window refinement",
+      "change": "Refine the open windows to 46.495 mm and walls to 3.34401 mm for a marginal predicted mass reduction, preserving the slotted base, four mounting holes and pivot interface.",
+      "lesson": "The measured 30.3330 g predecessor is already near this layout's analytical mass minimum; this refinement predicts approximately 0.649998 mm deflection and 4.525 MPa stress, but its marginal mass saving requires STEP confirmation and its negligible deflection ",
+      "parameters": {
+        "base_mm": 2.5,
+        "wall_mm": 3.34401,
+        "window_mm": 46.495,
+        "window_style": 1.0,
+        "base_slots": 1.0,
+        "gusset_mm": 0.0
+      },
+      "evaluation": {
+        "outcome": "passed",
+        "metrics": {
+          "mass_g": {
+            "value": 30.332221000747957,
+            "unit": "g",
+            "fidelity": "STEP_volume"
+          },
+          "volume_cm3": {
+            "value": 30.031901980938567,
+            "unit": "cm\u00b3",
+            "fidelity": "STEP_volume"
+          },
+          "stress_mpa": {
+            "value": 4.524636988995022,
+            "unit": "MPa",
+            "fidelity": "wall_strip_screen"
+          },
+          "deflection_mm": {
+            "value": 0.6499980927581781,
+            "unit": "mm",
+            "fidelity": "wall_strip_screen"
+          },
+          "safety_factor": {
+            "value": 6.1883417538473395,
+            "unit": "ratio",
+            "fidelity": "wall_strip_screen"
+          }
+        },
+        "violations": [],
+        "reference_residual_mm3": 0.0,
+        "bounds_mm": [
+          100.0,
+          72.0,
+          44.500000000000725
+        ],
+        "fidelity": "wall_strip_screen",
+        "limitations": "Nominal PA12 properties. Strip model excludes joint compliance, stress concentrations, print anisotropy and vibration. Ribs receive no stiffness credit. Not FEA or flight validation."
+      },
+      "source_commit": "03d4649271f79c1410cf57644abe34fd75a1475f",
+      "tool_id": "sensor-cradle-study-v1-wall-tool",
+      "generator": "gpt-6-astra",
+      "evaluator_version": "sensor-a2961693b7da",
+      "retrieved_memory": [
+        {
+          "_id": "memory-sensor-cradle-study-v1-02-evaluation",
+          "summary": "{\"fidelity\": \"wall_strip_screen\", \"metrics\": {\"deflection_mm\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"mm\", \"value\": 0.6499073068873088}, \"mass_g\": {\"fidelity\": \"STEP_volume\", \"unit\": \"g\", \"value\": 30.333004273274206}, \"safety_factor\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"ratio\", \"value\": 6.188669511133334}, \"stress_mpa\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"MPa\", \"value\": 4.524397360309575}, \"volume_cm3\": {\"fidelity\": \"STEP_volume\", \"unit\": \"cm\\u00b3\", \"value\": 30.03267749829129}}, \"outcome\": \"passed\", \"parameters\": {\"base_mm\": 2.5, \"base_slots\": 1.0, \"gusset_mm\": 0.0, \"wall_mm\": 3.3443, \"window_mm\": 46.5, \"window_style\": 1.0}, \"subsystem\": \"sensor_cradle\", \"violations\": []}",
+          "score": 0.7409025430679321
+        },
+        {
+          "_id": "memory-sensor-cradle-study-v1-01-evaluation",
+          "summary": "{\"fidelity\": \"wall_strip_screen\", \"metrics\": {\"deflection_mm\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"mm\", \"value\": 0.6465955109828594}, \"mass_g\": {\"fidelity\": \"STEP_volume\", \"unit\": \"g\", \"value\": 30.361676502631543}, \"safety_factor\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"ratio\", \"value\": 6.209783333333334}, \"stress_mpa\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"MPa\", \"value\": 4.509014002098838}, \"volume_cm3\": {\"fidelity\": \"STEP_volume\", \"unit\": \"cm\\u00b3\", \"value\": 30.061065844189645}}, \"outcome\": \"passed\", \"parameters\": {\"base_mm\": 2.5, \"base_slots\": 1.0, \"gusset_mm\": 0.0, \"wall_mm\": 3.35, \"window_mm\": 46.5, \"window_style\": 1.0}, \"subsystem\": \"sensor_cradle\", \"violations\": []}",
+          "score": 0.7397812604904175
+        },
+        {
+          "_id": "memory-sensor-cradle-study-v1-00-evaluation",
+          "summary": "{\"fidelity\": \"wall_strip_screen\", \"metrics\": {\"deflection_mm\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"mm\", \"value\": 0.0530736284412755}, \"mass_g\": {\"fidelity\": \"STEP_volume\", \"unit\": \"g\", \"value\": 83.5353604433992}, \"safety_factor\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"ratio\", \"value\": 42.24}, \"stress_mpa\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"MPa\", \"value\": 0.6628787878787878}, \"volume_cm3\": {\"fidelity\": \"STEP_volume\", \"unit\": \"cm\\u00b3\", \"value\": 82.70827766673189}}, \"outcome\": \"passed\", \"parameters\": {\"base_mm\": 6.0, \"base_slots\": 0.0, \"gusset_mm\": 0.0, \"wall_mm\": 6.0, \"window_mm\": 0.0, \"window_style\": 0.0}, \"subsystem\": \"sensor_cradle\", \"violations\": []}",
+          "score": 0.7393267154693604
+        }
+      ],
+      "model_url": "/models/sensor/04.glb",
+      "step_url": "/models/sensor/04.step",
+      "source_url": "/models/sensor/04.py"
+    },
+    {
+      "_id": "sensor-cradle-study-v1-04",
+      "iteration": 5,
+      "title": "Open-window cradle boundary refinement",
+      "change": "Refine the open-window width and wall thickness for a microscopic predicted mass reduction while preserving the broad base slot, four mounting holes and pivot interface.",
+      "lesson": "The best measured predecessor is 30.332221 g; this refinement predicts only about 0.000016 g further reduction, with calculated deflection approximately 0.64999998 mm and stress 4.525 MPa. STEP confirmation remains necessary. This layout has effectively exhaus",
+      "parameters": {
+        "base_mm": 2.5,
+        "wall_mm": 3.344003,
+        "window_mm": 46.49486,
+        "window_style": 1.0,
+        "base_slots": 1.0,
+        "gusset_mm": 0.0
+      },
+      "evaluation": {
+        "outcome": "passed",
+        "metrics": {
+          "mass_g": {
+            "value": 30.332204701505184,
+            "unit": "g",
+            "fidelity": "STEP_volume"
+          },
+          "volume_cm3": {
+            "value": 30.031885843074438,
+            "unit": "cm\u00b3",
+            "fidelity": "STEP_volume"
+          },
+          "stress_mpa": {
+            "value": 4.524640669846816,
+            "unit": "MPa",
+            "fidelity": "wall_strip_screen"
+          },
+          "deflection_mm": {
+            "value": 0.6499999821820159,
+            "unit": "mm",
+            "fidelity": "wall_strip_screen"
+          },
+          "safety_factor": {
+            "value": 6.188336719553899,
+            "unit": "ratio",
+            "fidelity": "wall_strip_screen"
+          }
+        },
+        "violations": [],
+        "reference_residual_mm3": 0.0,
+        "bounds_mm": [
+          100.0,
+          72.0,
+          44.500000000000725
+        ],
+        "fidelity": "wall_strip_screen",
+        "limitations": "Nominal PA12 properties. Strip model excludes joint compliance, stress concentrations, print anisotropy and vibration. Ribs receive no stiffness credit. Not FEA or flight validation."
+      },
+      "source_commit": "4480ff95dcfb61e54889a4e59d75955fd1e83b80",
+      "tool_id": "sensor-cradle-study-v1-wall-tool",
+      "generator": "gpt-6-astra",
+      "evaluator_version": "sensor-a2961693b7da",
+      "retrieved_memory": [
+        {
+          "_id": "memory-sensor-cradle-study-v1-02-evaluation",
+          "summary": "{\"fidelity\": \"wall_strip_screen\", \"metrics\": {\"deflection_mm\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"mm\", \"value\": 0.6499073068873088}, \"mass_g\": {\"fidelity\": \"STEP_volume\", \"unit\": \"g\", \"value\": 30.333004273274206}, \"safety_factor\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"ratio\", \"value\": 6.188669511133334}, \"stress_mpa\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"MPa\", \"value\": 4.524397360309575}, \"volume_cm3\": {\"fidelity\": \"STEP_volume\", \"unit\": \"cm\\u00b3\", \"value\": 30.03267749829129}}, \"outcome\": \"passed\", \"parameters\": {\"base_mm\": 2.5, \"base_slots\": 1.0, \"gusset_mm\": 0.0, \"wall_mm\": 3.3443, \"window_mm\": 46.5, \"window_style\": 1.0}, \"subsystem\": \"sensor_cradle\", \"violations\": []}",
+          "score": 0.7408961057662964
+        },
+        {
+          "_id": "memory-sensor-cradle-study-v1-03-evaluation",
+          "summary": "{\"fidelity\": \"wall_strip_screen\", \"metrics\": {\"deflection_mm\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"mm\", \"value\": 0.6499980927581781}, \"mass_g\": {\"fidelity\": \"STEP_volume\", \"unit\": \"g\", \"value\": 30.332221000747957}, \"safety_factor\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"ratio\", \"value\": 6.1883417538473395}, \"stress_mpa\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"MPa\", \"value\": 4.524636988995022}, \"volume_cm3\": {\"fidelity\": \"STEP_volume\", \"unit\": \"cm\\u00b3\", \"value\": 30.031901980938567}}, \"outcome\": \"passed\", \"parameters\": {\"base_mm\": 2.5, \"base_slots\": 1.0, \"gusset_mm\": 0.0, \"wall_mm\": 3.34401, \"window_mm\": 46.495, \"window_style\": 1.0}, \"subsystem\": \"sensor_cradle\", \"violations\": []}",
+          "score": 0.7406938672065735
+        },
+        {
+          "_id": "memory-sensor-cradle-study-v1-01-evaluation",
+          "summary": "{\"fidelity\": \"wall_strip_screen\", \"metrics\": {\"deflection_mm\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"mm\", \"value\": 0.6465955109828594}, \"mass_g\": {\"fidelity\": \"STEP_volume\", \"unit\": \"g\", \"value\": 30.361676502631543}, \"safety_factor\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"ratio\", \"value\": 6.209783333333334}, \"stress_mpa\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"MPa\", \"value\": 4.509014002098838}, \"volume_cm3\": {\"fidelity\": \"STEP_volume\", \"unit\": \"cm\\u00b3\", \"value\": 30.061065844189645}}, \"outcome\": \"passed\", \"parameters\": {\"base_mm\": 2.5, \"base_slots\": 1.0, \"gusset_mm\": 0.0, \"wall_mm\": 3.35, \"window_mm\": 46.5, \"window_style\": 1.0}, \"subsystem\": \"sensor_cradle\", \"violations\": []}",
+          "score": 0.7397757768630981
+        },
+        {
+          "_id": "memory-sensor-cradle-study-v1-00-evaluation",
+          "summary": "{\"fidelity\": \"wall_strip_screen\", \"metrics\": {\"deflection_mm\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"mm\", \"value\": 0.0530736284412755}, \"mass_g\": {\"fidelity\": \"STEP_volume\", \"unit\": \"g\", \"value\": 83.5353604433992}, \"safety_factor\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"ratio\", \"value\": 42.24}, \"stress_mpa\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"MPa\", \"value\": 0.6628787878787878}, \"volume_cm3\": {\"fidelity\": \"STEP_volume\", \"unit\": \"cm\\u00b3\", \"value\": 82.70827766673189}}, \"outcome\": \"passed\", \"parameters\": {\"base_mm\": 6.0, \"base_slots\": 0.0, \"gusset_mm\": 0.0, \"wall_mm\": 6.0, \"window_mm\": 0.0, \"window_style\": 0.0}, \"subsystem\": \"sensor_cradle\", \"violations\": []}",
+          "score": 0.7393206357955933
+        }
+      ],
+      "model_url": "/models/sensor/05.glb",
+      "step_url": "/models/sensor/05.step",
+      "source_url": "/models/sensor/05.py"
+    },
+    {
+      "_id": "sensor-cradle-study-v1-05",
+      "iteration": 6,
+      "title": "Open-window cradle: final thickness trim",
+      "change": "Reduce wall thickness to 3.34400297 mm while preserving the broad base slot, open windows, four mounting holes and pivot interface.",
+      "lesson": "The best measured mass is 30.3322047015 g; this trim predicts only about 0.00000015 g reduction, with calculated deflection approximately 0.6499999997 mm and stress 4.525 MPa\u2014not a meaningful engineering improvement. STEP confirmation remains necessary. This l",
+      "parameters": {
+        "base_mm": 2.5,
+        "wall_mm": 3.34400297,
+        "window_mm": 46.49486,
+        "window_style": 1.0,
+        "base_slots": 1.0,
+        "gusset_mm": 0.0
+      },
+      "evaluation": {
+        "outcome": "passed",
+        "metrics": {
+          "mass_g": {
+            "value": 30.332204550592497,
+            "unit": "g",
+            "fidelity": "STEP_volume"
+          },
+          "volume_cm3": {
+            "value": 30.031885693655934,
+            "unit": "cm\u00b3",
+            "fidelity": "STEP_volume"
+          },
+          "stress_mpa": {
+            "value": 4.524640751030487,
+            "unit": "MPa",
+            "fidelity": "wall_strip_screen"
+          },
+          "deflection_mm": {
+            "value": 0.649999999676019,
+            "unit": "mm",
+            "fidelity": "wall_strip_screen"
+          },
+          "safety_factor": {
+            "value": 6.188336608519251,
+            "unit": "ratio",
+            "fidelity": "wall_strip_screen"
+          }
+        },
+        "violations": [],
+        "reference_residual_mm3": 0.0,
+        "bounds_mm": [
+          100.0,
+          72.0,
+          44.500000000000725
+        ],
+        "fidelity": "wall_strip_screen",
+        "limitations": "Nominal PA12 properties. Strip model excludes joint compliance, stress concentrations, print anisotropy and vibration. Ribs receive no stiffness credit. Not FEA or flight validation."
+      },
+      "source_commit": "7b18f6566e8a4106c750bc3835dd0cfb5b9f329b",
+      "tool_id": "sensor-cradle-study-v1-wall-tool",
+      "generator": "gpt-6-astra",
+      "evaluator_version": "sensor-a2961693b7da",
+      "retrieved_memory": [
+        {
+          "_id": "memory-sensor-cradle-study-v1-02-evaluation",
+          "summary": "{\"fidelity\": \"wall_strip_screen\", \"metrics\": {\"deflection_mm\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"mm\", \"value\": 0.6499073068873088}, \"mass_g\": {\"fidelity\": \"STEP_volume\", \"unit\": \"g\", \"value\": 30.333004273274206}, \"safety_factor\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"ratio\", \"value\": 6.188669511133334}, \"stress_mpa\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"MPa\", \"value\": 4.524397360309575}, \"volume_cm3\": {\"fidelity\": \"STEP_volume\", \"unit\": \"cm\\u00b3\", \"value\": 30.03267749829129}}, \"outcome\": \"passed\", \"parameters\": {\"base_mm\": 2.5, \"base_slots\": 1.0, \"gusset_mm\": 0.0, \"wall_mm\": 3.3443, \"window_mm\": 46.5, \"window_style\": 1.0}, \"subsystem\": \"sensor_cradle\", \"violations\": []}",
+          "score": 0.7408961057662964
+        },
+        {
+          "_id": "memory-sensor-cradle-study-v1-03-evaluation",
+          "summary": "{\"fidelity\": \"wall_strip_screen\", \"metrics\": {\"deflection_mm\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"mm\", \"value\": 0.6499980927581781}, \"mass_g\": {\"fidelity\": \"STEP_volume\", \"unit\": \"g\", \"value\": 30.332221000747957}, \"safety_factor\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"ratio\", \"value\": 6.1883417538473395}, \"stress_mpa\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"MPa\", \"value\": 4.524636988995022}, \"volume_cm3\": {\"fidelity\": \"STEP_volume\", \"unit\": \"cm\\u00b3\", \"value\": 30.031901980938567}}, \"outcome\": \"passed\", \"parameters\": {\"base_mm\": 2.5, \"base_slots\": 1.0, \"gusset_mm\": 0.0, \"wall_mm\": 3.34401, \"window_mm\": 46.495, \"window_style\": 1.0}, \"subsystem\": \"sensor_cradle\", \"violations\": []}",
+          "score": 0.7406938672065735
+        },
+        {
+          "_id": "memory-sensor-cradle-study-v1-04-evaluation",
+          "summary": "{\"fidelity\": \"wall_strip_screen\", \"metrics\": {\"deflection_mm\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"mm\", \"value\": 0.6499999821820159}, \"mass_g\": {\"fidelity\": \"STEP_volume\", \"unit\": \"g\", \"value\": 30.332204701505184}, \"safety_factor\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"ratio\", \"value\": 6.188336719553899}, \"stress_mpa\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"MPa\", \"value\": 4.524640669846816}, \"volume_cm3\": {\"fidelity\": \"STEP_volume\", \"unit\": \"cm\\u00b3\", \"value\": 30.031885843074438}}, \"outcome\": \"passed\", \"parameters\": {\"base_mm\": 2.5, \"base_slots\": 1.0, \"gusset_mm\": 0.0, \"wall_mm\": 3.344003, \"window_mm\": 46.49486, \"window_style\": 1.0}, \"subsystem\": \"sensor_cradle\", \"violations\": []}",
+          "score": 0.7406670451164246
+        },
+        {
+          "_id": "memory-sensor-cradle-study-v1-01-evaluation",
+          "summary": "{\"fidelity\": \"wall_strip_screen\", \"metrics\": {\"deflection_mm\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"mm\", \"value\": 0.6465955109828594}, \"mass_g\": {\"fidelity\": \"STEP_volume\", \"unit\": \"g\", \"value\": 30.361676502631543}, \"safety_factor\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"ratio\", \"value\": 6.209783333333334}, \"stress_mpa\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"MPa\", \"value\": 4.509014002098838}, \"volume_cm3\": {\"fidelity\": \"STEP_volume\", \"unit\": \"cm\\u00b3\", \"value\": 30.061065844189645}}, \"outcome\": \"passed\", \"parameters\": {\"base_mm\": 2.5, \"base_slots\": 1.0, \"gusset_mm\": 0.0, \"wall_mm\": 3.35, \"window_mm\": 46.5, \"window_style\": 1.0}, \"subsystem\": \"sensor_cradle\", \"violations\": []}",
+          "score": 0.7397757768630981
+        },
+        {
+          "_id": "memory-sensor-cradle-study-v1-00-evaluation",
+          "summary": "{\"fidelity\": \"wall_strip_screen\", \"metrics\": {\"deflection_mm\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"mm\", \"value\": 0.0530736284412755}, \"mass_g\": {\"fidelity\": \"STEP_volume\", \"unit\": \"g\", \"value\": 83.5353604433992}, \"safety_factor\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"ratio\", \"value\": 42.24}, \"stress_mpa\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"MPa\", \"value\": 0.6628787878787878}, \"volume_cm3\": {\"fidelity\": \"STEP_volume\", \"unit\": \"cm\\u00b3\", \"value\": 82.70827766673189}}, \"outcome\": \"passed\", \"parameters\": {\"base_mm\": 6.0, \"base_slots\": 0.0, \"gusset_mm\": 0.0, \"wall_mm\": 6.0, \"window_mm\": 0.0, \"window_style\": 0.0}, \"subsystem\": \"sensor_cradle\", \"violations\": []}",
+          "score": 0.7393206357955933
+        }
+      ],
+      "model_url": "/models/sensor/06.glb",
+      "step_url": "/models/sensor/06.step",
+      "source_url": "/models/sensor/06.py"
+    },
+    {
+      "_id": "sensor-cradle-study-v1-06",
+      "iteration": 7,
+      "title": "Diagonal-rib topology comparison",
+      "change": "Test split triangular windows with three base slots and 12 mm gussets, using a minimum-thickness base and analytically optimized window/wall dimensions while preserving all four mo",
+      "lesson": "This required topology's analytical mass minimum gives calculated wall-screen deflection approximately 0.650 mm and stress 4.49 MPa without rib stiffness credit; these are predictions, not measured results. Retain iteration 6 as the incumbent at 30.33220455 g ",
+      "parameters": {
+        "base_mm": 2.5,
+        "wall_mm": 3.32141,
+        "window_mm": 45.64087,
+        "window_style": 2.0,
+        "base_slots": 3.0,
+        "gusset_mm": 12.0
+      },
+      "evaluation": {
+        "outcome": "passed",
+        "metrics": {
+          "mass_g": {
+            "value": 31.665612658675922,
+            "unit": "g",
+            "fidelity": "STEP_volume"
+          },
+          "volume_cm3": {
+            "value": 31.352091741263287,
+            "unit": "cm\u00b3",
+            "fidelity": "STEP_volume"
+          },
+          "stress_mpa": {
+            "value": 4.493940160723709,
+            "unit": "MPa",
+            "fidelity": "wall_strip_screen"
+          },
+          "deflection_mm": {
+            "value": 0.6499810642534869,
+            "unit": "mm",
+            "fidelity": "wall_strip_screen"
+          },
+          "safety_factor": {
+            "value": 6.2306125579319795,
+            "unit": "ratio",
+            "fidelity": "wall_strip_screen"
+          }
+        },
+        "violations": [],
+        "reference_residual_mm3": 0.0,
+        "bounds_mm": [
+          100.0,
+          72.0,
+          44.500000000000725
+        ],
+        "fidelity": "wall_strip_screen",
+        "limitations": "Nominal PA12 properties. Strip model excludes joint compliance, stress concentrations, print anisotropy and vibration. Ribs receive no stiffness credit. Not FEA or flight validation."
+      },
+      "source_commit": "482403d289a8ddc792b01d5802cbd0e93109e149",
+      "tool_id": "sensor-cradle-study-v1-wall-tool",
+      "generator": "gpt-6-astra",
+      "evaluator_version": "sensor-a2961693b7da",
+      "retrieved_memory": [
+        {
+          "_id": "memory-sensor-cradle-study-v1-05-evaluation",
+          "summary": "{\"fidelity\": \"wall_strip_screen\", \"metrics\": {\"deflection_mm\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"mm\", \"value\": 0.649999999676019}, \"mass_g\": {\"fidelity\": \"STEP_volume\", \"unit\": \"g\", \"value\": 30.332204550592497}, \"safety_factor\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"ratio\", \"value\": 6.188336608519251}, \"stress_mpa\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"MPa\", \"value\": 4.524640751030487}, \"volume_cm3\": {\"fidelity\": \"STEP_volume\", \"unit\": \"cm\\u00b3\", \"value\": 30.031885693655934}}, \"outcome\": \"passed\", \"parameters\": {\"base_mm\": 2.5, \"base_slots\": 1.0, \"gusset_mm\": 0.0, \"wall_mm\": 3.34400297, \"window_mm\": 46.49486, \"window_style\": 1.0}, \"subsystem\": \"sensor_cradle\", \"violations\": []}",
+          "score": 0.7417446374893188
+        },
+        {
+          "_id": "memory-sensor-cradle-study-v1-02-evaluation",
+          "summary": "{\"fidelity\": \"wall_strip_screen\", \"metrics\": {\"deflection_mm\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"mm\", \"value\": 0.6499073068873088}, \"mass_g\": {\"fidelity\": \"STEP_volume\", \"unit\": \"g\", \"value\": 30.333004273274206}, \"safety_factor\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"ratio\", \"value\": 6.188669511133334}, \"stress_mpa\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"MPa\", \"value\": 4.524397360309575}, \"volume_cm3\": {\"fidelity\": \"STEP_volume\", \"unit\": \"cm\\u00b3\", \"value\": 30.03267749829129}}, \"outcome\": \"passed\", \"parameters\": {\"base_mm\": 2.5, \"base_slots\": 1.0, \"gusset_mm\": 0.0, \"wall_mm\": 3.3443, \"window_mm\": 46.5, \"window_style\": 1.0}, \"subsystem\": \"sensor_cradle\", \"violations\": []}",
+          "score": 0.7408961057662964
+        },
+        {
+          "_id": "memory-sensor-cradle-study-v1-03-evaluation",
+          "summary": "{\"fidelity\": \"wall_strip_screen\", \"metrics\": {\"deflection_mm\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"mm\", \"value\": 0.6499980927581781}, \"mass_g\": {\"fidelity\": \"STEP_volume\", \"unit\": \"g\", \"value\": 30.332221000747957}, \"safety_factor\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"ratio\", \"value\": 6.1883417538473395}, \"stress_mpa\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"MPa\", \"value\": 4.524636988995022}, \"volume_cm3\": {\"fidelity\": \"STEP_volume\", \"unit\": \"cm\\u00b3\", \"value\": 30.031901980938567}}, \"outcome\": \"passed\", \"parameters\": {\"base_mm\": 2.5, \"base_slots\": 1.0, \"gusset_mm\": 0.0, \"wall_mm\": 3.34401, \"window_mm\": 46.495, \"window_style\": 1.0}, \"subsystem\": \"sensor_cradle\", \"violations\": []}",
+          "score": 0.7406938672065735
+        },
+        {
+          "_id": "memory-sensor-cradle-study-v1-04-evaluation",
+          "summary": "{\"fidelity\": \"wall_strip_screen\", \"metrics\": {\"deflection_mm\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"mm\", \"value\": 0.6499999821820159}, \"mass_g\": {\"fidelity\": \"STEP_volume\", \"unit\": \"g\", \"value\": 30.332204701505184}, \"safety_factor\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"ratio\", \"value\": 6.188336719553899}, \"stress_mpa\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"MPa\", \"value\": 4.524640669846816}, \"volume_cm3\": {\"fidelity\": \"STEP_volume\", \"unit\": \"cm\\u00b3\", \"value\": 30.031885843074438}}, \"outcome\": \"passed\", \"parameters\": {\"base_mm\": 2.5, \"base_slots\": 1.0, \"gusset_mm\": 0.0, \"wall_mm\": 3.344003, \"window_mm\": 46.49486, \"window_style\": 1.0}, \"subsystem\": \"sensor_cradle\", \"violations\": []}",
+          "score": 0.7406670451164246
+        },
+        {
+          "_id": "memory-sensor-cradle-study-v1-01-evaluation",
+          "summary": "{\"fidelity\": \"wall_strip_screen\", \"metrics\": {\"deflection_mm\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"mm\", \"value\": 0.6465955109828594}, \"mass_g\": {\"fidelity\": \"STEP_volume\", \"unit\": \"g\", \"value\": 30.361676502631543}, \"safety_factor\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"ratio\", \"value\": 6.209783333333334}, \"stress_mpa\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"MPa\", \"value\": 4.509014002098838}, \"volume_cm3\": {\"fidelity\": \"STEP_volume\", \"unit\": \"cm\\u00b3\", \"value\": 30.061065844189645}}, \"outcome\": \"passed\", \"parameters\": {\"base_mm\": 2.5, \"base_slots\": 1.0, \"gusset_mm\": 0.0, \"wall_mm\": 3.35, \"window_mm\": 46.5, \"window_style\": 1.0}, \"subsystem\": \"sensor_cradle\", \"violations\": []}",
+          "score": 0.7397757768630981
+        },
+        {
+          "_id": "memory-sensor-cradle-study-v1-00-evaluation",
+          "summary": "{\"fidelity\": \"wall_strip_screen\", \"metrics\": {\"deflection_mm\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"mm\", \"value\": 0.0530736284412755}, \"mass_g\": {\"fidelity\": \"STEP_volume\", \"unit\": \"g\", \"value\": 83.5353604433992}, \"safety_factor\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"ratio\", \"value\": 42.24}, \"stress_mpa\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"MPa\", \"value\": 0.6628787878787878}, \"volume_cm3\": {\"fidelity\": \"STEP_volume\", \"unit\": \"cm\\u00b3\", \"value\": 82.70827766673189}}, \"outcome\": \"passed\", \"parameters\": {\"base_mm\": 6.0, \"base_slots\": 0.0, \"gusset_mm\": 0.0, \"wall_mm\": 6.0, \"window_mm\": 0.0, \"window_style\": 0.0}, \"subsystem\": \"sensor_cradle\", \"violations\": []}",
+          "score": 0.7393206357955933
+        }
+      ],
+      "model_url": "/models/sensor/07.glb",
+      "step_url": "/models/sensor/07.step",
+      "source_url": "/models/sensor/07.py"
+    },
+    {
+      "_id": "sensor-cradle-study-v1-07",
+      "iteration": 8,
+      "title": "Twin-slot cradle with diagonal window ribs",
+      "change": "Test two triangular windows per wall, two base slots and 6 mm gussets with a minimum-thickness base and mass-targeted wall/window sizing, preserving all four mounting holes and the",
+      "lesson": "Iteration 7 passed but measured 31.6656 g, heavier than iteration 6 at 30.3322 g. This revised topology uses the analytical wall/window mass minimum and predicts approximately 0.649999 mm deflection and 4.494 MPa stress without rib stiffness credit; it has neg",
+      "parameters": {
+        "base_mm": 2.5,
+        "wall_mm": 3.32138,
+        "window_mm": 45.64087,
+        "window_style": 2.0,
+        "base_slots": 2.0,
+        "gusset_mm": 6.0
+      },
+      "evaluation": {
+        "outcome": "passed",
+        "metrics": {
+          "mass_g": {
+            "value": 31.21147695433709,
+            "unit": "g",
+            "fidelity": "STEP_volume"
+          },
+          "volume_cm3": {
+            "value": 30.902452430036725,
+            "unit": "cm\u00b3",
+            "fidelity": "STEP_volume"
+          },
+          "stress_mpa": {
+            "value": 4.494021343132038,
+            "unit": "MPa",
+            "fidelity": "wall_strip_screen"
+          },
+          "deflection_mm": {
+            "value": 0.6499986770602613,
+            "unit": "mm",
+            "fidelity": "wall_strip_screen"
+          },
+          "safety_factor": {
+            "value": 6.230500004809909,
+            "unit": "ratio",
+            "fidelity": "wall_strip_screen"
+          }
+        },
+        "violations": [],
+        "reference_residual_mm3": 0.0,
+        "bounds_mm": [
+          100.0,
+          72.0,
+          44.500000000000725
+        ],
+        "fidelity": "wall_strip_screen",
+        "limitations": "Nominal PA12 properties. Strip model excludes joint compliance, stress concentrations, print anisotropy and vibration. Ribs receive no stiffness credit. Not FEA or flight validation."
+      },
+      "source_commit": "e22142d2a124bbacc09201f7054f586c175009f4",
+      "tool_id": "sensor-cradle-study-v1-wall-tool",
+      "generator": "gpt-6-astra",
+      "evaluator_version": "sensor-a2961693b7da",
+      "retrieved_memory": [
+        {
+          "_id": "memory-sensor-cradle-study-v1-05-evaluation",
+          "summary": "{\"fidelity\": \"wall_strip_screen\", \"metrics\": {\"deflection_mm\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"mm\", \"value\": 0.649999999676019}, \"mass_g\": {\"fidelity\": \"STEP_volume\", \"unit\": \"g\", \"value\": 30.332204550592497}, \"safety_factor\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"ratio\", \"value\": 6.188336608519251}, \"stress_mpa\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"MPa\", \"value\": 4.524640751030487}, \"volume_cm3\": {\"fidelity\": \"STEP_volume\", \"unit\": \"cm\\u00b3\", \"value\": 30.031885693655934}}, \"outcome\": \"passed\", \"parameters\": {\"base_mm\": 2.5, \"base_slots\": 1.0, \"gusset_mm\": 0.0, \"wall_mm\": 3.34400297, \"window_mm\": 46.49486, \"window_style\": 1.0}, \"subsystem\": \"sensor_cradle\", \"violations\": []}",
+          "score": 0.7417446374893188
+        },
+        {
+          "_id": "memory-sensor-cradle-study-v1-06-evaluation",
+          "summary": "{\"fidelity\": \"wall_strip_screen\", \"metrics\": {\"deflection_mm\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"mm\", \"value\": 0.6499810642534869}, \"mass_g\": {\"fidelity\": \"STEP_volume\", \"unit\": \"g\", \"value\": 31.665612658675922}, \"safety_factor\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"ratio\", \"value\": 6.2306125579319795}, \"stress_mpa\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"MPa\", \"value\": 4.493940160723709}, \"volume_cm3\": {\"fidelity\": \"STEP_volume\", \"unit\": \"cm\\u00b3\", \"value\": 31.352091741263287}}, \"outcome\": \"passed\", \"parameters\": {\"base_mm\": 2.5, \"base_slots\": 3.0, \"gusset_mm\": 12.0, \"wall_mm\": 3.32141, \"window_mm\": 45.64087, \"window_style\": 2.0}, \"subsystem\": \"sensor_cradle\", \"violations\": []}",
+          "score": 0.7415887117385864
+        },
+        {
+          "_id": "memory-sensor-cradle-study-v1-02-evaluation",
+          "summary": "{\"fidelity\": \"wall_strip_screen\", \"metrics\": {\"deflection_mm\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"mm\", \"value\": 0.6499073068873088}, \"mass_g\": {\"fidelity\": \"STEP_volume\", \"unit\": \"g\", \"value\": 30.333004273274206}, \"safety_factor\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"ratio\", \"value\": 6.188669511133334}, \"stress_mpa\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"MPa\", \"value\": 4.524397360309575}, \"volume_cm3\": {\"fidelity\": \"STEP_volume\", \"unit\": \"cm\\u00b3\", \"value\": 30.03267749829129}}, \"outcome\": \"passed\", \"parameters\": {\"base_mm\": 2.5, \"base_slots\": 1.0, \"gusset_mm\": 0.0, \"wall_mm\": 3.3443, \"window_mm\": 46.5, \"window_style\": 1.0}, \"subsystem\": \"sensor_cradle\", \"violations\": []}",
+          "score": 0.7408961057662964
+        },
+        {
+          "_id": "memory-sensor-cradle-study-v1-03-evaluation",
+          "summary": "{\"fidelity\": \"wall_strip_screen\", \"metrics\": {\"deflection_mm\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"mm\", \"value\": 0.6499980927581781}, \"mass_g\": {\"fidelity\": \"STEP_volume\", \"unit\": \"g\", \"value\": 30.332221000747957}, \"safety_factor\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"ratio\", \"value\": 6.1883417538473395}, \"stress_mpa\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"MPa\", \"value\": 4.524636988995022}, \"volume_cm3\": {\"fidelity\": \"STEP_volume\", \"unit\": \"cm\\u00b3\", \"value\": 30.031901980938567}}, \"outcome\": \"passed\", \"parameters\": {\"base_mm\": 2.5, \"base_slots\": 1.0, \"gusset_mm\": 0.0, \"wall_mm\": 3.34401, \"window_mm\": 46.495, \"window_style\": 1.0}, \"subsystem\": \"sensor_cradle\", \"violations\": []}",
+          "score": 0.7406938672065735
+        },
+        {
+          "_id": "memory-sensor-cradle-study-v1-04-evaluation",
+          "summary": "{\"fidelity\": \"wall_strip_screen\", \"metrics\": {\"deflection_mm\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"mm\", \"value\": 0.6499999821820159}, \"mass_g\": {\"fidelity\": \"STEP_volume\", \"unit\": \"g\", \"value\": 30.332204701505184}, \"safety_factor\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"ratio\", \"value\": 6.188336719553899}, \"stress_mpa\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"MPa\", \"value\": 4.524640669846816}, \"volume_cm3\": {\"fidelity\": \"STEP_volume\", \"unit\": \"cm\\u00b3\", \"value\": 30.031885843074438}}, \"outcome\": \"passed\", \"parameters\": {\"base_mm\": 2.5, \"base_slots\": 1.0, \"gusset_mm\": 0.0, \"wall_mm\": 3.344003, \"window_mm\": 46.49486, \"window_style\": 1.0}, \"subsystem\": \"sensor_cradle\", \"violations\": []}",
+          "score": 0.7406670451164246
+        },
+        {
+          "_id": "memory-sensor-cradle-study-v1-01-evaluation",
+          "summary": "{\"fidelity\": \"wall_strip_screen\", \"metrics\": {\"deflection_mm\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"mm\", \"value\": 0.6465955109828594}, \"mass_g\": {\"fidelity\": \"STEP_volume\", \"unit\": \"g\", \"value\": 30.361676502631543}, \"safety_factor\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"ratio\", \"value\": 6.209783333333334}, \"stress_mpa\": {\"fidelity\": \"wall_strip_screen\", \"unit\": \"MPa\", \"value\": 4.509014002098838}, \"volume_cm3\": {\"fidelity\": \"STEP_volume\", \"unit\": \"cm\\u00b3\", \"value\": 30.061065844189645}}, \"outcome\": \"passed\", \"parameters\": {\"base_mm\": 2.5, \"base_slots\": 1.0, \"gusset_mm\": 0.0, \"wall_mm\": 3.35, \"window_mm\": 46.5, \"window_style\": 1.0}, \"subsystem\": \"sensor_cradle\", \"violations\": []}",
+          "score": 0.7397757768630981
+        }
+      ],
+      "model_url": "/models/sensor/08.glb",
+      "step_url": "/models/sensor/08.step",
+      "source_url": "/models/sensor/08.py"
+    }
+  ],
+  "spent_usd": 0.7736532199999999,
+  "tool": {
+    "_id": "sensor-cradle-study-v1-wall-tool",
+    "schema_version": 1,
+    "created_at": "2026-09-26T19:15:24.005757+00:00",
+    "study_id": "sensor-cradle-study-v1",
+    "source_commit": "43439689034a49c2a999e82c4dfbd8757bad887f",
+    "validation": [
+      {
+        "arguments": {
+          "load_n": 20,
+          "height_mm": 35,
+          "effective_width_mm": 88,
+          "youngs_modulus_mpa": 1700,
+          "max_deflection_mm": 0.65
+        },
+        "actual": 2.6029933468401376,
+        "expected": 2.602993346840139,
+        "passed": true
+      },
+      {
+        "arguments": {
+          "load_n": 20,
+          "height_mm": 35,
+          "effective_width_mm": 28,
+          "youngs_modulus_mpa": 1700,
+          "max_deflection_mm": 0.65
+        },
+        "actual": 3.812834356492485,
+        "expected": 3.812834356492484,
+        "passed": true
+      },
+      {
+        "arguments": {
+          "load_n": 20,
+          "height_mm": 35,
+          "effective_width_mm": 40,
+          "youngs_modulus_mpa": 1700,
+          "max_deflection_mm": 0.5
+        },
+        "actual": 3.694835171923003,
+        "expected": 3.6948351719230024,
+        "passed": true
+      },
+      {
+        "arguments": {
+          "load_n": 20,
+          "height_mm": 35,
+          "effective_width_mm": 22,
+          "youngs_modulus_mpa": 1700,
+          "max_deflection_mm": 0.4
+        },
+        "actual": 4.857850854100943,
+        "expected": 4.857850854100944,
+        "passed": true
+      },
+      {
+        "name": "nonpositive input rejected",
+        "passed": true
+      }
+    ],
+    "target_deflection_mm": 0.6,
+    "lesson": "The recorded STEP mass fell from 83.535 g to 30.362 g, while wall-screen deflection rose from 0.0531 mm to 0.6466 mm, almost reaching the 0.65 mm limit. Select a 0.60 mm target to retain some screening margin. Use the effective load-bearing width after opening"
+  },
+  "execution": "bounded Python study; Atlas archive and vector memory; isolated CAD evaluation"
+}

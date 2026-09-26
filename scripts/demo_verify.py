@@ -46,7 +46,7 @@ def offline(browser):
 def remote(browser, origin):
     context = browser.new_context(viewport={"width": 1440, "height": 1000})
     page = context.new_page()
-    page.goto(origin, wait_until="domcontentloaded", timeout=60000)
+    page.goto(origin + "/harness", wait_until="domcontentloaded", timeout=60000)
     expect(page.locator(".viewport-label")).to_contain_text("EVALUATED CAD GEOMETRY", timeout=90000)
     expect(page.get_by_test_id("cad-canvas")).to_have_attribute("data-geometry-ready", "true", timeout=60000)
     for name in ("Top view", "Side view", "Isometric view"):

@@ -26,7 +26,7 @@ def inspect_candidate(settings, candidate_id):
             page = browser.new_page(viewport={"width": 1440, "height": 1000}, device_scale_factor=1)
             # Only this workbench origin is visited. Model tools cannot navigate elsewhere.
             page.goto(
-                settings.davinci_web_url + "/?" + urlencode({"candidate": candidate_id}),
+                settings.davinci_web_url + "/harness?" + urlencode({"candidate": candidate_id}),
                 wait_until="domcontentloaded",
                 timeout=60000,
             )

@@ -562,7 +562,7 @@ class Validation:
             page = browser.new_page(viewport={"width": 1440, "height": 1000}, device_scale_factor=1)
             errors = []
             page.on("pageerror", lambda error: errors.append(type(error).__name__))
-            page.goto(self.settings.davinci_web_url, wait_until="domcontentloaded", timeout=60000)
+            page.goto(self.settings.davinci_web_url + "/harness", wait_until="domcontentloaded", timeout=60000)
             expect(page.locator(".viewport-label")).to_contain_text("EVALUATED CAD GEOMETRY", timeout=60000)
             page.locator('[data-testid="cad-canvas"][data-geometry-ready="true"]').wait_for(timeout=30000)
             page.screenshot(path=str(screenshot), full_page=True)

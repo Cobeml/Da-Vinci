@@ -5,9 +5,9 @@ test("renders measured CAD and navigates memory, tools, archive, and settings", 
 }) => {
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
-  await page.goto("/");
+  await page.goto("/harness");
   await expect(
-    page.getByRole("heading", { name: "From constraints to possibility." }),
+    page.getByRole("heading", { name: "CAD workbench" }),
   ).toBeVisible();
   await expect(page.locator(".viewport-label")).toContainText(
     "EVALUATED CAD GEOMETRY",
@@ -31,7 +31,7 @@ test("renders measured CAD and navigates memory, tools, archive, and settings", 
   ).toBeVisible();
   await page.getByRole("button", { name: "Tools", exact: true }).click();
   await expect(
-    page.getByRole("heading", { name: "directional_projected_area" }),
+    page.getByRole("heading", { name: "directional_projected_area" }).first(),
   ).toBeVisible();
   await page.getByRole("button", { name: "Archive", exact: true }).click();
   const downloadPromise = page.waitForEvent("download");
@@ -45,7 +45,7 @@ test("renders measured CAD and navigates memory, tools, archive, and settings", 
 
 test("mobile workbench stays within viewport", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/");
+  await page.goto("/harness");
   await expect(page.getByTestId("cad-canvas")).toBeVisible();
   await page.screenshot({
     path: "runtime/workbench-mobile.png",
@@ -59,7 +59,7 @@ test("mobile workbench stays within viewport", async ({ page }) => {
 test("run can be started and stopped through the interface", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/harness");
   await page.getByRole("button", { name: "Start replay run" }).click();
   await expect(page.getByRole("button", { name: "Stop run" })).toBeVisible();
   await page.getByRole("button", { name: "Stop run" }).click();
@@ -94,7 +94,7 @@ test("two-worker replay completes and browser inspection archives screenshots", 
     (a: any) => a.run_id === run._id && a.outcome === "passed",
   );
   expect(assembly.artifacts["assembly.glb"]).toBeTruthy();
-  await page.goto("/");
+  await page.goto("/harness");
   await expect(page.getByTestId("cad-canvas")).toHaveAttribute(
     "data-geometry-ready",
     "true",
