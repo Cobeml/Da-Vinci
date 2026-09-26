@@ -2,17 +2,17 @@
 
 The Next.js root page displays every recorded sensor-cradle attempt, its real GLB, mass, wall-strip stress/deflection estimates, and whether it improved the best passing mass. Each viewer has an independent Mount / On VTOL toggle, orbit/zoom controls, reset, and an expanded view. The original workbench remains at `/harness`.
 
-The opening presentation section shows the lightest passing mount on the illustrative VTOL by default, beside the self-improvement methods and Atlas usage. Its expanded view preserves the selected mode. A link jumps to all chronological attempts below the overview.
+The opening presentation section shows only the interactive VTOL with the lightest passing mount, beside the self-improvement methods and Atlas usage. It has no visible captions, metrics or controls; drag and zoom still work. The larger page title precedes this overview, and all chronological attempts follow below.
 
 ## Research context
 
 The methods section links to these primary sources (checked 2026-09-26):
 
-- [Reflexion (Shinn et al., 2023)](https://arxiv.org/abs/2303.11366): 91% HumanEval pass@1 versus the cited 80% GPT-4 baseline. The agent stores linguistic reflections from task feedback for subsequent trials; this result includes iterative feedback, not a single unassisted generation.
-- [Voyager (Wang et al., 2023)](https://voyager.minedojo.org/): 3.3 times as many unique Minecraft items as previous baselines. The complete system combines a retrieved executable skill library, iterative feedback and an automatic curriculum; the ratio does not isolate the skill library's contribution.
-- [Self-Refine (Madaan et al., 2023)](https://arxiv.org/abs/2303.17651): approximately 20 percentage points average improvement across seven tasks over conventional one-step generation. Its feedback is model-generated; this harness additionally uses an independent geometry evaluator.
+- [Closing the Consistency Gap (Duesterwald et al., 8 September 2026)](https://arxiv.org/abs/2609.08832): stored diagnostic guidelines raised the fraction of AppWorld tasks succeeding in all five runs by 16 percentage points on the same tasks and 13 points on similar tasks, using ReAct/GPT-4.1. This measures repeated-run consistency, not ordinary per-run accuracy.
+- [SkillAlchemy (Wang et al., 24 August 2026)](https://arxiv.org/abs/2608.23417): source-grounded creation of reusable skill packages improved pass rate by 19.9 percentage points over execution without skills across 87 SkillsBench v1.1 tasks. This studies procedural skill packages, not specifically self-written CAD utilities.
+- [Recursive self-improvement of AI research agents / AIDE² (Srikanth et al., 22 September 2026)](https://arxiv.org/abs/2609.26457): seven successive agent improvements in an eight-day autonomous run, with gains transferring to four held-out benchmarks. The system edits its code and selects variants using hidden evaluations; the count is not a percentage improvement in task performance.
 
-These are results for related methods in other domains, not validation of this CAD harness, guarantees of CAD performance, or controlled measurements of each mechanism's contribution to this study. No model weights are trained in the sensor study.
+All three are recent arXiv preprints. These are results for related methods in other domains, not validation of this CAD harness, guarantees of CAD performance, or controlled measurements of each mechanism's contribution to this study. No model weights are trained in the sensor study.
 
 ## Geometry and measurements
 

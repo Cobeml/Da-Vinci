@@ -25,7 +25,7 @@ function description(d: Design) {
   return `${p.wall_mm.toFixed(3)} mm walls, oval windows and one base slot.`;
 }
 
-function ModelView({ design, expanded = false, overview = false, initialMounted = false }: { design: Design; expanded?: boolean; overview?: boolean; initialMounted?: boolean }) {
+function ModelView({ design, expanded = false, initialMounted = false }: { design: Design; expanded?: boolean; initialMounted?: boolean }) {
   const [mounted, setMounted] = useState(initialMounted);
   const [reset, setReset] = useState(0);
   const [open, setOpen] = useState(false);
@@ -34,7 +34,7 @@ function ModelView({ design, expanded = false, overview = false, initialMounted 
     if (open) dialog.current?.showModal(); else dialog.current?.close();
   }, [open]);
   return <>
-    <div className={`${styles.modelView} ${overview ? styles.overviewView : ""} ${expanded ? styles.expanded : ""}`}>
+    <div className={`${styles.modelView} ${expanded ? styles.expanded : ""}`}>
       <div className={styles.viewBar}>
         <div className={styles.segment} aria-label={`View for iteration ${design.iteration}`}>
           <button aria-pressed={!mounted} onClick={() => setMounted(false)}>Mount</button>
@@ -68,15 +68,13 @@ export default function SensorGallery({ data }: { data: GalleryData }) {
   const maximum = Math.max(...designs.map(mass));
   return <main className={styles.page}>
     <header className={styles.header}>
-      <div><h1>Da Vinci <span>/ Recursive improvement CAD harness</span></h1><p>Drone sensor mount · {designs.length} GPT-6 Astra iterations</p></div>
+      <div><h1>Da Vinci <span>Recursive Improvement CAD Harness</span></h1><p>Drone sensor mount · {designs.length} GPT-6 Astra iterations</p></div>
       <span className={styles.material}>{data.specification.material} · {data.specification.load_n} N load</span>
     </header>
 
     <section className={styles.overview} aria-label="Project overview">
-      <div className={styles.overviewModel} data-testid="overview-model">
-        <div className={styles.overviewModelHeader}><div><span className={styles.eyebrow}>SELECTED DESIGN · ITERATION {String(best.iteration).padStart(2, "0")}</span><h2>Sensor mount on a VTOL</h2></div><span className={styles.badge}><Check size={12} />Best passing mount</span></div>
-        <ModelView design={best} overview initialMounted />
-        <div className={styles.overviewResult}><p><strong>{mass(best).toFixed(1)} g</strong><span>{reduction.toFixed(1)}% lighter than the initial mount</span></p><a href="#designs">View all {designs.length} iterations <ArrowDown size={14} /></a></div>
+      <div className={styles.overviewModel} data-testid="overview-model" role="group" aria-label="Interactive VTOL with the best sensor mount">
+        <Viewer url={best.model_url} mounted reset={0} />
       </div>
       <div className={styles.overviewText}>
         <section aria-labelledby="methods-heading">
@@ -85,19 +83,19 @@ export default function SensorGallery({ data }: { data: GalleryData }) {
           <div className={styles.method}>
             <h3>1. Reflect and remember</h3>
             <p>Retrieve prior designs and measurements; carry lessons into the next attempt.</p>
-            <p className={styles.evidence}><a href="https://arxiv.org/abs/2303.11366" target="_blank" rel="noopener noreferrer">Reflexion (2023) ↗</a> reported <strong>91% vs. 80%</strong> HumanEval pass@1 for its reflection system versus the cited GPT-4 baseline, using feedback across trials.</p>
+            <p className={styles.evidence}><a href="https://arxiv.org/abs/2609.08832" target="_blank" rel="noopener noreferrer">Closing the Consistency Gap · 8 Sep 2026 ↗</a> reported <strong>+16 percentage points</strong> in AppWorld tasks succeeding on all five runs, using stored diagnostic guidelines with ReAct/GPT-4.1; <strong>+13 points</strong> on similar tasks.</p>
           </div>
           <div className={styles.method}>
             <h3>2. Create and reuse tools</h3>
             <p>Write, test and save a wall-thickness utility for subsequent designs.</p>
-            <p className={styles.evidence}><a href="https://voyager.minedojo.org/" target="_blank" rel="noopener noreferrer">Voyager (2023) ↗</a> discovered <strong>3.3× as many unique items</strong> as prior baselines in Minecraft. Its system combines a retrieved code-skill library, feedback and a curriculum.</p>
+            <p className={styles.evidence}><a href="https://arxiv.org/abs/2608.23417" target="_blank" rel="noopener noreferrer">SkillAlchemy · 24 Aug 2026 ↗</a> reported <strong>+19.9 percentage points</strong> pass rate over execution without skills across 87 SkillsBench tasks, by creating reusable skill packages from source material.</p>
           </div>
           <div className={styles.method}>
             <h3>3. Evaluate and revise</h3>
             <p>Use independent CAD checks to guide revisions; retain the lightest passing design.</p>
-            <p className={styles.evidence}><a href="https://arxiv.org/abs/2303.17651" target="_blank" rel="noopener noreferrer">Self-Refine (2023) ↗</a> reported <strong>~20 percentage points</strong> average improvement across seven tasks over one-step generation, using model-generated feedback and revision.</p>
+            <p className={styles.evidence}><a href="https://arxiv.org/abs/2609.26457" target="_blank" rel="noopener noreferrer">AIDE² · 22 Sep 2026 ↗</a> found <strong>7 successive agent improvements in 8 days</strong> by testing changes to its own code. Gains transferred to four held-out benchmarks.</p>
           </div>
-          <p className={styles.researchNote}>Published results support related methods in other tasks. They do not validate this CAD harness or isolate each method’s contribution to its mass reduction.</p>
+          <p className={styles.researchNote}>Recent preprints; results are from other tasks, not validation of this CAD harness or measurements of each method’s contribution here.</p>
         </section>
         <section className={styles.atlas} aria-labelledby="atlas-heading">
           <h2 id="atlas-heading">MongoDB Atlas</h2>
@@ -105,9 +103,8 @@ export default function SensorGallery({ data }: { data: GalleryData }) {
         </section>
       </div>
     </section>
-    <p className={styles.measurementNote}>Mass uses STEP volume and nominal PA12 density. Stress and deflection are wall-strip estimates, not FEA. The VTOL is illustrative; measurements cover the mount only.</p>
-
     <div id="designs" className={styles.sectionHeading}><h2>All {designs.length} design iterations</h2><span>Chronological order · best passing design highlighted</span></div>
+    <p className={styles.measurementNote}>Mass uses STEP volume and nominal PA12 density. Stress and deflection are wall-strip estimates, not FEA. The VTOL is illustrative; measurements cover the mount only.</p>
     <section className={styles.progress} aria-label="Design progress">
       <div className={styles.progressSummary}><span className={styles.eyebrow}>BEST PASSING MOUNT</span><strong>{mass(baseline).toFixed(1)} <span>→</span> {mass(best).toFixed(1)} <small>g</small></strong><span className={styles.reduction}><ArrowDown size={15} />{reduction.toFixed(1)}% mass reduction</span></div>
       <div className={styles.chart} aria-label="Mass by iteration">
