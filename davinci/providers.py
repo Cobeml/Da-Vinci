@@ -68,7 +68,9 @@ class AstraProvider:
         self.client = OpenAI(api_key=settings.openai_api_key, timeout=120, max_retries=0)
         self.tool_handler = tool_handler
 
-    def _response(self, **kwargs):
+    def _response(self, *, output_limit=6000, reasoning_effort="medium", **kwargs):
+        if not isinstance(output_limit, int) or not 1 <= output_limit <= 32000:
+            raise ValueError("Unsupported output allowance")
         # Conservative text reservation; output budget includes reasoning tokens.
         # Byte length upper-bounds text token count; images get an additional allowance.
         def estimated_tokens(value):
@@ -84,14 +86,14 @@ class AstraProvider:
         long_context = input_allowance > 272000
         reserved = (
             input_allowance * (20 if long_context else 10) / 1_000_000
-            + 6000 * (75 if long_context else 50) / 1_000_000
+            + output_limit * (75 if long_context else 50) / 1_000_000
         )
         reservation = self.budget.reserve(self.run_id, reserved)
         try:
             response = self.client.responses.create(
                 model=self.settings.openai_model,
-                reasoning={"effort": "medium"},
-                max_output_tokens=6000,
+                reasoning={"effort": reasoning_effort},
+                max_output_tokens=output_limit,
                 **kwargs,
             )
         except Exception:

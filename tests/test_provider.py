@@ -1,6 +1,8 @@
 from types import SimpleNamespace
 
-from davinci.budget import Budget
+import pytest
+
+from davinci.budget import Budget, BudgetExceeded
 from davinci.config import Settings
 from davinci.providers import AstraProvider
 from davinci.store import Store
@@ -30,3 +32,25 @@ def test_screenshot_budget_uses_image_allowance_not_base64_byte_length(tmp_path)
     assert captured["model"] == "gpt-6-astra"
     assert store.get("runs", "run-a")["spent_usd"] == 0.006
     assert not store.get("budgets", "budget-global")["reservations"]
+
+
+def test_larger_reasoning_allowance_is_reserved_before_api_call(tmp_path):
+    store = Store(tmp_path)
+    store.insert("runs", {"_id": "large", "revision": 0, "budget_usd": .6, "spent_usd": 0.0})
+    provider = AstraProvider(Settings(openai_api_key="test-only", _env_file=None),
+                             Budget(store, 10), store, "large")
+    calls = []
+
+    def create(**kwargs):
+        calls.append(kwargs)
+        return SimpleNamespace(id="large-response", usage=SimpleNamespace(input_tokens=100, output_tokens=200))
+
+    provider.client = SimpleNamespace(responses=SimpleNamespace(create=create))
+    with pytest.raises(BudgetExceeded):
+        provider._response(output_limit=14000, reasoning_effort="high", input="Design a gripper")
+    assert not calls
+    store.update("runs", "large", {"budget_usd": 2})
+    provider._response(output_limit=14000, reasoning_effort="high", input="Design a gripper")
+    assert calls[0]["max_output_tokens"] == 14000
+    assert calls[0]["reasoning"] == {"effort": "high"}
+    assert store.get("runs", "large")["spent_usd"] == pytest.approx(.011)
