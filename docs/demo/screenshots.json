@@ -1,0 +1,90 @@
+[
+  {
+    "file": "assets/mount-iso.png",
+    "subject_id": "candidate-run-atlas-validation-20260926-live3-0-structural",
+    "geometry_artifact_id": "artifact-c09df0f19f4505c0a60445b324c2571aad707ceb353c772e7526426d3e210789",
+    "camera": "Isometric view",
+    "zoom_wheel_delta": -100,
+    "zoom_wheel_events": 12,
+    "sha256": "2ea2c1b123ef0affc38c222821a977d526e187bc5db92c2364da1a78efc2e236",
+    "archive": "live3",
+    "capture_method": "Real workbench viewer with hash-verified archive responses"
+  },
+  {
+    "file": "assets/mount-top.png",
+    "subject_id": "candidate-run-atlas-validation-20260926-live3-0-structural",
+    "geometry_artifact_id": "artifact-c09df0f19f4505c0a60445b324c2571aad707ceb353c772e7526426d3e210789",
+    "camera": "Top view",
+    "zoom_wheel_delta": -100,
+    "zoom_wheel_events": 12,
+    "sha256": "3c57605da8161d49193d5525ba5136c6a8c852d3710e83c7bc004f51400bd55a",
+    "archive": "live3",
+    "capture_method": "Real workbench viewer with hash-verified archive responses"
+  },
+  {
+    "file": "assets/mount-before.png",
+    "subject_id": "candidate-run-atlas-validation-20260926-replay-0-structural",
+    "geometry_artifact_id": "artifact-c3145190751a29856e5913dd8b762d0c4a3072c295f49bf557a445b19bbadb4c",
+    "camera": "Isometric view",
+    "zoom_wheel_delta": -100,
+    "zoom_wheel_events": 12,
+    "sha256": "c229f863a97f2fe95d6a6d095844eaeee2a737891d625ddbbe90d4696fe38d9d",
+    "archive": "replay",
+    "capture_method": "Real workbench viewer with hash-verified archive responses"
+  },
+  {
+    "file": "assets/wing-iso.png",
+    "subject_id": "candidate-run-atlas-validation-20260926-live3-0-aerodynamic",
+    "geometry_artifact_id": "artifact-c5d0a1c5506e8d53ea69d65054f7e7589ef4b4ce88b6bba3414c66a89931e347",
+    "camera": "Isometric view",
+    "zoom_wheel_delta": -100,
+    "zoom_wheel_events": 12,
+    "sha256": "50f4d8545930a42ab60fba926984d7b499038fc47e705bc741b5503f84c5ac2b",
+    "archive": "live3",
+    "capture_method": "Real workbench viewer with hash-verified archive responses"
+  },
+  {
+    "file": "assets/wing-detail.png",
+    "subject_id": "candidate-run-atlas-validation-20260926-live3-0-aerodynamic",
+    "geometry_artifact_id": "artifact-c5d0a1c5506e8d53ea69d65054f7e7589ef4b4ce88b6bba3414c66a89931e347",
+    "camera": "Side view",
+    "zoom_wheel_delta": -100,
+    "zoom_wheel_events": 12,
+    "sha256": "b35595ecb4343c8e69c6799348e079eb74b0ebd1bf7b8122f0967cde4e85298f",
+    "archive": "live3",
+    "capture_method": "Real workbench viewer with hash-verified archive responses"
+  },
+  {
+    "file": "assets/wing-before.png",
+    "subject_id": "candidate-run-atlas-validation-20260926-replay-0-aerodynamic",
+    "geometry_artifact_id": "artifact-d208c371bd0dabf411c92720e30521f0afcca22edf409afe2b4f3707061a74e4",
+    "camera": "Isometric view",
+    "zoom_wheel_delta": -100,
+    "zoom_wheel_events": 12,
+    "sha256": "757fc9461363a13ead360f65983d0c6cc28a4a53d78333d7e3affcd8541a101d",
+    "archive": "replay",
+    "capture_method": "Real workbench viewer with hash-verified archive responses"
+  },
+  {
+    "file": "assets/assembly.png",
+    "subject_id": "assembly-run-atlas-validation-20260926-live3-0",
+    "geometry_artifact_id": "artifact-d1ea115b0b3dc00348fd3a49f6595148b873d8e1c631fced81bc9039542a90d9",
+    "camera": "Isometric view",
+    "zoom_wheel_delta": -100,
+    "zoom_wheel_events": 12,
+    "sha256": "7c41b934f7bb2fc50c39b14636b2d3e733dcce98fe8d820188b7aa65720c902f",
+    "archive": "live3",
+    "capture_method": "Real workbench viewer with hash-verified archive responses"
+  },
+  {
+    "file": "assets/workbench.png",
+    "subject_id": "assembly-run-atlas-validation-20260926-live3-0",
+    "geometry_artifact_id": "artifact-d1ea115b0b3dc00348fd3a49f6595148b873d8e1c631fced81bc9039542a90d9",
+    "camera": "Isometric view",
+    "zoom_wheel_delta": -100,
+    "zoom_wheel_events": 12,
+    "sha256": "a2154178a1906f45ccadec15ff1925b9c56e5932a298ff5324698496d60050aa",
+    "archive": "live3",
+    "capture_method": "Real workbench viewer with hash-verified archive responses"
+  }
+]

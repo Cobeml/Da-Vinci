@@ -1,0 +1,48 @@
+:root { --ink: #193b2e; --muted: #627168; --paper: #f8f7f1; --line: #d8dfd4; --accent: #246b50; }
+body { background: var(--paper); color: #2b3931; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height: 1.7; }
+#quarto-content { max-width: 1460px; margin: auto; }
+#quarto-document-content { max-width: 1020px; }
+#title-block-header { padding-top: 2rem; border-top: 5px solid var(--ink); }
+.title { color: var(--ink); font-family: Georgia, serif; font-size: clamp(3.5rem, 8vw, 6.5rem); letter-spacing: -.05em; line-height: 1; }
+.subtitle { color: var(--muted); font-size: 1.25rem; max-width: 760px; }
+h2 { color: var(--ink); font-family: Georgia, serif; font-size: 2.1rem; margin-top: 3.7rem; padding-bottom: .7rem; border-bottom: 1px solid var(--line); }
+h3 { color: var(--ink); margin-top: 2rem; font-size: 1.3rem; }
+a { color: var(--accent); text-underline-offset: .2em; }
+.eyebrow { font-family: monospace; letter-spacing: .12em; color: var(--muted); font-size: .72rem; margin: 1.5rem 0; }
+.hero { padding: 2rem; border-radius: 18px; background: #e9eee4; border: 1px solid var(--line); }
+.hero h2 { margin-top: 0; border: 0; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.16; max-width: 730px; }
+.hero p { max-width: 780px; }
+.demo-button { display: inline-block; padding: .7rem 1rem; border-radius: 6px; color: #fff; background: var(--ink); text-decoration: none; margin: .5rem .6rem 1rem 0; font-weight: 600; }
+.demo-button:hover { background: var(--accent); color: #fff; }
+.demo-button.secondary { background: transparent; color: var(--ink); border: 1px solid #9bb09e; }
+.fact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0 2.5rem; }
+.fact { border-bottom: 3px solid var(--accent); padding: 1rem; font-size: .9rem; color: var(--muted); }
+.fact strong { color: var(--ink); font-size: 2rem; }
+.fact p { margin: .15rem 0; }
+.architecture { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+.arch-box { padding: 1.5rem; border: 1px solid var(--line); border-radius: 10px; background: #fffefa; }
+.arch-box p { margin-bottom: .5rem; }
+.arch-box strong { color: var(--ink); }
+.atlas-box { background: #e2eddd; border-color: #98b999; }
+.loop { background: #edf0e8; border-radius: 12px; padding: 1.5rem 1.8rem 1rem; }
+.loop li { padding: .4rem 0; }
+.document-trail { background: var(--ink); color: #e5eedf; padding: 1.2rem; border-radius: 8px; overflow-wrap: anywhere; }
+.document-trail code { color: #e5eedf; background: transparent; }
+figure { margin: 1.6rem 0; }
+img { border-radius: 10px; max-width: 100%; }
+figcaption { color: var(--muted); font-size: .85rem; line-height: 1.5; text-align: left; }
+table { font-size: .88rem; line-height: 1.5; }
+th { color: var(--ink); background: #e9eee4 !important; }
+td, th { padding: .8rem !important; }
+td code { overflow-wrap: anywhere; white-space: normal; }
+details { margin: 1.5rem 0; border: 1px solid var(--line); border-radius: 8px; padding: 1rem; background: #fffdf7; }
+summary { font-weight: 600; cursor: pointer; color: var(--ink); }
+.evidence-download { display: inline-block; border: 1px solid var(--line); border-radius: 5px; padding: .6rem .9rem; margin: .3rem; font-family: monospace; font-size: .9rem; }
+#TOC { font-size: .85rem; }
+.sidebar nav[role=doc-toc] ul>li>a.active { color: var(--accent) !important; border-left-color: var(--accent) !important; }
+.nav-tabs .nav-link { color: var(--muted); }
+.nav-tabs .nav-link.active { background: var(--paper); color: var(--ink); font-weight: 700; }
+.tab-content { padding-top: 1rem; }
+pre { font-size: .82rem; }
+@media(max-width: 700px) { .hero { padding: 1rem; } .fact-grid, .architecture { grid-template-columns: 1fr; } .fact { padding: .7rem; } .columns { display: block; } .column { width: 100% !important; } h2 { font-size: 1.8rem; } table { font-size: .78rem; display: block; max-width: 100%; overflow-x: auto; } .table-responsive { overflow-x: auto; } }
+@media print { .demo-button, #TOC { display: none; } details { break-inside: avoid; } body { background: white; } }

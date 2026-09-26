@@ -11,3 +11,6 @@ node_modules/
 playwright-report/
 test-results/
 *.tsbuildinfo
+docs/demo/index.html
+docs/demo/index_files/
+docs/demo/.quarto/

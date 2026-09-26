@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 850 400" role="img" aria-label="Observed live-run tradeoff · not a causal ablation">
+<rect width="850" height="400" rx="16" fill="#f0efe7"/>
+<g font-family="sans-serif" fill="#172d25">
+<text x="28" y="36" font-size="21" font-weight="bold">Observed live-run tradeoff · not a causal ablation</text>
+<text x="28" y="60" font-size="13">Baseline / earlier = clay · Promoted / later = green</text>
+<text x="28" y="95" font-size="15">Screened induced drag</text>
+<rect x="28" y="107" width="560.00" height="19" rx="3" fill="#b97553"/>
+<text x="600.00" y="122" font-size="14">0.3728 N</text>
+<rect x="28" y="134" width="512.36" height="19" rx="3" fill="#246b50"/>
+<text x="552.36" y="149" font-size="14">0.3411 N</text>
+<text x="28" y="200" font-size="15">Wing mass</text>
+<rect x="28" y="212" width="535.65" height="19" rx="3" fill="#b97553"/>
+<text x="575.65" y="227" font-size="14">45.98 g</text>
+<rect x="28" y="239" width="560.00" height="19" rx="3" fill="#246b50"/>
+<text x="600.00" y="254" font-size="14">48.07 g</text>
+<text x="28" y="305" font-size="15">Wing span</text>
+<rect x="28" y="317" width="535.65" height="19" rx="3" fill="#b97553"/>
+<text x="575.65" y="332" font-size="14">660 mm</text>
+<rect x="28" y="344" width="560.00" height="19" rx="3" fill="#246b50"/>
+<text x="600.00" y="359" font-size="14">690 mm</text>
+</g></svg>
