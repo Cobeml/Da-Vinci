@@ -4,7 +4,7 @@ A multi-agent CAD workbench for the MongoDB Atlas Hackathon. Two specialists gen
 
 **Implemented:** Next.js/React 3D workbench, Python workers, real CadQuery STEP/GLB generation, structural/aerodynamic screening, shared-assembly checks, durable jobs, failure memory, generated Python tools, automatically tested releases, Git archives, browser inspection, and portable run exports.
 
-**Two explicit modes:** `replay` uses deterministic specialist/meta-agent fixtures and makes no model calls. `live` uses GPT-6 Astra through the Responses API. Both run actual CAD and evaluations. Local storage uses SQLite; configuring `MONGODB_URI` switches the repository to Atlas, GridFS, and vector retrieval. Atlas and OpenAI integration require your credentials and have not been live-tested without them.
+**Two explicit modes:** `replay` uses deterministic specialist/meta-agent fixtures and makes no model calls. `live` uses GPT-6 Astra through the Responses API. Both run actual CAD and evaluations. Local storage uses SQLite; configuring `MONGODB_URI` switches the repository to Atlas, GridFS, and vector retrieval. Astra inference and Atlas connectivity have passed live checks; the full Atlas-backed CAD workflow still needs external validation (see [verification](docs/verification.md)).
 
 ## Start locally
 
@@ -34,6 +34,7 @@ The CLI runs the same durable job handlers without needing the browser. Do not r
 Copy `.env.example` to `.env`, then set `OPENAI_API_KEY` and `MONGODB_URI` **server-side**. Keep the file untracked. Follow [Atlas setup](atlas/README.md) to create indexes and the two Database Triggers:
 
 ```bash
+.venv/bin/python -m scripts.check_connections --public-ip
 .venv/bin/python -m scripts.atlas_setup
 ```
 

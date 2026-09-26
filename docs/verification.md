@@ -10,7 +10,21 @@ Verified on the current Linux host: AMD Ryzen 7 7700X (8 cores / 16 threads), ap
 - Next.js production build and TypeScript validation passed.
 - Python lint and Git whitespace checks passed.
 
-The browser tests ran against the actual local API/workers and actual CadQuery artifacts. Fresh-ledger integration tests exercised the deliberately failing baseline and automatic release promotion. No paid inference calls were made.
+The browser tests ran against the actual local API/workers and actual CadQuery artifacts. Fresh-ledger integration tests exercised the deliberately failing baseline and automatic release promotion. Those tests used replay without paid inference.
+
+## Live connection verification
+
+After credentials were configured, GPT-6 Astra model access and a small Responses
+API inference request passed. MongoDB Atlas ping and database collection-list
+access also passed after the workstation's public egress IPv4 address was added
+to the project IP access list. Database routes did not use Tailscale; allowlisting
+the workstation's Tailscale address alone was insufficient.
+
+`.venv/bin/python -m scripts.check_connections --inference --public-ip` exited 0
+with both services passing. Credentials were loaded directly by the SDK setup;
+their values and raw error messages were not displayed. The check does not write
+to Atlas or verify write permissions. Synthetic-secret redaction checks and
+Python lint passed for the reusable checker.
 
 ## Compute benchmark
 
@@ -25,6 +39,9 @@ These measurements cover the bundled screening fixtures, not arbitrary CAD, mesh
 
 ## Remaining external validation
 
-The user has not yet configured `OPENAI_API_KEY` or `MONGODB_URI`. Therefore Astra inference, Atlas trigger delivery, GridFS on Atlas, and Atlas Vector Search are implemented but **not live-validated**. Follow [Atlas setup](../atlas/README.md) when credentials are available, then run the same demonstration in Astra live mode.
+Atlas trigger delivery, GridFS writes on Atlas, Atlas Vector Search, and the full
+Astra-driven CAD/reflection loop remain **not live-validated**. Follow
+[Atlas setup](../atlas/README.md), restart the stack to load updated credentials,
+then run the demonstration in Astra live mode.
 
 The local workflow intentionally uses labelled deterministic replay and durable SQLite storage. FEA, viscous CFD, distributed workers, and whole-application UI redeployment remain the documented post-hackathon phases.
