@@ -3,6 +3,7 @@ import io
 import json
 import secrets
 import zipfile
+from pathlib import Path
 
 from fastapi import BackgroundTasks, Depends, FastAPI, HTTPException, Request
 from fastapi.responses import HTMLResponse, Response, StreamingResponse
@@ -50,7 +51,9 @@ def create_app(settings=None):
             "events": engine.store.list("events", limit=100, reverse=True),
             "tools": [{k: v for k, v in t.items() if k != "source"} for t in engine.store.list("tools")],
             "releases": engine.store.list("releases", limit=30, reverse=True),
-            "champions": engine.store.list("champions", limit=50, reverse=True),
+            "champions": engine.store.list(
+                "champions", {"evaluator_version": engine.evaluator_version}, limit=50, reverse=True
+            ),
             "assemblies": engine.store.list("assemblies", limit=50, reverse=True),
             "active_release_id": engine.improvements.active()["_id"],
             "memory_count": len(engine.store.list("memories", limit=10000)),
@@ -149,7 +152,9 @@ def create_app(settings=None):
 
     @app.get("/api/projects/{id}/champions")
     def champions(id: str):
-        rows = engine.store.list("champions", {"project_id": id})
+        rows = engine.store.list(
+            "champions", {"project_id": id, "evaluator_version": engine.evaluator_version}
+        )
         frontier = [
             a
             for a in rows
@@ -178,7 +183,38 @@ def create_app(settings=None):
             "tools",
             "releases",
             "memories",
+            "policies",
+            "inspections",
         )
+        rows_by_collection = {
+            name: engine.store.list(name, {"run_id": id}, limit=10000) for name in collections
+        }
+        # A run may reuse releases and tools from older runs; export their full dependency closure.
+        release_ids = {run["release_id"]} | {c["release_id"] for c in rows_by_collection["candidates"]}
+        releases = {r["_id"]: r for r in rows_by_collection["releases"]}
+        while release_ids:
+            release_id = release_ids.pop()
+            release = engine.store.get("releases", release_id)
+            if release and release_id not in releases:
+                releases[release_id] = release
+                if release.get("predecessor_id"):
+                    release_ids.add(release["predecessor_id"])
+        rows_by_collection["releases"] = list(releases.values())
+        tool_ids = {t for c in rows_by_collection["candidates"] for t in c.get("tool_version_ids", [])}
+        tool_ids.update(t for r in releases.values() for t in r.get("tool_version_ids", []))
+        tools = {t["_id"]: t for t in rows_by_collection["tools"]}
+        for tool_id in tool_ids:
+            tool = engine.store.get("tools", tool_id)
+            if tool:
+                tools[tool_id] = tool
+        rows_by_collection["tools"] = list(tools.values())
+        policies = {p["_id"]: p for p in rows_by_collection["policies"]}
+        for release in releases.values():
+            if release.get("policy_version_id"):
+                policy = engine.store.get("policies", release["policy_version_id"])
+                if policy:
+                    policies[policy["_id"]] = policy
+        rows_by_collection["policies"] = list(policies.values())
         with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED) as archive:
             archive.writestr("run.json", json.dumps(run, indent=2))
             archive.writestr(
@@ -187,10 +223,11 @@ def create_app(settings=None):
             )
             artifact_ids = set()
             for name in collections:
-                rows = engine.store.list(name, {"run_id": id}, limit=10000)
+                rows = rows_by_collection[name]
                 archive.writestr(name + ".json", json.dumps(rows, indent=2))
                 for row in rows:
-                    artifact_ids.update(row.get("artifacts", {}).values())
+                    references = row.get("artifacts", {})
+                    artifact_ids.update(references.values() if isinstance(references, dict) else references)
                     for field in ("source_bundle_artifact_id", "bundle_artifact_id", "ui_artifact_id"):
                         if row.get(field):
                             artifact_ids.add(row[field])
@@ -199,6 +236,22 @@ def create_app(settings=None):
                 archive.writestr(
                     f"artifacts/{artifact_id}/{info['name']}", engine.artifacts.read(artifact_id)
                 )
+            archive.writestr(
+                "artifact-manifest.json",
+                json.dumps([engine.store.get("artifacts", key) for key in artifact_ids], indent=2),
+            )
+            root = Path(__file__).resolve().parent.parent
+            for path in [
+                root / "uv.lock",
+                root / "pyproject.toml",
+                root / "package-lock.json",
+                *sorted((root / "sandbox").glob("*.py")),
+                root / "sandbox/Dockerfile",
+                root / "sandbox/requirements.lock",
+                root / "sandbox/ui/package-lock.json",
+                root / "sandbox/ui/check.cjs",
+            ]:
+                archive.writestr("environment/" + str(path.relative_to(root)), path.read_bytes())
         return Response(
             buffer.getvalue(),
             media_type="application/zip",

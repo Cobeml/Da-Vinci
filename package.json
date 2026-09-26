@@ -3,9 +3,9 @@
   "private": true,
   "version": "0.1.0",
   "scripts": {
-    "dev": "next dev web --hostname 127.0.0.1",
+    "dev": "next dev web --hostname 127.0.0.1 --port 3215",
     "build": "next build web",
-    "start": "next start web --hostname 127.0.0.1",
+    "start": "next start web --hostname 127.0.0.1 --port 3215",
     "test:e2e": "playwright test",
     "typecheck": "tsc --noEmit -p web/tsconfig.json"
   },

@@ -19,7 +19,7 @@ class Improvements:
             **document("release"),
             "_id": "release-baseline",
             "files": files,
-            "status": "active",
+            "status": "baseline",
             "predecessor_id": None,
             "summary": "Initial screening policy",
             "validation": [],
@@ -30,11 +30,29 @@ class Improvements:
             release["bundle_artifact_id"] = self.artifacts.put(
                 self.repository.bundle(files), "release.json", "application/json"
             )
+            release["policy_version_id"] = self.archive_policy(files, release["source_commit"])
             self.store.insert("releases", release)
         self.store.insert("pointers", {"_id": "active-release", "release_id": release["_id"], "revision": 0})
 
     def active(self):
         return self.store.get("releases", self.store.get("pointers", "active-release")["release_id"])
+
+    def archive_policy(self, files, commit, run_id=None, predecessor=None):
+        content = json.loads(files["policy.json"])
+        policy_id = "policy-" + digest(content)[:16]
+        self.store.insert(
+            "policies",
+            {
+                **document("policy"),
+                "_id": policy_id,
+                "project_id": "uas-demo",
+                "run_id": run_id,
+                "parent_policy_id": predecessor,
+                "content": content,
+                "source_commit": commit,
+            },
+        )
+        return policy_id
 
     def create_tool(self, source, summary, run_id, evaluation_id):
         id = "tool-area-" + digest(source)[:16]
@@ -79,7 +97,7 @@ class Improvements:
             "motivation": evaluation_id,
             "run_id": run_id,
             "validation": tests,
-            "runtime_image": self.runner.settings.davinci_sandbox_image,
+            "runtime_image": self.runner.image_digest(),
             "input_schema": {
                 "type": "object",
                 "required": ["dimensions_m", "direction"],
@@ -213,6 +231,12 @@ class Improvements:
         )
         if ui:
             release["ui_artifact_id"] = self.artifacts.put(ui, "note.html", "text/html")
+        try:
+            release["policy_version_id"] = self.archive_policy(
+                files, release["source_commit"], run_id, current.get("policy_version_id")
+            )
+        except (ValueError, TypeError):
+            release["policy_version_id"] = None
         self.store.insert("releases", release)
         self.store.event(
             run_id,

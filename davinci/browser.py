@@ -22,7 +22,7 @@ def inspect_candidate(settings, candidate_id):
             # Only this workbench origin is visited. Model tools cannot navigate elsewhere.
             page.goto(
                 settings.davinci_web_url + "/?" + urlencode({"candidate": candidate_id}),
-                wait_until="networkidle",
+                wait_until="domcontentloaded",
                 timeout=60000,
             )
             page.get_by_test_id("cad-canvas").wait_for()

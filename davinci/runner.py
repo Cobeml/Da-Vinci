@@ -1,6 +1,7 @@
 import json
 import subprocess
 import tempfile
+import threading
 import time
 from pathlib import Path
 
@@ -11,12 +12,26 @@ class SandboxError(RuntimeError):
     pass
 
 
+_slots = threading.BoundedSemaphore(2)
+
+
 class Runner:
     def __init__(self, settings, cancelled=lambda: False):
         self.settings = settings
         self.cancelled = cancelled
         self.root = settings.root / "sandboxes"
         self.root.mkdir(exist_ok=True)
+        self._image_digest = None
+
+    def image_digest(self):
+        if self._image_digest is None:
+            self._image_digest = subprocess.check_output(
+                ["docker", "image", "inspect", "--format={{.Id}}", self.settings.davinci_sandbox_image],
+                text=True,
+                stderr=subprocess.PIPE,
+                timeout=10,
+            ).strip()
+        return self._image_digest
 
     def available(self):
         try:
@@ -30,6 +45,10 @@ class Runner:
             return False
 
     def execute(self, entrypoint, files, timeout=120, image=None, executable="python"):
+        with _slots:
+            return self._execute(entrypoint, files, timeout, image, executable)
+
+    def _execute(self, entrypoint, files, timeout=120, image=None, executable="python"):
         if self.cancelled():
             raise SandboxError("Run stopped")
         name = identity("davinci")
@@ -75,7 +94,7 @@ class Runner:
                 f"type=bind,src={incoming},dst=/input,readonly",
                 "--mount",
                 f"type=bind,src={outgoing},dst=/output",
-                image or self.settings.davinci_sandbox_image,
+                image or self.image_digest(),
                 executable,
                 entrypoint,
             ]
@@ -89,6 +108,15 @@ class Runner:
                             raise SandboxError("Run stopped" if self.cancelled() else "Sandbox timed out")
                         if log.tell() > 8_000_000:
                             raise SandboxError("Sandbox log limit exceeded")
+                        if (
+                            sum(
+                                p.stat().st_size
+                                for p in outgoing.iterdir()
+                                if p.is_file() and not p.is_symlink()
+                            )
+                            > 64_000_000
+                        ):
+                            raise SandboxError("Sandbox output quota exceeded")
                         time.sleep(0.15)
                     log.seek(0)
                     logs = log.read(32000).decode(errors="replace")
@@ -141,6 +169,18 @@ class Runner:
             "/opt/invoke.py", {"tool.py": source, "arguments.json": json.dumps(arguments)}, timeout=60
         )
         return json.loads(result["result.json"])
+
+    def integrate(self, mount_step, wing_step, specification):
+        outputs, _, _ = self.execute(
+            "/opt/integrate.py",
+            {
+                "structural.step": mount_step,
+                "aerodynamic.step": wing_step,
+                "specification.json": json.dumps(specification),
+            },
+            timeout=60,
+        )
+        return json.loads(outputs["result.json"]), {k: v for k, v in outputs.items() if k != "result.json"}
 
     def adapt(self, files, cases):
         result, _, _ = self.execute(

@@ -5,6 +5,7 @@ import math
 from pathlib import Path
 
 import cadquery as cq
+from families import wing_reference
 
 root = Path("/input")
 request = json.loads((root / "request.json").read_text())
@@ -72,7 +73,7 @@ if subsystem == "structural":
 else:
     wing = spec["wing"]
     # Demo airfoil uses a homogeneous foam model, separate from mount material.
-    metric("mass_kg", volume * 60.0, "kg")
+    metric("mass_kg", volume * wing["material_density_kg_m3"], "kg")
     span, chord = bounds.ylen / 1000, bounds.xlen / 1000
     metric("span_mm", span * 1000, "mm")
     supported = len(solids) == 2 and 0.45 <= span <= 0.75 and abs(chord - 0.12) < 0.0001
@@ -89,6 +90,10 @@ else:
         if gap < wing["min_hinge_gap_mm"] - 1e-6:
             fail("HINGE_CLEARANCE", "Hinge gap is below the fixed clearance limit")
         hinge = (flap.BoundingBox().xmin + main.BoundingBox().xmax) / 2
+        reference = wing_reference(span * 1000, gap, 1 - hinge / 120)
+        difference = reference.cut(shape).val().Volume() + shape.cut(reference).val().Volume()
+        if difference > 0.1:
+            fail("UNSUPPORTED_ANALYSIS", "Surface differs from the fixed symmetric NACA0012 extrusion family")
         for angle in wing["travel_deg"]:
             moved = flap.rotate((hinge, 0, 0), (hinge, 1, 0), angle)
             if main.intersect(moved).Volume() > 0.001:
@@ -105,7 +110,7 @@ else:
     metric("projected_area_m2", span * chord, "m2")
     if cl > wing["max_cl"]:
         fail("LIFT_SCREENING", "Required lift coefficient exceeds the attached-flow screening range")
-    if volume * 60.0 > wing["max_mass_kg"]:
+    if volume * wing["material_density_kg_m3"] > wing["max_mass_kg"]:
         fail("MASS_LIMIT", "Surface exceeds its mass allocation")
     baseline_drag = wing["required_lift_n"] ** 2 / (
         dynamic_pressure * math.pi * wing["oswald_efficiency"] * 0.6**2

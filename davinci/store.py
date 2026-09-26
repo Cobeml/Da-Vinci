@@ -10,7 +10,7 @@ from typing import Callable
 from pymongo import MongoClient, ReturnDocument
 from pymongo.errors import DuplicateKeyError
 
-from davinci.models import digest, document, identity, now
+from davinci.models import document, identity, now
 
 
 def matches(doc, query):
@@ -149,7 +149,7 @@ class Store:
             lease_token=None,
             lease_expires_at=now(),
         )
-        job["_id"] = "job-" + digest(key)[:24]
+        job["_id"] = key
         self.insert("jobs", job)
         return job["_id"]
 

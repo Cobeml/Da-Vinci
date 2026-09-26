@@ -75,6 +75,7 @@ SPECIFICATION = {
         "hole_spacing_mm": 28,
     },
     "wing": {
+        "material_density_kg_m3": 60,
         "span_mm": 600,
         "chord_mm": 120,
         "required_lift_n": 10,
@@ -88,6 +89,7 @@ SPECIFICATION = {
     },
     "assembly": {"max_mass_kg": 0.72, "mount_translation_mm": [150, 0, 25]},
     "baseline": {
+        "assembly_mass_kg": 0.093230793914711,
         "mount_thickness_mm": 6.0,
         "wing_thickness_mm": 2.0,
         "hinge_gap_mm": 2.0,

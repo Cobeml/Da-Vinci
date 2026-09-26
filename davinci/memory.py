@@ -5,8 +5,9 @@ from davinci.models import document
 
 
 class Memory:
-    def __init__(self, store, embed=None):
+    def __init__(self, store, embed=None, evaluator_version="screening-v1"):
         self.store, self.embed = store, embed
+        self.evaluator_version = evaluator_version
 
     def remember(self, candidate, evaluation):
         summary = json.dumps(
@@ -58,7 +59,7 @@ class Memory:
             "project_id": "uas-demo",
             "subsystem": subsystem,
             "specification_id": "spec-demo-v1",
-            "evaluator_version": "screening-v1",
+            "evaluator_version": self.evaluator_version,
         }
         recent = self.store.list("memories", filters, limit=200, reverse=True)
         if self.embed and self.store.db is not None and run_id:

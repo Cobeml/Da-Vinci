@@ -13,23 +13,24 @@ class Budget:
 
     def reserve(self, run_id, amount):
         day = datetime.now(timezone.utc).date().isoformat()
-        ledger_id = f"budget-{day}"
+        ledger_id = "budget-global"
         self.store.insert(
-            "budgets", {"_id": ledger_id, "revision": 0, "spent": 0.0, "reservations": {}, "runs": {}}
+            "budgets", {"_id": ledger_id, "revision": 0, "days": {}, "reservations": {}, "runs": {}}
         )
         run = self.store.get("runs", run_id)
         token = identity("reservation")
 
         def change(doc):
-            held = sum(x["amount"] for x in doc["reservations"].values())
+            held = sum(x["amount"] for x in doc["reservations"].values() if x["day"] == day)
             run_held = sum(x["amount"] for x in doc["reservations"].values() if x["run_id"] == run_id)
-            # Cumulative run spending spans midnight; the run stores settled usage.
+            # Run totals and all outstanding reservations share one atomic ledger,
+            # including requests that span midnight. Run.spent_usd is a UI projection.
             if (
-                doc["spent"] + held + amount > self.daily_limit
-                or run.get("spent_usd", 0) + run_held + amount > run["budget_usd"]
+                doc["days"].get(day, 0) + held + amount > self.daily_limit
+                or doc["runs"].get(run_id, 0) + run_held + amount > run["budget_usd"]
             ):
                 raise BudgetExceeded("API budget cannot cover the next request")
-            doc["reservations"][token] = {"run_id": run_id, "amount": amount}
+            doc["reservations"][token] = {"run_id": run_id, "amount": amount, "day": day}
             return doc
 
         self.store.mutate("budgets", ledger_id, change)
@@ -40,10 +41,11 @@ class Budget:
         holder = {}
 
         def change(doc):
+            holder.clear()
             item = doc["reservations"].pop(token, None)
             if item:
                 holder.update(item)
-                doc["spent"] += actual
+                doc["days"][item["day"]] = doc["days"].get(item["day"], 0) + actual
                 doc["runs"][item["run_id"]] = doc["runs"].get(item["run_id"], 0) + actual
             return doc
 

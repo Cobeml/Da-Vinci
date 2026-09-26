@@ -1,0 +1,15 @@
+{
+  "name": "memory_vector",
+  "type": "vectorSearch",
+  "definition": {
+    "fields": [
+      {"type":"vector","path":"embedding","numDimensions":1536,"similarity":"cosine"},
+      {"type":"filter","path":"project_id"},
+      {"type":"filter","path":"subsystem"},
+      {"type":"filter","path":"specification_id"},
+      {"type":"filter","path":"evaluator_version"},
+      {"type":"filter","path":"outcome"},
+      {"type":"filter","path":"embedding_version"}
+    ]
+  }
+}

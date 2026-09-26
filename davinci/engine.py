@@ -1,6 +1,7 @@
 import json
 import time
 from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
 
 from davinci.artifacts import Artifacts, Repository
 from davinci.budget import Budget, BudgetExceeded
@@ -16,6 +17,19 @@ from davinci.templates import MOUNT_SOURCE, WING_SOURCE
 class Engine:
     def __init__(self, settings, store=None, runner=None):
         self.settings = settings
+        trusted = Path(__file__).resolve().parent.parent / "sandbox"
+        self.evaluator_version = (
+            "screening-"
+            + digest(
+                {
+                    "specification": SPECIFICATION,
+                    "sources": {
+                        name: (trusted / name).read_text()
+                        for name in ("evaluate.py", "integrate.py", "families.py")
+                    },
+                }
+            )[:12]
+        )
         self.store = store or Store(settings.root, settings.mongodb_uri, settings.mongodb_database)
         self.artifacts = Artifacts(settings.root, self.store)
         self.repository = Repository(settings.root)
@@ -24,6 +38,7 @@ class Engine:
         self.budget = Budget(self.store, settings.davinci_daily_budget_usd)
         self.store.insert("specifications", SPECIFICATION)
         self.improvements.initialize()
+        self.store.insert("pointers", {"_id": "active-run", "run_id": None})
 
     def provider(self, run, subsystem=None):
         if run["mode"] == "replay":
@@ -40,14 +55,17 @@ class Engine:
 
     def memory(self, run):
         provider = self.provider(run)
-        return Memory(self.store, provider.embed if run["mode"] == "live" else None)
+        return Memory(self.store, provider.embed if run["mode"] == "live" else None, self.evaluator_version)
 
     def start(self, request):
         if request.mode == "live" and not self.settings.openai_api_key:
             raise ValueError("Set OPENAI_API_KEY before starting a live run")
-        active = self.store.list("runs", {"status": "running"})
-        if active:
-            raise ValueError("A run is already active; finish or stop it before starting another")
+        slot = self.store.get("pointers", "active-run")
+        if slot["run_id"]:
+            active = self.store.get("runs", slot["run_id"])
+            if active and active["status"] == "running":
+                raise ValueError("A run is already active; finish or stop it before starting another")
+            self.store.update("pointers", "active-run", {"run_id": None}, {"run_id": slot["run_id"]})
         run = document(
             "run",
             project_id="uas-demo",
@@ -62,10 +80,14 @@ class Engine:
             no_improvement_rounds=0,
             best_objective=None,
             specification_id=SPECIFICATION["_id"],
+            evaluator_version=self.evaluator_version,
             release_id=self.improvements.active()["_id"],
             assembly_revision_id=None,
         )
         self.store.insert("runs", run)
+        if not self.store.update("pointers", "active-run", {"run_id": run["_id"]}, {"run_id": None}):
+            self.store.update("runs", run["_id"], {"status": "rejected"})
+            raise ValueError("A concurrent request already started a run")
         self.store.event(
             run["_id"],
             "run_started",
@@ -80,6 +102,7 @@ class Engine:
         )
         if run:
             self.store.event(id, "run_stopped", "Run stopped; active containers are being cancelled")
+            self.store.update("pointers", "active-run", {"run_id": None}, {"run_id": id})
         return run
 
     def generate(self, job):
@@ -125,7 +148,7 @@ class Engine:
                     "source": proposal.source,
                     "parameters": adapted,
                     "spec": SPECIFICATION["_id"],
-                    "evaluator": "screening-v1",
+                    "evaluator": self.evaluator_version,
                 }
             )
             repeated = memory.failed_before(fingerprint)
@@ -157,7 +180,7 @@ class Engine:
                     self.repository.bundle(files), "source.json", "application/json"
                 ),
                 "specification_id": SPECIFICATION["_id"],
-                "evaluator_version": "screening-v1",
+                "evaluator_version": self.evaluator_version,
                 "fingerprint": fingerprint,
                 "release_id": release["_id"],
                 "agent_state_id": state["_id"],
@@ -247,7 +270,8 @@ class Engine:
             "run_id": candidate["run_id"],
             "round": candidate["round"],
             "subsystem": candidate["subsystem"],
-            "evaluator_version": "screening-v1",
+            "evaluator_version": self.evaluator_version,
+            "runtime_image_digest": self.runner.image_digest(),
             **result,
             "artifacts": artifacts,
             "duration_seconds": time.monotonic() - started,
@@ -282,7 +306,7 @@ class Engine:
             "runs",
             run["_id"],
             {"phase": "reflecting", "reflection_job_id": job["_id"]},
-            {"phase": "evaluating", "status": "running", "round": number},
+            {"phase": {"$in": ["evaluating", "generating"]}, "status": "running", "round": number},
         )
         if not claimed and not (
             run.get("phase") == "reflecting" and run.get("reflection_job_id") == job["_id"]
@@ -309,8 +333,12 @@ class Engine:
         objective = None
         assembly = None
         if not failures:
-            mass = sum(e["metrics"]["mass_kg"]["value"] for e in evaluations)
-            feasible = mass <= SPECIFICATION["assembly"]["max_mass_kg"]
+            parts = {e["subsystem"]: self.artifacts.read(e["artifacts"]["model.step"]) for e in evaluations}
+            integration, outputs = self.runner.integrate(
+                parts["structural"], parts["aerodynamic"], SPECIFICATION
+            )
+            mass = integration["mass_kg"]
+            feasible = integration["outcome"] == "passed"
             assembly = {
                 **document("assembly"),
                 "_id": f"assembly-{run['_id']}-{number}",
@@ -322,23 +350,30 @@ class Engine:
                 "mass_kg": mass,
                 "outcome": "passed" if feasible else "failed",
                 "mount_translation_mm": SPECIFICATION["assembly"]["mount_translation_mm"],
-                "violations": []
-                if feasible
-                else [{"code": "ASSEMBLY_MASS", "message": "Shared mass budget exceeded"}],
+                "violations": integration["violations"],
+                "artifacts": {
+                    name: self.artifacts.put(
+                        content, name, "model/gltf-binary" if name.endswith("glb") else "application/step"
+                    )
+                    for name, content in outputs.items()
+                },
             }
-            # Supported families have disjoint X envelopes at the frozen mount translation.
-            # Mount spans [110,190] in X and [23,27] in Z; airfoil remains near Z=0.
-            assembly["interface_check"] = "fixed transforms and supported envelopes"
+            assembly["interface_check"] = (
+                "BRep collision and sampled control-surface travel against shared mount"
+            )
             self.store.insert("assemblies", assembly)
             if feasible:
-                objective = sum(e["objective"] for e in evaluations) / 2
+                aerodynamic = next(e for e in evaluations if e["subsystem"] == "aerodynamic")
+                objective = (
+                    mass / SPECIFICATION["baseline"]["assembly_mass_kg"] + aerodynamic["objective"]
+                ) / 2
                 champion = {
                     **document("champion"),
                     "_id": "champion-" + assembly["_id"],
                     "project_id": "uas-demo",
                     "run_id": run["_id"],
                     "specification_id": SPECIFICATION["_id"],
-                    "evaluator_version": "screening-v1",
+                    "evaluator_version": self.evaluator_version,
                     "assembly_id": assembly["_id"],
                     "candidate_ids": assembly["candidate_ids"],
                     "evaluation_ids": assembly["evaluation_ids"],

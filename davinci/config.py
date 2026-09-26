@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     davinci_run_budget_usd: float = 10
     davinci_daily_budget_usd: float = 50
     davinci_api_token: str = ""
-    davinci_web_url: str = "http://127.0.0.1:3000"
+    davinci_web_url: str = "http://127.0.0.1:3215"
     davinci_use_atlas_triggers: bool = False
 
     @property
