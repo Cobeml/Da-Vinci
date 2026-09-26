@@ -11,11 +11,13 @@ test("gallery shows every measured design and independent VTOL controls", async 
   await expect(selected).toHaveAttribute("data-loaded", "true", { timeout: 30000 });
   await expect(selected).toHaveAttribute("data-mounted", "true");
   await expect(overview.getByRole("heading", { name: "MongoDB Atlas" })).toBeVisible();
+  await overview.locator("summary", { hasText: "Research evidence" }).click();
   for (const [name, url] of [
     ["Closing the Consistency Gap", "https://arxiv.org/abs/2609.08832"],
     ["SkillAlchemy", "https://arxiv.org/abs/2608.23417"],
     ["AIDE²", "https://arxiv.org/abs/2609.26457"],
   ]) await expect(overview.getByRole("link", { name: new RegExp(name) })).toHaveAttribute("href", url);
+  await overview.locator("summary", { hasText: "Research evidence" }).click();
   await page.waitForTimeout(700);
   await page.screenshot({ path: "runtime/sensor-overview.png" });
   const cards = page.getByTestId("design-card");

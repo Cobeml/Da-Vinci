@@ -48,21 +48,30 @@
 .violation { color: #a66538; font-size: 10px; line-height: 1.6; margin: 0 0 10px; }
 .cardFooter { border-top: 1px solid #edf0e8; padding-top: 11px; display: flex; align-items: center; justify-content: space-between; gap: 6px; color: #929b88; font-size: 9px; }
 .cardFooter a { display: inline-flex; align-items: center; gap: 4px; color: #6c7f5f; font: 9px var(--mono); }
-.overview { display: grid; grid-template-columns: minmax(0,1.15fr) minmax(0,1fr); gap: 32px; align-items: stretch; margin-bottom: 30px; }
-.overviewModel { min-height: 490px; border-radius: 10px; overflow: hidden; background: #edf0ea; }
+.overview { display: grid; grid-template-columns: minmax(0,1.15fr) minmax(0,1fr); gap: 32px; align-items: start; margin-bottom: 30px; }
+.overviewModel { height: 490px; border-radius: 10px; overflow: hidden; background: #edf0ea; }
 .overviewText { padding: 4px 0; }
 .overviewText h2 { font-size: 16px; font-weight: 600; margin-bottom: 9px; }
 .overviewText p { font-size: 12px; line-height: 1.65; color: #667361; }
 .methodIntro { margin-bottom: 18px; }
 .method { margin-bottom: 16px; }
 .method h3 { font-size: 12px; font-weight: 600; margin-bottom: 3px; }
-.method .evidence { font-size: 11px; margin-top: 5px; color: #798273; }
+.disclosureBody .evidence { font-size: 11px; color: #798273; }
 .evidence a { text-decoration: underline; text-underline-offset: 3px; color: #38664d; }
 .evidence strong { color: #4b6245; font-weight: 600; }
 .overviewText .researchNote { font-size: 10px; line-height: 1.6; color: #7c8674; }
 .atlas { border-top: 1px solid #dce2d6; margin-top: 18px; padding-top: 16px; }
 .atlas strong { font-weight: 600; }
-.measurementNote { font-size: 10px; line-height: 1.7; color: #7c8674; margin: 0 0 20px; }
+.disclosure { border-top: 1px solid #dce2d6; margin-top: 16px; }
+.disclosure summary { cursor: pointer; padding: 13px 0; color: #365b43; font-size: 12px; font-weight: 500; }
+.disclosure summary::marker { color: #778372; }
+.disclosure summary:focus-visible { outline: 2px solid #71916c; outline-offset: 3px; border-radius: 3px; }
+.disclosureBody { padding: 0 0 7px 14px; }
+.disclosureBody p { margin-bottom: 13px; }
+.disclosureBody h3 { font-size: 12px; font-weight: 600; margin: 5px 0 9px; }
+.disclosureBody ol { padding-left: 17px; margin: 0 0 16px; }
+.disclosureBody li { font-size: 12px; line-height: 1.7; color: #667361; margin-bottom: 10px; }
+.disclosureBody a { text-decoration: underline; text-underline-offset: 3px; color: #38664d; }
 .sectionHeading { display: flex; justify-content: space-between; gap: 16px; align-items: baseline; margin-bottom: 16px; padding-top: 24px; border-top: 1px solid #dce2d6; scroll-margin-top: 24px; }
 .sectionHeading h2 { font-size: 17px; font-weight: 500; }
 .sectionHeading span { font-size: 10px; color: #7c8674; }

@@ -83,28 +83,50 @@ export default function SensorGallery({ data }: { data: GalleryData }) {
           <div className={styles.method}>
             <h3>1. Reflect and remember</h3>
             <p>Retrieve prior designs and measurements; carry lessons into the next attempt.</p>
-            <p className={styles.evidence}><a href="https://arxiv.org/abs/2609.08832" target="_blank" rel="noopener noreferrer">Closing the Consistency Gap · 8 Sep 2026 ↗</a> reported <strong>+16 percentage points</strong> in AppWorld tasks succeeding on all five runs, using stored diagnostic guidelines with ReAct/GPT-4.1; <strong>+13 points</strong> on similar tasks.</p>
           </div>
           <div className={styles.method}>
             <h3>2. Create and reuse tools</h3>
             <p>Write, test and save a wall-thickness utility for subsequent designs.</p>
-            <p className={styles.evidence}><a href="https://arxiv.org/abs/2608.23417" target="_blank" rel="noopener noreferrer">SkillAlchemy · 24 Aug 2026 ↗</a> reported <strong>+19.9 percentage points</strong> pass rate over execution without skills across 87 SkillsBench tasks, by creating reusable skill packages from source material.</p>
           </div>
           <div className={styles.method}>
             <h3>3. Evaluate and revise</h3>
             <p>Use independent CAD checks to guide revisions; retain the lightest passing design.</p>
-            <p className={styles.evidence}><a href="https://arxiv.org/abs/2609.26457" target="_blank" rel="noopener noreferrer">AIDE² · 22 Sep 2026 ↗</a> found <strong>7 successive agent improvements in 8 days</strong> by testing changes to its own code. Gains transferred to four held-out benchmarks.</p>
           </div>
-          <p className={styles.researchNote}>Recent preprints; results are from other tasks, not validation of this CAD harness or measurements of each method’s contribution here.</p>
+          <details className={styles.disclosure}>
+            <summary>Research evidence</summary>
+            <div className={styles.disclosureBody}>
+              <p className={styles.evidence}><strong>Reflection and memory.</strong> <a href="https://arxiv.org/abs/2609.08832" target="_blank" rel="noopener noreferrer">Closing the Consistency Gap · 8 Sep 2026 ↗</a> reported <strong>+16 percentage points</strong> in AppWorld tasks succeeding on all five runs, using stored diagnostic guidelines with ReAct/GPT-4.1; <strong>+13 points</strong> on similar tasks.</p>
+              <p className={styles.evidence}><strong>Reusable skills.</strong> <a href="https://arxiv.org/abs/2608.23417" target="_blank" rel="noopener noreferrer">SkillAlchemy · 24 Aug 2026 ↗</a> reported <strong>+19.9 percentage points</strong> pass rate over execution without skills across 87 SkillsBench tasks, by creating reusable skill packages from source material.</p>
+              <p className={styles.evidence}><strong>Evaluation and revision.</strong> <a href="https://arxiv.org/abs/2609.26457" target="_blank" rel="noopener noreferrer">AIDE² · 22 Sep 2026 ↗</a> found <strong>7 successive agent improvements in 8 days</strong> by testing changes to its own code. Gains transferred to four held-out benchmarks.</p>
+              <p className={styles.researchNote}>Recent preprints; results are from other tasks, not validation of this CAD harness or measurements of each method’s contribution here.</p>
+            </div>
+          </details>
         </section>
         <section className={styles.atlas} aria-labelledby="atlas-heading">
           <h2 id="atlas-heading">MongoDB Atlas</h2>
           <p><strong>Documents</strong> store designs, evaluations, tools and policies. <strong>Vector Search</strong> retrieves prior results. <strong>GridFS</strong> stores CAD files and source snapshots.</p>
         </section>
+        <details className={styles.disclosure}>
+          <summary>Agent harness setup</summary>
+          <div className={styles.disclosureBody}>
+            <h3>This sensor-mount study</h3>
+            <ol>
+              <li><strong>Set the design contract.</strong> A Python runner fixes the mounting footprint, PA12 material assumptions, 20 N load and acceptance limits. Astra writes CadQuery wrappers and chooses dimensions within the supplied cradle family.</li>
+              <li><strong>Build and measure.</strong> Candidate code runs in an isolated Docker container and exports STEP and GLB. A separate evaluator checks the STEP against the supported geometry family, measures volume and applies the same stress and deflection screen to every attempt.</li>
+              <li><strong>Reflect and reuse.</strong> Previous results, scoped Atlas Vector Search matches and accumulated lessons enter the next prompt. After two attempts, Astra created a wall-thickness utility; five validation cases passed before the saved tool was reused.</li>
+              <li><strong>Archive and select.</strong> Git versions source, tools and context. Atlas stores records and GridFS stores artifacts. The runner retains the lightest passing design; this page displays all eight attempts from an exported snapshot without making new model calls.</li>
+            </ol>
+            <h3>Full multi-agent workbench</h3>
+            <p>The <a href="/harness">full harness</a> coordinates structural and aerodynamic specialists against a shared vehicle specification. Two Python workers process durable jobs. Atlas candidate-insert triggers enqueue evaluation; evaluation-insert triggers enqueue reflection, with a recovery loop for missed delivery.</p>
+            <p>A meta-agent proposes reusable tools and versioned changes to orchestration logic, context policy and an isolated React policy panel. Independent tool tests and release checks run before activation. The evaluator and acceptance limits remain fixed outside those editable files.</p>
+            <p>The sensor study shown here uses a sequential Python loop with the same sandbox, archive and memory services; it does not use the full workbench’s two-specialist trigger queue.</p>
+            <h3>Measurement scope</h3>
+            <p>Mass uses STEP volume and nominal PA12 density. Stress and deflection are wall-strip estimates, not FEA. The VTOL is illustrative; measurements cover the mount only.</p>
+          </div>
+        </details>
       </div>
     </section>
     <div id="designs" className={styles.sectionHeading}><h2>All {designs.length} design iterations</h2><span>Chronological order · best passing design highlighted</span></div>
-    <p className={styles.measurementNote}>Mass uses STEP volume and nominal PA12 density. Stress and deflection are wall-strip estimates, not FEA. The VTOL is illustrative; measurements cover the mount only.</p>
     <section className={styles.progress} aria-label="Design progress">
       <div className={styles.progressSummary}><span className={styles.eyebrow}>BEST PASSING MOUNT</span><strong>{mass(baseline).toFixed(1)} <span>→</span> {mass(best).toFixed(1)} <small>g</small></strong><span className={styles.reduction}><ArrowDown size={15} />{reduction.toFixed(1)}% mass reduction</span></div>
       <div className={styles.chart} aria-label="Mass by iteration">

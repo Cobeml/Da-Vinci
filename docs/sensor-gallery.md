@@ -4,6 +4,8 @@ The Next.js root page displays every recorded sensor-cradle attempt, its real GL
 
 The opening presentation section shows only the interactive VTOL with the lightest passing mount, beside the self-improvement methods and Atlas usage. It has no visible captions, metrics or controls; drag and zoom still work. The larger page title precedes this overview, and all chronological attempts follow below.
 
+Research citations and their scope disclaimer are collapsed by default under **Research evidence**. A separate **Agent harness setup** disclosure explains the sensor-study loop, tool validation, persistence, the full multi-agent workbench and the measurement scope. Both use native keyboard-accessible details/summary controls.
+
 ## Research context
 
 The methods section links to these primary sources (checked 2026-09-26):
