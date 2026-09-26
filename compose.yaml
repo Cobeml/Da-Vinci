@@ -1,0 +1,9 @@
+name: da-vinci
+services:
+  cad-image:
+    image: da-vinci-cad:local
+    build: ./sandbox
+    profiles: [build]
+    entrypoint: ["python", "-c", "import cadquery; print(cadquery.__version__)"]
+# The trusted API/worker run on the Linux host via scripts/dev.sh.
+# Only the runner holds Docker access. Agent code runs in disposable containers.
