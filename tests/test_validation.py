@@ -1,4 +1,5 @@
 import importlib
+import subprocess
 
 from pymongo.errors import OperationFailure
 
@@ -34,3 +35,47 @@ def test_validation_run_resumes_without_new_allocation(tmp_path):
 def test_external_provider_errors_are_redacted():
     secret = "mongodb://user:synthetic-secret@example.invalid"
     assert safe_error(OperationFailure(secret)) == "OperationFailure"
+
+
+def test_trigger_functions_ignore_updates_and_deduplicate_insert_delivery():
+    subprocess.run(
+        [
+            "node",
+            "-e",
+            """
+const fs = require('fs'), vm = require('vm'), assert = require('assert/strict');
+(async () => {
+  for (const [file, kind] of [
+    ['atlas/enqueue-candidate.js', 'evaluate_candidate'],
+    ['atlas/enqueue-reflection.js', 'reflect_on_evaluation']
+  ]) {
+    const rows = new Map();
+    const collection = { updateOne: async (query, update, options) => {
+      assert.equal(options.upsert, true);
+      assert.equal(query._id, kind + ':probe');
+      assert.equal(update.$setOnInsert.job_key, query._id);
+      if (!rows.has(query._id)) rows.set(query._id, update.$setOnInsert);
+    }};
+    const scope = {context: {
+      values: {get: () => 'validation'},
+      services: {get: () => ({db: () => ({collection: () => collection})})}
+    }};
+    vm.createContext(scope);
+    vm.runInContext(fs.readFileSync(file, 'utf8'), scope);
+    const event = {operationType: 'insert', fullDocument: {_id: 'probe', run_id: 'test'}};
+    await scope.exports(event);
+    const original = rows.get(kind + ':probe');
+    original.status = 'done';
+    await scope.exports(event);
+    await scope.exports({...event, operationType: 'update'});
+    await scope.exports({operationType: 'insert', fullDocument: {_id: 'irrelevant'}});
+    assert.equal(rows.size, 1);
+    assert.equal(rows.get(kind + ':probe').status, 'done');
+  }
+})().catch(error => { console.error(error); process.exitCode = 1; });
+""",
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )

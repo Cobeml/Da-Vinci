@@ -31,7 +31,11 @@ In Atlas → Streaming Data → Triggers, create these Database Triggers:
 Select the configured cluster and database (default `da_vinci`). Use INSERT only,
 enabled triggers, event ordering disabled, and preimages disabled. Retain the
 full document. Prepared functions contain the configured database name directly;
-no context value is necessary. They use the linked service `mongodb-atlas`.
+no context value is necessary. Set `DAVINCI_ATLAS_SERVICE` in `.env` to the exact
+linked service name shown in Atlas before running `prepare` (this deployment
+uses `Cluster0`). The default template name is `mongodb-atlas`. Restarting a
+trigger does not replace the function source: save the prepared function in
+each dashboard trigger after changing this setting.
 
 With the application workers still stopped:
 

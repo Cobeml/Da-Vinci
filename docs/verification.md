@@ -1,12 +1,12 @@
-# Local verification — 2026-09-26
+# Local and live verification — 2026-09-26
 
 Verified on the current Linux host: AMD Ryzen 7 7700X (8 cores / 16 threads), approximately 61 GiB RAM, Docker 29.6.1.
 
 ## Checks completed
 
-- **13 API/ledger/provider tests passed:** durable storage, atomic job claims, stale leases, stopped jobs, concurrent budget reservations, scoped memory, authentication/origin validation, concurrent run admission, portable export, image-budget estimation, and cancellation without release rollback.
+- **17 API/ledger/provider/validation tests passed:** durable storage, atomic job claims, stale leases, stopped jobs, concurrent budget reservations, scoped memory, authentication/origin validation, concurrent run admission, portable export, image-budget estimation, cancellation without release rollback, import isolation, resumable validation IDs, external-error redaction, and trigger duplicate-delivery behavior.
 - **7 Docker/CAD integration tests passed:** measured mass and unit conversion, minimum thickness, hinge clearance, full reflection/tool-reuse loop, rejected patches, shared-assembly collision detection, unsupported geometry rejection, and validated release rollback. Some tests cover multiple scenarios.
-- **4 Playwright tests passed:** measured CAD rendering and navigation, mobile containment, starting/stopping runs, a full two-worker replay, and archived browser inspection screenshots.
+- **4 Playwright tests passed against Atlas:** measured CAD rendering and navigation, mobile containment, starting/stopping runs, a full two-worker replay, and archived browser inspection screenshots.
 - Next.js production build and TypeScript validation passed.
 - Python lint and Git whitespace checks passed.
 
@@ -37,11 +37,43 @@ Ten alternating mount/wing candidates were built and evaluated at each concurren
 
 These measurements cover the bundled screening fixtures, not arbitrary CAD, meshing, CFD, or model latency. RSS is the evaluator process peak, not total host or container memory. Detailed samples are in [benchmark.json](benchmark.json).
 
-## Remaining external validation
+## Atlas workflow verification
 
-Atlas trigger delivery, GridFS writes on Atlas, Atlas Vector Search, and the full
-Astra-driven CAD/reflection loop remain **not live-validated**. Follow
-[Atlas setup](../atlas/README.md), restart the stack to load updated credentials,
-then run the demonstration in Astra live mode.
+- Provisioning created validators and ordinary indexes. A second provisioning
+  run passed without replacing existing definitions. `memory_vector` is READY
+  and queryable with 1,536 dimensions.
+- Atlas writes and GridFS upload/download passed. Remote reads used an empty
+  local cache and checked SHA-256 digests.
+- Atlas recovery checks passed: two concurrent claims produce one owner, expired
+  leases can be reclaimed, stale owners cannot finish jobs, cancellation prevents
+  execution, reconciliation repairs a missing job, and excess budget reservations
+  are rejected without a model call.
+- Named replay `run-atlas-validation-20260926-replay`: four rounds, eight
+  evaluations, six passing candidates, three accepted assemblies, no model spend.
+  Its portable ZIP contained 60 entries; all 33 manifest hashes were verified,
+  and 24 evaluation-artifact references were independently downloaded from GridFS.
+- Live run `run-atlas-validation-20260926-live1`: four rounds, eight passing
+  candidates, four accepted assemblies, no job errors. CAD generation and
+  embeddings consumed $0.63736974 before additional diagnostic checks.
+- Direct `$vectorSearch` returned both archived failures and successes with
+  similarity scores. Application retrieval returned the correct subsystem,
+  specification, and evaluator cohort with semantic scores. Lexical fallback
+  was not counted as a vector-search pass.
 
-The local workflow intentionally uses labelled deterministic replay and durable SQLite storage. FEA, viscous CFD, distributed workers, and whole-application UI redeployment remain the documented post-hackathon phases.
+## Validation still in progress
+
+The first independent trigger probe timed out with workers stopped; neither
+trigger created its job. Trigger configuration is being diagnosed separately.
+The live CAD run used the existing reconciliation path and does not establish
+successful trigger delivery.
+
+Astra-generated diagnostic tool/release validation, visual inspection, final
+live export, and a subsequent run using the generated release remain pending.
+The validation session has fixed $10/$10/$5 live allocations, totalling at most
+$25; run IDs and spending persist across command restarts. See
+[live validation procedure](live-validation.md). Runtime reports are stored in
+`runtime/validation/report.json` and Atlas `validations`.
+
+FEA, viscous CFD, distributed workers, and whole-application UI redeployment
+remain the documented post-hackathon phases. Existing engineering results are
+analytic screening, not physical or flight validation.

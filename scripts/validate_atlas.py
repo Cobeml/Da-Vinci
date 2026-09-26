@@ -90,10 +90,18 @@ class Validation:
                 (Path("atlas") / name)
                 .read_text()
                 .replace('context.values.get("DAVINCI_DATABASE")', json.dumps(self.settings.mongodb_database))
+                .replace(
+                    'context.services.get("mongodb-atlas")',
+                    "context.services.get(" + json.dumps(self.settings.davinci_atlas_service) + ")",
+                )
             )
             (directory / name).write_text(source)
         self.save(
-            "trigger_sources", passed=True, directory=str(directory), database=self.settings.mongodb_database
+            "trigger_sources",
+            passed=True,
+            directory=str(directory),
+            database=self.settings.mongodb_database,
+            linked_service=self.settings.davinci_atlas_service,
         )
 
     def recovery(self):
@@ -404,6 +412,29 @@ class Validation:
             "inspection", passed=True, candidate_id=candidate, inspection_ids=[i["_id"] for i in inspections]
         )
 
+    def reuse(self, slot):
+        run_id = self.record()["runs"][slot]["run_id"]
+        reflection = self.record()["checks"]["reflection"]
+        assert reflection["passed"]
+        candidates = self.store.list("candidates", {"run_id": run_id})
+        assert len(candidates) >= 2
+        assert all(c["release_id"] == reflection["release_id"] for c in candidates)
+        assert all(reflection["tool_id"] in c["tool_version_ids"] for c in candidates)
+        invocations = self.store.list("events", {"run_id": run_id, "kind": "tool_invoked"})
+        assert any(e["data"]["tool_id"] == reflection["tool_id"] for e in invocations)
+        assert self.store.list("champions", {"run_id": run_id})
+        states = self.store.list("agent_states", {"run_id": run_id})
+        assert all(s["retrieved_memory_ids"] for s in states)
+        self.save(
+            "promoted_release_reuse",
+            passed=True,
+            run_id=run_id,
+            release_id=reflection["release_id"],
+            tool_id=reflection["tool_id"],
+            candidates=len(candidates),
+            memory_retrieved=True,
+        )
+
     def export(self, slot):
         import httpx
 
@@ -466,6 +497,7 @@ def main():
             "vector",
             "reflection",
             "inspect",
+            "reuse",
             "export",
             "report",
         ],
@@ -480,7 +512,7 @@ def main():
             validation.run(args.slot, args.rounds)
         elif args.stage == "monitor":
             return 0 if validation.monitor(args.slot, args.seconds) else 1
-        elif args.stage in ("vector", "reflection", "inspect", "export"):
+        elif args.stage in ("vector", "reflection", "inspect", "reuse", "export"):
             getattr(validation, args.stage)(args.slot)
         else:
             result = getattr(validation, args.stage)()

@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     davinci_data_dir: Path = Path("runtime")
     mongodb_uri: str = ""
     mongodb_database: str = "da_vinci"
+    davinci_atlas_service: str = "mongodb-atlas"
     openai_api_key: str = ""
     openai_model: str = "gpt-6-astra"
     davinci_sandbox_image: str = "da-vinci-cad:local"

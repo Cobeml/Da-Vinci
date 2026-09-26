@@ -4,7 +4,7 @@ A multi-agent CAD workbench for the MongoDB Atlas Hackathon. Two specialists gen
 
 **Implemented:** Next.js/React 3D workbench, Python workers, real CadQuery STEP/GLB generation, structural/aerodynamic screening, shared-assembly checks, durable jobs, failure memory, generated Python tools, automatically tested releases, Git archives, browser inspection, and portable run exports.
 
-**Two explicit modes:** `replay` uses deterministic specialist/meta-agent fixtures and makes no model calls. `live` uses GPT-6 Astra through the Responses API. Both run actual CAD and evaluations. Local storage uses SQLite; configuring `MONGODB_URI` switches the repository to Atlas, GridFS, and vector retrieval. Astra inference and Atlas connectivity have passed live checks; the full Atlas-backed CAD workflow still needs external validation (see [verification](docs/verification.md)).
+**Two explicit modes:** `replay` uses deterministic specialist/meta-agent fixtures and makes no model calls. `live` uses GPT-6 Astra through the Responses API. Both run actual CAD and evaluations. Local storage uses SQLite; configuring `MONGODB_URI` switches the repository to Atlas, GridFS, and vector retrieval. Astra-driven CAD, Atlas persistence, GridFS, and vector retrieval have passed live checks. See [verification](docs/verification.md) for evidence and remaining trigger validation.
 
 ## Start locally
 
@@ -41,6 +41,8 @@ Copy `.env.example` to `.env`, then set `OPENAI_API_KEY` and `MONGODB_URI` **ser
 Set `DAVINCI_USE_ATLAS_TRIGGERS=true`, restart the stack, then choose **Astra live** in the workbench. There is no silent fallback from a live model request to a replay fixture. The UI reports missing credentials or runtime failures.
 
 The Atlas trigger functions only upsert durable jobs. Local Python workers execute CAD, inference, and reflection. A 15-second reconciliation pass repairs missed trigger delivery. Vector retrieval filters by project, subsystem, specification, and evaluator version; recent results are also injected directly because indexing is asynchronous. Failed embedding calls can be retried with `.venv/bin/python -m scripts.backfill_memory` within the original run's budget.
+
+For the resumable, budgeted setup and validation sequence, see [live validation](docs/live-validation.md).
 
 ## What the demo evaluates
 

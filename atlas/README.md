@@ -5,7 +5,7 @@
 3. Run `.venv/bin/python -m scripts.atlas_setup`. This creates validators, ordinary indexes, and the `memory_vector` search index.
 4. In Atlas **Triggers**, create a Database Trigger for **INSERT** on `candidates`. Use the source in `enqueue-candidate.js` as its function. Enable full document delivery; ordering is not required.
 5. Create a second INSERT-only trigger on `evaluations`, using `enqueue-reflection.js`.
-6. Set the function context value `DAVINCI_DATABASE` to the same value as `MONGODB_DATABASE` (default `da_vinci`). The linked service is named `mongodb-atlas`; change that literal if your Atlas service uses another name.
+6. Set the function context value `DAVINCI_DATABASE` to the same value as `MONGODB_DATABASE` (default `da_vinci`). The template service name is `mongodb-atlas`; use the exact linked service name shown in Atlas (this deployment uses `Cluster0`). Alternatively, set `DAVINCI_ATLAS_SERVICE` in `.env`, run `.venv/bin/python -m scripts.validate_atlas prepare`, and paste the generated files under `runtime/validation/triggers/`. Those functions embed both names and need no context value.
 7. Set `DAVINCI_USE_ATLAS_TRIGGERS=true`, add `OPENAI_API_KEY`, and restart the API and workers.
 8. Start an Astra live run. Verify the candidate insert creates exactly one job, and evaluation insertion creates a reflection job. The worker's 15-second reconciler also repairs missing jobs.
 

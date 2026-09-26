@@ -144,7 +144,9 @@ class Engine:
             retrieved = memory.search(
                 subsystem, f"{subsystem} geometric failures thickness hinge clearance", run_id=run["_id"]
             )
-            tools = self.store.list("tools", {"status": "active"})
+            # Prefer the latest validated utility while retaining all versions
+            # in the archive and making them available to the specialist.
+            tools = self.store.list("tools", {"status": "active"}, reverse=True)
             context = {
                 "specification": SPECIFICATION,
                 "round": number,
