@@ -8,6 +8,8 @@ A multi-agent CAD workbench for the MongoDB Atlas Hackathon. Two specialists gen
 
 ## Start locally
 
+For the presentation, see the [Quarto demo and laptop-access guide](docs/demo/README.md). Rebuild the standalone HTML with `.venv/bin/python -m scripts.demo_report`. On the configured Tailscale network, open the [report](http://100.99.98.39:8085) or [live workbench](http://100.99.98.39:8086).
+
 Requirements: Linux, Docker, Node 22+, and [uv](https://docs.astral.sh/uv/). Run from this directory:
 
 ```bash
