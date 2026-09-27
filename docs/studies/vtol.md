@@ -53,3 +53,24 @@ Empty/truncated model outputs are retained and retried with up to 32,000 output 
 The first twelve-design campaign is retained in Atlas and [the audit export](vtol-v1-audit.json), but its performance claims are withdrawn. Final visual/geometry review found that constant-diameter spars protruded from thinner wing tips while the aerodynamic model assumed an uninterrupted airfoil. The corrected v2 cohort uses tapered, contained spars following the quarter-chord mean line, integrates bending compliance along the changing section, and independently checks BRep containment and material-volume conservation. Earlier results are not mixed into its ranking.
 
 The two campaigns share a total $30 API allowance. The corrected campaign receives only the unspent remainder after the first campaign's $10.92388498 cost. The UI reports their combined accounting.
+
+## Completed corrected campaign
+
+All twelve v2 designs passed their initial engineering checks. Iteration seven, **Compact-span lightweight survey VTOL**, won the final publication gate. The [archived export](../../web/data/vtol-gallery.json) contains every design, reflection, memory match, metric and finalist validation.
+
+| Campaign-grid metric | Baseline | Selected design |
+| --- | ---: | ---: |
+| Estimated range | 68.33 km | 85.14 km (+24.60%) |
+| Supported maximum speed | 19.00 m/s | 19.75 m/s |
+| Payload capacity for 10 km | 0.96 kg | 0.96 kg |
+| Maximum endurance | 82.34 min | 107.28 min |
+| Takeoff mass at 0.5 kg payload | 4.38 kg | 3.62 kg |
+| Hover electrical power | 385.95 W | 291.72 W |
+
+The selected aircraft has a 0.80 m body instead of 1.08 m, a 2.30 m span instead of 2.10 m, stronger taper, and revised spars, booms and component placement. Its reduced mass and drag improve the range estimate without increasing battery capacity. The later candidates explore wing/tail efficiency and stiffness; none displaces iteration seven after validation. Range and maximum endurance are optimized at different airspeeds.
+
+The baseline and the three finalists (7, 11 and 12) were checked at both finer grids. The selected design changes by 0.073% in range, 0% in supported maximum speed and 1.189% in best-range drag between these grids. At the finest grid, estimated range is 68.33 → 85.08 km. Under combined adverse assumptions, the paired finest-grid estimates are 51.46 → 63.94 km, with both aircraft feasible. This is sensitivity evidence, not flight validation or an ablation of memory/tool effects.
+
+Recorded API accounting totals **$23.86430978** across both campaigns, including incomplete model outputs. The corrected campaign reuses the independently validated energy utility from v1; the withdrawn aircraft results are excluded from selection. Atlas archives designs in `design_iterations`, tools in `design_tools`, finalist evidence in `study_validations`, and the correction in `study_audits`, alongside vector memories and GridFS artifacts.
+
+Verification includes 27 passing non-integration tests and eight passing VTOL tests (six unit checks plus two Docker integration checks). These cover propeller-map limits, mass/energy accounting, tapered-spar containment and volume conservation, analytic beam/VLM trends, trim, protected capabilities, and rejection of an altered STEP. The production build and all six gallery browser checks passed, covering all twelve CAD views, internal layouts, STEP downloads, mobile sizing and the preserved gripper/sensor studies. The Tailscale homepage was verified to serve the twelve-design VTOL gallery.

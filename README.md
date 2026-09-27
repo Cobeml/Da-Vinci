@@ -10,8 +10,8 @@ The latest study is a **complete lift-and-cruise survey VTOL**. The agent change
 
 ## Self-improvement methods
 
-1. **Reflect and remember.** A separate review call interprets measured drag, energy, trim, structure and capability limits. Atlas Vector Search retrieves previous outcomes; saved lessons guide later proposals.
-2. **Create and reuse tools.** Astra writes an energy-sensitivity utility. Four numerical and four invalid-input checks gate reuse; subsequent proposals receive actual tool outputs.
+1. **Reflect and remember.** A separate review call interprets computed drag, energy, trim, structure and capability limits. Atlas Vector Search retrieves previous outcomes; saved lessons guide later proposals.
+2. **Create and reuse tools.** Astra wrote an energy-sensitivity utility, reused in the corrected campaign. Four numerical and four invalid-input checks gate reuse; subsequent proposals receive actual tool outputs.
 3. **Evaluate and revise.** Change the aircraft geometry, evaluate its exported STEP and compare performance under a frozen mission. Keep all attempts, including failed checks and unsuccessful alternatives.
 
 ## MongoDB Atlas
@@ -23,7 +23,26 @@ The latest study is a **complete lift-and-cruise survey VTOL**. The agent change
 
 ## Improvement by model
 
-The initial VTOL campaign is superseded after a spar-to-airfoil geometry mismatch was found. A corrected campaign is in progress with contained tapered spars and variable-section structural analysis. The [audit export](docs/studies/vtol-v1-audit.json) preserves the original evidence; its performance figures are not validated results. The gripper remains the homepage until a corrected VTOL champion passes the publication gate.
+**68.3 → 85.1 km estimated range: 24.6% improvement.** Supported maximum speed changes from 19.0 to 19.8 m/s; 10 km mission payload capacity stays at 0.96 kg. Battery and nominal mission payload are unchanged.
+
+The winning geometry shortens the body from 1.08 to 0.80 m, increases span from 2.10 to 2.30 m and reduces takeoff mass from 4.38 to 3.62 kg. Later alternatives trade range against endurance and payload capacity; iteration seven remains the selected design.
+
+| Iteration / STEP | Aircraft | Range est. (km) | Max speed est. (m/s) | Payload capacity est. (kg) | Endurance est. (min) | Takeoff mass (kg) | Result |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | --- |
+| [01](web/public/models/vtol/survey-vtol-range-v2/01-model.step) | BASELINE | 68.3 | 19.0 | 0.96 | 82.3 | 4.38 | Baseline |
+| [02](web/public/models/vtol/survey-vtol-range-v2/02-model.step) | Lean high-aspect-ratio survey VTOL | 77.4 | 19.5 | 0.96 | 94.4 | 3.98 | Passed |
+| [03](web/public/models/vtol/survey-vtol-range-v2/03-model.step) | Broad-root range VTOL | 82.4 | 19.5 | 0.96 | 110.5 | 3.94 | Passed |
+| [04](web/public/models/vtol/survey-vtol-range-v2/04-model.step) | Compact low-drag survey VTOL | 84.7 | 19.8 | 0.96 | 106.8 | 3.75 | Passed |
+| [05](web/public/models/vtol/survey-vtol-range-v2/05-model.step) | Compact long-span survey VTOL | 83.9 | 19.5 | 0.96 | 110.2 | 3.79 | Passed |
+| [06](web/public/models/vtol/survey-vtol-range-v2/06-model.step) | Long-span balanced-tail VTOL | 84.3 | 19.5 | 0.96 | 108.5 | 3.85 | Passed |
+| [07](web/public/models/vtol/survey-vtol-range-v2/07-model.step) | Compact-span lightweight survey VTOL | 85.1 | 19.8 | 0.96 | 107.3 | 3.62 | Best passing |
+| [08](web/public/models/vtol/survey-vtol-range-v2/08-model.step) | Lift-sharing survey VTOL | 84.3 | 19.5 | 0.93 | 105.2 | 3.64 | Passed |
+| [09](web/public/models/vtol/survey-vtol-range-v2/09-model.step) | Stiff-root survey VTOL | 84.8 | 19.5 | 0.96 | 109.1 | 3.72 | Passed |
+| [10](web/public/models/vtol/survey-vtol-range-v2/10-model.step) | Slender-wing survey VTOL | 83.3 | 19.8 | 0.96 | 97.9 | 3.68 | Passed |
+| [11](web/public/models/vtol/survey-vtol-range-v2/11-model.step) | Long-span VTOL with higher-Re tail | 84.9 | 19.5 | 0.96 | 111.0 | 3.75 | Passed |
+| [12](web/public/models/vtol/survey-vtol-range-v2/12-model.step) | Long-chord trim-tail survey VTOL | 85.0 | 19.8 | 0.96 | 105.4 | 3.63 | Passed |
+
+Values come from the [archived study export](web/data/vtol-gallery.json). Payload capacity is limited by both the fixed bay and mission feasibility. The [initial campaign audit](docs/studies/vtol-v1-audit.json) preserves a superseded run with a spar/airfoil mismatch. Corrected designs use contained tapered spars and variable-section bending analysis; their ranking excludes the old results. Reported API accounting includes both cohorts. The iteration table uses one consistent campaign grid; finer-grid validation is archived separately. Recorded API accounting: **$23.86** within the $30 cap, including unsuccessful model calls.
 
 <details>
 <summary><strong>Research evidence</strong></summary>
@@ -34,7 +53,7 @@ The initial VTOL campaign is superseded after a spar-to-airfoil geometry mismatc
 
 **Evaluation and revision.** [AIDE² — 22 September 2026](https://arxiv.org/abs/2609.26457) found **7 successive agent improvements in 8 days** by testing changes to its own code. Gains transferred to four held-out benchmarks.
 
-These are recent preprints. Their results come from other tasks; they do not validate this CAD harness or measure each method's contribution to its mass reduction.
+These are recent preprints. Their results come from other tasks; they do not validate this CAD harness or measure each method's contribution to its engineering improvements.
 
 </details>
 
@@ -86,7 +105,7 @@ npm run build
 bash scripts/app_service.sh up
 ```
 
-After rebuilding, stop an existing application service with `bash scripts/app_service.sh down`, then run `up` to load the new snapshot. Stop any foreground development stack before using the service.
+The service survives terminal closure. After rebuilding, run `bash scripts/app_service.sh down`, wait for it to finish, then run `bash scripts/app_service.sh up`.
 
 The study resumes the same ID and $30 cap; changing the frozen evaluator or container image requires a new study ID. The existing global daily budget still applies. Open http://127.0.0.1:3215/vtol for the study, or use the configured Tailscale listener on port 8086. See [laptop access](docs/demo/README.md) and [Atlas setup](atlas/README.md).
 
