@@ -4,7 +4,7 @@ import data from "../../web/data/gripper-gallery.json";
 test("gripper gallery loads evaluated CAD and independently moves jaws and displays frame stress", async ({ page, request }) => {
   const errors: string[] = [];
   page.on("pageerror", error => errors.push(error.message));
-  await page.goto("/");
+  await page.goto("/gripper");
   const overview = page.getByTestId("overview-model");
   await expect(overview.getByTestId("gripper-canvas")).toHaveAttribute("data-loaded", "true", { timeout: 30000 });
   await overview.getByRole("slider", { name: "Jaw opening" }).fill("20");
@@ -43,7 +43,7 @@ test("gripper gallery loads evaluated CAD and independently moves jaws and displ
 });
 
 test("gripper overview and details fit laptop and mobile screens", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/gripper");
   for (const width of [1280, 390]) {
     await page.setViewportSize({ width, height: 900 });
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);

@@ -1,0 +1,24 @@
+.view { height: 310px; position: relative; background: #edf0ea; }
+.hero .view { height: 500px; border-radius: 12px; overflow: hidden; }
+.controls { position: absolute; top: 12px; left: 12px; display: flex; gap: 4px; z-index: 2; background: #e1e7dc; padding: 3px; border-radius: 5px; }
+.controls button { background: transparent; border: 0; padding: 6px 9px; color: #486247; cursor: pointer; font-size: 11px; }
+.controls button[aria-pressed=true] { background: white; border-radius: 4px; }
+.expand { position: absolute; right: 12px; top: 12px; z-index: 2; background: white; border: 0; border-radius: 4px; padding: 5px; cursor: pointer; }
+.modal { position: fixed; inset: 0; z-index: 100; background: #17261cbb; padding: 4vh 4vw; display: grid; place-items: center; }
+.modal > div { width: 100%; max-width: 1400px; position: relative; }
+.modal .view { height: 85vh; border-radius: 12px; }
+.close { position: absolute; z-index: 4; right: 14px; bottom: 14px; border: 1px solid #bdcbb8; border-radius: 6px; background: white; padding: 8px 15px; cursor: pointer; }
+.evidence { border-top: 1px solid #d9e1d3; margin-top: 14px; padding-top: 12px; font-size: 12px; line-height: 1.65; color: #64735c; }
+.evidence summary { cursor: pointer; }
+.evidence p { margin: 12px 0; }
+.breakdown { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 10px 0; }
+.breakdown span { display: block; }
+.plot { width: 100%; height: 140px; display: block; margin: 10px 0; }
+.plot text { fill: #64735c; font-size: 10px; }
+.caption { font-size: 11px; color: #718167; }
+.notice { color: #7c5a36; padding: 10px 0; font-size: 12px; }
+@media(max-width:600px) { .hero .view { height: 340px; } .view { height: 270px; } }
+
+.rangeChart.rangeChart { gap: 10px; min-width: 0; }
+.rangeChart > a { min-width: 18px; }
+@media(max-width:600px) { .rangeChart.rangeChart { gap: 6px; } .rangeChart > a > span { font-size: 8px; } }

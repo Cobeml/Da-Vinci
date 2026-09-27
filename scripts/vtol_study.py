@@ -280,7 +280,7 @@ class Study:
                     fidelity="geometry_rejection",
                 )
                 files = {}
-            except SandboxError:
+            except SandboxError as exc:
                 # Preserve infrastructure/solver failures as explicit unsupported attempts, not successful estimates.
                 e = dict(
                     outcome="unsupported",
@@ -288,13 +288,13 @@ class Study:
                     violations=[
                         dict(
                             code="UNSUPPORTED_ANALYSIS",
-                            message="CAD or solver did not complete; inspect isolated diagnostics",
+                            message="CAD/solver did not complete: " + str(exc)[-1200:],
                         )
                     ],
                     fidelity="unsupported",
                 )
                 files = {}
-                raise  # Retry explicitly rather than silently converting infrastructure into design evidence.
+                # Archive unsupported analysis without inventing performance; it cannot become champion.
             if index == 0 and e["outcome"] != "passed":
                 raise ValueError("Baseline failed; stop before optimization")
             if index:
