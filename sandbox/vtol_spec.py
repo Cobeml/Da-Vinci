@@ -1,7 +1,7 @@
 """Fixed engineering assumptions, distinct from experimental propeller measurements."""
 
 SPECIFICATION = {
-    "_id": "survey-vtol-range-v1",
+    "_id": "survey-vtol-range-v2",
     "payload_kg": 0.5,
     "battery_wh": 150.0,
     "battery_kg": 0.85,

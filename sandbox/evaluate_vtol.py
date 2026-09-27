@@ -34,12 +34,17 @@ else:
         remaining.remove(a)
         if shape.cut(a).Volume() + a.cut(shape).Volume() > 0.5:
             fail("UNSUPPORTED_GEOMETRY", name)
+for o in expected:
+    if o["name"].startswith("wing_spar"):
+        envelope = next(x["envelope"] for x in expected if x["name"] == o["name"].replace("_spar", ""))
+        if o["shape"].cut(envelope).Volume() > 0.5:
+            fail("SPAR_ENVELOPE", "Spar protrudes outside the analyzed airfoil")
 components = []
 for o in expected:
     shape = o["shape"]
     mass = shape.Volume() * 1e-9 * o["density"]
     if o["kind"] == "foam":
-        mass += shape.Area() * 1e-6 * S["skin_areal_kg_m2"]
+        mass += o.get("envelope", shape).Area() * 1e-6 * S["skin_areal_kg_m2"]
     if mass:
         components.append(dict(name=o["name"], mass_kg=mass, cg_x_m=shape.Center().x / 1000))
 for name, mass, x in [

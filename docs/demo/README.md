@@ -89,3 +89,14 @@ The remote check preserves an already-active run by refusing to start another. I
 - The user confirmed **both URLs open from the Tailscale-connected laptop** after the listener was moved to the user service manager.
 
 These access checks do not alter the frozen report's historical Astra results or claim new paid-model validation.
+
+### Keep the application running after the terminal or agent session ends
+
+The report/proxy service and application service are separate. Build the frontend, stop any foreground `scripts/dev.sh` stack, then run:
+
+```bash
+bash scripts/app_service.sh up
+bash scripts/demo_access.sh up
+```
+
+`da-vinci-workbench.service` supervises the Next.js/API/worker stack on localhost. The existing demo proxy exposes it only on the configured Tailscale address. Logs go to `runtime/demo/workbench.log`. Use `bash scripts/app_service.sh status` or `down` to inspect/stop this application service. These user services survive terminal closure; rerun the `up` commands after a host reboot. After rebuilding the frontend, stop/start the application service to load the new snapshot.

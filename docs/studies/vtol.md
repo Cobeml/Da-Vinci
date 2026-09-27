@@ -45,3 +45,9 @@ The XFOIL source is compiled in double precision without debug floating-point tr
 Three meshes are used: 10 spanwise panels per section for the campaign, then 14 and 18 for baseline/top-three checks. Promotion requires less than 3% change in range, supported maximum speed and best-range drag between the two finer resolutions. All nominal per-iteration metrics remain from the same campaign grid; finer-grid evidence is archived separately.
 
 Empty/truncated model outputs are retained and retried with up to 32,000 output tokens; their cost remains in the original ledger. No retry changes the evaluator or the $30 cap. The energy utility is checked on four numeric cases and four invalid-input cases before reuse.
+
+## Superseded first campaign
+
+The first twelve-design campaign is retained in Atlas and [the audit export](vtol-v1-audit.json), but its performance claims are withdrawn. Final visual/geometry review found that constant-diameter spars protruded from thinner wing tips while the aerodynamic model assumed an uninterrupted airfoil. The corrected v2 cohort uses tapered, contained spars following the quarter-chord mean line, integrates bending compliance along the changing section, and independently checks BRep containment and material-volume conservation. Earlier results are not mixed into its ranking.
+
+The two campaigns share a total $30 API allowance. The corrected campaign receives only the unspent remainder after the first campaign's $10.92388498 cost. The UI reports their combined accounting.

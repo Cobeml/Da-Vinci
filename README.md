@@ -1,50 +1,29 @@
 # Da Vinci: Recursive Improvement CAD Harness
 
-A CAD harness for the MongoDB Atlas Hackathon. GPT-6 Astra generates physical components, reviews independent evaluations, creates reusable tools and carries lessons into subsequent designs. Model weights stay fixed.
+A CAD harness for physical engineering tasks, built for the MongoDB Atlas Hackathon. GPT-6 Astra generates designs, reviews independent evaluations, creates reusable tools and carries lessons into subsequent attempts. Model weights stay fixed.
 
-The main demo is a **three-part parallel-jaw gripper**. The agent chooses rib connectivity, node locations and section sizes for the moving fingers. An independent evaluator checks four structural load cases and actual CAD clearance at nine jaw openings. The Next.js page shows every attempt with interactive opening controls, a frame-stress view and quantitative comparisons.
+The latest study is a **complete lift-and-cruise survey VTOL**. The agent changes fuselage proportions, wing geometry, tail, structure and component layout to improve estimated range. Every design uses the same **0.5 kg mission payload, 150 Wh battery and propulsion hardware**. Speed, payload capacity and endurance are benchmarked alongside range.
 
-**Stack:** Next.js / React · Python · CadQuery · GPT-6 Astra · MongoDB Atlas
+**Stack:** Next.js / React · Python · CadQuery · GPT-6 Astra · MongoDB Atlas · AeroSandbox VLM · XFOIL
 
-[Open the demo on the configured Tailscale network](http://100.99.98.39:8086) · [Gripper plan and evaluation guide](docs/studies/gripper.md) · [Earlier sensor-mount study](docs/sensor-gallery.md)
+[Interactive VTOL gallery](http://100.99.98.39:8086/vtol) · [Study plan and physics](docs/studies/vtol.md) · [Gripper gallery](http://100.99.98.39:8086/gripper) · [Sensor gallery](http://100.99.98.39:8086/sensor)
 
 ## Self-improvement methods
 
-1. **Reflect and remember.** A review-agent call interprets measured stress, displacement, buckling and clearance after each attempt. Atlas Vector Search retrieves relevant prior outcomes; saved lessons become the next working policy.
-2. **Create and reuse tools.** Astra writes a member-sizing utility after the first two designs. It passes six independent checks, then runs before subsequent proposals.
-3. **Evaluate and revise.** Change rib topology and dimensions, evaluate the actual CAD and keep the lightest passing jaw pair. Every attempt remains visible, including heavier alternatives and failed checks.
+1. **Reflect and remember.** A separate review call interprets measured drag, energy, trim, structure and capability limits. Atlas Vector Search retrieves previous outcomes; saved lessons guide later proposals.
+2. **Create and reuse tools.** Astra writes an energy-sensitivity utility. Four numerical and four invalid-input checks gate reuse; subsequent proposals receive actual tool outputs.
+3. **Evaluate and revise.** Change the aircraft geometry, evaluate its exported STEP and compare performance under a frozen mission. Keep all attempts, including failed checks and unsuccessful alternatives.
 
 ## MongoDB Atlas
 
-- **Documents** store designs, evaluations, tools and policies.
-- **Vector Search** retrieves prior results within the matching specification and evaluator cohort.
-- **GridFS** preserves CAD files and source snapshots.
-- **Database Triggers** enqueue evaluation and reflection in the full two-specialist workbench. The gripper study uses a sequential Python loop with the same Atlas archive and memory services.
+- **Documents** archive designs, quantitative evaluations, generated tools and review policies.
+- **Vector Search** retrieves prior outcomes within the same specification and evaluator cohort.
+- **GridFS** preserves CAD files, source bundles and artifacts.
+- **Database Triggers** enqueue evaluation/reflection in the full two-specialist workbench. This VTOL campaign uses a sequential Python loop with the same Atlas archive and memory services.
 
 ## Improvement by model
 
-<!-- gripper-results:start -->
-
-**523.6 → 193.2 g: 63.1% less moving jaw mass.** Total three-part mass falls from 887.5 to 557.1 g. The guide base is unchanged.
-
-| Iteration / STEP | Rib layout | Moving mass (g) | Total mass (g) | Tip displacement est. (mm) | Stress est. (MPa) | Result |
-| --- | --- | ---: | ---: | ---: | ---: | --- |
-| [01](web/public/models/gripper/01-model.step) | Conservative baseline frame | 523.6 | 887.5 | 0.002 | 1.9 | Baseline |
-| [02](web/public/models/gripper/02-model.step) | Tapered triangular frame | 207.1 | 570.9 | 0.047 | 15.9 | Passed |
-| [03](web/public/models/gripper/03-model.step) | Slim two-leg triangle | 198.5 | 562.3 | 0.062 | 20.3 | Passed |
-| [04](web/public/models/gripper/04-model.step) | High-junction Y frame | 193.5 | 557.4 | 0.120 | 54.4 | Passed |
-| [05](web/public/models/gripper/05-model.step) | Minimum-section direct legs | 194.6 | 558.4 | 0.071 | 22.1 | Passed |
-| [06](web/public/models/gripper/06-model.step) | Canted minimum-width Y | 193.4 | 557.3 | 0.143 | 74.8 | Passed |
-| [07](web/public/models/gripper/07-model.step) | Stepped knee-braced mast | 193.2 | 557.1 | 0.246 | 77.1 | Best passing |
-| [08](web/public/models/gripper/08-model.step) | Inclined Shared Spine | 193.3 | 557.1 | 0.246 | 79.7 | Passed |
-
-The study changes topology as well as section sizes: a heavily braced baseline becomes a tied triangle, direct legs and Y-shaped alternatives. Lighter designs can have higher stress or displacement. All attempts and their review notes remain visible; the best label uses unrounded measurements.
-
-All eight attempts passed the fixed screen. Recorded API accounting was $4.39 within the $25 cap, including a conservative reservation charged for one timed-out request.
-
-Values come from the [exported study records](web/data/gripper-gallery.json). Research context and measurement scope are expandable below.
-
-<!-- gripper-results:end -->
+The initial VTOL campaign is superseded after a spar-to-airfoil geometry mismatch was found. A corrected campaign is in progress with contained tapered spars and variable-section structural analysis. The [audit export](docs/studies/vtol-v1-audit.json) preserves the original evidence; its performance figures are not validated results. The gripper remains the homepage until a corrected VTOL champion passes the publication gate.
 
 <details>
 <summary><strong>Research evidence</strong></summary>
@@ -60,82 +39,62 @@ These are recent preprints. Their results come from other tasks; they do not val
 </details>
 
 <details>
-<summary><strong>Agent harness setup</strong></summary>
+<summary><strong>Agent harness setup and physics</strong></summary>
 
-### Graph design and independent evaluation
+### Generate, evaluate, reflect
 
-Astra uses high reasoning to choose a graph of rectangular ribs within fixed carriage and gripping-pad interfaces. CadQuery builds the guide base and two mirrored jaws in a container without network access or credentials. A separate trusted container verifies the exported STEP against the graph and fixed interfaces; it never imports candidate code.
+Astra chooses parameters within the fixed aircraft family. An isolated container builds CadQuery geometry; a separate trusted container checks the STEP against an independent reference before accepting a design. The agent cannot change its evaluator, battery, hardware inventory or acceptance limits.
 
-A linear 3D beam-frame solver checks pinch, payload, lateral and combined loads. Fixed limits are 80 MPa nominal normal stress, 0.25 mm tip displacement and a pinned-member buckling factor of 2. BRep checks test collisions at nine openings between 20 and 60 mm, with 0.25 mm minimum running clearance and sample gauges at both endpoints.
+The evaluator combines component mass/CG, AeroSandbox vortex-lattice lift/trim/induced drag, XFOIL viscous section polars, empirical body/hardware drag and measured UIUC propeller maps. Beam calculations screen wing spars, lift booms and payload support. Pitch trim uses an all-moving tail. The mission deducts 90 seconds hover and 40 seconds transition allowance, then cruise energy, with 20% reserve at landing.
 
-After each evaluation, a separate review call records lessons and the next design focus. The validated sizing tool, actual tool executions, prior measurements and retrieved Atlas memories enter later prompts. Git versions source and context; Atlas and GridFS retain the evidence. The study resumes under a $25 total API cap with cached responses. The gallery reads a static export without making model or database calls.
+After each evaluation a review call saves a lesson and next focus. A generated utility must pass independent checks before execution; retrieved Atlas memories and tool outputs enter later proposals. Source, policy, artifacts and evaluator/image fingerprints are archived. Resuming uses cached responses and retains the original budget ledger.
 
-### Full multi-agent workbench
+### Acceptance and uncertainty
 
-The workbench at `/harness` coordinates structural and aerodynamic specialists against a shared vehicle specification. Two Python workers process durable jobs. Atlas triggers enqueue evaluation and reflection; a recovery loop repairs missed delivery. A meta-agent proposes tested tools and versions of `orchestrator.py`, `policy.json` and an isolated React `PolicyNote.tsx` panel. Independent tests and CAD checks gate activation. The evaluator, acceptance limits, permissions and API budget remain outside the editable release.
+A homepage champion needs at least 10% more range, at least 95% of baseline speed and payload capacity, converged finer-grid checks and a positive range gain under combined adverse assumptions. The adverse case uses 10% less available battery energy, 20% more parasite drag and 10% more empty mass. These are scenarios, not confidence intervals.
 
-The gripper study uses a sequential loop rather than that two-specialist queue. Its richer graph family has a separate evaluator and scoring cohort.
+These are engineering estimates, not flight-test results. Hardware masses, efficiency, electrical limits and transition energy are assumptions. There is no complete-aircraft CFD, dynamic transition, rotor interaction, flutter, fatigue or closed-loop controller simulation. Beam checks exclude joints and local shell buckling. Range is total cruise distance, not radius; maximum speed is the highest supported passing sweep point. Propeller shapes are display/clearance surrogates. This study does not isolate each self-improvement method's causal contribution.
 
-### Measurement scope
+### Physics sources
 
-The objective is moving jaw-pair mass. Total assembly mass also includes the unchanged guide base; both are measured from STEP volume using nominal aluminium density. Frame results assume rigid beam joints and fixed carriage roots, with loads applied at the defined tip node; pad compliance and offset force couples are not modeled. They do not model local joint, bearing, contact, shear, torsional stress or fatigue behavior. An external actuator and friction pads are required; those are outside this passive mechanism study. The opening slider is continuous, while collision validation samples nine positions.
+- [UIUC experimental APC propeller data](https://m-selig.ae.illinois.edu/props/volume-4/propDB-volume-4.html): 16×8 lift and 12×8 cruise maps, with archived raw files and hashes.
+- [AeroSandbox VLM](https://aerosandbox.readthedocs.io/en/master/autoapi/aerosandbox/aerodynamics/aero_3D/vortex_lattice_method/): lifting-surface analysis.
+- [XFOIL](https://web.mit.edu/drela/Public/web/xfoil/xfoil_doc.txt): generated NACA 2412/0012 viscous polars.
 
-See [the build plan and reproducibility commands](docs/studies/gripper.md), [system architecture](docs/architecture.md) and [earlier verification results](docs/verification.md). The original sensor study remains at `/sensor`, with its 83.5 → 30.3 g result and archived assets intact.
+The [full workbench](http://100.99.98.39:8086/harness) retains two specialists, durable jobs, Database Triggers and gated meta-agent tool/policy releases. The VTOL campaign uses a sequential study loop. Earlier [gripper](docs/studies/gripper.md) and [sensor](docs/sensor-gallery.md) studies remain reproducible.
 
 </details>
 
 <details>
 <summary><strong>Run locally and verify</strong></summary>
 
-Requirements: Linux, Docker, Node 22+ and [uv](https://docs.astral.sh/uv/).
+Requirements: Linux, Docker, Node 22+ and uv. Keep API/Atlas credentials in the existing untracked server-side environment file.
 
 ```bash
 uv sync --frozen
 npm ci
 npm ci --prefix sandbox/ui
 docker compose --profile build build cad-image
-.venv/bin/python -m playwright install chromium
-bash scripts/dev.sh
-```
-
-Open **http://127.0.0.1:3215** for the gallery or **http://127.0.0.1:3215/harness** for run controls. The Python API listens on **127.0.0.1:8215**, with its OpenAPI explorer at `/docs`. Stop the stack with Ctrl+C.
-
-**Replay** uses deterministic specialist and meta-agent fixtures with real CAD evaluation and no model calls. **Astra live** uses GPT-6 Astra. Local persistence uses SQLite; configuring `MONGODB_URI` enables Atlas, GridFS and vector retrieval.
-
-For live use, copy `.env.example` to `.env` if a project environment file does not already exist. Set `OPENAI_API_KEY` and `MONGODB_URI` server-side and keep the file untracked. Follow [Atlas setup](atlas/README.md) to create indexes and both Database Triggers:
-
-```bash
-.venv/bin/python -m scripts.check_connections --public-ip
-.venv/bin/python -m scripts.atlas_setup
-```
-
-Set `DAVINCI_USE_ATLAS_TRIGGERS=true`, restart the stack and choose **Astra live** in the workbench. See [live validation](docs/live-validation.md) for setup checks.
-
-To resume the gripper study or republish its archived results:
-
-```bash
-# Live generation: resumes the same study and its existing budget cap.
-.venv/bin/python -m scripts.gripper_study --count 8
-
-# Export completed records without new model calls.
-.venv/bin/python -m scripts.gripper_study --export-only
+docker compose --profile build build vtol-image
+# Committed polars are already available; regenerate only for a new evaluator cohort.
+# .venv/bin/python -m scripts.vtol_prepare
+.venv/bin/python -m scripts.vtol_baseline
+.venv/bin/python -m scripts.vtol_study --count 12
+# Re-export existing records without new model calls:
+.venv/bin/python -m scripts.vtol_study --export-only
 npm run build
-# Stop the existing development stack before starting production.
-bash scripts/dev.sh --production
+bash scripts/app_service.sh up
 ```
 
-Relevant checks:
+After rebuilding, stop an existing application service with `bash scripts/app_service.sh down`, then run `up` to load the new snapshot. Stop any foreground development stack before using the service.
+
+The study resumes the same ID and $30 cap; changing the frozen evaluator or container image requires a new study ID. The existing global daily budget still applies. Open http://127.0.0.1:3215/vtol for the study, or use the configured Tailscale listener on port 8086. See [laptop access](docs/demo/README.md) and [Atlas setup](atlas/README.md).
 
 ```bash
 .venv/bin/python -m pytest -q -m 'not integration'
-DAVINCI_INTEGRATION=1 .venv/bin/python -m pytest -q tests/test_gripper.py
-DAVINCI_INTEGRATION=1 .venv/bin/python -m pytest -q tests/test_integration.py
-npm run typecheck
+DAVINCI_INTEGRATION=1 .venv/bin/python -m pytest -q tests/test_vtol.py
 npm run build
-# With the application running:
-node_modules/.bin/playwright test tests/browser/gripper-gallery.spec.ts
+node_modules/.bin/playwright test tests/browser/vtol-gallery.spec.ts tests/browser/gripper-gallery.spec.ts tests/browser/sensor-gallery.spec.ts
 ```
-
-See the [laptop-access guide](docs/demo/README.md) for private Tailscale access and startup after reboot. The earlier Quarto report remains available separately; the Next.js gallery is the main presentation.
 
 </details>

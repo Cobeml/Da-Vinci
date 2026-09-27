@@ -129,3 +129,21 @@ def test_speed_and_payload_protection():
     result = protect(candidate, base)
     assert result["outcome"] == "failed"
     assert {x["code"] for x in result["violations"]} == {"SPEED_RETENTION", "PAYLOAD_RETENTION"}
+
+
+def test_tapered_spar_containment_mass_conservation_and_stiffness():
+    from vtol_family import parts
+    from vtol_physics import tapered_wing_beam
+
+    objects = parts(BASELINE)
+    for wing in [o for o in objects if o["name"] in ("wing1", "wing-1")]:
+        spar = next(o["shape"] for o in objects if o["name"] == wing["name"].replace("wing", "wing_spar"))
+        assert spar.cut(wing["envelope"]).Volume() < 0.5
+        assert wing["shape"].Volume() + spar.Volume() == pytest.approx(wing["envelope"].Volume(), abs=0.5)
+    uniform = tapered_wing_beam(100, 1, 0.025, 0.0012, 1)
+    reference = beam(100, 1, 0.025, 0.0012, True)
+    assert uniform["deflection_m"] == pytest.approx(reference["deflection_m"], rel=1e-4)
+    tapered = tapered_wing_beam(100, 1, 0.025, 0.0012, 0.6)
+    assert tapered["deflection_m"] > uniform["deflection_m"]
+    with pytest.raises(ValueError):
+        validate({**BASELINE, "root_chord": 0.22, "spar_diameter": 0.03})

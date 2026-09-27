@@ -69,6 +69,8 @@ def validate(p):
             or not lo <= p[k] <= hi
         ):
             raise ValueError(f"{k} must be finite in [{lo},{hi}]")
+    if p["spar_diameter"] > 0.105 * p["root_chord"]:
+        raise ValueError("Spar root diameter must be <= 10.5% root chord to preserve airfoil clearance")
     if p["tail_x"] + p["tail_chord"] > p["fuselage_length"] + 0.14:
         raise ValueError("Tail trailing edge must remain near the fuselage tail")
 
@@ -173,13 +175,31 @@ def parts(p):
         inner = cq.Solid.makeCylinder(dia / 2 - wall, axis.Length, a, axis.normalized())
         add(name, outer.cut(inner), 2700, dark)
 
-    tube(
-        "wing_spar",
-        (s["wing_x"] + 0.25 * s["root_chord"], -s["span"] / 2, 80),
-        (s["wing_x"] + 0.25 * s["root_chord"], s["span"] / 2, 80),
-        s["spar_diameter"],
-        s["spar_wall"],
-    )
+    # Tapered spar follows the airfoil mean line at quarter chord. Section planes
+    # match the wing loft; no exposed constant-diameter tube at thin tips.
+    for sign in (-1, 1):
+        outer = []
+        inner = []
+        for frac in (0, 1):
+            scale = 1 - frac + frac * p["taper"]
+            chord = s["root_chord"] * scale
+            angle = math.radians(p["twist_deg"] * frac)
+            xx = 0.25 * chord
+            zz = 0.0171875 * chord
+            center = (
+                s["wing_x"] + s["sweep"] * frac + xx * math.cos(angle) + zz * math.sin(angle),
+                sign * s["span"] / 2 * frac,
+                80 - xx * math.sin(angle) + zz * math.cos(angle),
+            )
+            radius = s["spar_diameter"] * scale / 2
+            outer.append(cq.Workplane("XZ", origin=center).circle(radius).val())
+            inner.append(cq.Workplane("XZ", origin=center).circle(radius - s["spar_wall"]).val())
+        add(
+            "wing_spar" + str(sign),
+            cq.Solid.makeLoft(outer, ruled=True).cut(cq.Solid.makeLoft(inner, ruled=True)),
+            2700,
+            dark,
+        )
     for sign in (-1, 1):
         y = sign * s["boom_y"]
         front = s["rotor_front_x"]
@@ -215,9 +235,10 @@ def parts(p):
     ]:
         add(name, cq.Workplane("XY", origin=(x, 0, -5)).box(*dim).val(), 0, color, "internal")
     # The foam shell mass excludes embedded spar material; structural masses are additive.
-    spar = next(o["shape"] for o in out if o["name"] == "wing_spar")
     for o in out:
         if o["name"].startswith("wing") and o["kind"] == "foam":
+            o["envelope"] = o["shape"]
+            spar = next(x["shape"] for x in out if x["name"] == o["name"].replace("wing", "wing_spar"))
             o["shape"] = o["shape"].cut(spar)
     return out
 

@@ -4,7 +4,7 @@ import data from "../../web/data/vtol-gallery.json";
 test("VTOL gallery displays archived aircraft, layout views and measured benchmarks", async ({ page, request }) => {
   const errors: string[] = [];
   page.on("pageerror", e => errors.push(e.message));
-  await page.goto("/vtol");
+  await page.goto(data.publishable ? "/" : "/vtol");
   const overview = page.getByTestId("overview-model");
   await expect(overview.getByTestId("vtol-canvas")).toHaveAttribute("data-loaded", "true", { timeout: 30000 });
   await overview.getByRole("button", { name: "Internal layout", exact: true }).click();

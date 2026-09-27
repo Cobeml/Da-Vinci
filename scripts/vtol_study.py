@@ -23,7 +23,7 @@ from scripts.gripper_study import Design, Reflection, Utility
 from scripts.gripper_study import Study as SharedStudy
 
 ROOT = Path(__file__).resolve().parents[1]
-STUDY = "survey-vtol-range-v1"
+STUDY = "survey-vtol-range-v2"
 
 
 def score(e, key):
@@ -73,6 +73,20 @@ class Study:
         self.repository = Repository(self.settings.root)
         self.runner = Runner(self.settings)
         self.version = evaluator_version()
+        previous = self.store.get("runs", "survey-vtol-range-v1")
+        self.prior_spent = previous["spent_usd"] if previous else 0
+        self.campaign_cap = 30 - self.prior_spent
+        self.store.insert(
+            "study_audits",
+            document(
+                "audit",
+                _id="survey-vtol-range-v1-superseded",
+                study_id="survey-vtol-range-v1",
+                replacement=STUDY,
+                status="superseded",
+                reason="Straight spars protruded beyond the analyzed airfoil. V2 uses contained tapered spars and variable EI.",
+            ),
+        )
         self.image = subprocess.check_output(
             ["docker", "image", "inspect", "--format={{.Id}}", IMAGE], text=True
         ).strip()
@@ -85,7 +99,7 @@ class Study:
                 diagnostic=True,
                 mode="live",
                 status="study_running",
-                budget_usd=30,
+                budget_usd=self.campaign_cap,
                 spent_usd=0,
                 revision=0,
                 evaluator_version=self.version,
@@ -128,7 +142,9 @@ class Study:
         )
 
     def tool(self, history):
-        saved = self.store.get("design_tools", STUDY + "-energy")
+        saved = self.store.get("design_tools", STUDY + "-energy") or self.store.get(
+            "design_tools", "survey-vtol-range-v1-energy"
+        )
         if saved:
             return saved
         u = self.structured(
@@ -252,7 +268,7 @@ class Study:
             proposal = self.structured(
                 f"proposal-{index:02d}",
                 "Design a small survey lift-and-cruise VTOL. Return source using the exact reference build wrapper and ALL "
-                "documented SI parameters. Maximize estimated range, keeping .5kg payload and 150Wh fixed; maintain >=95% "
+                "documented SI parameters. The wing spar tapers with chord and is checked for containment; its root diameter must be <=10.5% root chord. Its variable stiffness is integrated along the span. Maximize estimated range, keeping .5kg payload and 150Wh fixed; maintain >=95% "
                 "baseline speed and payload capacity. Improve fuselage/wing/tail/booms and packaging together. "
                 "All-moving tail provides pitch trim. Battery and payload boxes must fit without overlap. "
                 "Use real previous failures and best-cruise drag breakdowns; do not invent results or change evaluator. "
@@ -265,7 +281,7 @@ class Study:
                 ),
                 context,
                 Design,
-                16000,
+                24000,
             )
             print(f"Evaluating {index + 1}: {proposal.title}", flush=True)
             try:
@@ -411,7 +427,7 @@ class Study:
 
     def export(self):
         records = self.store.list("design_iterations", {"study_id": STUDY})
-        public = ROOT / "web/public/models/vtol"
+        public = ROOT / "web/public/models/vtol" / STUDY
         public.mkdir(parents=True, exist_ok=True)
         designs = []
         for d in records:
@@ -419,7 +435,7 @@ class Study:
             for name, ident in d["artifacts"].items():
                 target = f"{d['iteration']:02d}-" + name
                 (public / target).write_bytes(self.artifacts.read(ident))
-                assets[name] = "/models/vtol/" + target
+                assets[name] = "/models/vtol/" + STUDY + "/" + target
             (public / f"{d['iteration']:02d}.py").write_text(d["source"])
             designs.append(
                 {
@@ -477,7 +493,9 @@ class Study:
                 improvement = (
                     score(best["evaluation"], "range_km") / score(base["evaluation"], "range_km") - 1
                 ) * 100
-        tool = self.store.get("design_tools", STUDY + "-energy")
+        tool = self.store.get("design_tools", STUDY + "-energy") or self.store.get(
+            "design_tools", "survey-vtol-range-v1-energy"
+        )
         manifest = dict(
             study_id=STUDY,
             generated_at=now(),
@@ -487,7 +505,9 @@ class Study:
             improvement_percent=improvement,
             publishable=publishable,
             validation=validation,
-            spent_usd=self.store.get("runs", STUDY)["spent_usd"],
+            spent_usd=self.prior_spent + self.store.get("runs", STUDY)["spent_usd"],
+            current_cohort_spent_usd=self.store.get("runs", STUDY)["spent_usd"],
+            superseded_cohort_spent_usd=self.prior_spent,
             tool={k: v for k, v in (tool or {}).items() if k not in ("source", "bundle_artifact_id")},
         )
         (ROOT / "web/data/vtol-gallery.json").write_text(json.dumps(manifest, indent=2) + "\n")

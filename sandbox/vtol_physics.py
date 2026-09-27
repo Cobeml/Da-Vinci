@@ -24,6 +24,17 @@ def beam(force, length, d, t, distributed=False):
     }
 
 
+def tapered_wing_beam(force, length, diameter, wall, taper):
+    x = np.linspace(0, length, 401)
+    d = diameter * (1 - (1 - taper) * x / length)
+    inertia = math.pi / 64 * (d**4 - (d - 2 * wall) ** 4)
+    moment = force / (2 * length) * (length - x) ** 2
+    return {
+        "stress_pa": float(np.max(moment * d / (2 * inertia))),
+        "deflection_m": float(np.trapezoid(moment * (length - x) / (S["aluminium_e_pa"] * inertia), x)),
+    }
+
+
 class Props:
     def __init__(self):
         self.static = np.loadtxt(DATA / "apce_16x8_static_2150od.txt", skiprows=1)
@@ -200,7 +211,7 @@ def aero_model(p, cg, resolution=10):
 
 def structural(p, mass, payload):
     force = mass * S["gravity"] * S["maneuver_g"] * S["ultimate_factor"] / 2
-    wing = beam(force, p["span"] / 2, p["spar_diameter"], p["spar_wall"], True)
+    wing = tapered_wing_beam(force, p["span"] / 2, p["spar_diameter"], p["spar_wall"], p["taper"])
     arm = max(abs(p["wing_x"] + 0.25 * p["root_chord"] - p[k]) for k in ("rotor_front_x", "rotor_rear_x"))
     boom = beam(
         mass * S["gravity"] / 4 * S["hover_thrust_ratio"] * S["ultimate_factor"],
