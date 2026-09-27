@@ -40,7 +40,12 @@ class ParametricNonlinear:
             self.opti.set_value(parameter, value)
         if self.solution is not None:
             self.opti.set_initial(self.opti.x, self.solution.value(self.opti.x))
-        self.solution = casadi.Opti.solve(self.opti)
+        try:
+            self.solution = casadi.Opti.solve(self.opti)
+        except RuntimeError:
+            # A distant preceding grid point can be a poor initial condition.
+            self.opti.set_initial(self.opti.x, 0)
+            self.solution = casadi.Opti.solve(self.opti)
         return {k: float(self.solution.value(self.raw[k])) for k in ("CL", "CD", "Cm", "Cn")}
 
 
@@ -153,8 +158,8 @@ def solve(spec, cg, speed, alpha, elevator, resolution, nonlinear=False, details
 def aero_model(spec, cg, resolution, nonlinear):
     plane = airplane(spec, cg)
     tables = []
-    alpha_grid = [-4.0, -2.0, 0.0, 2.0, 4.0, 6.0, 8.0]
-    elevator_grid = [-10.0, -7.5, -5.0, -2.5, 0.0, 2.5, 5.0, 7.5, 10.0]
+    alpha_grid = [-2.0, 0.0, 2.0, 4.0, 6.0, 8.0]
+    elevator_grid = [-5.0, -2.5, 0.0, 2.5, 5.0]
     for speed in (10.0, 15.0, 20.0, 25.0, 30.0):
         values = [
             [solve(spec, cg, speed, alpha, elev, resolution, nonlinear) for elev in elevator_grid]
@@ -226,7 +231,7 @@ class AeroTable:
         if not r.success or np.max(np.abs(residual(r.x))) > 1e-5:
             return None
         alpha, elev = r.x
-        if not -4 <= alpha <= 8 or abs(elev) > 10:
+        if not -2 <= alpha <= 8 or abs(elev) > 5:
             return None
         v = self.evaluate(speed, alpha, elev)
         d = self.evaluate(speed, alpha, elev, True)
@@ -367,8 +372,10 @@ def evaluate_performance(spec, components, resolution=6, nonlinear=False, wetted
         }.items()
     }
     payloads = []
+    payload_missions = []
     for payload in np.linspace(0, 0.96, 21):
         n = run(payload=float(payload))
+        payload_missions.append(n)
         payloads.append(
             dict(
                 payload_kg=float(payload),
@@ -429,10 +436,56 @@ def evaluate_performance(spec, components, resolution=6, nonlinear=False, wetted
             or wing["deflection_m"] > p["span"] * S["tip_deflection_span_fraction"]
         ):
             nominal["violations"].append("SPANWISE_STRUCTURE")
+        for scenario in scenarios.values():
+            factor = scenario["mass_kg"] / nominal["mass_kg"]
+            if (
+                stress * factor > S["aluminium_allowable_pa"]
+                or deflection * factor > p["span"] * S["tip_deflection_span_fraction"]
+            ):
+                scenario["violations"].append("SPANWISE_STRUCTURE")
+        for row in payloads:
+            mass, _ = mass_properties(p, components, row["payload_kg"])
+            factor = mass / nominal["mass_kg"]
+            if (
+                stress * factor > S["aluminium_allowable_pa"]
+                or deflection * factor > p["span"] * S["tip_deflection_span_fraction"]
+            ):
+                row["violations"].append("SPANWISE_STRUCTURE")
+                row["feasible"] = False
+    # Check the reported speed boundary, adverse optimum and payload optimum directly,
+    # rather than accepting an interpolation-only improvement in another benchmark.
+    benchmark_audits = {}
+    capacity_index = max(
+        (i for i, row in enumerate(payloads) if row["feasible"] and row["range_km"] >= 10), default=None
+    )
+    cases = [
+        ("maximum_speed", nominal, nominal["curve"][-1] if nominal["curve"] else None),
+        ("combined_adverse", scenarios["combined_adverse"], scenarios["combined_adverse"]["best"]),
+    ]
+    if capacity_index is not None:
+        cases.append(
+            ("payload_capacity", payload_missions[capacity_index], payload_missions[capacity_index]["best"])
+        )
+    for name, case, point in cases:
+        if not point:
+            continue
+        direct = solve(
+            spec, cg, point["speed_m_s"], point["alpha_deg"], point["elevator_deg"], resolution, nonlinear
+        )
+        q = 0.5 * S["rho"] * point["speed_m_s"] ** 2
+        errors = {
+            "lift_relative": abs(direct["CL"] * q * aero["area"] / (case["mass_kg"] * S["gravity"]) - 1),
+            "moment_absolute": abs(direct["Cm"] + (case["cg_x_m"] - cg) / aero["mac"] * direct["CL"]),
+        }
+        passed = errors["lift_relative"] <= 0.03 and errors["moment_absolute"] <= 0.01
+        benchmark_audits[name] = {"passed": passed, "errors": errors, "coefficients": direct}
+        if not passed:
+            nominal["violations"].append("BENCHMARK_TRIM_" + name.upper())
     return dict(
         nominal=nominal,
         aero=aero,
         direct_audit=audit,
+        benchmark_audits=benchmark_audits,
         payload_capacity_kg=max(
             (x["payload_kg"] for x in payloads if x["feasible"] and x["range_km"] >= 10), default=0
         ),

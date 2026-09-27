@@ -89,3 +89,27 @@ def test_surface_section_sensitivity_and_smooth_step(tmp_path):
     assert b"ISO-10303-21" in files["model.step"]
     with pytest.raises(RuntimeError):
         tool(runner, "edit", {"geometry": spec, "edits": {"thickness_scale": 0.1}})
+
+
+@pytest.mark.integration
+@pytest.mark.skipif(os.environ.get("DAVINCI_INTEGRATION") != "1", reason="Requires CAD container")
+def test_constrained_section_optimizer_returns_supported_new_geometry(tmp_path):
+    from davinci.config import Settings
+    from davinci.runner import Runner
+    from davinci.surface import tool
+
+    runner = Runner(Settings(_env_file=None, davinci_data_dir=tmp_path))
+    original, _ = tool(runner, "seed", {"parameters": BASELINE})
+    result, _ = tool(
+        runner,
+        "optimize",
+        {
+            "geometry": original["geometry"],
+            "targets": {"reynolds": 300000, "lift_coefficient": 0.6, "min_thickness": 0.12},
+        },
+    )
+    validate(result["geometry"])
+    assert result["geometry"]["root"] != original["geometry"]["root"]
+    assert result["min_confidence"] >= 0.95
+    assert result["seconds"] < 180
+    assert result["numerical_evaluations"] > 1

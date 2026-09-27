@@ -275,6 +275,10 @@ class Study:
                         current = r["geometry"]
                         result = {
                             "geometry": current,
+                            "geometry_id": digest(current),
+                            "preview_artifact_id": self.artifacts.put(
+                                artifacts["model.glb"], "preview.glb", "model/gltf-binary"
+                            ),
                             "sections": preview["sections"],
                             "valid_solids": preview["valid_solids"],
                         }
@@ -282,9 +286,13 @@ class Study:
                         result, _ = tool(self.runner, "analyze", {"geometry": current, **args})
                     elif name == "optimize_sections" and arm != "control":
                         r, _ = tool(self.runner, "optimize", {"geometry": current, **args})
-                        tool(self.runner, "preview", {"geometry": r["geometry"]})
+                        _, artifacts = tool(self.runner, "preview", {"geometry": r["geometry"]})
                         current = r["geometry"]
                         result = r
+                        result["geometry_id"] = digest(current)
+                        result["preview_artifact_id"] = self.artifacts.put(
+                            artifacts["model.glb"], "preview.glb", "model/gltf-binary"
+                        )
                     else:
                         raise ValueError("Unknown or unavailable tool")
                     result["ok"] = True
@@ -423,10 +431,12 @@ class Study:
         if baseline["outcome"] != "passed":
             raise ValueError("Common baseline must pass before paid campaign")
         self.pilot()
+        limited = False
         for index in range(count):
             # Reserve enough room for both next proposals before starting a paired round.
             if index and any(27 - self.spent(arm) < 3 for arm in ARMS):
                 self.store.update("surface_studies", STUDY, {"status": "budget_limited"})
+                limited = True
                 break
             for arm in ARMS:
                 if self.store.get("design_iterations", f"{STUDY}-{arm}-{index:02d}"):
@@ -465,7 +475,17 @@ class Study:
                     proposal = self.propose(arm, f"{arm}-{index:02d}", best["geometry"], context)
                 self.record(arm, index, proposal)
         self.validate_finalists()
-        self.store.update("surface_studies", STUDY, {"status": "completed", "finished_at": now()})
+        self.store.update(
+            "surface_studies",
+            STUDY,
+            {"status": "budget_limited" if limited else "completed", "finished_at": now()},
+        )
+        for arm in ("pilot", *ARMS):
+            self.store.update(
+                "runs",
+                STUDY + "-" + arm,
+                {"status": "budget_exhausted" if limited else "completed", "finished_at": now()},
+            )
         self.export()
 
     def validate_finalists(self):
@@ -605,7 +625,11 @@ def main():
     except Exception as exc:
         # Never expose exceptions containing credentials or connection strings.
         print(json.dumps({"status": "stopped", "error_type": type(exc).__name__}), flush=True)
-        if isinstance(exc, (BudgetExceeded, ValueError)):
+        if isinstance(exc, BudgetExceeded):
+            print("Campaign budget cannot cover the next request.", flush=True)
+        elif isinstance(exc, ValueError) and str(exc).startswith(
+            ("Frozen seed/", "Common baseline ", "Pilot failed;", "Agent did not ")
+        ):
             print(str(exc)[:200], flush=True)
         return 1
     return 0

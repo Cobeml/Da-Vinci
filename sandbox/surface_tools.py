@@ -10,7 +10,7 @@ import time
 from pathlib import Path
 
 import numpy as np
-from surface_geometry import build, profile, section_checks, seed, validate
+from surface_geometry import parts, profile, section_checks, seed, validate
 
 
 def edit(spec, edits):
@@ -164,11 +164,30 @@ def main():
     elif action == "preview":
         spec = args["geometry"]
         validate(spec)
-        assembly = build(spec)
-        assembly.export("/output/model.step")
-        assembly.export("/output/model.glb")
         import cadquery as cq
 
+        objects = parts(spec)
+        body = next(o for o in objects if o["name"] == "fuselage")
+        boxes = [o["shape"] for o in objects if o["kind"] == "internal"]
+        if boxes[0].intersect(boxes[1]).Volume() > 0.1:
+            raise ValueError("Battery and payload boxes overlap; adjust battery_x/payload_x")
+        for box in boxes:
+            if box.cut(body["cavity"]).Volume() > 0.5:
+                raise ValueError(
+                    "Battery/payload outside the actual cavity; enlarge body or move internal components"
+                )
+        for o in objects:
+            if o["name"].startswith("wing_spar"):
+                wing = next(w for w in objects if w["name"] == o["name"].replace("_spar", ""))
+                if o["shape"].cut(wing["envelope"]).Volume() > 0.5:
+                    raise ValueError(
+                        "Spar protrudes outside the wing; increase local airfoil thickness or reduce spar diameter"
+                    )
+        assembly = cq.Assembly(name="streamlined_vtol")
+        for o in objects:
+            assembly.add(o["shape"], name=o["name"], color=cq.Color(*o["color"]))
+        assembly.export("/output/model.step")
+        assembly.export("/output/model.glb")
         actual = cq.importers.importStep("/output/model.step").solids().vals()
         if not actual or not all(s.isValid() for s in actual):
             raise ValueError("STEP round-trip validity failed")

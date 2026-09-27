@@ -218,7 +218,13 @@ def parts(spec):
             .val()
             for y, f in ((0, 1), (p["fuselage_width"] * 0.55, 0.9), (p["fuselage_width"] * 0.85, 0.08))
         ]
-        fairing = cq.Solid.makeLoft(fairing_wires, ruled=False).cut(envelope).cut(outer).fix()
+        fairing = (
+            cq.Solid.makeLoft(fairing_wires, ruled=False)
+            .cut(envelope, tol=0.001)
+            .cut(outer, tol=0.001)
+            .clean()
+            .fix()
+        )
         add("root_fairing" + str(sign), fairing, 32, green, "foam")
         # Elliptical hollow covers enclose the existing circular structural booms.
         length = (p["rotor_rear_x"] - p["rotor_front_x"]) * 1000
