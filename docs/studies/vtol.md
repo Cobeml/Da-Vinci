@@ -36,6 +36,8 @@ docker compose --profile build build vtol-image
 
 Freeze the evaluator only after baseline validation. Changing its source, data or specification requires a new study ID. The sequential campaign reuses Atlas/GridFS/Vector Search; the existing workbench's Database Triggers do not drive this study.
 
+While proposals run, `.venv/bin/python -m scripts.vtol_refine_baseline --iteration 7` can precompute the two finer checks for an already archived iteration (omit the option for the baseline). It makes no API or Atlas calls and writes the same cached evidence used by finalist validation.
+
 ## Implementation notes
 
 The pitch control is an all-moving horizontal tail. VLM samples its incidence directly; the solver does not implement the flap metadata used during the first setup probe. The six-point lift/moment/induced-drag response surface provides a fast trim sweep. Profile drag uses XFOIL at matching Reynolds number and interpolated section lift; body/pod/boom drag uses the documented empirical buildup. These are engineering approximations, not a resolved wake model.
