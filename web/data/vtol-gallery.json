@@ -1,1 +1,4233 @@
-{"designs": [], "best_id": null, "publishable": false, "improvement_percent": 0, "spent_usd": 10.923884979999999, "validation": null}
+{
+  "study_id": "survey-vtol-range-v2",
+  "generated_at": "2026-09-27T12:58:22.485634+00:00",
+  "specification": {
+    "_id": "survey-vtol-range-v2",
+    "payload_kg": 0.5,
+    "battery_wh": 150.0,
+    "battery_kg": 0.85,
+    "reserve_fraction": 0.2,
+    "hover_seconds": 90.0,
+    "transition_seconds": 40.0,
+    "transition_power_factor": 1.15,
+    "max_mass_kg": 5.0,
+    "rho": 1.225,
+    "viscosity": 1.7894e-05,
+    "gravity": 9.80665,
+    "motor_efficiency": 0.85,
+    "esc_efficiency": 0.97,
+    "avionics_w": 12.0,
+    "lift_motor_limit_w": 400.0,
+    "cruise_motor_limit_w": 500.0,
+    "battery_power_limit_w": 1600.0,
+    "lift_prop_diameter_m": 0.4064,
+    "cruise_prop_diameter_m": 0.3048,
+    "lift_motor_mass_kg": 0.095,
+    "cruise_motor_mass_kg": 0.14,
+    "lift_prop_mass_kg": 0.045,
+    "cruise_prop_mass_kg": 0.025,
+    "other_hardware_kg": 0.3,
+    "skin_areal_kg_m2": 0.09,
+    "hover_thrust_ratio": 1.3,
+    "stall_cl_limit": 1.1,
+    "stall_speed_factor": 1.3,
+    "static_margin_range": [
+      0.05,
+      0.2
+    ],
+    "max_elevator_deg": 15.0,
+    "maneuver_g": 3.5,
+    "landing_g": 3.0,
+    "ultimate_factor": 1.5,
+    "aluminium_e_pa": 69000000000.0,
+    "aluminium_allowable_pa": 200000000.0,
+    "tip_deflection_span_fraction": 0.025,
+    "payload_mission_km": 10.0,
+    "payload_density_kg_m3": 1000.0,
+    "min_prop_clearance_m": 0.02,
+    "speed_retention": 0.95,
+    "payload_retention": 0.95,
+    "sources": [
+      {
+        "name": "UIUC experimental propeller maps",
+        "url": "https://m-selig.ae.illinois.edu/props/volume-4/propDB-volume-4.html",
+        "kind": "measurement"
+      },
+      {
+        "name": "AeroSandbox VLM",
+        "url": "https://aerosandbox.readthedocs.io/en/master/autoapi/aerosandbox/aerodynamics/aero_3D/vortex_lattice_method/",
+        "kind": "solver"
+      },
+      {
+        "name": "XFOIL",
+        "url": "https://web.mit.edu/drela/Public/web/xfoil/xfoil_doc.txt",
+        "kind": "solver"
+      }
+    ],
+    "assumptions": "Hardware masses, power limits, motor efficiency, material allowables, battery and transition energy are frozen engineering assumptions, not measured aircraft performance."
+  },
+  "designs": [
+    {
+      "_id": "survey-vtol-range-v2-00",
+      "iteration": 1,
+      "title": "BASELINE",
+      "change": "Unmodified baseline for the fixed 0.5 kg payload and 150 Wh battery. Establishes the reference for subsequent optimization; performance has not yet been evaluated.",
+      "parameters": {
+        "span": 2.1,
+        "root_chord": 0.3,
+        "taper": 0.75,
+        "twist_deg": -1.0,
+        "sweep": 0.04,
+        "wing_x": 0.3,
+        "fuselage_length": 1.08,
+        "fuselage_width": 0.19,
+        "fuselage_height": 0.2,
+        "nose_fraction": 0.25,
+        "tail_fraction": 0.72,
+        "tail_span": 0.72,
+        "tail_chord": 0.17,
+        "tail_x": 0.88,
+        "tail_incidence_deg": 0.0,
+        "boom_y": 0.46,
+        "rotor_front_x": 0.13,
+        "rotor_rear_x": 0.78,
+        "battery_x": 0.28,
+        "payload_x": 0.49,
+        "spar_diameter": 0.025,
+        "spar_wall": 0.0012,
+        "boom_diameter": 0.02,
+        "boom_wall": 0.001,
+        "shell_thickness": 0.0015
+      },
+      "evaluation": {
+        "outcome": "passed",
+        "metrics": {
+          "range_km": {
+            "value": 68.33084876481837,
+            "unit": "km",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "max_speed_m_s": {
+            "value": 19.0,
+            "unit": "m/s",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "payload_capacity_kg": {
+            "value": 0.9600000000000001,
+            "unit": "kg",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "endurance_min": {
+            "value": 82.342928718562,
+            "unit": "min",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "mass_kg": {
+            "value": 4.381786409911109,
+            "unit": "kg",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "hover_power_w": {
+            "value": 385.94782840855873,
+            "unit": "W",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "static_margin": {
+            "value": 0.08986567441132458,
+            "unit": "ratio",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "stall_speed_m_s": {
+            "value": 10.75628372835031,
+            "unit": "m/s",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "best_range_speed_m_s": {
+            "value": 17.0,
+            "unit": "m/s",
+            "fidelity": "coupled_engineering_estimate"
+          }
+        },
+        "violations": [],
+        "components": [
+          {
+            "name": "fuselage",
+            "mass_kg": 0.7864741027687059,
+            "cg_x_m": 0.5251090899986245
+          },
+          {
+            "name": "wing-1",
+            "mass_kg": 0.23931137128672766,
+            "cg_x_m": 0.42991564563559864
+          },
+          {
+            "name": "wing1",
+            "mass_kg": 0.23931137128672766,
+            "cg_x_m": 0.42991564563559864
+          },
+          {
+            "name": "tail-1",
+            "mass_kg": 0.029684589087886168,
+            "cg_x_m": 0.9505055691900861
+          },
+          {
+            "name": "tail1",
+            "mass_kg": 0.029684589087886168,
+            "cg_x_m": 0.9505055691900861
+          },
+          {
+            "name": "fin",
+            "mass_kg": 0.03087125036909117,
+            "cg_x_m": 0.9938105401335854
+          },
+          {
+            "name": "wing_spar-1",
+            "mass_kg": 0.2209681609780904,
+            "cg_x_m": 0.3850535779063788
+          },
+          {
+            "name": "wing_spar1",
+            "mass_kg": 0.2209681609780904,
+            "cg_x_m": 0.3850535779063788
+          },
+          {
+            "name": "boom-1",
+            "mass_kg": 0.10475640703395152,
+            "cg_x_m": 0.45500000000000035
+          },
+          {
+            "name": "boom1",
+            "mass_kg": 0.10475640703395152,
+            "cg_x_m": 0.45500000000000035
+          },
+          {
+            "name": "battery",
+            "mass_kg": 0.85,
+            "cg_x_m": 0.28
+          },
+          {
+            "name": "payload",
+            "mass_kg": 0.5,
+            "cg_x_m": 0.49
+          },
+          {
+            "name": "cruise_drive",
+            "mass_kg": 0.165,
+            "cg_x_m": -0.035
+          },
+          {
+            "name": "avionics_esc_wiring_landing",
+            "mass_kg": 0.3,
+            "cg_x_m": 0.3
+          },
+          {
+            "name": "lift_drives_0.13",
+            "mass_kg": 0.28,
+            "cg_x_m": 0.13
+          },
+          {
+            "name": "lift_drives_0.78",
+            "mass_kg": 0.28,
+            "cg_x_m": 0.78
+          }
+        ],
+        "performance": {
+          "nominal": {
+            "mass_kg": 4.381786409911109,
+            "cg_x_m": 0.4092818177126106,
+            "static_margin": 0.08986567441132458,
+            "stall_speed_m_s": 10.75628372835031,
+            "hover_power_w": 385.94782840855873,
+            "hover_thrust_ratio": 2.356854347843227,
+            "overhead_wh": 14.580251295434442,
+            "usable_wh": 120.0,
+            "reserve_wh": 30.0,
+            "structure": {
+              "wing": {
+                "stress_pa": 116224006.19819249,
+                "deflection_m": 0.04424225675231195
+              },
+              "boom": {
+                "stress_pa": 31410833.858788576,
+                "deflection_m": 0.002488967161201834
+              },
+              "payload_floor_stress_pa": 13075533.333333334,
+              "passed": true
+            },
+            "range_km": 68.33084876481837,
+            "best": {
+              "speed_m_s": 17.0,
+              "range_km": 68.33084876481837,
+              "cruise_minutes": 66.99102820080233,
+              "power_w": 94.4183884342617,
+              "wh_km": 1.5427841247428382,
+              "drag_n": 3.588290819399391,
+              "induced_drag_n": 0.721615642621409,
+              "body_drag_n": 0.5622590170209567,
+              "profile_drag_n": 1.1087159684815642,
+              "hardware_drag_n": 1.1957001912754612,
+              "lift_drag": 11.975240541943366,
+              "alpha_deg": 4.0428065272949665,
+              "elevator_deg": -2.213938178521629,
+              "rpm": 5460.617449664429
+            },
+            "max_speed_m_s": 19.0,
+            "endurance_min": 82.342928718562,
+            "curve": [
+              {
+                "speed_m_s": 14.0,
+                "range_km": 67.34806012359208,
+                "cruise_minutes": 80.17626205189534,
+                "power_w": 78.89099292481183,
+                "wh_km": 1.5652974786669014,
+                "drag_n": 3.148954305644394,
+                "induced_drag_n": 1.0586609633402186,
+                "body_drag_n": 0.3952692251328781,
+                "profile_drag_n": 0.8840994199740985,
+                "hardware_drag_n": 0.8109246971971986,
+                "lift_drag": 13.646004840315195,
+                "alpha_deg": 6.415366572913549,
+                "elevator_deg": -2.960737348768302,
+                "rpm": 4897.234899328859
+              },
+              {
+                "speed_m_s": 14.25,
+                "range_km": 66.98019587922734,
+                "cruise_minutes": 78.3394103850612,
+                "power_w": 80.74077774116238,
+                "wh_km": 1.5738943029466348,
+                "drag_n": 3.1692766748995758,
+                "induced_drag_n": 1.0220480014587698,
+                "body_drag_n": 0.40816490440191416,
+                "profile_drag_n": 0.8989188898317175,
+                "hardware_drag_n": 0.8401448792071742,
+                "lift_drag": 13.558502492723004,
+                "alpha_deg": 6.158941292646119,
+                "elevator_deg": -2.8800236121918017,
+                "rpm": 4957.597315436242
+              },
+              {
+                "speed_m_s": 14.5,
+                "range_km": 65.42308837096633,
+                "cruise_minutes": 75.198952150536,
+                "power_w": 84.11267366614295,
+                "wh_km": 1.611353901650248,
+                "drag_n": 3.1926450317676007,
+                "induced_drag_n": 0.9873426319939042,
+                "body_drag_n": 0.42124775714577944,
+                "profile_drag_n": 0.9141724100477591,
+                "hardware_drag_n": 0.8698822325801582,
+                "lift_drag": 13.45926191893753,
+                "alpha_deg": 5.91566471220657,
+                "elevator_deg": -2.803448627820717,
+                "rpm": 5017.959731543624
+              },
+              {
+                "speed_m_s": 14.75,
+                "range_km": 63.468153756387764,
+                "cruise_minutes": 71.7154279733195,
+                "power_w": 88.19838493646179,
+                "wh_km": 1.6609865336433483,
+                "drag_n": 3.2196254100949755,
+                "induced_drag_n": 0.9544171498215274,
+                "body_drag_n": 0.43451725154908327,
+                "profile_drag_n": 0.9305542514082142,
+                "hardware_drag_n": 0.9001367573161507,
+                "lift_drag": 13.346473649394879,
+                "alpha_deg": 5.684652993054836,
+                "elevator_deg": -2.730734194102437,
+                "rpm": 5098.442953020134
+              },
+              {
+                "speed_m_s": 15.0,
+                "range_km": 63.734020243585654,
+                "cruise_minutes": 70.81557804842849,
+                "power_w": 89.31911729857437,
+                "wh_km": 1.6540577277513773,
+                "drag_n": 3.249124148220406,
+                "induced_drag_n": 0.9231544024557495,
+                "body_drag_n": 0.44797286691035326,
+                "profile_drag_n": 0.947088425439152,
+                "hardware_drag_n": 0.9309084534151514,
+                "lift_drag": 13.225301261661683,
+                "alpha_deg": 5.465095330747273,
+                "elevator_deg": -2.661625098071176,
+                "rpm": 5138.684563758389
+              },
+              {
+                "speed_m_s": 15.25,
+                "range_km": 63.90592977435668,
+                "cruise_minutes": 69.8425462014827,
+                "power_w": 90.56349268863933,
+                "wh_km": 1.6496082456947054,
+                "drag_n": 3.2821346440009553,
+                "induced_drag_n": 0.8934467606902136,
+                "body_drag_n": 0.4616140932252063,
+                "profile_drag_n": 0.9648764692083748,
+                "hardware_drag_n": 0.9621973208771607,
+                "lift_drag": 13.09228607525166,
+                "alpha_deg": 5.25624683081478,
+                "elevator_deg": -2.5958868729228284,
+                "rpm": 5178.926174496644
+              },
+              {
+                "speed_m_s": 15.5,
+                "range_km": 64.26525927349084,
+                "cruise_minutes": 69.10242932633423,
+                "power_w": 91.53346682507254,
+                "wh_km": 1.640384710126748,
+                "drag_n": 3.31791003637767,
+                "induced_drag_n": 0.8651952045067329,
+                "body_drag_n": 0.4754404307918156,
+                "profile_drag_n": 0.9832710413769435,
+                "hardware_drag_n": 0.9940033597021785,
+                "lift_drag": 12.951118392489025,
+                "alpha_deg": 5.05742218239821,
+                "elevator_deg": -2.533303806695997,
+                "rpm": 5219.167785234899
+              },
+              {
+                "speed_m_s": 15.75,
+                "range_km": 64.67215979893336,
+                "cruise_minutes": 68.43614793537921,
+                "power_w": 92.42461934366155,
+                "wh_km": 1.630063833221544,
+                "drag_n": 3.356113174093789,
+                "induced_drag_n": 0.8383085097322633,
+                "body_drag_n": 0.4894513898371387,
+                "profile_drag_n": 1.002026704634182,
+                "hardware_drag_n": 1.0263265698902047,
+                "lift_drag": 12.803693876729179,
+                "alpha_deg": 4.867990029156203,
+                "elevator_deg": -2.47367717043007,
+                "rpm": 5259.4093959731545
+              },
+              {
+                "speed_m_s": 16.0,
+                "range_km": 64.9995061552192,
+                "cruise_minutes": 67.70781891168666,
+                "power_w": 93.41882553511378,
+                "wh_km": 1.6218546099846143,
+                "drag_n": 3.3979830878338184,
+                "induced_drag_n": 0.8127025229506926,
+                "body_drag_n": 0.5036464901624955,
+                "profile_drag_n": 1.0224671232793916,
+                "hardware_drag_n": 1.059166951441239,
+                "lift_drag": 12.645926888396653,
+                "alpha_deg": 4.687367950978644,
+                "elevator_deg": -2.4168236385836033,
+                "rpm": 5299.6510067114095
+              },
+              {
+                "speed_m_s": 16.25,
+                "range_km": 65.43992748758262,
+                "cruise_minutes": 67.1178743462386,
+                "power_w": 94.23994701686212,
+                "wh_km": 1.6109392652455063,
+                "drag_n": 3.441944540996361,
+                "induced_drag_n": 0.7882995138922483,
+                "body_drag_n": 0.5180252608072083,
+                "profile_drag_n": 1.0430952619416225,
+                "hardware_drag_n": 1.0925245043552818,
+                "lift_drag": 12.48440966579775,
+                "alpha_deg": 4.515017981917492,
+                "elevator_deg": -2.362573878235241,
+                "rpm": 5339.892617449665
+              },
+              {
+                "speed_m_s": 16.5,
+                "range_km": 66.25882682817299,
+                "cruise_minutes": 66.92810790724545,
+                "power_w": 94.50715282493721,
+                "wh_km": 1.5910295088373267,
+                "drag_n": 3.487935201043527,
+                "induced_drag_n": 0.7650275959815851,
+                "body_drag_n": 0.5325872397291135,
+                "profile_drag_n": 1.0639211367004955,
+                "hardware_drag_n": 1.1263992286323332,
+                "lift_drag": 12.319794726661991,
+                "alpha_deg": 4.350442599839209,
+                "elevator_deg": -2.3107712867661396,
+                "rpm": 5380.13422818792
+              },
+              {
+                "speed_m_s": 16.75,
+                "range_km": 67.10161499876976,
+                "cruise_minutes": 66.76777611817886,
+                "power_w": 94.73409614659572,
+                "wh_km": 1.5710463705903104,
+                "drag_n": 3.5371624423436536,
+                "induced_drag_n": 0.7428202069679033,
+                "body_drag_n": 0.5473319735008557,
+                "profile_drag_n": 1.0862191376025017,
+                "hardware_drag_n": 1.1607911242723932,
+                "lift_drag": 12.148338222285114,
+                "alpha_deg": 4.193181131900891,
+                "elevator_deg": -2.2612708604292,
+                "rpm": 5420.375838926175
+              },
+              {
+                "speed_m_s": 17.0,
+                "range_km": 68.33084876481837,
+                "cruise_minutes": 66.99102820080233,
+                "power_w": 94.4183884342617,
+                "wh_km": 1.5427841247428382,
+                "drag_n": 3.588290819399391,
+                "induced_drag_n": 0.721615642621409,
+                "body_drag_n": 0.5622590170209567,
+                "profile_drag_n": 1.1087159684815642,
+                "hardware_drag_n": 1.1957001912754612,
+                "lift_drag": 11.975240541943366,
+                "alpha_deg": 4.0428065272949665,
+                "elevator_deg": -2.213938178521629,
+                "rpm": 5460.617449664429
+              },
+              {
+                "speed_m_s": 17.25,
+                "range_km": 67.57169145753572,
+                "cruise_minutes": 65.28665841307799,
+                "power_w": 96.88326950743271,
+                "wh_km": 1.5601170613113158,
+                "drag_n": 3.6412537968176375,
+                "induced_drag_n": 0.7013566373887722,
+                "body_drag_n": 0.5773679332387318,
+                "profile_drag_n": 1.1314027965485958,
+                "hardware_drag_n": 1.2311264296415378,
+                "lift_drag": 11.80105757371541,
+                "alpha_deg": 3.8989224549939223,
+                "elevator_deg": -2.1686484898561873,
+                "rpm": 5520.979865771812
+              },
+              {
+                "speed_m_s": 17.5,
+                "range_km": 66.8116307793504,
+                "cruise_minutes": 63.63012455176228,
+                "power_w": 99.40550905457489,
+                "wh_km": 1.5778652230884904,
+                "drag_n": 3.6963651606121917,
+                "induced_drag_n": 0.6819899866797489,
+                "body_drag_n": 0.5926582928921984,
+                "profile_drag_n": 1.1546470416696217,
+                "hardware_drag_n": 1.2670698393706226,
+                "lift_drag": 11.62510840504675,
+                "alpha_deg": 3.761160689621535,
+                "elevator_deg": -2.125285889924605,
+                "rpm": 5581.342281879195
+              },
+              {
+                "speed_m_s": 17.75,
+                "range_km": 66.05132526950231,
+                "cruise_minutes": 62.02002372723222,
+                "power_w": 101.98617385398747,
+                "wh_km": 1.5960277598433095,
+                "drag_n": 3.7537305955442344,
+                "induced_drag_n": 0.6634662061276637,
+                "body_drag_n": 0.6081296742581814,
+                "profile_drag_n": 1.1786042946956725,
+                "hardware_drag_n": 1.3035304204627163,
+                "lift_drag": 11.447450636910899,
+                "alpha_deg": 3.6291787532176736,
+                "elevator_deg": -2.0837425786073753,
+                "rpm": 5641.704697986577
+              },
+              {
+                "speed_m_s": 18.0,
+                "range_km": 65.29139281031426,
+                "cruise_minutes": 60.454993342883576,
+                "power_w": 104.62634387203185,
+                "wh_km": 1.6146040720992572,
+                "drag_n": 3.812548833220225,
+                "induced_drag_n": 0.6457392237444931,
+                "body_drag_n": 0.6237816629138864,
+                "profile_drag_n": 1.2025197736440276,
+                "hardware_drag_n": 1.340508172917818,
+                "lift_drag": 11.270844670194064,
+                "alpha_deg": 3.5026577846644247,
+                "elevator_deg": -2.043918189543394,
+                "rpm": 5702.067114093959
+              },
+              {
+                "speed_m_s": 18.25,
+                "range_km": 64.53241258284675,
+                "cruise_minutes": 58.933710121321226,
+                "power_w": 107.3271122631322,
+                "wh_km": 1.633593793959394,
+                "drag_n": 3.872773759819097,
+                "induced_drag_n": 0.6287661013907122,
+                "body_drag_n": 0.6396138515092558,
+                "profile_drag_n": 1.226390710183201,
+                "hardware_drag_n": 1.3780030967359282,
+                "lift_drag": 11.09557344727568,
+                "alpha_deg": 3.381300611997707,
+                "elevator_deg": -2.0057191833608727,
+                "rpm": 5762.4295302013425
+              },
+              {
+                "speed_m_s": 18.5,
+                "range_km": 63.774926939199155,
+                "cruise_minutes": 57.45488913441365,
+                "power_w": 110.08958536977403,
+                "wh_km": 1.6529967773239342,
+                "drag_n": 3.9343540878698624,
+                "induced_drag_n": 0.612506782412459,
+                "body_drag_n": 0.6556258395494836,
+                "profile_drag_n": 1.2502062739908733,
+                "hardware_drag_n": 1.416015191917047,
+                "lift_drag": 10.921906045324947,
+                "alpha_deg": 3.2648300058211293,
+                "elevator_deg": -1.9690582979129272,
+                "rpm": 5822.791946308725
+              },
+              {
+                "speed_m_s": 18.75,
+                "range_km": 61.890591187772316,
+                "cruise_minutes": 55.01385883357539,
+                "power_w": 114.97439111494617,
+                "wh_km": 1.7033243128140174,
+                "drag_n": 3.997245050119606,
+                "induced_drag_n": 0.596923862673707,
+                "body_drag_n": 0.6718172331870983,
+                "profile_drag_n": 1.273959495797627,
+                "hardware_drag_n": 1.4545444584611742,
+                "lift_drag": 10.750065397033639,
+                "alpha_deg": 3.152987094635117,
+                "elevator_deg": -1.9338540494784437,
+                "rpm": 5903.275167785235
+              },
+              {
+                "speed_m_s": 19.0,
+                "range_km": 61.155449701401494,
+                "cruise_minutes": 53.645131317018844,
+                "power_w": 117.90790267424096,
+                "wh_km": 1.723799746699429,
+                "drag_n": 4.0610997501175445,
+                "induced_drag_n": 0.5819823825372418,
+                "body_drag_n": 0.6881876450230711,
+                "profile_drag_n": 1.2973388261889225,
+                "hardware_drag_n": 1.4935908963683098,
+                "lift_drag": 10.581036748853812,
+                "alpha_deg": 3.045529925151296,
+                "elevator_deg": -1.9000302795992494,
+                "rpm": 5963.637583892618
+              }
+            ],
+            "violations": []
+          },
+          "aero": {
+            "area": 0.55125,
+            "mac": 0.2642857142857143,
+            "cl": [
+              0.0992098407227364,
+              0.09304844991251478,
+              0.01581574541560856
+            ],
+            "cm": [
+              -0.02500876512632394,
+              -0.008361861704316496,
+              -0.026565400414272633
+            ],
+            "drag": [
+              0.0004125054990901279,
+              0.0006575913892255498,
+              5.371526852055564e-05,
+              0.00033990791206729167,
+              0.0001590341822564966,
+              6.345963032988542e-05
+            ],
+            "static_margin": 0.08986567441132458,
+            "cnb_per_deg": 0.0006152593327346459,
+            "resolution": 10,
+            "samples": [
+              [
+                0.0,
+                0.0,
+                0.0992098407227364,
+                -0.02500876512632394,
+                0.0004125054990901279
+              ],
+              [
+                5.0,
+                0.0,
+                0.5637907123199555,
+                -0.07790744674792704,
+                0.012198160246900168
+              ],
+              [
+                0.0,
+                5.0,
+                0.1781926364416865,
+                -0.15622631351915023,
+                0.0022675725999400415
+              ],
+              [
+                5.0,
+                5.0,
+                0.6426004877897639,
+                -0.21141286332004539,
+                0.018029081904162497
+              ],
+              [
+                -5.0,
+                0.0,
+                -0.3666937868051922,
+                0.005711170295237904,
+                0.0056222463546446695
+              ],
+              [
+                0.0,
+                -5.0,
+                0.020035182285600923,
+                0.10942769062357612,
+                0.0017304199147344847
+              ]
+            ]
+          },
+          "payload_capacity_kg": 0.9600000000000001,
+          "payload_curve": [
+            {
+              "payload_kg": 0.0,
+              "range_km": 73.7358585002186,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.096,
+              "range_km": 72.56707667307799,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.192,
+              "range_km": 71.40130738095836,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.28800000000000003,
+              "range_km": 70.4398404743397,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.384,
+              "range_km": 68.86546735769568,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.48,
+              "range_km": 68.39260460456465,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.5760000000000001,
+              "range_km": 68.09490544352698,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.672,
+              "range_km": 66.57431593291199,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.768,
+              "range_km": 66.25009768181222,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.864,
+              "range_km": 65.01739256367378,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.9600000000000001,
+              "range_km": 64.7099580165479,
+              "feasible": true,
+              "violations": []
+            }
+          ],
+          "scenarios": {
+            "battery_minus_10": {
+              "range_km": 60.55270287418689,
+              "violations": [],
+              "max_speed_m_s": 19.0,
+              "mass_kg": 4.381786409911109
+            },
+            "parasite_plus_20": {
+              "range_km": 61.25343115034619,
+              "violations": [],
+              "max_speed_m_s": 18.5,
+              "mass_kg": 4.381786409911109
+            },
+            "empty_mass_plus_10": {
+              "range_km": 64.90022149672166,
+              "violations": [],
+              "max_speed_m_s": 19.0,
+              "mass_kg": 4.76996505090222
+            },
+            "combined_adverse": {
+              "range_km": 51.83667782666869,
+              "violations": [],
+              "max_speed_m_s": 18.25,
+              "mass_kg": 4.76996505090222
+            }
+          }
+        },
+        "fidelity": "coupled_engineering_estimate",
+        "limitations": [
+          "No flight validation; transition energy allowance, not dynamic simulation.",
+          "VLM/XFOIL attached-flow estimates; no rotor interference, flutter, fatigue or control simulation.",
+          "Maximum speed is the highest supported passing speed on a 0.25 m/s grid; no propeller-map extrapolation.",
+          "Beam screening excludes joints/local shell buckling; hardware properties are assumptions."
+        ]
+      },
+      "reflection": {
+        "lesson": "Engineering estimates establish a feasible 68.33 km baseline at 17 m/s. Cruise has 105.42 Wh after reserve/overhead; hardware plus profile drag contributes 2.30 of 3.59 N. Static margin is 8.99% within the 5\u201320% band. Structure passes, but wing deflection is 44.2 mm against a 52.5 mm limit, constraining weight cuts.",
+        "next_focus": "Prioritize parasite-drag reduction, especially hardware/profile drag, before structural thinning. Keep 150 Wh and the 0.5 kg mission payload fixed; recheck static margin, stress and deflection. Protect max speed \u226518.05 m/s and payload capacity \u22650.912 kg (95% of baseline). Compare nominal and adverse range against 68.33 and 51.84 km."
+      },
+      "tool_id": null,
+      "retrieved_memory": [],
+      "source_commit": "4d63cba952952199722d50d7debf9210c523b775",
+      "generator": "gpt-6-astra",
+      "assets": {
+        "model.step": "/models/vtol/survey-vtol-range-v2/01-model.step",
+        "model.glb": "/models/vtol/survey-vtol-range-v2/01-model.glb",
+        "internal.glb": "/models/vtol/survey-vtol-range-v2/01-internal.glb"
+      }
+    },
+    {
+      "_id": "survey-vtol-range-v2-01",
+      "iteration": 2,
+      "title": "Lean high-aspect-ratio survey VTOL",
+      "change": "Targets the baseline\u2019s 1.109 N profile and 0.562 N body drag with a longer, narrower wing, slimmer fuselage, smaller aft all-moving tail and shorter booms. Enlarged tapered spar, 1.30 mm shell and 45 mm box separation address structure and packaging. Keeps 0.5 kg payload and 150 Wh fixed. Range improvement, 5\u201320% static margin and 95% speed/capacity retention require evaluation.",
+      "parameters": {
+        "span": 2.3,
+        "root_chord": 0.26,
+        "taper": 0.72,
+        "twist_deg": -1.5,
+        "sweep": 0.025,
+        "wing_x": 0.31,
+        "fuselage_length": 1.04,
+        "fuselage_width": 0.16,
+        "fuselage_height": 0.17,
+        "nose_fraction": 0.3,
+        "tail_fraction": 0.67,
+        "tail_span": 0.66,
+        "tail_chord": 0.155,
+        "tail_x": 0.93,
+        "tail_incidence_deg": -1.5,
+        "boom_y": 0.4,
+        "rotor_front_x": 0.16,
+        "rotor_rear_x": 0.7,
+        "battery_x": 0.3,
+        "payload_x": 0.48,
+        "spar_diameter": 0.027,
+        "spar_wall": 0.0011,
+        "boom_diameter": 0.018,
+        "boom_wall": 0.0009,
+        "shell_thickness": 0.0013
+      },
+      "evaluation": {
+        "outcome": "passed",
+        "metrics": {
+          "range_km": {
+            "value": 77.44654356158573,
+            "unit": "km",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "max_speed_m_s": {
+            "value": 19.5,
+            "unit": "m/s",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "payload_capacity_kg": {
+            "value": 0.9600000000000001,
+            "unit": "kg",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "endurance_min": {
+            "value": 94.36493281141159,
+            "unit": "min",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "mass_kg": {
+            "value": 3.9820235932010553,
+            "unit": "kg",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "hover_power_w": {
+            "value": 334.9914892821792,
+            "unit": "W",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "static_margin": {
+            "value": 0.15478058900239913,
+            "unit": "ratio",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "stall_speed_m_s": {
+            "value": 10.616052204477459,
+            "unit": "m/s",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "best_range_speed_m_s": {
+            "value": 14.0,
+            "unit": "m/s",
+            "fidelity": "coupled_engineering_estimate"
+          }
+        },
+        "violations": [],
+        "components": [
+          {
+            "name": "fuselage",
+            "mass_kg": 0.5213864304885535,
+            "cg_x_m": 0.5074584646132361
+          },
+          {
+            "name": "wing-1",
+            "mass_kg": 0.1966716591895354,
+            "cg_x_m": 0.4169451558511371
+          },
+          {
+            "name": "wing1",
+            "mass_kg": 0.1966716591895354,
+            "cg_x_m": 0.4169451558511371
+          },
+          {
+            "name": "tail-1",
+            "mass_kg": 0.023346801529330642,
+            "cg_x_m": 0.995041806927808
+          },
+          {
+            "name": "tail1",
+            "mass_kg": 0.023346801529330642,
+            "cg_x_m": 0.995041806927808
+          },
+          {
+            "name": "fin",
+            "mass_kg": 0.029914179125297254,
+            "cg_x_m": 0.957665518707483
+          },
+          {
+            "name": "wing_spar-1",
+            "mass_kg": 0.23735002732604263,
+            "cg_x_m": 0.3781590643123039
+          },
+          {
+            "name": "wing_spar1",
+            "mass_kg": 0.23735002732604263,
+            "cg_x_m": 0.3781590643123039
+          },
+          {
+            "name": "boom-1",
+            "mass_kg": 0.07049300374869329,
+            "cg_x_m": 0.4300000000000001
+          },
+          {
+            "name": "boom1",
+            "mass_kg": 0.07049300374869329,
+            "cg_x_m": 0.4300000000000001
+          },
+          {
+            "name": "battery",
+            "mass_kg": 0.85,
+            "cg_x_m": 0.3
+          },
+          {
+            "name": "payload",
+            "mass_kg": 0.5,
+            "cg_x_m": 0.48
+          },
+          {
+            "name": "cruise_drive",
+            "mass_kg": 0.165,
+            "cg_x_m": -0.035
+          },
+          {
+            "name": "avionics_esc_wiring_landing",
+            "mass_kg": 0.3,
+            "cg_x_m": 0.31
+          },
+          {
+            "name": "lift_drives_0.16",
+            "mass_kg": 0.28,
+            "cg_x_m": 0.16
+          },
+          {
+            "name": "lift_drives_0.7",
+            "mass_kg": 0.28,
+            "cg_x_m": 0.7
+          }
+        ],
+        "performance": {
+          "nominal": {
+            "mass_kg": 3.9820235932010553,
+            "cg_x_m": 0.39348223051566816,
+            "static_margin": 0.15478058900239913,
+            "stall_speed_m_s": 10.616052204477459,
+            "hover_power_w": 334.9914892821792,
+            "hover_thrust_ratio": 2.6058460408634603,
+            "overhead_wh": 12.655234039548992,
+            "usable_wh": 120.0,
+            "reserve_wh": 30.0,
+            "structure": {
+              "wing": {
+                "stress_pa": 105832947.62687857,
+                "deflection_m": 0.045752917767550756
+              },
+              "boom": {
+                "stress_pa": 31421933.1225075,
+                "deflection_m": 0.0017815038572543502
+              },
+              "payload_floor_stress_pa": 17408254.437869824,
+              "passed": true
+            },
+            "range_km": 77.44654356158573,
+            "best": {
+              "speed_m_s": 14.0,
+              "range_km": 77.44654356158573,
+              "cruise_minutes": 92.19826614474492,
+              "power_w": 69.85690975484971,
+              "wh_km": 1.3860497967232086,
+              "drag_n": 2.6881007100916863,
+              "induced_drag_n": 0.7372854734695233,
+              "body_drag_n": 0.2978153497910321,
+              "profile_drag_n": 0.8618679270683025,
+              "hardware_drag_n": 0.7911319597628285,
+              "lift_drag": 14.527101430263448,
+              "alpha_deg": 6.137071367912053,
+              "elevator_deg": -2.3477700789565272,
+              "rpm": 4756.3892617449665
+            },
+            "max_speed_m_s": 19.5,
+            "endurance_min": 94.36493281141159,
+            "curve": [
+              {
+                "speed_m_s": 14.0,
+                "range_km": 77.44654356158573,
+                "cruise_minutes": 92.19826614474492,
+                "power_w": 69.85690975484971,
+                "wh_km": 1.3860497967232086,
+                "drag_n": 2.6881007100916863,
+                "induced_drag_n": 0.7372854734695233,
+                "body_drag_n": 0.2978153497910321,
+                "profile_drag_n": 0.8618679270683025,
+                "hardware_drag_n": 0.7911319597628285,
+                "lift_drag": 14.527101430263448,
+                "alpha_deg": 6.137071367912053,
+                "elevator_deg": -2.3477700789565272,
+                "rpm": 4756.3892617449665
+              },
+              {
+                "speed_m_s": 14.25,
+                "range_km": 77.00465452064459,
+                "cruise_minutes": 90.06392341595857,
+                "power_w": 71.51238490778235,
+                "wh_km": 1.3940036044402015,
+                "drag_n": 2.71401469697661,
+                "induced_drag_n": 0.7117992554168948,
+                "body_drag_n": 0.3075288242700328,
+                "profile_drag_n": 0.8750476704563184,
+                "hardware_drag_n": 0.819638946833364,
+                "lift_drag": 14.38839359041307,
+                "alpha_deg": 5.895353398008878,
+                "elevator_deg": -2.233173818372197,
+                "rpm": 4816.7516778523495
+              },
+              {
+                "speed_m_s": 14.5,
+                "range_km": 76.55282250343453,
+                "cruise_minutes": 87.99175000394771,
+                "power_w": 73.19647532113069,
+                "wh_km": 1.4022313279910092,
+                "drag_n": 2.7431963748238433,
+                "induced_drag_n": 0.6876406846022365,
+                "body_drag_n": 0.31738320389951424,
+                "profile_drag_n": 0.8895220039744671,
+                "hardware_drag_n": 0.848650482347626,
+                "lift_drag": 14.235332194463393,
+                "alpha_deg": 5.666029982285179,
+                "elevator_deg": -2.12445370163082,
+                "rpm": 4877.114093959732
+              },
+              {
+                "speed_m_s": 14.75,
+                "range_km": 76.09198863361205,
+                "cruise_minutes": 85.97964817357293,
+                "power_w": 74.9094244329171,
+                "wh_km": 1.4107236239720735,
+                "drag_n": 2.7743169858677064,
+                "induced_drag_n": 0.6647208769313419,
+                "body_drag_n": 0.32737808740039265,
+                "profile_drag_n": 0.9040514552303576,
+                "hardware_drag_n": 0.8781665663056142,
+                "lift_drag": 14.075648842286705,
+                "alpha_deg": 5.448267974892758,
+                "elevator_deg": -2.02121474196843,
+                "rpm": 4937.476510067114
+              },
+              {
+                "speed_m_s": 15.0,
+                "range_km": 75.62303489775962,
+                "cruise_minutes": 84.02559433084402,
+                "power_w": 76.65147755179663,
+                "wh_km": 1.4194718065147525,
+                "drag_n": 2.8080533735690265,
+                "induced_drag_n": 0.6429582930559209,
+                "body_drag_n": 0.3375130818829715,
+                "profile_drag_n": 0.9193947999228055,
+                "hardware_drag_n": 0.9081871987073286,
+                "lift_drag": 13.90654181926475,
+                "alpha_deg": 5.241303075198305,
+                "elevator_deg": -1.9230945915025963,
+                "rpm": 4997.838926174497
+              },
+              {
+                "speed_m_s": 15.25,
+                "range_km": 71.62303676993412,
+                "cruise_minutes": 78.27654291796078,
+                "power_w": 82.28117540113318,
+                "wh_km": 1.498746364319366,
+                "drag_n": 2.843939912425246,
+                "induced_drag_n": 0.6222780219292564,
+                "body_drag_n": 0.34778780253222114,
+                "profile_drag_n": 0.935161708410999,
+                "hardware_drag_n": 0.9387123795527693,
+                "lift_drag": 13.731060737132076,
+                "alpha_deg": 5.0444331122665815,
+                "elevator_deg": -1.8297603574678314,
+                "rpm": 5078.322147651006
+              },
+              {
+                "speed_m_s": 15.5,
+                "range_km": 71.8080122924828,
+                "cruise_minutes": 77.21291644352989,
+                "power_w": 83.41461836035548,
+                "wh_km": 1.4948856336981267,
+                "drag_n": 2.8814784831151967,
+                "induced_drag_n": 0.6026111445891137,
+                "body_drag_n": 0.35820187230989486,
+                "profile_drag_n": 0.9509233573742517,
+                "hardware_drag_n": 0.9697421088419365,
+                "lift_drag": 13.552178820383702,
+                "alpha_deg": 4.857012081345435,
+                "elevator_deg": -1.740905774968124,
+                "rpm": 5118.563758389262
+              },
+              {
+                "speed_m_s": 15.75,
+                "range_km": 72.25989689191172,
+                "cruise_minutes": 76.46549935652034,
+                "power_w": 84.22996007123902,
+                "wh_km": 1.4855372146603,
+                "drag_n": 2.9221381797615686,
+                "induced_drag_n": 0.5838941680625356,
+                "body_drag_n": 0.3687549216723243,
+                "profile_drag_n": 0.9682127034518786,
+                "hardware_drag_n": 1.00127638657483,
+                "lift_drag": 13.363608860362458,
+                "alpha_deg": 4.6784448376310435,
+                "elevator_deg": -1.6562486913399725,
+                "rpm": 5158.805369127516
+              },
+              {
+                "speed_m_s": 16.0,
+                "range_km": 72.72215590805821,
+                "cruise_minutes": 75.75224573756063,
+                "power_w": 85.02303654389934,
+                "wh_km": 1.4760943844426968,
+                "drag_n": 2.9643562583626157,
+                "induced_drag_n": 0.5660685206969093,
+                "body_drag_n": 0.37944658830282535,
+                "profile_drag_n": 0.9855259366114316,
+                "hardware_drag_n": 1.0333152127514496,
+                "lift_drag": 13.173285619804298,
+                "alpha_deg": 4.508182365805962,
+                "elevator_deg": -1.575528823483996,
+                "rpm": 5199.046979865772
+              },
+              {
+                "speed_m_s": 16.25,
+                "range_km": 73.08932539122443,
+                "cruise_minutes": 74.96341065766609,
+                "power_w": 85.91772841072577,
+                "wh_km": 1.4686791181320644,
+                "drag_n": 3.0086470481516336,
+                "induced_drag_n": 0.5490801014162603,
+                "body_drag_n": 0.3902765168577447,
+                "profile_drag_n": 1.0034318425058333,
+                "hardware_drag_n": 1.0658585873717952,
+                "lift_drag": 12.97935950787439,
+                "alpha_deg": 4.3457175550396885,
+                "elevator_deg": -1.4985057548316594,
+                "rpm": 5239.2885906040265
+              },
+              {
+                "speed_m_s": 16.5,
+                "range_km": 73.5351202911619,
+                "cruise_minutes": 74.27789928400192,
+                "power_w": 86.7106638678763,
+                "wh_km": 1.4597754859911836,
+                "drag_n": 3.0582013806364445,
+                "induced_drag_n": 0.532878876416696,
+                "body_drag_n": 0.40124435872524605,
+                "profile_drag_n": 1.0251716350586348,
+                "hardware_drag_n": 1.0989065104358677,
+                "lift_drag": 12.769045203340513,
+                "alpha_deg": 4.190581418655189,
+                "elevator_deg": -1.4249571431240327,
+                "rpm": 5279.530201342282
+              },
+              {
+                "speed_m_s": 16.75,
+                "range_km": 73.14727137572605,
+                "cruise_minutes": 72.78335460271248,
+                "power_w": 88.49119407567166,
+                "wh_km": 1.4675156563129628,
+                "drag_n": 3.1096475476571035,
+                "induced_drag_n": 0.5174185176795668,
+                "body_drag_n": 0.4123497717960145,
+                "profile_drag_n": 1.0474202762378562,
+                "hardware_drag_n": 1.1324589819436661,
+                "lift_drag": 12.557793470738101,
+                "alpha_deg": 4.042339705769472,
+                "elevator_deg": -1.3546771140218363,
+                "rpm": 5339.892617449665
+              },
+              {
+                "speed_m_s": 17.0,
+                "range_km": 74.12893053157146,
+                "cruise_minutes": 72.67542208977592,
+                "power_w": 88.62261507983928,
+                "wh_km": 1.4480819457490077,
+                "drag_n": 3.162731682558204,
+                "induced_drag_n": 0.5026560784193577,
+                "body_drag_n": 0.423592420245117,
+                "profile_drag_n": 1.0699671819985384,
+                "hardware_drag_n": 1.166516001895191,
+                "lift_drag": 12.347020104683343,
+                "alpha_deg": 3.9005898591380146,
+                "elevator_deg": -1.2874748188475296,
+                "rpm": 5380.13422818792
+              },
+              {
+                "speed_m_s": 17.25,
+                "range_km": 75.61859105664045,
+                "cruise_minutes": 73.06144063443523,
+                "power_w": 88.15437940586467,
+                "wh_km": 1.4195552239269673,
+                "drag_n": 3.2178142761765134,
+                "induced_drag_n": 0.4885517012155223,
+                "body_drag_n": 0.43497197432432055,
+                "profile_drag_n": 1.0932130303462282,
+                "hardware_drag_n": 1.2010775702904422,
+                "lift_drag": 12.135663627133159,
+                "alpha_deg": 3.7649582793587593,
+                "elevator_deg": -1.2231731375696588,
+                "rpm": 5420.375838926175
+              },
+              {
+                "speed_m_s": 17.5,
+                "range_km": 74.74484200021766,
+                "cruise_minutes": 71.18556380973111,
+                "power_w": 90.47741723086017,
+                "wh_km": 1.4361494798549232,
+                "drag_n": 3.2755306764103094,
+                "induced_drag_n": 0.4750683551200476,
+                "body_drag_n": 0.4464881101642192,
+                "profile_drag_n": 1.1178305239966235,
+                "hardware_drag_n": 1.2361436871294194,
+                "lift_drag": 11.921827492411335,
+                "alpha_deg": 3.6350978606770967,
+                "elevator_deg": -1.1616075105507198,
+                "rpm": 5480.738255033557
+              },
+              {
+                "speed_m_s": 17.75,
+                "range_km": 73.8706578919095,
+                "cruise_minutes": 69.36212008630001,
+                "power_w": 92.85595581008181,
+                "wh_km": 1.4531448483580878,
+                "drag_n": 3.3344896629808747,
+                "induced_drag_n": 0.46217159849920575,
+                "body_drag_n": 0.45814050958557245,
+                "profile_drag_n": 1.1424632024839734,
+                "hardware_drag_n": 1.2717143524121233,
+                "lift_drag": 11.711030957389745,
+                "alpha_deg": 3.5106857680076073,
+                "elevator_deg": -1.1026248846536646,
+                "rpm": 5541.100671140939
+              },
+              {
+                "speed_m_s": 18.0,
+                "range_km": 72.99678832138792,
+                "cruise_minutes": 67.58961881609993,
+                "power_w": 95.29105312978746,
+                "wh_km": 1.4705409433609176,
+                "drag_n": 3.3946563460056884,
+                "induced_drag_n": 0.44982936477029134,
+                "body_drag_n": 0.4699288599193014,
+                "profile_drag_n": 1.1671085551775424,
+                "hardware_drag_n": 1.3077895661385532,
+                "lift_drag": 11.50346535554727,
+                "alpha_deg": 3.3914214285595627,
+                "elevator_deg": -1.0460827610900718,
+                "rpm": 5601.463087248322
+              },
+              {
+                "speed_m_s": 18.25,
+                "range_km": 70.77316908529701,
+                "cruise_minutes": 64.63303112812514,
+                "power_w": 99.65006816498182,
+                "wh_km": 1.5167438076861768,
+                "drag_n": 3.455998026452312,
+                "induced_drag_n": 0.4380117685417388,
+                "body_drag_n": 0.4818528538346291,
+                "profile_drag_n": 1.1917640757672348,
+                "hardware_drag_n": 1.3443693283087095,
+                "lift_drag": 11.299286449637087,
+                "alpha_deg": 3.2770247147114,
+                "elevator_deg": -0.991848333937691,
+                "rpm": 5681.946308724832
+              },
+              {
+                "speed_m_s": 18.5,
+                "range_km": 69.92312485222884,
+                "cruise_minutes": 62.99380617317913,
+                "power_w": 102.24316244553756,
+                "wh_km": 1.5351826193023657,
+                "drag_n": 3.5184840214562625,
+                "induced_drag_n": 0.42669092996596464,
+                "body_drag_n": 0.49391218917488955,
+                "profile_drag_n": 1.2164272633928164,
+                "hardware_drag_n": 1.381453638922592,
+                "lift_drag": 11.098618448209585,
+                "alpha_deg": 3.1672342976002894,
+                "elevator_deg": -0.9397977095924385,
+                "rpm": 5742.308724832215
+              },
+              {
+                "speed_m_s": 18.75,
+                "range_km": 69.07532749236302,
+                "cruise_minutes": 61.400291104322676,
+                "power_w": 104.89666810673518,
+                "wh_km": 1.554024712692373,
+                "drag_n": 3.5819439889053384,
+                "induced_drag_n": 0.4158408153753786,
+                "body_drag_n": 0.5061065688005609,
+                "profile_drag_n": 1.2409541067491976,
+                "hardware_drag_n": 1.419042497980201,
+                "lift_drag": 10.90198835917563,
+                "alpha_deg": 3.0618061533402954,
+                "elevator_deg": -0.8898151985802035,
+                "rpm": 5802.6711409395975
+              },
+              {
+                "speed_m_s": 19.0,
+                "range_km": 68.23033157527193,
+                "cruise_minutes": 59.851168048484155,
+                "power_w": 107.61170028310222,
+                "wh_km": 1.5732704719751787,
+                "drag_n": 3.646462769906784,
+                "induced_drag_n": 0.4054370924989809,
+                "body_drag_n": 0.5184357004391167,
+                "profile_drag_n": 1.2654540714871503,
+                "hardware_drag_n": 1.4571359054815363,
+                "lift_drag": 10.70909375313967,
+                "alpha_deg": 2.9605122059101454,
+                "elevator_deg": -0.8417926721624501,
+                "rpm": 5863.03355704698
+              },
+              {
+                "speed_m_s": 19.25,
+                "range_km": 67.38865450017794,
+                "cruise_minutes": 58.345155411409465,
+                "power_w": 110.3893872972284,
+                "wh_km": 1.5929204516194575,
+                "drag_n": 3.7117857785034203,
+                "induced_drag_n": 0.3954569987546458,
+                "body_drag_n": 0.5308992965413073,
+                "profile_drag_n": 1.2896956217808697,
+                "hardware_drag_n": 1.4957338614265976,
+                "lift_drag": 10.52062645867728,
+                "alpha_deg": 2.8631390926046025,
+                "elevator_deg": -0.7956289770481011,
+                "rpm": 5923.395973154362
+              },
+              {
+                "speed_m_s": 19.5,
+                "range_km": 66.55077830379425,
+                "cruise_minutes": 56.88100709726004,
+                "power_w": 113.23087065976561,
+                "wh_km": 1.6129753655237267,
+                "drag_n": 3.7779871697631986,
+                "induced_drag_n": 0.3858792212847146,
+                "body_drag_n": 0.5434970741435186,
+                "profile_drag_n": 1.3137745085195802,
+                "hardware_drag_n": 1.5348363658153854,
+                "lift_drag": 10.336274295159336,
+                "alpha_deg": 2.769487039560524,
+                "elevator_deg": -0.7512294022908097,
+                "rpm": 5983.758389261745
+              }
+            ],
+            "violations": []
+          },
+          "aero": {
+            "area": 0.51428,
+            "mac": 0.22557519379844962,
+            "cl": [
+              0.06617820378105184,
+              0.09759016977482463,
+              0.013882480738191174
+            ],
+            "cm": [
+              0.017898267516414035,
+              -0.015105063958591486,
+              -0.031861121616978905
+            ],
+            "drag": [
+              0.00033055077394245866,
+              0.0002692425885613663,
+              -0.00012893312417060123,
+              0.00029906228121900387,
+              0.00013328700725356743,
+              5.678067868369606e-05
+            ],
+            "static_margin": 0.15478058900239913,
+            "cnb_per_deg": 0.0005851581966368765,
+            "resolution": 10,
+            "samples": [
+              [
+                0.0,
+                0.0,
+                0.06617820378105184,
+                0.017898267516414035,
+                0.00033055077394245866
+              ],
+              [
+                5.0,
+                0.0,
+                0.5537608315159926,
+                -0.07208801214352739,
+                0.009153320747224388
+              ],
+              [
+                0.0,
+                5.0,
+                0.13476765084027548,
+                -0.1379898582228903,
+                0.001105402120181854
+              ],
+              [
+                5.0,
+                5.0,
+                0.6220209266650998,
+                -0.22983605347332384,
+                0.013260347274802969
+              ],
+              [
+                -5.0,
+                0.0,
+                -0.42214086623225366,
+                0.07896262744238745,
+                0.006460894861610722
+              ],
+              [
+                0.0,
+                -5.0,
+                -0.0040571565416362585,
+                0.1806213579468987,
+                0.002394733361887866
+              ]
+            ]
+          },
+          "payload_capacity_kg": 0.9600000000000001,
+          "payload_curve": [
+            {
+              "payload_kg": 0.0,
+              "range_km": 84.59118617992046,
+              "feasible": false,
+              "violations": [
+                "STATIC_MARGIN"
+              ]
+            },
+            {
+              "payload_kg": 0.096,
+              "range_km": 83.82206576181724,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.192,
+              "range_km": 81.93765063119818,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.28800000000000003,
+              "range_km": 81.41568990361864,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.384,
+              "range_km": 79.65888130898405,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.48,
+              "range_km": 77.51140358414449,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.5760000000000001,
+              "range_km": 77.19851226760855,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.672,
+              "range_km": 75.10655515474971,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.768,
+              "range_km": 73.33539203219077,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.864,
+              "range_km": 73.02486106849892,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.9600000000000001,
+              "range_km": 72.71079970465588,
+              "feasible": true,
+              "violations": []
+            }
+          ],
+          "scenarios": {
+            "battery_minus_10": {
+              "range_km": 68.78884596055474,
+              "violations": [],
+              "max_speed_m_s": 19.5,
+              "mass_kg": 3.9820235932010553
+            },
+            "parasite_plus_20": {
+              "range_km": 69.7593985949372,
+              "violations": [],
+              "max_speed_m_s": 18.75,
+              "mass_kg": 3.9820235932010553
+            },
+            "empty_mass_plus_10": {
+              "range_km": 73.030297080059,
+              "violations": [],
+              "max_speed_m_s": 19.25,
+              "mass_kg": 4.33022595252116
+            },
+            "combined_adverse": {
+              "range_km": 58.51672888419723,
+              "violations": [],
+              "max_speed_m_s": 18.75,
+              "mass_kg": 4.33022595252116
+            }
+          }
+        },
+        "fidelity": "coupled_engineering_estimate",
+        "limitations": [
+          "No flight validation; transition energy allowance, not dynamic simulation.",
+          "VLM/XFOIL attached-flow estimates; no rotor interference, flutter, fatigue or control simulation.",
+          "Maximum speed is the highest supported passing speed on a 0.25 m/s grid; no propeller-map extrapolation.",
+          "Beam screening excludes joints/local shell buckling; hardware properties are assumptions."
+        ]
+      },
+      "reflection": {
+        "lesson": "At 14 m/s, screening estimates 77.45 km at 1.386 Wh/km. Cruise energy is 120 Wh usable minus 12.66 Wh overhead. Profile/body/hardware drag are 0.862/0.298/0.791 N. Static margin is 15.48%; structure passes with 45.75 mm wing deflection. Max speed is 19.5 m/s and payload capacity 0.96 kg; 95% baseline retention remains unverified.",
+        "next_focus": "Target hardware/profile drag while preserving wing stiffness. Investigate zero-payload static-margin failure; maintain 5\u201320% across intended loadings. Keep 0.5 kg payload and 150 Wh fixed. Obtain baseline range, speed and capacity to verify improvement and 95% retention. Recheck robustness: combined-adverse range is 58.52 km, with 18.75 m/s max speed."
+      },
+      "tool_id": null,
+      "retrieved_memory": [
+        {
+          "_id": "memory-survey-vtol-range-v2-00-evaluation",
+          "summary": "{\"fidelity\": \"coupled_engineering_estimate\", \"metrics\": {\"best_range_speed_m_s\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"m/s\", \"value\": 17.0}, \"endurance_min\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"min\", \"value\": 82.342928718562}, \"hover_power_w\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"W\", \"value\": 385.94782840855873}, \"mass_kg\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"kg\", \"value\": 4.381786409911109}, \"max_speed_m_s\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"m/s\", \"value\": 19.0}, \"payload_capacity_kg\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"kg\", \"value\": 0.9600000000000001}, \"range_km\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"km\", \"value\": 68.33084876481837}, \"stall_speed_m_s\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"m/s\", \"value\": 10.75628372835031}, \"static_margin\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"ratio\", \"value\": 0.08986567441132458}}, \"outcome\": \"passed\", \"parameters\": {\"battery_x\": 0.28, \"boom_diameter\": 0.02, \"boom_wall\": 0.001, \"boom_y\": 0.46, \"fuselage_height\": 0.2, \"fuselage_length\": 1.08, \"fuselage_width\": 0.19, \"nose_fraction\": 0.25, \"payload_x\": 0.49, \"root_chord\": 0.3, \"rotor_front_x\": 0.13, \"rotor_rear_x\": 0.78, \"shell_thickness\": 0.0015, \"span\": 2.1, \"spar_diameter\": 0.025, \"spar_wall\": 0.0012, \"sweep\": 0.04, \"tail_chord\": 0.17, \"tail_fraction\": 0.72, \"tail_incidence_deg\": 0.0, \"tail_span\": 0.72, \"tail_x\": 0.88, \"taper\": 0.75, \"twist_deg\": -1.0, \"wing_x\": 0.3}, \"subsystem\": \"vtol\", \"violations\": []}",
+          "score": 0.7957496047019958
+        }
+      ],
+      "source_commit": "d54a6b88dffc3ba3a14bef1fbf2d0e7127b18d28",
+      "generator": "gpt-6-astra",
+      "assets": {
+        "model.step": "/models/vtol/survey-vtol-range-v2/02-model.step",
+        "model.glb": "/models/vtol/survey-vtol-range-v2/02-model.glb",
+        "internal.glb": "/models/vtol/survey-vtol-range-v2/02-internal.glb"
+      }
+    },
+    {
+      "_id": "survey-vtol-range-v2-02",
+      "iteration": 3,
+      "title": "Broad-root range VTOL",
+      "change": "Targets the 77.45 km incumbent's induced/profile/body/hardware drag of 0.737/0.862/0.298/0.791 N with a longer, strongly tapered wing, larger thin-wall spar, compact hull, smaller all-moving tail and shorter booms. Aft battery placement targets the reported unloaded static-margin failure; battery and payload boxes have a 10 mm axial gap. Keeps 0.5 kg payload and 150 Wh fixed. Range improvement, 5\u2013",
+      "parameters": {
+        "span": 2.6,
+        "root_chord": 0.32,
+        "taper": 0.5,
+        "twist_deg": -0.75,
+        "sweep": 0.04,
+        "wing_x": 0.31,
+        "fuselage_length": 0.92,
+        "fuselage_width": 0.152,
+        "fuselage_height": 0.162,
+        "nose_fraction": 0.31,
+        "tail_fraction": 0.72,
+        "tail_span": 0.62,
+        "tail_chord": 0.145,
+        "tail_x": 0.9,
+        "tail_incidence_deg": -2.0,
+        "boom_y": 0.35,
+        "rotor_front_x": 0.21,
+        "rotor_rear_x": 0.7,
+        "battery_x": 0.315,
+        "payload_x": 0.46,
+        "spar_diameter": 0.0335,
+        "spar_wall": 0.0008,
+        "boom_diameter": 0.016,
+        "boom_wall": 0.0008,
+        "shell_thickness": 0.0013
+      },
+      "evaluation": {
+        "outcome": "passed",
+        "metrics": {
+          "range_km": {
+            "value": 82.38896324870268,
+            "unit": "km",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "max_speed_m_s": {
+            "value": 19.5,
+            "unit": "m/s",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "payload_capacity_kg": {
+            "value": 0.9600000000000001,
+            "unit": "kg",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "endurance_min": {
+            "value": 110.45173260651156,
+            "unit": "min",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "mass_kg": {
+            "value": 3.939509595082903,
+            "unit": "kg",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "hover_power_w": {
+            "value": 337.6804046181634,
+            "unit": "W",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "static_margin": {
+            "value": 0.11817203912853307,
+            "unit": "ratio",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "stall_speed_m_s": {
+            "value": 9.586050998548695,
+            "unit": "m/s",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "best_range_speed_m_s": {
+            "value": 13.75,
+            "unit": "m/s",
+            "fidelity": "coupled_engineering_estimate"
+          }
+        },
+        "violations": [],
+        "components": [
+          {
+            "name": "fuselage",
+            "mass_kg": 0.45080260580159603,
+            "cg_x_m": 0.45885182439757316
+          },
+          {
+            "name": "wing-1",
+            "mass_kg": 0.25854616135330594,
+            "cg_x_m": 0.4337497206494552
+          },
+          {
+            "name": "wing1",
+            "mass_kg": 0.25854616135330594,
+            "cg_x_m": 0.4337497206494552
+          },
+          {
+            "name": "tail-1",
+            "mass_kg": 0.019659583561094412,
+            "cg_x_m": 0.9613990330607468
+          },
+          {
+            "name": "tail1",
+            "mass_kg": 0.019659583561094412,
+            "cg_x_m": 0.9613990330607468
+          },
+          {
+            "name": "fin",
+            "mass_kg": 0.02704316467265712,
+            "cg_x_m": 0.8492322015688699
+          },
+          {
+            "name": "wing_spar-1",
+            "mass_kg": 0.214585230088621,
+            "cg_x_m": 0.3899825620180163
+          },
+          {
+            "name": "wing_spar1",
+            "mass_kg": 0.214585230088621,
+            "cg_x_m": 0.3899825620180163
+          },
+          {
+            "name": "boom-1",
+            "mass_kg": 0.05054093730130327,
+            "cg_x_m": 0.455
+          },
+          {
+            "name": "boom1",
+            "mass_kg": 0.05054093730130327,
+            "cg_x_m": 0.455
+          },
+          {
+            "name": "battery",
+            "mass_kg": 0.85,
+            "cg_x_m": 0.315
+          },
+          {
+            "name": "payload",
+            "mass_kg": 0.5,
+            "cg_x_m": 0.46
+          },
+          {
+            "name": "cruise_drive",
+            "mass_kg": 0.165,
+            "cg_x_m": -0.035
+          },
+          {
+            "name": "avionics_esc_wiring_landing",
+            "mass_kg": 0.3,
+            "cg_x_m": 0.31
+          },
+          {
+            "name": "lift_drives_0.21",
+            "mass_kg": 0.28,
+            "cg_x_m": 0.21
+          },
+          {
+            "name": "lift_drives_0.7",
+            "mass_kg": 0.28,
+            "cg_x_m": 0.7
+          }
+        ],
+        "performance": {
+          "nominal": {
+            "mass_kg": 3.939509595082903,
+            "cg_x_m": 0.39219192019194293,
+            "static_margin": 0.11817203912853307,
+            "stall_speed_m_s": 9.586050998548695,
+            "hover_power_w": 337.6804046181634,
+            "hover_thrust_ratio": 2.380062602692622,
+            "overhead_wh": 12.75681528557506,
+            "usable_wh": 120.0,
+            "reserve_wh": 30.0,
+            "structure": {
+              "wing": {
+                "stress_pa": 100454020.56350563,
+                "deflection_m": 0.05417149979756149
+              },
+              "boom": {
+                "stress_pa": 42218921.401673324,
+                "deflection_m": 0.002450023156220293
+              },
+              "payload_floor_stress_pa": 17408254.437869824,
+              "passed": true
+            },
+            "range_km": 82.38896324870268,
+            "best": {
+              "speed_m_s": 13.75,
+              "range_km": 82.38896324870268,
+              "cruise_minutes": 99.86540999842748,
+              "power_w": 64.43263070733718,
+              "wh_km": 1.301669307218933,
+              "drag_n": 2.493802105309347,
+              "induced_drag_n": 0.6023476835190318,
+              "body_drag_n": 0.2596064206717918,
+              "profile_drag_n": 0.8796615504028455,
+              "hardware_drag_n": 0.752186450715678,
+              "lift_drag": 15.491763235089346,
+              "alpha_deg": 4.8210216396733045,
+              "elevator_deg": -2.7116522236680725,
+              "rpm": 4635.664429530201
+            },
+            "max_speed_m_s": 19.5,
+            "endurance_min": 110.45173260651156,
+            "curve": [
+              {
+                "speed_m_s": 12.5,
+                "range_km": 81.21379945488367,
+                "cruise_minutes": 108.28506593984488,
+                "power_w": 59.42270087770068,
+                "wh_km": 1.3205044639489039,
+                "drag_n": 2.3679231794677005,
+                "induced_drag_n": 0.7225829568807843,
+                "body_drag_n": 0.21845837605202392,
+                "profile_drag_n": 0.8052401517285467,
+                "hardware_drag_n": 0.6216416948063455,
+                "lift_drag": 16.315306216692544,
+                "alpha_deg": 6.064776562038884,
+                "elevator_deg": -3.4204346170898967,
+                "rpm": 4394.214765100671
+              },
+              {
+                "speed_m_s": 12.75,
+                "range_km": 81.90996782642975,
+                "cruise_minutes": 107.07185336788204,
+                "power_w": 60.096009179529695,
+                "wh_km": 1.3092812457413878,
+                "drag_n": 2.3873981101950124,
+                "induced_drag_n": 0.6955847351499592,
+                "body_drag_n": 0.22643100175746525,
+                "profile_drag_n": 0.818626354011066,
+                "hardware_drag_n": 0.6467560192765218,
+                "lift_drag": 16.18221594699345,
+                "alpha_deg": 5.786496616482601,
+                "elevator_deg": -3.26185037970852,
+                "rpm": 4434.456375838926
+              },
+              {
+                "speed_m_s": 13.0,
+                "range_km": 80.87840330603396,
+                "cruise_minutes": 103.69026064876148,
+                "power_w": 62.05588685577631,
+                "wh_km": 1.3259804883712885,
+                "drag_n": 2.40993858718672,
+                "induced_drag_n": 0.6701746536122133,
+                "body_drag_n": 0.23453252998964527,
+                "profile_drag_n": 0.8328637464823185,
+                "hardware_drag_n": 0.6723676571025432,
+                "lift_drag": 16.030861523205473,
+                "alpha_deg": 5.524116402422234,
+                "elevator_deg": -3.112326970583411,
+                "rpm": 4494.818791946309
+              },
+              {
+                "speed_m_s": 13.25,
+                "range_km": 81.3535320875872,
+                "cruise_minutes": 102.3314869026254,
+                "power_w": 62.87987478368608,
+                "wh_km": 1.3182363686307352,
+                "drag_n": 2.4352815872718185,
+                "induced_drag_n": 0.6462348676789721,
+                "body_drag_n": 0.2427625450177879,
+                "profile_drag_n": 0.8478075662906488,
+                "hardware_drag_n": 0.6984766082844097,
+                "lift_drag": 15.864034768110622,
+                "alpha_deg": 5.276447334685876,
+                "elevator_deg": -2.971187047074325,
+                "rpm": 4535.060402684564
+              },
+              {
+                "speed_m_s": 13.5,
+                "range_km": 80.83718560750408,
+                "cruise_minutes": 99.79899457716553,
+                "power_w": 64.47551010035687,
+                "wh_km": 1.326656586427096,
+                "drag_n": 2.463196241555168,
+                "induced_drag_n": 0.623658342283705,
+                "body_drag_n": 0.2511206408188141,
+                "profile_drag_n": 0.8633343856305272,
+                "hardware_drag_n": 0.7250828728221214,
+                "lift_drag": 15.68425248417402,
+                "alpha_deg": 5.042409853367617,
+                "elevator_deg": -2.837815397100333,
+                "rpm": 4595.422818791946
+              },
+              {
+                "speed_m_s": 13.75,
+                "range_km": 82.38896324870268,
+                "cruise_minutes": 99.86540999842748,
+                "power_w": 64.43263070733718,
+                "wh_km": 1.301669307218933,
+                "drag_n": 2.493802105309347,
+                "induced_drag_n": 0.6023476835190318,
+                "body_drag_n": 0.2596064206717918,
+                "profile_drag_n": 0.8796615504028455,
+                "hardware_drag_n": 0.752186450715678,
+                "lift_drag": 15.491763235089346,
+                "alpha_deg": 4.8210216396733045,
+                "elevator_deg": -2.7116522236680725,
+                "rpm": 4635.664429530201
+              },
+              {
+                "speed_m_s": 14.0,
+                "range_km": 81.6357057748847,
+                "cruise_minutes": 97.18536401771989,
+                "power_w": 66.20946629054424,
+                "wh_km": 1.3136798867171477,
+                "drag_n": 2.5262100183169016,
+                "induced_drag_n": 0.5822141149945074,
+                "body_drag_n": 0.268219496776494,
+                "profile_drag_n": 0.8959890645808204,
+                "hardware_drag_n": 0.7797873419650798,
+                "lift_drag": 15.293024527057895,
+                "alpha_deg": 4.611387291424734,
+                "elevator_deg": -2.5921872612199706,
+                "rpm": 4696.026845637583
+              },
+              {
+                "speed_m_s": 14.25,
+                "range_km": 81.16297963715384,
+                "cruise_minutes": 94.9274615639226,
+                "power_w": 67.78429525930753,
+                "wh_km": 1.321331291604435,
+                "drag_n": 2.562049843734562,
+                "induced_drag_n": 0.5631765787849355,
+                "body_drag_n": 0.27695948989422087,
+                "profile_drag_n": 0.914028228485079,
+                "hardware_drag_n": 0.8078855465703265,
+                "lift_drag": 15.079094524681823,
+                "alpha_deg": 4.412689255188864,
+                "elevator_deg": -2.4789546080991967,
+                "rpm": 4756.3892617449665
+              },
+              {
+                "speed_m_s": 14.5,
+                "range_km": 80.67949231154758,
+                "cruise_minutes": 92.73504863396273,
+                "power_w": 69.38683030472828,
+                "wh_km": 1.329249622695944,
+                "drag_n": 2.5995240704439038,
+                "induced_drag_n": 0.5451609439352122,
+                "body_drag_n": 0.2858260290092155,
+                "profile_drag_n": 0.9320560329680573,
+                "hardware_drag_n": 0.8364810645314185,
+                "lift_drag": 14.861717269662588,
+                "alpha_deg": 4.2241798432264295,
+                "elevator_deg": -2.371528177223933,
+                "rpm": 4816.7516778523495
+              },
+              {
+                "speed_m_s": 14.75,
+                "range_km": 78.7642625333345,
+                "cruise_minutes": 88.99916670433278,
+                "power_w": 72.29945314254543,
+                "wh_km": 1.3615716222701588,
+                "drag_n": 2.6398436993748966,
+                "induced_drag_n": 0.5280993080636012,
+                "body_drag_n": 0.294818751009152,
+                "profile_drag_n": 0.9513517444537881,
+                "hardware_drag_n": 0.8655738958483555,
+                "lift_drag": 14.634726964997197,
+                "alpha_deg": 4.045174189435001,
+                "elevator_deg": -2.269517681869259,
+                "rpm": 4897.234899328859
+              },
+              {
+                "speed_m_s": 15.0,
+                "range_km": 78.27361916361119,
+                "cruise_minutes": 86.97068795956798,
+                "power_w": 73.98574432177529,
+                "wh_km": 1.3701063763291719,
+                "drag_n": 2.6855839038822937,
+                "induced_drag_n": 0.5119293797556072,
+                "body_drag_n": 0.30393730038331496,
+                "profile_drag_n": 0.974553183222234,
+                "hardware_drag_n": 0.8951640405211374,
+                "lift_drag": 14.385471894872145,
+                "alpha_deg": 3.8750440201492222,
+                "elevator_deg": -2.172565085814173,
+                "rpm": 4957.597315436242
+              },
+              {
+                "speed_m_s": 15.25,
+                "range_km": 76.56822264281017,
+                "cruise_minutes": 83.68111764241549,
+                "power_w": 76.89418191522806,
+                "wh_km": 1.4006226214067041,
+                "drag_n": 2.732931120229822,
+                "induced_drag_n": 0.49659393124133705,
+                "body_drag_n": 0.31318132893720735,
+                "profile_drag_n": 0.997904361501513,
+                "hardware_drag_n": 0.9252514985497646,
+                "lift_drag": 14.136247885885588,
+                "alpha_deg": 3.7132121338230584,
+                "elevator_deg": -2.0803414574613583,
+                "rpm": 5017.959731543624
+              },
+              {
+                "speed_m_s": 15.5,
+                "range_km": 73.15959945011276,
+                "cruise_minutes": 78.66623596786319,
+                "power_w": 81.7960971908477,
+                "wh_km": 1.465879877972181,
+                "drag_n": 2.7818294588353294,
+                "induced_drag_n": 0.4820403123619025,
+                "body_drag_n": 0.32255049552243625,
+                "profile_drag_n": 1.0214023810167536,
+                "hardware_drag_n": 0.9558362699342369,
+                "lift_drag": 13.887764272506635,
+                "alpha_deg": 3.559147498875763,
+                "elevator_deg": -1.99254417623178,
+                "rpm": 5098.442953020134
+              },
+              {
+                "speed_m_s": 15.75,
+                "range_km": 73.56166619871706,
+                "cruise_minutes": 77.84303301451541,
+                "power_w": 82.6611044518992,
+                "wh_km": 1.4578678033844656,
+                "drag_n": 2.834201400853877,
+                "induced_drag_n": 0.468220018104952,
+                "body_drag_n": 0.3320444657808216,
+                "profile_drag_n": 1.0470185622935493,
+                "hardware_drag_n": 0.9869183546745541,
+                "lift_drag": 13.631138478366582,
+                "alpha_deg": 3.4123608918381723,
+                "elevator_deg": -1.9088944468618712,
+                "rpm": 5138.684563758389
+              },
+              {
+                "speed_m_s": 16.0,
+                "range_km": 74.0661893772424,
+                "cruise_minutes": 77.15228060129418,
+                "power_w": 83.4011779394835,
+                "wh_km": 1.447937117004922,
+                "drag_n": 2.887959632141479,
+                "induced_drag_n": 0.4550883030663703,
+                "body_drag_n": 0.3416629119017635,
+                "profile_drag_n": 1.0727106644026292,
+                "hardware_drag_n": 1.0184977527707164,
+                "lift_drag": 13.377400203469024,
+                "alpha_deg": 3.2724010087981963,
+                "elevator_deg": -1.829135083421174,
+                "rpm": 5178.926174496644
+              },
+              {
+                "speed_m_s": 16.25,
+                "range_km": 73.02016035389806,
+                "cruise_minutes": 74.89247215784417,
+                "power_w": 85.91772841072577,
+                "wh_km": 1.4686791181320644,
+                "drag_n": 2.9429917024516663,
+                "induced_drag_n": 0.4426038371077793,
+                "body_drag_n": 0.3514055123919826,
+                "profile_drag_n": 1.0984078887291806,
+                "hardware_drag_n": 1.0505744642227237,
+                "lift_drag": 13.12725134034055,
+                "alpha_deg": 3.1388509923487717,
+                "elevator_deg": -1.7530285301136206,
+                "rpm": 5239.2885906040265
+              },
+              {
+                "speed_m_s": 16.5,
+                "range_km": 73.46553339440901,
+                "cruise_minutes": 74.20760948930203,
+                "power_w": 86.7106638678763,
+                "wh_km": 1.4597754859911836,
+                "drag_n": 2.9992558891882473,
+                "induced_drag_n": 0.43072839725484285,
+                "body_drag_n": 0.36127195185681865,
+                "profile_drag_n": 1.1241070510460092,
+                "hardware_drag_n": 1.0831484890305765,
+                "lift_drag": 12.880992218731938,
+                "alpha_deg": 3.011325324062015,
+                "elevator_deg": -1.6803550903823512,
+                "rpm": 5279.530201342282
+              },
+              {
+                "speed_m_s": 16.75,
+                "range_km": 74.28088329979754,
+                "cruise_minutes": 73.9113266664652,
+                "power_w": 87.05825443916673,
+                "wh_km": 1.4437521465865129,
+                "drag_n": 3.056689597652122,
+                "induced_drag_n": 0.4194265915419295,
+                "body_drag_n": 0.3712619207923409,
+                "profile_drag_n": 1.1497812581235773,
+                "hardware_drag_n": 1.116219827194274,
+                "lift_drag": 12.638964649958078,
+                "alpha_deg": 2.889467039175575,
+                "elevator_deg": -1.6109113396345638,
+                "rpm": 5319.771812080537
+              },
+              {
+                "speed_m_s": 17.0,
+                "range_km": 75.4061742958772,
+                "cruise_minutes": 73.92762185870313,
+                "power_w": 87.03906498120342,
+                "wh_km": 1.4222069441373109,
+                "drag_n": 3.1151433843788308,
+                "induced_drag_n": 0.4086656110727959,
+                "body_drag_n": 0.38137511538757907,
+                "profile_drag_n": 1.1753141792046393,
+                "hardware_drag_n": 1.1497884787138166,
+                "lift_drag": 12.401802101421849,
+                "alpha_deg": 2.7729452258669136,
+                "elevator_deg": -1.54450870014536,
+                "rpm": 5360.013422818793
+              },
+              {
+                "speed_m_s": 17.25,
+                "range_km": 75.54703255415046,
+                "cruise_minutes": 72.99230198468642,
+                "power_w": 88.15437940586467,
+                "wh_km": 1.4195552239269673,
+                "drag_n": 3.1746818597539073,
+                "induced_drag_n": 0.3984150070499481,
+                "body_drag_n": 0.39161123733623976,
+                "profile_drag_n": 1.200801171778515,
+                "hardware_drag_n": 1.1838544435892044,
+                "lift_drag": 12.16921678369829,
+                "alpha_deg": 2.6614527763626343,
+                "elevator_deg": -1.4809721594755918,
+                "rpm": 5420.375838926175
+              },
+              {
+                "speed_m_s": 17.5,
+                "range_km": 76.12526628290081,
+                "cruise_minutes": 72.50025360276268,
+                "power_w": 88.75266999921641,
+                "wh_km": 1.4087725396701016,
+                "drag_n": 3.2348623751859353,
+                "induced_drag_n": 0.38864648993980233,
+                "body_drag_n": 0.4019699936573219,
+                "profile_drag_n": 1.2258281697683744,
+                "hardware_drag_n": 1.218417721820437,
+                "lift_drag": 11.94282392566984,
+                "alpha_deg": 2.554704361310373,
+                "elevator_deg": -1.4201391161210193,
+                "rpm": 5460.617449664429
+              },
+              {
+                "speed_m_s": 17.75,
+                "range_km": 73.80075347313057,
+                "cruise_minutes": 69.2964821343949,
+                "power_w": 92.85595581008181,
+                "wh_km": 1.4531448483580878,
+                "drag_n": 3.2961053789457697,
+                "induced_drag_n": 0.3793337482973034,
+                "body_drag_n": 0.41245109652408585,
+                "profile_drag_n": 1.250842220716866,
+                "hardware_drag_n": 1.253478313407515,
+                "lift_drag": 11.720921308340058,
+                "alpha_deg": 2.4524346024367367,
+                "elevator_deg": -1.3618583381593443,
+                "rpm": 5541.100671140939
+              },
+              {
+                "speed_m_s": 18.0,
+                "range_km": 72.92771085266142,
+                "cruise_minutes": 67.52565819690871,
+                "power_w": 95.29105312978746,
+                "wh_km": 1.4705409433609176,
+                "drag_n": 3.358793458677146,
+                "induced_drag_n": 0.3704522850810029,
+                "body_drag_n": 0.42305426310087735,
+                "profile_drag_n": 1.2762506921448278,
+                "hardware_drag_n": 1.289036218350438,
+                "lift_drag": 11.502163573295583,
+                "alpha_deg": 2.354396421614735,
+                "elevator_deg": -1.3059890224282544,
+                "rpm": 5601.463087248322
+              },
+              {
+                "speed_m_s": 18.25,
+                "range_km": 72.05568458785338,
+                "cruise_minutes": 65.80427816242317,
+                "power_w": 97.78378036429706,
+                "wh_km": 1.4883376006742322,
+                "drag_n": 3.422559879606453,
+                "induced_drag_n": 0.3619792695551596,
+                "body_drag_n": 0.4337792153873365,
+                "profile_drag_n": 1.3017099580147513,
+                "hardware_drag_n": 1.325091436649206,
+                "lift_drag": 11.287864385023427,
+                "alpha_deg": 2.2603595471425075,
+                "elevator_deg": -1.252399943293947,
+                "rpm": 5661.825503355705
+              },
+              {
+                "speed_m_s": 18.5,
+                "range_km": 71.18533221372844,
+                "cruise_minutes": 64.13092992227787,
+                "power_w": 100.33522187599281,
+                "wh_km": 1.506534863002895,
+                "drag_n": 3.4873300723758733,
+                "induced_drag_n": 0.35389340310532186,
+                "body_drag_n": 0.44462568006956343,
+                "profile_drag_n": 1.3271670208971693,
+                "hardware_drag_n": 1.361643968303819,
+                "lift_drag": 11.078214843110425,
+                "alpha_deg": 2.170109160353998,
+                "elevator_deg": -1.2009686813910472,
+                "rpm": 5722.187919463087
+              },
+              {
+                "speed_m_s": 18.75,
+                "range_km": 69.00996093467805,
+                "cruise_minutes": 61.3421874974916,
+                "power_w": 104.89666810673518,
+                "wh_km": 1.554024712692373,
+                "drag_n": 3.5530809586052676,
+                "induced_drag_n": 0.34617479749332414,
+                "body_drag_n": 0.45559338837783653,
+                "profile_drag_n": 1.3526189594198295,
+                "hardware_drag_n": 1.3986938133142772,
+                "lift_drag": 10.873208975734954,
+                "alpha_deg": 2.083444667694045,
+                "elevator_deg": -1.151580923861309,
+                "rpm": 5802.6711409395975
+              },
+              {
+                "speed_m_s": 19.0,
+                "range_km": 68.16576464426068,
+                "cruise_minutes": 59.794530389702345,
+                "power_w": 107.61170028310222,
+                "wh_km": 1.5732704719751787,
+                "drag_n": 3.6199503583757187,
+                "induced_drag_n": 0.33880486425101897,
+                "body_drag_n": 0.46668207595051303,
+                "profile_drag_n": 1.3782224464936061,
+                "hardware_drag_n": 1.4362409716805806,
+                "lift_drag": 10.672354023096233,
+                "alpha_deg": 2.0001785851391882,
+                "elevator_deg": -1.1041298286151158,
+                "rpm": 5863.03355704698
+              },
+              {
+                "speed_m_s": 19.25,
+                "range_km": 67.32488405519256,
+                "cruise_minutes": 58.28994290492862,
+                "power_w": 110.3893872972284,
+                "wh_km": 1.5929204516194575,
+                "drag_n": 3.6877888359225484,
+                "induced_drag_n": 0.3317662140630892,
+                "body_drag_n": 0.4778914827037614,
+                "profile_drag_n": 1.4038456957529688,
+                "hardware_drag_n": 1.474285443402729,
+                "lift_drag": 10.47603143496016,
+                "alpha_deg": 1.9201355233687516,
+                "elevator_deg": -1.058515446007844,
+                "rpm": 5923.395973154362
+              },
+              {
+                "speed_m_s": 19.5,
+                "range_km": 66.48780074803157,
+                "cruise_minutes": 56.82718012652271,
+                "power_w": 113.23087065976561,
+                "wh_km": 1.6129753655237267,
+                "drag_n": 3.7565660013356776,
+                "induced_drag_n": 0.3250425651210793,
+                "body_drag_n": 0.4892213527068063,
+                "profile_drag_n": 1.42947485502707,
+                "hardware_drag_n": 1.5128272284807223,
+                "lift_drag": 10.284230799321332,
+                "alpha_deg": 1.8431512634199774,
+                "elevator_deg": -1.0146441920806486,
+                "rpm": 5983.758389261745
+              }
+            ],
+            "violations": []
+          },
+          "aero": {
+            "area": 0.6240000000000001,
+            "mac": 0.24888888888888885,
+            "cl": [
+              0.09907056054523102,
+              0.09624731062024569,
+              0.01048600163197462
+            ],
+            "cm": [
+              0.0007128735907416227,
+              -0.01137374095663175,
+              -0.019958377115192827
+            ],
+            "drag": [
+              0.0005246699382060513,
+              0.00042666977166928925,
+              -0.00013304107656800088,
+              0.00027461626051395225,
+              9.90427466620613e-05,
+              4.1552617680364116e-05
+            ],
+            "static_margin": 0.11817203912853307,
+            "cnb_per_deg": 0.0003515549857215086,
+            "resolution": 10,
+            "samples": [
+              [
+                0.0,
+                0.0,
+                0.09907056054523102,
+                0.0007128735907416227,
+                0.0005246699382060513
+              ],
+              [
+                5.0,
+                0.0,
+                0.5797349689854708,
+                -0.06870417612096713,
+                0.009523425309401303
+              ],
+              [
+                0.0,
+                5.0,
+                0.15073553676822898,
+                -0.09657935844561369,
+                0.0008982799973751498
+              ],
+              [
+                5.0,
+                5.0,
+                0.6310750477939157,
+                -0.16707451736865941,
+                0.012373104035121934
+              ],
+              [
+                -5.0,
+                0.0,
+                -0.38273813721698613,
+                0.04503323344535038,
+                0.00525672759270841
+              ],
+              [
+                0.0,
+                -5.0,
+                0.045875520448482775,
+                0.10300441270631457,
+                0.0022286907630551587
+              ]
+            ]
+          },
+          "payload_capacity_kg": 0.9600000000000001,
+          "payload_curve": [
+            {
+              "payload_kg": 0.0,
+              "range_km": 89.08603733863671,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.096,
+              "range_km": 87.95238129451144,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.192,
+              "range_km": 86.17061476010026,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.28800000000000003,
+              "range_km": 85.0601958590319,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.384,
+              "range_km": 83.2557083594146,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.48,
+              "range_km": 82.49596153400248,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.5760000000000001,
+              "range_km": 81.0880087906197,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.672,
+              "range_km": 80.03248702188807,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.768,
+              "range_km": 78.48809568036113,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.864,
+              "range_km": 77.94021215199956,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.9600000000000001,
+              "range_km": 76.44310284666248,
+              "feasible": true,
+              "violations": []
+            }
+          ],
+          "scenarios": {
+            "battery_minus_10": {
+              "range_km": 73.1700318861445,
+              "violations": [],
+              "max_speed_m_s": 19.5,
+              "mass_kg": 3.939509595082903
+            },
+            "parasite_plus_20": {
+              "range_km": 74.09128463616284,
+              "violations": [],
+              "max_speed_m_s": 18.75,
+              "mass_kg": 3.939509595082903
+            },
+            "empty_mass_plus_10": {
+              "range_km": 77.94539893779442,
+              "violations": [],
+              "max_speed_m_s": 19.5,
+              "mass_kg": 4.283460554591193
+            },
+            "combined_adverse": {
+              "range_km": 61.96217831239643,
+              "violations": [],
+              "max_speed_m_s": 18.75,
+              "mass_kg": 4.283460554591193
+            }
+          }
+        },
+        "fidelity": "coupled_engineering_estimate",
+        "limitations": [
+          "No flight validation; transition energy allowance, not dynamic simulation.",
+          "VLM/XFOIL attached-flow estimates; no rotor interference, flutter, fatigue or control simulation.",
+          "Maximum speed is the highest supported passing speed on a 0.25 m/s grid; no propeller-map extrapolation.",
+          "Beam screening excludes joints/local shell buckling; hardware properties are assumptions."
+        ]
+      },
+      "reflection": {
+        "lesson": "Screening estimate: 82.39 km (+6.4%); 107.24 Wh remains for cruise at 1.302 Wh/km. Profile/hardware drag dominate (0.880/0.752 N). Static margin is 11.82% nominal; unloaded is feasible. Structure passes; wing stress/deflection are 100.5 MPa/54.2 mm. Speed 19.5 m/s and capacity 0.960 kg exceed protected 18.05 m/s/0.912 kg.",
+        "next_focus": "Reduce profile/hardware drag before adding span; monitor wing deflection against the 65 mm limit. Keep 150 Wh and 0.5 kg payload fixed. Recheck 5\u201320% static margin across payloads, structure, and \u226518.05 m/s speed/\u22650.912 kg capacity with the unchanged evaluator. Improve energy/drag robustness: combined-adverse range is 61.96 km."
+      },
+      "tool_id": "survey-vtol-range-v1-energy",
+      "retrieved_memory": [
+        {
+          "_id": "memory-survey-vtol-range-v2-01-evaluation",
+          "summary": "{\"fidelity\": \"coupled_engineering_estimate\", \"metrics\": {\"best_range_speed_m_s\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"m/s\", \"value\": 14.0}, \"endurance_min\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"min\", \"value\": 94.36493281141159}, \"hover_power_w\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"W\", \"value\": 334.9914892821792}, \"mass_kg\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"kg\", \"value\": 3.9820235932010553}, \"max_speed_m_s\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"m/s\", \"value\": 19.5}, \"payload_capacity_kg\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"kg\", \"value\": 0.9600000000000001}, \"range_km\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"km\", \"value\": 77.44654356158573}, \"stall_speed_m_s\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"m/s\", \"value\": 10.616052204477459}, \"static_margin\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"ratio\", \"value\": 0.15478058900239913}}, \"outcome\": \"passed\", \"parameters\": {\"battery_x\": 0.3, \"boom_diameter\": 0.018, \"boom_wall\": 0.0009, \"boom_y\": 0.4, \"fuselage_height\": 0.17, \"fuselage_length\": 1.04, \"fuselage_width\": 0.16, \"nose_fraction\": 0.3, \"payload_x\": 0.48, \"root_chord\": 0.26, \"rotor_front_x\": 0.16, \"rotor_rear_x\": 0.7, \"shell_thickness\": 0.0013, \"span\": 2.3, \"spar_diameter\": 0.027, \"spar_wall\": 0.0011, \"sweep\": 0.025, \"tail_chord\": 0.155, \"tail_fraction\": 0.67, \"tail_incidence_deg\": -1.5, \"tail_span\": 0.66, \"tail_x\": 0.93, \"taper\": 0.72, \"twist_deg\": -1.5, \"wing_x\": 0.31}, \"subsystem\": \"vtol\", \"violations\": []}",
+          "score": 0.7964978218078613
+        },
+        {
+          "_id": "memory-survey-vtol-range-v2-00-evaluation",
+          "summary": "{\"fidelity\": \"coupled_engineering_estimate\", \"metrics\": {\"best_range_speed_m_s\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"m/s\", \"value\": 17.0}, \"endurance_min\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"min\", \"value\": 82.342928718562}, \"hover_power_w\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"W\", \"value\": 385.94782840855873}, \"mass_kg\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"kg\", \"value\": 4.381786409911109}, \"max_speed_m_s\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"m/s\", \"value\": 19.0}, \"payload_capacity_kg\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"kg\", \"value\": 0.9600000000000001}, \"range_km\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"km\", \"value\": 68.33084876481837}, \"stall_speed_m_s\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"m/s\", \"value\": 10.75628372835031}, \"static_margin\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"ratio\", \"value\": 0.08986567441132458}}, \"outcome\": \"passed\", \"parameters\": {\"battery_x\": 0.28, \"boom_diameter\": 0.02, \"boom_wall\": 0.001, \"boom_y\": 0.46, \"fuselage_height\": 0.2, \"fuselage_length\": 1.08, \"fuselage_width\": 0.19, \"nose_fraction\": 0.25, \"payload_x\": 0.49, \"root_chord\": 0.3, \"rotor_front_x\": 0.13, \"rotor_rear_x\": 0.78, \"shell_thickness\": 0.0015, \"span\": 2.1, \"spar_diameter\": 0.025, \"spar_wall\": 0.0012, \"sweep\": 0.04, \"tail_chord\": 0.17, \"tail_fraction\": 0.72, \"tail_incidence_deg\": 0.0, \"tail_span\": 0.72, \"tail_x\": 0.88, \"taper\": 0.75, \"twist_deg\": -1.0, \"wing_x\": 0.3}, \"subsystem\": \"vtol\", \"violations\": []}",
+          "score": 0.7957690954208374
+        }
+      ],
+      "source_commit": "05655089da527430f4e38d0a989d2a0bec0a8517",
+      "generator": "gpt-6-astra",
+      "assets": {
+        "model.step": "/models/vtol/survey-vtol-range-v2/03-model.step",
+        "model.glb": "/models/vtol/survey-vtol-range-v2/03-model.glb",
+        "internal.glb": "/models/vtol/survey-vtol-range-v2/03-internal.glb"
+      }
+    },
+    {
+      "_id": "survey-vtol-range-v2-03",
+      "iteration": 4,
+      "title": "Compact low-drag survey VTOL",
+      "change": "Targets the 82.39 km incumbent\u2019s 0.880 N profile and 0.260 N body drag with a 17.5% smaller wing, compact hull, smaller all-moving tail and rebalanced booms. Forward payload/aft battery packaging leaves a 5 mm box gap and addresses iteration 2\u2019s unloaded static-margin failure. The thicker-wall, chord-tapered spar has a 10.46%-chord root. Keeps 0.5 kg payload and 150 Wh fixed. Range improvement, co",
+      "parameters": {
+        "span": 2.45,
+        "root_chord": 0.28,
+        "taper": 0.5,
+        "twist_deg": -0.5,
+        "sweep": 0.03,
+        "wing_x": 0.34,
+        "fuselage_length": 0.82,
+        "fuselage_width": 0.146,
+        "fuselage_height": 0.156,
+        "nose_fraction": 0.34,
+        "tail_fraction": 0.78,
+        "tail_span": 0.58,
+        "tail_chord": 0.135,
+        "tail_x": 0.82,
+        "tail_incidence_deg": -2.5,
+        "boom_y": 0.35,
+        "rotor_front_x": 0.18,
+        "rotor_rear_x": 0.7,
+        "battery_x": 0.5,
+        "payload_x": 0.36,
+        "spar_diameter": 0.0293,
+        "spar_wall": 0.001,
+        "boom_diameter": 0.016,
+        "boom_wall": 0.0008,
+        "shell_thickness": 0.00128
+      },
+      "evaluation": {
+        "outcome": "passed",
+        "metrics": {
+          "range_km": {
+            "value": 84.73501280345175,
+            "unit": "km",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "max_speed_m_s": {
+            "value": 19.75,
+            "unit": "m/s",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "payload_capacity_kg": {
+            "value": 0.9600000000000001,
+            "unit": "kg",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "endurance_min": {
+            "value": 106.77779358450833,
+            "unit": "min",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "mass_kg": {
+            "value": 3.747666701296559,
+            "unit": "kg",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "hover_power_w": {
+            "value": 305.5527627006246,
+            "unit": "W",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "static_margin": {
+            "value": 0.0920251411223064,
+            "unit": "ratio",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "stall_speed_m_s": {
+            "value": 10.296716112726072,
+            "unit": "m/s",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "best_range_speed_m_s": {
+            "value": 13.5,
+            "unit": "m/s",
+            "fidelity": "coupled_engineering_estimate"
+          }
+        },
+        "violations": [],
+        "components": [
+          {
+            "name": "fuselage",
+            "mass_kg": 0.3886343155752499,
+            "cg_x_m": 0.4231575702443104
+          },
+          {
+            "name": "wing-1",
+            "mass_kg": 0.19173199107336086,
+            "cg_x_m": 0.4465252488210924
+          },
+          {
+            "name": "wing1",
+            "mass_kg": 0.19173199107336086,
+            "cg_x_m": 0.4465252488210924
+          },
+          {
+            "name": "tail-1",
+            "mass_kg": 0.01637607220213918,
+            "cg_x_m": 0.8777537930300433
+          },
+          {
+            "name": "tail1",
+            "mass_kg": 0.01637607220213918,
+            "cg_x_m": 0.8777537930300433
+          },
+          {
+            "name": "fin",
+            "mass_kg": 0.024650894718466994,
+            "cg_x_m": 0.7588736190268311
+          },
+          {
+            "name": "wing_spar-1",
+            "mass_kg": 0.21794740182453798,
+            "cg_x_m": 0.40778116522127755
+          },
+          {
+            "name": "wing_spar1",
+            "mass_kg": 0.21794740182453798,
+            "cg_x_m": 0.40778116522127755
+          },
+          {
+            "name": "boom-1",
+            "mass_kg": 0.053635280401383066,
+            "cg_x_m": 0.43999999999999984
+          },
+          {
+            "name": "boom1",
+            "mass_kg": 0.053635280401383066,
+            "cg_x_m": 0.43999999999999984
+          },
+          {
+            "name": "battery",
+            "mass_kg": 0.85,
+            "cg_x_m": 0.5
+          },
+          {
+            "name": "payload",
+            "mass_kg": 0.5,
+            "cg_x_m": 0.36
+          },
+          {
+            "name": "cruise_drive",
+            "mass_kg": 0.165,
+            "cg_x_m": -0.035
+          },
+          {
+            "name": "avionics_esc_wiring_landing",
+            "mass_kg": 0.3,
+            "cg_x_m": 0.34
+          },
+          {
+            "name": "lift_drives_0.18",
+            "mass_kg": 0.28,
+            "cg_x_m": 0.18
+          },
+          {
+            "name": "lift_drives_0.7",
+            "mass_kg": 0.28,
+            "cg_x_m": 0.7
+          }
+        ],
+        "performance": {
+          "nominal": {
+            "mass_kg": 3.747666701296559,
+            "cg_x_m": 0.4151139888088949,
+            "static_margin": 0.0920251411223064,
+            "stall_speed_m_s": 10.296716112726072,
+            "hover_power_w": 305.5527627006246,
+            "hover_thrust_ratio": 2.8687039922823425,
+            "overhead_wh": 11.543104368690264,
+            "usable_wh": 120.0,
+            "reserve_wh": 30.0,
+            "structure": {
+              "wing": {
+                "stress_pa": 97138980.73051128,
+                "deflection_m": 0.05345570276917789
+              },
+              "boom": {
+                "stress_pa": 37571820.19580762,
+                "deflection_m": 0.0019080857961759775
+              },
+              "payload_floor_stress_pa": 17956512.45117187,
+              "passed": true
+            },
+            "range_km": 84.73501280345175,
+            "best": {
+              "speed_m_s": 13.5,
+              "range_km": 84.73501280345175,
+              "cruise_minutes": 104.61112691784166,
+              "power_w": 62.20575123896051,
+              "wh_km": 1.2799537291967182,
+              "drag_n": 2.3904866376923324,
+              "induced_drag_n": 0.6266649703712789,
+              "body_drag_n": 0.23262820315387936,
+              "profile_drag_n": 0.8034172913967599,
+              "hardware_drag_n": 0.7277761727704145,
+              "lift_drag": 15.374298720928502,
+              "alpha_deg": 5.707363602413798,
+              "elevator_deg": -2.000006725023549,
+              "rpm": 4555.181208053691
+            },
+            "max_speed_m_s": 19.75,
+            "endurance_min": 106.77779358450833,
+            "curve": [
+              {
+                "speed_m_s": 13.5,
+                "range_km": 84.73501280345175,
+                "cruise_minutes": 104.61112691784166,
+                "power_w": 62.20575123896051,
+                "wh_km": 1.2799537291967182,
+                "drag_n": 2.3904866376923324,
+                "induced_drag_n": 0.6266649703712789,
+                "body_drag_n": 0.23262820315387936,
+                "profile_drag_n": 0.8034172913967599,
+                "hardware_drag_n": 0.7277761727704145,
+                "lift_drag": 15.374298720928502,
+                "alpha_deg": 5.707363602413798,
+                "elevator_deg": -2.000006725023549,
+                "rpm": 4555.181208053691
+              },
+              {
+                "speed_m_s": 13.75,
+                "range_km": 84.67316489703742,
+                "cruise_minutes": 102.63413926913627,
+                "power_w": 63.40398803184066,
+                "wh_km": 1.2808886471078922,
+                "drag_n": 2.4165778057513823,
+                "induced_drag_n": 0.6047979427524384,
+                "body_drag_n": 0.24048201528299,
+                "profile_drag_n": 0.8163174215738057,
+                "hardware_drag_n": 0.7549804261421481,
+                "lift_drag": 15.20830637805293,
+                "alpha_deg": 5.458901301777957,
+                "elevator_deg": -1.8855711062775506,
+                "rpm": 4615.543624161074
+              },
+              {
+                "speed_m_s": 14.0,
+                "range_km": 84.06612650772598,
+                "cruise_minutes": 100.07872203300711,
+                "power_w": 65.02294999063201,
+                "wh_km": 1.290137896639524,
+                "drag_n": 2.4455635796961745,
+                "induced_drag_n": 0.5841335837431924,
+                "body_drag_n": 0.24845343109662085,
+                "profile_drag_n": 0.830292724730154,
+                "hardware_drag_n": 0.7826838401262072,
+                "lift_drag": 15.028051595712677,
+                "alpha_deg": 5.2236302745223915,
+                "elevator_deg": -1.7772110632927687,
+                "rpm": 4675.906040268456
+              },
+              {
+                "speed_m_s": 14.25,
+                "range_km": 83.57720485541556,
+                "cruise_minutes": 97.75111678995971,
+                "power_w": 66.57124697471465,
+                "wh_km": 1.297685126212761,
+                "drag_n": 2.476685353962968,
+                "induced_drag_n": 0.5645889855385888,
+                "body_drag_n": 0.25654209772381875,
+                "profile_drag_n": 0.8446678559779688,
+                "hardware_drag_n": 0.8108864147225915,
+                "lift_drag": 14.83921063992347,
+                "alpha_deg": 5.000632986676002,
+                "elevator_deg": -1.6745040025110087,
+                "rpm": 4736.268456375839
+              },
+              {
+                "speed_m_s": 14.5,
+                "range_km": 83.07708809849946,
+                "cruise_minutes": 95.4909058603442,
+                "power_w": 68.14694738989806,
+                "wh_km": 1.3054970764348286,
+                "drag_n": 2.5101001789419937,
+                "induced_drag_n": 0.5460883253890113,
+                "body_drag_n": 0.2647476699546007,
+                "profile_drag_n": 0.8596760336670802,
+                "hardware_drag_n": 0.8395881499313013,
+                "lift_drag": 14.641668872260261,
+                "alpha_deg": 4.789070314001978,
+                "elevator_deg": -1.5770634439673084,
+                "rpm": 4796.6308724832215
+              },
+              {
+                "speed_m_s": 14.75,
+                "range_km": 82.56683919198906,
+                "cruise_minutes": 93.29586349377294,
+                "power_w": 69.75029218002707,
+                "wh_km": 1.313564824482619,
+                "drag_n": 2.5458343540369572,
+                "induced_drag_n": 0.5285621512648504,
+                "body_drag_n": 0.2730698099420563,
+                "profile_drag_n": 0.8754133470777141,
+                "hardware_drag_n": 0.8687890457523365,
+                "lift_drag": 14.436153553349522,
+                "alpha_deg": 4.588173636506519,
+                "elevator_deg": -1.484535380215282,
+                "rpm": 4856.993288590604
+              },
+              {
+                "speed_m_s": 15.0,
+                "range_km": 82.04745461861562,
+                "cruise_minutes": 91.16383846512848,
+                "power_w": 71.38152415957964,
+                "wh_km": 1.3218800770292527,
+                "drag_n": 2.5831004832853743,
+                "induced_drag_n": 0.5119467501555577,
+                "body_drag_n": 0.281508186920953,
+                "profile_drag_n": 0.8911564440231666,
+                "hardware_drag_n": 0.8984891021856969,
+                "lift_drag": 14.22788462705329,
+                "alpha_deg": 4.397237847455541,
+                "elevator_deg": -1.3965950564523286,
+                "rpm": 4917.355704697987
+              },
+              {
+                "speed_m_s": 15.25,
+                "range_km": 81.51986828315704,
+                "cruise_minutes": 89.09275222202955,
+                "power_w": 73.04088801366635,
+                "wh_km": 1.3304351186460173,
+                "drag_n": 2.6232951898985712,
+                "induced_drag_n": 0.49618358825616965,
+                "body_drag_n": 0.2900624769416656,
+                "profile_drag_n": 0.9083608054693529,
+                "hardware_drag_n": 0.9286883192313828,
+                "lift_drag": 14.009881845470431,
+                "alpha_deg": 4.215615157964234,
+                "elevator_deg": -1.3129441170661058,
+                "rpm": 4977.718120805369
+              },
+              {
+                "speed_m_s": 15.5,
+                "range_km": 75.46139594304711,
+                "cruise_minutes": 81.1412859602657,
+                "power_w": 80.19855318863466,
+                "wh_km": 1.4372500571439903,
+                "drag_n": 2.66514184194141,
+                "induced_drag_n": 0.48121881384159937,
+                "body_drag_n": 0.2987323626183571,
+                "profile_drag_n": 0.9258039685920596,
+                "hardware_drag_n": 0.9593866968893943,
+                "lift_drag": 13.78990606725008,
+                "alpha_deg": 4.042709595347058,
+                "elevator_deg": -1.2333080717099865,
+                "rpm": 5078.322147651006
+              },
+              {
+                "speed_m_s": 15.75,
+                "range_km": 75.81571118286321,
+                "cruise_minutes": 80.22826580197166,
+                "power_w": 81.11123520905846,
+                "wh_km": 1.43053324883701,
+                "drag_n": 2.7083100799615605,
+                "induced_drag_n": 0.46700281493259316,
+                "body_drag_n": 0.3075175328904266,
+                "profile_drag_n": 0.9432054969788095,
+                "hardware_drag_n": 0.9905842351597309,
+                "lift_drag": 13.570106291814094,
+                "alpha_deg": 3.8779721078426532,
+                "elevator_deg": -1.1574340406598673,
+                "rpm": 5118.563758389262
+              },
+              {
+                "speed_m_s": 16.0,
+                "range_km": 76.36577927731209,
+                "cruise_minutes": 79.54768674720009,
+                "power_w": 81.80519137607268,
+                "wh_km": 1.4202290169457064,
+                "drag_n": 2.7545154010407527,
+                "induced_drag_n": 0.45348982495878915,
+                "body_drag_n": 0.31641768279632376,
+                "profile_drag_n": 0.9623269592432467,
+                "hardware_drag_n": 1.022280934042393,
+                "lift_drag": 13.342476009531,
+                "alpha_deg": 3.720896200518824,
+                "elevator_deg": -1.0850887448194462,
+                "rpm": 5158.805369127516
+              },
+              {
+                "speed_m_s": 16.25,
+                "range_km": 76.75309293259531,
+                "cruise_minutes": 78.721120956508,
+                "power_w": 82.66413967191616,
+                "wh_km": 1.4130622166139515,
+                "drag_n": 2.80221297731259,
+                "induced_drag_n": 0.4406375705577366,
+                "body_drag_n": 0.3254325132589033,
+                "profile_drag_n": 0.9816660999585696,
+                "hardware_drag_n": 1.0544767935373804,
+                "lift_drag": 13.11536844409174,
+                "alpha_deg": 3.571014037492764,
+                "elevator_deg": -1.0160567104988172,
+                "rpm": 5199.046979865772
+              },
+              {
+                "speed_m_s": 16.5,
+                "range_km": 77.16406218490239,
+                "cruise_minutes": 77.94349715646706,
+                "power_w": 83.48886020363351,
+                "wh_km": 1.405536367064537,
+                "drag_n": 2.851049423278186,
+                "induced_drag_n": 0.4284069564417979,
+                "body_drag_n": 0.334561730881561,
+                "profile_drag_n": 1.0009089223101337,
+                "hardware_drag_n": 1.0871718136446933,
+                "lift_drag": 12.890711524043576,
+                "alpha_deg": 3.4278929543785503,
+                "elevator_deg": -0.9501386631336467,
+                "rpm": 5239.2885906040265
+              },
+              {
+                "speed_m_s": 16.75,
+                "range_km": 77.83379921168665,
+                "cruise_minutes": 77.44656637978773,
+                "power_w": 84.02456095945026,
+                "wh_km": 1.3934421386310158,
+                "drag_n": 2.9017696567049276,
+                "induced_drag_n": 0.4167617829404734,
+                "body_drag_n": 0.34380504775445087,
+                "profile_drag_n": 1.0208368316456717,
+                "hardware_drag_n": 1.1203659943643316,
+                "lift_drag": 12.665393881747075,
+                "alpha_deg": 3.291132332350907,
+                "elevator_deg": -0.8871500875559015,
+                "rpm": 5279.530201342282
+              },
+              {
+                "speed_m_s": 17.0,
+                "range_km": 77.65693904957296,
+                "cruise_minutes": 76.13425397016955,
+                "power_w": 85.47287716811776,
+                "wh_km": 1.396615640001924,
+                "drag_n": 2.9577008748141633,
+                "induced_drag_n": 0.40566849240269026,
+                "body_drag_n": 0.35316218127014365,
+                "profile_drag_n": 1.0448108654450343,
+                "hardware_drag_n": 1.1540593356962952,
+                "lift_drag": 12.425886596317516,
+                "alpha_deg": 3.160360791599846,
+                "elevator_deg": -0.8269199353681514,
+                "rpm": 5339.892617449665
+              },
+              {
+                "speed_m_s": 17.25,
+                "range_km": 78.8420381955348,
+                "cruise_minutes": 76.17588231452638,
+                "power_w": 85.42616823274591,
+                "wh_km": 1.3756226768558117,
+                "drag_n": 3.0150157535143594,
+                "induced_drag_n": 0.3950959411375938,
+                "body_drag_n": 0.36263285394813094,
+                "profile_drag_n": 1.0690351207880506,
+                "hardware_drag_n": 1.1882518376405842,
+                "lift_drag": 12.18967284447221,
+                "alpha_deg": 3.0352336674178466,
+                "elevator_deg": -0.7692894624914587,
+                "rpm": 5380.13422818792
+              },
+              {
+                "speed_m_s": 17.5,
+                "range_km": 80.04375274257298,
+                "cruise_minutes": 76.23214546911713,
+                "power_w": 85.3631194272873,
+                "wh_km": 1.354970149639481,
+                "drag_n": 3.073441155874447,
+                "induced_drag_n": 0.3850151939963159,
+                "body_drag_n": 0.3722167932676258,
+                "profile_drag_n": 1.0932656684133066,
+                "hardware_drag_n": 1.2229435001971984,
+                "lift_drag": 11.95794999556883,
+                "alpha_deg": 2.915430736852912,
+                "elevator_deg": -0.7141111821177455,
+                "rpm": 5420.375838926175
+              },
+              {
+                "speed_m_s": 17.75,
+                "range_km": 77.56672541473252,
+                "cruise_minutes": 72.83260602322302,
+                "power_w": 89.34753393011455,
+                "wh_km": 1.3982399676074264,
+                "drag_n": 3.1329514456970076,
+                "induced_drag_n": 0.37539933906186124,
+                "body_drag_n": 0.38191373150815805,
+                "profile_drag_n": 1.1175040517608503,
+                "hardware_drag_n": 1.2581343233661384,
+                "lift_drag": 11.73080920444761,
+                "alpha_deg": 2.8006541678965244,
+                "elevator_deg": -0.6612479201562551,
+                "rpm": 5500.859060402685
+              },
+              {
+                "speed_m_s": 18.0,
+                "range_km": 76.63919344164285,
+                "cruise_minutes": 70.96221614966932,
+                "power_w": 91.70251566204657,
+                "wh_km": 1.4151622787352867,
+                "drag_n": 3.1935146285877822,
+                "induced_drag_n": 0.36622332022861953,
+                "body_drag_n": 0.39172340559749025,
+                "profile_drag_n": 1.1417435956142687,
+                "hardware_drag_n": 1.2938243071474036,
+                "lift_drag": 11.508341100827268,
+                "alpha_deg": 2.6906266666546492,
+                "elevator_deg": -0.6105719618661312,
+                "rpm": 5561.221476510067
+              },
+              {
+                "speed_m_s": 18.25,
+                "range_km": 75.71266564767456,
+                "cruise_minutes": 69.14398689285348,
+                "power_w": 94.11395018286358,
+                "wh_km": 1.4324802158731138,
+                "drag_n": 3.2550499729099376,
+                "induced_drag_n": 0.35746378572461845,
+                "body_drag_n": 0.4016455569664223,
+                "profile_drag_n": 1.1659271786779029,
+                "hardware_drag_n": 1.330013451540994,
+                "lift_drag": 11.290780775145654,
+                "alpha_deg": 2.58508980095576,
+                "elevator_deg": -0.5619642797515445,
+                "rpm": 5621.583892617449
+              },
+              {
+                "speed_m_s": 18.5,
+                "range_km": 74.78785863852126,
+                "cruise_minutes": 67.37644922389302,
+                "power_w": 96.58291306290636,
+                "wh_km": 1.4501938898334286,
+                "drag_n": 3.317574797317205,
+                "induced_drag_n": 0.34909895086478926,
+                "body_drag_n": 0.4116799314100834,
+                "profile_drag_n": 1.1900941584954225,
+                "hardware_drag_n": 1.36670175654691,
+                "lift_drag": 11.077988561400296,
+                "alpha_deg": 2.4838024814523374,
+                "elevator_deg": -0.5153138339944394,
+                "rpm": 5681.946308724832
+              },
+              {
+                "speed_m_s": 18.75,
+                "range_km": 72.47080423650544,
+                "cruise_minutes": 64.41849265467151,
+                "power_w": 101.01778960838008,
+                "wh_km": 1.4965598460500753,
+                "drag_n": 3.380660118894634,
+                "induced_drag_n": 0.3411084735275362,
+                "body_drag_n": 0.4218262789553329,
+                "profile_drag_n": 1.2138361442466137,
+                "hardware_drag_n": 1.4038892221651516,
+                "lift_drag": 10.871266073410133,
+                "alpha_deg": 2.386539583530127,
+                "elevator_deg": -0.4705169377398632,
+                "rpm": 5762.4295302013425
+              },
+              {
+                "speed_m_s": 19.0,
+                "range_km": 71.5739374271595,
+                "cruise_minutes": 62.784155637859214,
+                "power_w": 103.64738797179228,
+                "wh_km": 1.515312689646086,
+                "drag_n": 3.444669081493084,
+                "induced_drag_n": 0.3334733410242445,
+                "body_drag_n": 0.43208435373392545,
+                "profile_drag_n": 1.2375355383391957,
+                "hardware_drag_n": 1.4415758483957182,
+                "lift_drag": 10.669255823070182,
+                "alpha_deg": 2.2930906953021384,
+                "elevator_deg": -0.4274766804528269,
+                "rpm": 5822.791946308725
+              },
+              {
+                "speed_m_s": 19.25,
+                "range_km": 70.68059170737723,
+                "cruise_minutes": 61.1953174955647,
+                "power_w": 106.33842594819819,
+                "wh_km": 1.5344650208975208,
+                "drag_n": 3.509854623225257,
+                "induced_drag_n": 0.3261757671858373,
+                "body_drag_n": 0.4424539138611156,
+                "profile_drag_n": 1.2614633069396939,
+                "hardware_drag_n": 1.4797616352386103,
+                "lift_drag": 10.47110481815281,
+                "alpha_deg": 2.2032589786738987,
+                "elevator_deg": -0.3861024033529998,
+                "rpm": 5883.154362416108
+              },
+              {
+                "speed_m_s": 19.5,
+                "range_km": 69.7912912307993,
+                "cruise_minutes": 59.65067626564043,
+                "power_w": 109.09203625620822,
+                "wh_km": 1.5540176104872965,
+                "drag_n": 3.576126020938346,
+                "induced_drag_n": 0.31919909862528995,
+                "body_drag_n": 0.4529347213194006,
+                "profile_drag_n": 1.2855456182998277,
+                "hardware_drag_n": 1.5184465826938278,
+                "lift_drag": 10.277058314244325,
+                "alpha_deg": 2.116860131958277,
+                "elevator_deg": -0.34630922162063726,
+                "rpm": 5943.51677852349
+              },
+              {
+                "speed_m_s": 19.75,
+                "range_km": 67.82412749918228,
+                "cruise_minutes": 57.23555063222133,
+                "power_w": 113.69531114836816,
+                "wh_km": 1.5990901708631244,
+                "drag_n": 3.6433322570655795,
+                "induced_drag_n": 0.3125277292528468,
+                "body_drag_n": 0.4635265418471187,
+                "profile_drag_n": 1.309647295204243,
+                "hardware_drag_n": 1.5576306907613708,
+                "lift_drag": 10.087483946871982,
+                "alpha_deg": 2.033721443822302,
+                "elevator_deg": -0.3080175886677766,
+                "rpm": 6003.879194630872
+              }
+            ],
+            "violations": []
+          },
+          "aero": {
+            "area": 0.5145000000000002,
+            "mac": 0.21777777777777776,
+            "cl": [
+              0.10319322311560818,
+              0.09797582341585062,
+              0.011230650499210066
+            ],
+            "cm": [
+              0.01230675598729587,
+              -0.009016238976417826,
+              -0.019576033264045584
+            ],
+            "drag": [
+              0.0006598904532972363,
+              0.00038543844677248234,
+              -0.0001899656275451714,
+              0.00026602728082954767,
+              0.00010258262390382621,
+              4.4255107421608964e-05
+            ],
+            "static_margin": 0.0920251411223064,
+            "cnb_per_deg": 0.00033721288353287136,
+            "resolution": 10,
+            "samples": [
+              [
+                0.0,
+                0.0,
+                0.10319322311560818,
+                0.01230675598729587,
+                0.0006598904532972363
+              ],
+              [
+                5.0,
+                0.0,
+                0.5925039972447073,
+                -0.047597301219131236,
+                0.00923776470789834
+              ],
+              [
+                0.0,
+                5.0,
+                0.15842237800264297,
+                -0.08268173110934926,
+                0.0008164400011116034
+              ],
+              [
+                5.0,
+                5.0,
+                0.6473669407921887,
+                -0.1439884321889821,
+                0.011958879853308362
+              ],
+              [
+                -5.0,
+                0.0,
+                -0.38725423691379895,
+                0.042565088545047015,
+                0.005383380240173516
+              ],
+              [
+                0.0,
+                -5.0,
+                0.046115873010542326,
+                0.11307860153110658,
+                0.0027160962765633177
+              ]
+            ]
+          },
+          "payload_capacity_kg": 0.9600000000000001,
+          "payload_curve": [
+            {
+              "payload_kg": 0.0,
+              "range_km": 92.22731842869412,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.096,
+              "range_km": 90.79015521683634,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.192,
+              "range_km": 89.32852023245272,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.28800000000000003,
+              "range_km": 87.91336243572044,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.384,
+              "range_km": 86.44859437301966,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.48,
+              "range_km": 84.80213584899332,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.5760000000000001,
+              "range_km": 83.81163703204724,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.672,
+              "range_km": 82.72983072903662,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.768,
+              "range_km": 80.17518997148456,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.864,
+              "range_km": 79.37257366555811,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.9600000000000001,
+              "range_km": 77.62951000608558,
+              "feasible": true,
+              "violations": []
+            }
+          ],
+          "scenarios": {
+            "battery_minus_10": {
+              "range_km": 75.35967389371551,
+              "violations": [],
+              "max_speed_m_s": 19.75,
+              "mass_kg": 3.747666701296559
+            },
+            "parasite_plus_20": {
+              "range_km": 76.45664088906199,
+              "violations": [],
+              "max_speed_m_s": 19.0,
+              "mass_kg": 3.747666701296559
+            },
+            "empty_mass_plus_10": {
+              "range_km": 79.99872778929843,
+              "violations": [],
+              "max_speed_m_s": 19.5,
+              "mass_kg": 4.072433371426215
+            },
+            "combined_adverse": {
+              "range_km": 63.900512045586716,
+              "violations": [],
+              "max_speed_m_s": 19.0,
+              "mass_kg": 4.072433371426215
+            }
+          }
+        },
+        "fidelity": "coupled_engineering_estimate",
+        "limitations": [
+          "No flight validation; transition energy allowance, not dynamic simulation.",
+          "VLM/XFOIL attached-flow estimates; no rotor interference, flutter, fatigue or control simulation.",
+          "Maximum speed is the highest supported passing speed on a 0.25 m/s grid; no propeller-map extrapolation.",
+          "Beam screening excludes joints/local shell buckling; hardware properties are assumptions."
+        ]
+      },
+      "reflection": {
+        "lesson": "Screening estimates give 84.74 km vs 82.39 at 1.280 Wh/km. Profile/body drag fell to 0.803/0.233 N. Static margin is 9.20%; unloaded screening and structure pass (wing 97.1 MPa, 53.5 mm deflection). Max speed/payload capacity are 19.75 m/s/0.960 kg, above protected 18.05/0.912 floors. Battery -10%/parasite +20% cut range to 75.36/76.46 km.",
+        "next_focus": "Target profile and hardware drag (0.803/0.728 N) plus 11.54 Wh overhead while preserving wing stiffness. Keep 150 Wh and 0.5 kg mission payload fixed. Recheck containment, 5\u201320% static margin across loading, structure and protected speed/payload capacity with the unchanged evaluator. Track the 63.90 km combined-adverse range, not just nominal gains."
+      },
+      "tool_id": "survey-vtol-range-v1-energy",
+      "retrieved_memory": [
+        {
+          "_id": "memory-survey-vtol-range-v2-02-evaluation",
+          "summary": "{\"fidelity\": \"coupled_engineering_estimate\", \"metrics\": {\"best_range_speed_m_s\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"m/s\", \"value\": 13.75}, \"endurance_min\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"min\", \"value\": 110.45173260651156}, \"hover_power_w\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"W\", \"value\": 337.6804046181634}, \"mass_kg\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"kg\", \"value\": 3.939509595082903}, \"max_speed_m_s\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"m/s\", \"value\": 19.5}, \"payload_capacity_kg\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"kg\", \"value\": 0.9600000000000001}, \"range_km\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"km\", \"value\": 82.38896324870268}, \"stall_speed_m_s\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"m/s\", \"value\": 9.586050998548695}, \"static_margin\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"ratio\", \"value\": 0.11817203912853307}}, \"outcome\": \"passed\", \"parameters\": {\"battery_x\": 0.315, \"boom_diameter\": 0.016, \"boom_wall\": 0.0008, \"boom_y\": 0.35, \"fuselage_height\": 0.162, \"fuselage_length\": 0.92, \"fuselage_width\": 0.152, \"nose_fraction\": 0.31, \"payload_x\": 0.46, \"root_chord\": 0.32, \"rotor_front_x\": 0.21, \"rotor_rear_x\": 0.7, \"shell_thickness\": 0.0013, \"span\": 2.6, \"spar_diameter\": 0.0335, \"spar_wall\": 0.0008, \"sweep\": 0.04, \"tail_chord\": 0.145, \"tail_fraction\": 0.72, \"tail_incidence_deg\": -2.0, \"tail_span\": 0.62, \"tail_x\": 0.9, \"taper\": 0.5, \"twist_deg\": -0.75, \"wing_x\": 0.31}, \"subsystem\": \"vtol\", \"violations\": []}",
+          "score": 0.796858012676239
+        },
+        {
+          "_id": "memory-survey-vtol-range-v2-01-evaluation",
+          "summary": "{\"fidelity\": \"coupled_engineering_estimate\", \"metrics\": {\"best_range_speed_m_s\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"m/s\", \"value\": 14.0}, \"endurance_min\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"min\", \"value\": 94.36493281141159}, \"hover_power_w\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"W\", \"value\": 334.9914892821792}, \"mass_kg\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"kg\", \"value\": 3.9820235932010553}, \"max_speed_m_s\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"m/s\", \"value\": 19.5}, \"payload_capacity_kg\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"kg\", \"value\": 0.9600000000000001}, \"range_km\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"km\", \"value\": 77.44654356158573}, \"stall_speed_m_s\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"m/s\", \"value\": 10.616052204477459}, \"static_margin\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"ratio\", \"value\": 0.15478058900239913}}, \"outcome\": \"passed\", \"parameters\": {\"battery_x\": 0.3, \"boom_diameter\": 0.018, \"boom_wall\": 0.0009, \"boom_y\": 0.4, \"fuselage_height\": 0.17, \"fuselage_length\": 1.04, \"fuselage_width\": 0.16, \"nose_fraction\": 0.3, \"payload_x\": 0.48, \"root_chord\": 0.26, \"rotor_front_x\": 0.16, \"rotor_rear_x\": 0.7, \"shell_thickness\": 0.0013, \"span\": 2.3, \"spar_diameter\": 0.027, \"spar_wall\": 0.0011, \"sweep\": 0.025, \"tail_chord\": 0.155, \"tail_fraction\": 0.67, \"tail_incidence_deg\": -1.5, \"tail_span\": 0.66, \"tail_x\": 0.93, \"taper\": 0.72, \"twist_deg\": -1.5, \"wing_x\": 0.31}, \"subsystem\": \"vtol\", \"violations\": []}",
+          "score": 0.7964791059494019
+        },
+        {
+          "_id": "memory-survey-vtol-range-v2-00-evaluation",
+          "summary": "{\"fidelity\": \"coupled_engineering_estimate\", \"metrics\": {\"best_range_speed_m_s\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"m/s\", \"value\": 17.0}, \"endurance_min\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"min\", \"value\": 82.342928718562}, \"hover_power_w\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"W\", \"value\": 385.94782840855873}, \"mass_kg\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"kg\", \"value\": 4.381786409911109}, \"max_speed_m_s\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"m/s\", \"value\": 19.0}, \"payload_capacity_kg\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"kg\", \"value\": 0.9600000000000001}, \"range_km\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"km\", \"value\": 68.33084876481837}, \"stall_speed_m_s\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"m/s\", \"value\": 10.75628372835031}, \"static_margin\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"ratio\", \"value\": 0.08986567441132458}}, \"outcome\": \"passed\", \"parameters\": {\"battery_x\": 0.28, \"boom_diameter\": 0.02, \"boom_wall\": 0.001, \"boom_y\": 0.46, \"fuselage_height\": 0.2, \"fuselage_length\": 1.08, \"fuselage_width\": 0.19, \"nose_fraction\": 0.25, \"payload_x\": 0.49, \"root_chord\": 0.3, \"rotor_front_x\": 0.13, \"rotor_rear_x\": 0.78, \"shell_thickness\": 0.0015, \"span\": 2.1, \"spar_diameter\": 0.025, \"spar_wall\": 0.0012, \"sweep\": 0.04, \"tail_chord\": 0.17, \"tail_fraction\": 0.72, \"tail_incidence_deg\": 0.0, \"tail_span\": 0.72, \"tail_x\": 0.88, \"taper\": 0.75, \"twist_deg\": -1.0, \"wing_x\": 0.3}, \"subsystem\": \"vtol\", \"violations\": []}",
+          "score": 0.7957496047019958
+        }
+      ],
+      "source_commit": "ed51d95bc8aaaab2d94c3297f26fe86c4bd187e5",
+      "generator": "gpt-6-astra",
+      "assets": {
+        "model.step": "/models/vtol/survey-vtol-range-v2/04-model.step",
+        "model.glb": "/models/vtol/survey-vtol-range-v2/04-model.glb",
+        "internal.glb": "/models/vtol/survey-vtol-range-v2/04-internal.glb"
+      }
+    },
+    {
+      "_id": "survey-vtol-range-v2-04",
+      "iteration": 5,
+      "title": "Compact long-span survey VTOL",
+      "change": "Targets the 84.74 km incumbent\u2019s 0.803 N profile and 0.728 N hardware drag with an 11.5% larger, straight-quarter-chord wing, thinner-wall tapered spar, compact hull, smaller all-moving tail and shorter booms. Retains forward-payload packaging following iteration 2\u2019s unloaded-margin failure; boxes have a 5 mm axial gap. Spar root diameter is 10.47% chord. Keeps 0.5 kg payload and 150 Wh fixed. Imp",
+      "parameters": {
+        "span": 2.55,
+        "root_chord": 0.3,
+        "taper": 0.5,
+        "twist_deg": 0.0,
+        "sweep": 0.0375,
+        "wing_x": 0.36,
+        "fuselage_length": 0.8,
+        "fuselage_width": 0.146,
+        "fuselage_height": 0.152,
+        "nose_fraction": 0.35,
+        "tail_fraction": 0.78,
+        "tail_span": 0.5,
+        "tail_chord": 0.135,
+        "tail_x": 0.8,
+        "tail_incidence_deg": -2.5,
+        "boom_y": 0.35,
+        "rotor_front_x": 0.23,
+        "rotor_rear_x": 0.7,
+        "battery_x": 0.5,
+        "payload_x": 0.36,
+        "spar_diameter": 0.0314,
+        "spar_wall": 0.0009,
+        "boom_diameter": 0.016,
+        "boom_wall": 0.0008,
+        "shell_thickness": 0.00128
+      },
+      "evaluation": {
+        "outcome": "passed",
+        "metrics": {
+          "range_km": {
+            "value": 83.85141172120758,
+            "unit": "km",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "max_speed_m_s": {
+            "value": 19.5,
+            "unit": "m/s",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "payload_capacity_kg": {
+            "value": 0.9600000000000001,
+            "unit": "kg",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "endurance_min": {
+            "value": 110.17372280087244,
+            "unit": "min",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "mass_kg": {
+            "value": 3.7887330131543333,
+            "unit": "kg",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "hover_power_w": {
+            "value": 312.8854248991725,
+            "unit": "W",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "static_margin": {
+            "value": 0.1123024075151805,
+            "unit": "ratio",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "stall_speed_m_s": {
+            "value": 9.803848705339183,
+            "unit": "m/s",
+            "fidelity": "coupled_engineering_estimate"
+          },
+          "best_range_speed_m_s": {
+            "value": 14.0,
+            "unit": "m/s",
+            "fidelity": "coupled_engineering_estimate"
+          }
+        },
+        "violations": [],
+        "components": [
+          {
+            "name": "fuselage",
+            "mass_kg": 0.37186586290146223,
+            "cg_x_m": 0.41444233412311743
+          },
+          {
+            "name": "wing-1",
+            "mass_kg": 0.22576191850053046,
+            "cg_x_m": 0.4761296020657214
+          },
+          {
+            "name": "wing1",
+            "mass_kg": 0.22576191850053046,
+            "cg_x_m": 0.4761296020657214
+          },
+          {
+            "name": "tail-1",
+            "mass_kg": 0.014144976525249502,
+            "cg_x_m": 0.8577537930300435
+          },
+          {
+            "name": "tail1",
+            "mass_kg": 0.014144976525249502,
+            "cg_x_m": 0.8577537930300435
+          },
+          {
+            "name": "fin",
+            "mass_kg": 0.024172468739821512,
+            "cg_x_m": 0.7408022431139698
+          },
+          {
+            "name": "wing_spar-1",
+            "mass_kg": 0.22046240382949495,
+            "cg_x_m": 0.43500001065903715
+          },
+          {
+            "name": "wing_spar1",
+            "mass_kg": 0.22046240382949495,
+            "cg_x_m": 0.43500001065903715
+          },
+          {
+            "name": "boom-1",
+            "mass_kg": 0.048478041901250074,
+            "cg_x_m": 0.4649999999999997
+          },
+          {
+            "name": "boom1",
+            "mass_kg": 0.048478041901250074,
+            "cg_x_m": 0.4649999999999997
+          },
+          {
+            "name": "battery",
+            "mass_kg": 0.85,
+            "cg_x_m": 0.5
+          },
+          {
+            "name": "payload",
+            "mass_kg": 0.5,
+            "cg_x_m": 0.36
+          },
+          {
+            "name": "cruise_drive",
+            "mass_kg": 0.165,
+            "cg_x_m": -0.035
+          },
+          {
+            "name": "avionics_esc_wiring_landing",
+            "mass_kg": 0.3,
+            "cg_x_m": 0.36
+          },
+          {
+            "name": "lift_drives_0.23",
+            "mass_kg": 0.28,
+            "cg_x_m": 0.23
+          },
+          {
+            "name": "lift_drives_0.7",
+            "mass_kg": 0.28,
+            "cg_x_m": 0.7
+          }
+        ],
+        "performance": {
+          "nominal": {
+            "mass_kg": 3.7887330131543333,
+            "cg_x_m": 0.4264712039680743,
+            "static_margin": 0.1123024075151805,
+            "stall_speed_m_s": 9.803848705339183,
+            "hover_power_w": 312.8854248991725,
+            "hover_thrust_ratio": 2.6712545842869826,
+            "overhead_wh": 11.820116051746517,
+            "usable_wh": 120.0,
+            "reserve_wh": 30.0,
+            "structure": {
+              "wing": {
+                "stress_pa": 97262163.00487396,
+                "deflection_m": 0.053955563442259824
+              },
+              "boom": {
+                "stress_pa": 34709084.09177441,
+                "deflection_m": 0.001471887337164769
+              },
+              "payload_floor_stress_pa": 17956512.45117187,
+              "passed": true
+            },
+            "range_km": 83.85141172120758,
+            "best": {
+              "speed_m_s": 14.0,
+              "range_km": 83.85141172120758,
+              "cruise_minutes": 99.8231091919138,
+              "power_w": 65.02294999063201,
+              "wh_km": 1.290137896639524,
+              "drag_n": 2.482498765523997,
+              "induced_drag_n": 0.6341406399758903,
+              "body_drag_n": 0.24268081934338967,
+              "profile_drag_n": 0.8278209630137221,
+              "hardware_drag_n": 0.777856343190995,
+              "lift_drag": 14.966685631204106,
+              "alpha_deg": 4.779614872194877,
+              "elevator_deg": -5.540061810311104,
+              "rpm": 4675.906040268456
+            },
+            "max_speed_m_s": 19.5,
+            "endurance_min": 110.17372280087244,
+            "curve": [
+              {
+                "speed_m_s": 12.75,
+                "range_km": 82.6253979426674,
+                "cruise_minutes": 108.00705613420577,
+                "power_w": 60.096009179529695,
+                "wh_km": 1.3092812457413878,
+                "drag_n": 2.3483537794154747,
+                "induced_drag_n": 0.7409008567659192,
+                "body_drag_n": 0.20490874866933345,
+                "profile_drag_n": 0.7573897260721298,
+                "hardware_drag_n": 0.6451544479080924,
+                "lift_drag": 15.82162744350133,
+                "alpha_deg": 6.036957202567861,
+                "elevator_deg": -6.608075858606507,
+                "rpm": 4434.456375838926
+              },
+              {
+                "speed_m_s": 13.0,
+                "range_km": 83.1455416056318,
+                "cruise_minutes": 106.59684821234846,
+                "power_w": 60.89104083044829,
+                "wh_km": 1.3010906160352198,
+                "drag_n": 2.3698486713109235,
+                "induced_drag_n": 0.716834373143167,
+                "body_drag_n": 0.21223211625224556,
+                "profile_drag_n": 0.770079518653888,
+                "hardware_drag_n": 0.6707026632616231,
+                "lift_drag": 15.678122849463263,
+                "alpha_deg": 5.756215876841271,
+                "elevator_deg": -6.369608042348282,
+                "rpm": 4474.697986577181
+              },
+              {
+                "speed_m_s": 13.25,
+                "range_km": 83.57182874314324,
+                "cruise_minutes": 105.12179716118646,
+                "power_w": 61.74545348518612,
+                "wh_km": 1.294453951471407,
+                "drag_n": 2.394026472842055,
+                "induced_drag_n": 0.6942254010366026,
+                "body_drag_n": 0.21967137231803002,
+                "profile_drag_n": 0.7833827390207438,
+                "hardware_drag_n": 0.6967469604666787,
+                "lift_drag": 15.51978602782193,
+                "alpha_deg": 5.491215169121075,
+                "elevator_deg": -6.144510650956523,
+                "rpm": 4514.939597315436
+              },
+              {
+                "speed_m_s": 13.5,
+                "range_km": 83.01345470086447,
+                "cruise_minutes": 102.48574654427712,
+                "power_w": 63.33361716881263,
+                "wh_km": 1.30316084709491,
+                "drag_n": 2.4210994793967435,
+                "induced_drag_n": 0.6729690242489854,
+                "body_drag_n": 0.2272261474562941,
+                "profile_drag_n": 0.7976169681682045,
+                "hardware_drag_n": 0.7232873395232593,
+                "lift_drag": 15.346242035749666,
+                "alpha_deg": 5.240799972951276,
+                "elevator_deg": -5.931802511768481,
+                "rpm": 4575.302013422819
+              },
+              {
+                "speed_m_s": 13.75,
+                "range_km": 83.10857707737154,
+                "cruise_minutes": 100.73766918469276,
+                "power_w": 64.43263070733718,
+                "wh_km": 1.301669307218933,
+                "drag_n": 2.4503604693444974,
+                "induced_drag_n": 0.6529697768855607,
+                "body_drag_n": 0.23489608073316562,
+                "profile_drag_n": 0.8121708112944065,
+                "hardware_drag_n": 0.7503238004313646,
+                "lift_drag": 15.162984821326846,
+                "alpha_deg": 5.0039192278258735,
+                "elevator_deg": -5.730590831024729,
+                "rpm": 4635.664429530201
+              },
+              {
+                "speed_m_s": 14.0,
+                "range_km": 83.85141172120758,
+                "cruise_minutes": 99.8231091919138,
+                "power_w": 65.02294999063201,
+                "wh_km": 1.290137896639524,
+                "drag_n": 2.482498765523997,
+                "induced_drag_n": 0.6341406399758903,
+                "body_drag_n": 0.24268081934338967,
+                "profile_drag_n": 0.8278209630137221,
+                "hardware_drag_n": 0.777856343190995,
+                "lift_drag": 14.966685631204106,
+                "alpha_deg": 4.779614872194877,
+                "elevator_deg": -5.540061810311104,
+                "rpm": 4675.906040268456
+              },
+              {
+                "speed_m_s": 14.25,
+                "range_km": 81.87188529902699,
+                "cruise_minutes": 95.75659099301402,
+                "power_w": 67.78429525930753,
+                "wh_km": 1.321331291604435,
+                "drag_n": 2.5163405276763546,
+                "induced_drag_n": 0.6164021602198237,
+                "body_drag_n": 0.25058001828274384,
+                "profile_drag_n": 0.8434733813716371,
+                "hardware_drag_n": 0.80588496780215,
+                "lift_drag": 14.765401659591557,
+                "alpha_deg": 4.5670121410327855,
+                "elevator_deg": -5.359472405101365,
+                "rpm": 4756.3892617449665
+              },
+              {
+                "speed_m_s": 14.5,
+                "range_km": 81.38417502714525,
+                "cruise_minutes": 93.54502876683362,
+                "power_w": 69.38683030472828,
+                "wh_km": 1.329249622695944,
+                "drag_n": 2.5530974640377164,
+                "induced_drag_n": 0.5996816741608008,
+                "body_drag_n": 0.2585933400392488,
+                "profile_drag_n": 0.8604127755728369,
+                "hardware_drag_n": 0.8344096742648299,
+                "lift_drag": 14.552824217172565,
+                "alpha_deg": 4.36531102414103,
+                "elevator_deg": -5.188143069252659,
+                "rpm": 4816.7516778523495
+              },
+              {
+                "speed_m_s": 14.75,
+                "range_km": 80.88664010875446,
+                "cruise_minutes": 91.39733345621973,
+                "power_w": 71.01731299419546,
+                "wh_km": 1.3374258567645096,
+                "drag_n": 2.5918862948407164,
+                "induced_drag_n": 0.5839126236146096,
+                "body_drag_n": 0.2667204543017834,
+                "profile_drag_n": 0.8778227543452884,
+                "hardware_drag_n": 0.8634304625790349,
+                "lift_drag": 14.335034170830891,
+                "alpha_deg": 4.173778729154798,
+                "elevator_deg": -5.025451352918832,
+                "rpm": 4877.114093959732
+              },
+              {
+                "speed_m_s": 15.0,
+                "range_km": 80.38024653227285,
+                "cruise_minutes": 89.31138503585872,
+                "power_w": 72.6759867657314,
+                "wh_km": 1.3458516067728037,
+                "drag_n": 2.632124436175355,
+                "induced_drag_n": 0.5690339502894085,
+                "body_drag_n": 0.27496103768484537,
+                "profile_drag_n": 0.8951821154563365,
+                "hardware_drag_n": 0.8929473327447645,
+                "lift_drag": 14.11588984654472,
+                "alpha_deg": 3.9917430164299437,
+                "elevator_deg": -4.870826241057738,
+                "rpm": 4937.476510067114
+              },
+              {
+                "speed_m_s": 15.25,
+                "range_km": 79.86589954033471,
+                "cruise_minutes": 87.28513610965543,
+                "power_w": 74.36309692799118,
+                "wh_km": 1.3545190697266154,
+                "drag_n": 2.6757068591032107,
+                "induced_drag_n": 0.5549895592979023,
+                "body_drag_n": 0.28331477346830225,
+                "profile_drag_n": 0.9144422415749875,
+                "hardware_drag_n": 0.9229602847620191,
+                "lift_drag": 13.885967544255848,
+                "alpha_deg": 3.8185862924187757,
+                "elevator_deg": -4.723743136215577,
+                "rpm": 4997.838926174497
+              },
+              {
+                "speed_m_s": 15.5,
+                "range_km": 75.26865865166253,
+                "cruise_minutes": 80.93404156092745,
+                "power_w": 80.19855318863466,
+                "wh_km": 1.4372500571439903,
+                "drag_n": 2.720853709661953,
+                "induced_drag_n": 0.5417278427452795,
+                "body_drag_n": 0.2917813513510838,
+                "profile_drag_n": 0.9338751969347913,
+                "hardware_drag_n": 0.9534693186307986,
+                "lift_drag": 13.655559088498793,
+                "alpha_deg": 3.6537403644680664,
+                "elevator_deg": -4.583719403137711,
+                "rpm": 5078.322147651006
+              },
+              {
+                "speed_m_s": 15.75,
+                "range_km": 75.62206892863287,
+                "cruise_minutes": 80.02335336363268,
+                "power_w": 81.11123520905846,
+                "wh_km": 1.43053324883701,
+                "drag_n": 2.7684544445654398,
+                "induced_drag_n": 0.5292012558258243,
+                "body_drag_n": 0.30036046721785165,
+                "profile_drag_n": 0.9544182871706609,
+                "hardware_drag_n": 0.9844744343511029,
+                "lift_drag": 13.420765754836928,
+                "alpha_deg": 3.4966817737270732,
+                "elevator_deg": -4.450310404438765,
+                "rpm": 5118.563758389262
+              },
+              {
+                "speed_m_s": 16.0,
+                "range_km": 74.71310920741163,
+                "cruise_minutes": 77.82615542438711,
+                "power_w": 83.4011779394835,
+                "wh_km": 1.447937117004922,
+                "drag_n": 2.8204851716310952,
+                "induced_drag_n": 0.5173659389167432,
+                "body_drag_n": 0.30905182291776767,
+                "profile_drag_n": 0.9780917778736521,
+                "hardware_drag_n": 1.015975631922932,
+                "lift_drag": 13.173187002420303,
+                "alpha_deg": 3.3469276344757763,
+                "elevator_deg": -4.323105966437122,
+                "rpm": 5178.926174496644
+              },
+              {
+                "speed_m_s": 16.25,
+                "range_km": 75.08383390606663,
+                "cruise_minutes": 77.0090604164786,
+                "power_w": 84.28609571123,
+                "wh_km": 1.4407879608757266,
+                "drag_n": 2.8748081364947513,
+                "induced_drag_n": 0.5061813800522799,
+                "body_drag_n": 0.3178551260545493,
+                "profile_drag_n": 1.0027987190416356,
+                "hardware_drag_n": 1.0479729113462861,
+                "lift_drag": 12.924263755825006,
+                "alpha_deg": 3.204031918032031,
+                "elevator_deg": -4.201727222624462,
+                "rpm": 5219.167785234899
+              },
+              {
+                "speed_m_s": 16.5,
+                "range_km": 75.49039502266858,
+                "cruise_minutes": 76.25292426532181,
+                "power_w": 85.12189007087146,
+                "wh_km": 1.4330284523715735,
+                "drag_n": 2.9303889298028083,
+                "induced_drag_n": 0.4956101129212101,
+                "body_drag_n": 0.326770089787073,
+                "profile_drag_n": 1.0275424544733598,
+                "hardware_drag_n": 1.0804662726211651,
+                "lift_drag": 12.679128775561598,
+                "alpha_deg": 3.0675821277640942,
+                "elevator_deg": -4.085823789348747,
+                "rpm": 5259.4093959731545
+              },
+              {
+                "speed_m_s": 16.75,
+                "range_km": 76.22391122615838,
+                "cruise_minutes": 75.84468778722227,
+                "power_w": 85.58006138946396,
+                "wh_km": 1.4192381656627522,
+                "drag_n": 2.9871757159415844,
+                "induced_drag_n": 0.4856174461782837,
+                "body_drag_n": 0.3357964326398377,
+                "profile_drag_n": 1.052306121375894,
+                "hardware_drag_n": 1.1134557157475689,
+                "lift_drag": 12.438096093633522,
+                "alpha_deg": 2.93719631886344,
+                "elevator_deg": -3.975071234344136,
+                "rpm": 5299.6510067114095
+              },
+              {
+                "speed_m_s": 17.0,
+                "range_km": 76.06479801986465,
+                "cruise_minutes": 74.57333139202417,
+                "power_w": 87.03906498120342,
+                "wh_km": 1.4222069441373109,
+                "drag_n": 3.045133521271093,
+                "induced_drag_n": 0.47617122041312165,
+                "body_drag_n": 0.3449338783226654,
+                "profile_drag_n": 1.0770871818098084,
+                "hardware_drag_n": 1.1469412407254975,
+                "lift_drag": 12.201362713297668,
+                "alpha_deg": 2.8125204226206932,
+                "elevator_deg": -3.8691688039125025,
+                "rpm": 5360.013422818793
+              },
+              {
+                "speed_m_s": 17.25,
+                "range_km": 77.62673355385833,
+                "cruise_minutes": 75.00167493126409,
+                "power_w": 86.54197446715358,
+                "wh_km": 1.3935905711296872,
+                "drag_n": 3.1041662306193634,
+                "induced_drag_n": 0.4672415895935112,
+                "body_drag_n": 0.3541821555590517,
+                "profile_drag_n": 1.1018196379118492,
+                "hardware_drag_n": 1.1809228475549511,
+                "lift_drag": 11.969326332126414,
+                "alpha_deg": 2.6932258401597804,
+                "elevator_deg": -3.7678373789886357,
+                "rpm": 5400.255033557047
+              },
+              {
+                "speed_m_s": 17.5,
+                "range_km": 76.79017080613059,
+                "cruise_minutes": 73.13349600583865,
+                "power_w": 88.75266999921641,
+                "wh_km": 1.4087725396701016,
+                "drag_n": 3.1642474216260275,
+                "induced_drag_n": 0.4588008242062988,
+                "body_drag_n": 0.36354099792263544,
+                "profile_drag_n": 1.1265050632611637,
+                "hardware_drag_n": 1.2154005362359293,
+                "lift_drag": 11.742058585405129,
+                "alpha_deg": 2.5790072750583386,
+                "elevator_deg": -3.6708176341206684,
+                "rpm": 5460.617449664429
+              },
+              {
+                "speed_m_s": 17.75,
+                "range_km": 75.88728952662957,
+                "cruise_minutes": 71.25567091702307,
+                "power_w": 91.09159949463827,
+                "wh_km": 1.4255336384137445,
+                "drag_n": 3.225173276880628,
+                "induced_drag_n": 0.4508231336685606,
+                "body_drag_n": 0.3730101436812904,
+                "profile_drag_n": 1.1509656927623446,
+                "hardware_drag_n": 1.2503743067684328,
+                "lift_drag": 11.52024260829355,
+                "alpha_deg": 2.4695807781300387,
+                "elevator_deg": -3.577868376665454,
+                "rpm": 5520.979865771812
+              },
+              {
+                "speed_m_s": 18.0,
+                "range_km": 74.98469049081983,
+                "cruise_minutes": 69.43026897298132,
+                "power_w": 93.48650283093517,
+                "wh_km": 1.442692944921839,
+                "drag_n": 3.2868867885697095,
+                "induced_drag_n": 0.4432845058829939,
+                "body_drag_n": 0.382589335648378,
+                "profile_drag_n": 1.1751687878858765,
+                "hardware_drag_n": 1.285844159152461,
+                "lift_drag": 11.303942299642715,
+                "alpha_deg": 2.3646819809613646,
+                "elevator_deg": -3.488765046316113,
+                "rpm": 5581.342281879195
+              },
+              {
+                "speed_m_s": 18.25,
+                "range_km": 74.08310863343387,
+                "cruise_minutes": 67.65580697117247,
+                "power_w": 95.93844678640633,
+                "wh_km": 1.460250331604358,
+                "drag_n": 3.349628227535878,
+                "induced_drag_n": 0.43616256207176585,
+                "body_drag_n": 0.3922783210407396,
+                "profile_drag_n": 1.1993772510353589,
+                "hardware_drag_n": 1.321810093388014,
+                "lift_drag": 11.092209666140322,
+                "alpha_deg": 2.264064497661179,
+                "elevator_deg": -3.4032983575131923,
+                "rpm": 5641.704697986577
+              },
+              {
+                "speed_m_s": 18.5,
+                "range_km": 73.18323226841406,
+                "cruise_minutes": 65.9308398814541,
+                "power_w": 98.44851132741334,
+                "wh_km": 1.478205875786987,
+                "drag_n": 3.4133739292818803,
+                "induced_drag_n": 0.42943642524841624,
+                "body_drag_n": 0.4020768513430333,
+                "profile_drag_n": 1.2235885432153386,
+                "hardware_drag_n": 1.3582721094750916,
+                "lift_drag": 10.885059584218105,
+                "alpha_deg": 2.1674984767625367,
+                "elevator_deg": -3.321273069398425,
+                "rpm": 5702.067114093959
+              },
+              {
+                "speed_m_s": 18.75,
+                "range_km": 70.93144424065231,
+                "cruise_minutes": 63.05017265835761,
+                "power_w": 102.94647521531923,
+                "wh_km": 1.5251329661528774,
+                "drag_n": 3.478101623646565,
+                "induced_drag_n": 0.4230866008829211,
+                "body_drag_n": 0.4119846821780466,
+                "profile_drag_n": 1.2478001331719026,
+                "hardware_drag_n": 1.3952302074136946,
+                "lift_drag": 10.682487926990342,
+                "alpha_deg": 2.074769287368781,
+                "elevator_deg": -3.242506869798514,
+                "rpm": 5782.5503355704695
+              },
+              {
+                "speed_m_s": 19.0,
+                "range_km": 70.0586873960229,
+                "cruise_minutes": 61.454988943879734,
+                "power_w": 105.61865112078299,
+                "wh_km": 1.5441323263272364,
+                "drag_n": 3.5437903271143405,
+                "induced_drag_n": 0.417094868484989,
+                "body_drag_n": 0.4220015731826473,
+                "profile_drag_n": 1.272009498242882,
+                "hardware_drag_n": 1.4326843872038222,
+                "lift_drag": 10.484474298372096,
+                "alpha_deg": 1.9856763255072132,
+                "elevator_deg": -3.1668293613158607,
+                "rpm": 5842.912751677852
+              },
+              {
+                "speed_m_s": 19.25,
+                "range_km": 69.18935985857924,
+                "cruise_minutes": 59.904207669765576,
+                "power_w": 108.3528735189531,
+                "wh_km": 1.5635335284120218,
+                "drag_n": 3.6107420475389844,
+                "induced_drag_n": 0.41144418297869495,
+                "body_drag_n": 0.4321272878890556,
+                "profile_drag_n": 1.2965359278257595,
+                "hardware_drag_n": 1.4706346488454747,
+                "lift_drag": 10.290067280982854,
+                "alpha_deg": 1.9000319282834293,
+                "elevator_deg": -3.0940811389875313,
+                "rpm": 5903.275167785235
+              },
+              {
+                "speed_m_s": 19.5,
+                "range_km": 68.323965406638,
+                "cruise_minutes": 58.39655162960511,
+                "power_w": 111.1502795244607,
+                "wh_km": 1.5833373151632577,
+                "drag_n": 3.6789204893605225,
+                "induced_drag_n": 0.40611858487073715,
+                "body_drag_n": 0.4423615936111406,
+                "profile_drag_n": 1.321359318539993,
+                "hardware_drag_n": 1.5090809923386521,
+                "lift_drag": 10.099369831694368,
+                "alpha_deg": 1.8176603848517026,
+                "elevator_deg": -3.024112950181893,
+                "rpm": 5963.637583892618
+              }
+            ],
+            "violations": []
+          },
+          "aero": {
+            "area": 0.57375,
+            "mac": 0.2333333333333333,
+            "cl": [
+              0.1303260495348081,
+              0.09552126640898606,
+              0.008566235536738548
+            ],
+            "cm": [
+              -0.018692705942049786,
+              -0.010727268186628076,
+              -0.012628905398611681
+            ],
+            "drag": [
+              0.0008100815318696737,
+              0.0005484106347396423,
+              -0.00016207239074385074,
+              0.0002571050053845928,
+              7.917341026060829e-05,
+              3.585384564065473e-05
+            ],
+            "static_margin": 0.1123024075151805,
+            "cnb_per_deg": 0.000270698488452438,
+            "resolution": 10,
+            "samples": [
+              [
+                0.0,
+                0.0,
+                0.1303260495348081,
+                -0.018692705942049786,
+                0.0008100815318696737
+              ],
+              [
+                5.0,
+                0.0,
+                0.6071881051076408,
+                -0.08531556314546747,
+                0.009979759840182706
+              ],
+              [
+                0.0,
+                5.0,
+                0.1722477013751725,
+                -0.07949318754379134,
+                0.0008960657191667881
+              ],
+              [
+                5.0,
+                5.0,
+                0.6488756528959043,
+                -0.14713575279890295,
+                0.012045079283995027
+              ],
+              [
+                -5.0,
+                0.0,
+                -0.34802455898221984,
+                0.02195711872081328,
+                0.004495653492786283
+              ],
+              [
+                0.0,
+                -5.0,
+                0.08658534600778703,
+                0.046795866442325466,
+                0.0025167896266052956
+              ]
+            ]
+          },
+          "payload_capacity_kg": 0.9600000000000001,
+          "payload_curve": [
+            {
+              "payload_kg": 0.0,
+              "range_km": 91.55369918045953,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.096,
+              "range_km": 90.62333033476564,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.192,
+              "range_km": 89.1574544835972,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.28800000000000003,
+              "range_km": 87.14043148415476,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.384,
+              "range_km": 85.60891265392448,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.48,
+              "range_km": 84.53043636864821,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.5760000000000001,
+              "range_km": 82.83137595187213,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.672,
+              "range_km": 80.92282572215463,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.768,
+              "range_km": 79.14984869773774,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.864,
+              "range_km": 78.14932438858209,
+              "feasible": true,
+              "violations": []
+            },
+            {
+              "payload_kg": 0.9600000000000001,
+              "range_km": 76.849031113494,
+              "feasible": true,
+              "violations": []
+            }
+          ],
+          "scenarios": {
+            "battery_minus_10": {
+              "range_km": 74.55008042068778,
+              "violations": [],
+              "max_speed_m_s": 19.5,
+              "mass_kg": 3.7887330131543333
+            },
+            "parasite_plus_20": {
+              "range_km": 75.69956425733135,
+              "violations": [],
+              "max_speed_m_s": 19.0,
+              "mass_kg": 3.7887330131543333
+            },
+            "empty_mass_plus_10": {
+              "range_km": 80.18639862890676,
+              "violations": [],
+              "max_speed_m_s": 19.5,
+              "mass_kg": 4.117606314469768
+            },
+            "combined_adverse": {
+              "range_km": 63.24231738092282,
+              "violations": [],
+              "max_speed_m_s": 19.0,
+              "mass_kg": 4.117606314469768
+            }
+          }
+        },
+        "fidelity": "coupled_engineering_estimate",
+        "limitations": [
+          "No flight validation; transition energy allowance, not dynamic simulation.",
+          "VLM/XFOIL attached-flow estimates; no rotor interference, flutter, fatigue or control simulation.",
+          "Maximum speed is the highest supported passing speed on a 0.25 m/s grid; no propeller-map extrapolation.",
+          "Beam screening excludes joints/local shell buckling; hardware properties are assumptions."
+        ]
+      },
+      "reflection": {
+        "lesson": "Screening estimate: 83.85 km trails 84.74 km; profile/hardware drag rose to 0.828/0.778 N. Cruise has 108.18 Wh at 1.290 Wh/km. Static margin is 11.23%; structure passes with 54.0 mm wing deflection. The unloaded case passes, and 19.5 m/s speed plus 0.960 kg capacity exceed protected floors.",
+        "next_focus": "Use the unchanged evaluator to isolate wing-area and hardware-drag changes, targeting lower Wh/km. Hold 150 Wh and 0.5 kg mission payload; retain forward packaging. Recheck containment, 5\u201320% static margin across payloads and spar stiffness. Protect \u226518.05 m/s speed and \u22650.912 kg capacity; require range >84.74 km before replacing the incumbent."
+      },
+      "tool_id": "survey-vtol-range-v1-energy",
+      "retrieved_memory": [
+        {
+          "_id": "memory-survey-vtol-range-v2-02-evaluation",
+          "summary": "{\"fidelity\": \"coupled_engineering_estimate\", \"metrics\": {\"best_range_speed_m_s\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"m/s\", \"value\": 13.75}, \"endurance_min\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"min\", \"value\": 110.45173260651156}, \"hover_power_w\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"W\", \"value\": 337.6804046181634}, \"mass_kg\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"kg\", \"value\": 3.939509595082903}, \"max_speed_m_s\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"m/s\", \"value\": 19.5}, \"payload_capacity_kg\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"kg\", \"value\": 0.9600000000000001}, \"range_km\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"km\", \"value\": 82.38896324870268}, \"stall_speed_m_s\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"m/s\", \"value\": 9.586050998548695}, \"static_margin\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"ratio\", \"value\": 0.11817203912853307}}, \"outcome\": \"passed\", \"parameters\": {\"battery_x\": 0.315, \"boom_diameter\": 0.016, \"boom_wall\": 0.0008, \"boom_y\": 0.35, \"fuselage_height\": 0.162, \"fuselage_length\": 0.92, \"fuselage_width\": 0.152, \"nose_fraction\": 0.31, \"payload_x\": 0.46, \"root_chord\": 0.32, \"rotor_front_x\": 0.21, \"rotor_rear_x\": 0.7, \"shell_thickness\": 0.0013, \"span\": 2.6, \"spar_diameter\": 0.0335, \"spar_wall\": 0.0008, \"sweep\": 0.04, \"tail_chord\": 0.145, \"tail_fraction\": 0.72, \"tail_incidence_deg\": -2.0, \"tail_span\": 0.62, \"tail_x\": 0.9, \"taper\": 0.5, \"twist_deg\": -0.75, \"wing_x\": 0.31}, \"subsystem\": \"vtol\", \"violations\": []}",
+          "score": 0.796858012676239
+        },
+        {
+          "_id": "memory-survey-vtol-range-v2-03-evaluation",
+          "summary": "{\"fidelity\": \"coupled_engineering_estimate\", \"metrics\": {\"best_range_speed_m_s\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"m/s\", \"value\": 13.5}, \"endurance_min\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"min\", \"value\": 106.77779358450833}, \"hover_power_w\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"W\", \"value\": 305.5527627006246}, \"mass_kg\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"kg\", \"value\": 3.747666701296559}, \"max_speed_m_s\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"m/s\", \"value\": 19.75}, \"payload_capacity_kg\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"kg\", \"value\": 0.9600000000000001}, \"range_km\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"km\", \"value\": 84.73501280345175}, \"stall_speed_m_s\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"m/s\", \"value\": 10.296716112726072}, \"static_margin\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"ratio\", \"value\": 0.0920251411223064}}, \"outcome\": \"passed\", \"parameters\": {\"battery_x\": 0.5, \"boom_diameter\": 0.016, \"boom_wall\": 0.0008, \"boom_y\": 0.35, \"fuselage_height\": 0.156, \"fuselage_length\": 0.82, \"fuselage_width\": 0.146, \"nose_fraction\": 0.34, \"payload_x\": 0.36, \"root_chord\": 0.28, \"rotor_front_x\": 0.18, \"rotor_rear_x\": 0.7, \"shell_thickness\": 0.00128, \"span\": 2.45, \"spar_diameter\": 0.0293, \"spar_wall\": 0.001, \"sweep\": 0.03, \"tail_chord\": 0.135, \"tail_fraction\": 0.78, \"tail_incidence_deg\": -2.5, \"tail_span\": 0.58, \"tail_x\": 0.82, \"taper\": 0.5, \"twist_deg\": -0.5, \"wing_x\": 0.34}, \"subsystem\": \"vtol\", \"violations\": []}",
+          "score": 0.7965366840362549
+        },
+        {
+          "_id": "memory-survey-vtol-range-v2-01-evaluation",
+          "summary": "{\"fidelity\": \"coupled_engineering_estimate\", \"metrics\": {\"best_range_speed_m_s\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"m/s\", \"value\": 14.0}, \"endurance_min\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"min\", \"value\": 94.36493281141159}, \"hover_power_w\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"W\", \"value\": 334.9914892821792}, \"mass_kg\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"kg\", \"value\": 3.9820235932010553}, \"max_speed_m_s\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"m/s\", \"value\": 19.5}, \"payload_capacity_kg\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"kg\", \"value\": 0.9600000000000001}, \"range_km\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"km\", \"value\": 77.44654356158573}, \"stall_speed_m_s\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"m/s\", \"value\": 10.616052204477459}, \"static_margin\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"ratio\", \"value\": 0.15478058900239913}}, \"outcome\": \"passed\", \"parameters\": {\"battery_x\": 0.3, \"boom_diameter\": 0.018, \"boom_wall\": 0.0009, \"boom_y\": 0.4, \"fuselage_height\": 0.17, \"fuselage_length\": 1.04, \"fuselage_width\": 0.16, \"nose_fraction\": 0.3, \"payload_x\": 0.48, \"root_chord\": 0.26, \"rotor_front_x\": 0.16, \"rotor_rear_x\": 0.7, \"shell_thickness\": 0.0013, \"span\": 2.3, \"spar_diameter\": 0.027, \"spar_wall\": 0.0011, \"sweep\": 0.025, \"tail_chord\": 0.155, \"tail_fraction\": 0.67, \"tail_incidence_deg\": -1.5, \"tail_span\": 0.66, \"tail_x\": 0.93, \"taper\": 0.72, \"twist_deg\": -1.5, \"wing_x\": 0.31}, \"subsystem\": \"vtol\", \"violations\": []}",
+          "score": 0.7964791059494019
+        },
+        {
+          "_id": "memory-survey-vtol-range-v2-00-evaluation",
+          "summary": "{\"fidelity\": \"coupled_engineering_estimate\", \"metrics\": {\"best_range_speed_m_s\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"m/s\", \"value\": 17.0}, \"endurance_min\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"min\", \"value\": 82.342928718562}, \"hover_power_w\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"W\", \"value\": 385.94782840855873}, \"mass_kg\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"kg\", \"value\": 4.381786409911109}, \"max_speed_m_s\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"m/s\", \"value\": 19.0}, \"payload_capacity_kg\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"kg\", \"value\": 0.9600000000000001}, \"range_km\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"km\", \"value\": 68.33084876481837}, \"stall_speed_m_s\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"m/s\", \"value\": 10.75628372835031}, \"static_margin\": {\"fidelity\": \"coupled_engineering_estimate\", \"unit\": \"ratio\", \"value\": 0.08986567441132458}}, \"outcome\": \"passed\", \"parameters\": {\"battery_x\": 0.28, \"boom_diameter\": 0.02, \"boom_wall\": 0.001, \"boom_y\": 0.46, \"fuselage_height\": 0.2, \"fuselage_length\": 1.08, \"fuselage_width\": 0.19, \"nose_fraction\": 0.25, \"payload_x\": 0.49, \"root_chord\": 0.3, \"rotor_front_x\": 0.13, \"rotor_rear_x\": 0.78, \"shell_thickness\": 0.0015, \"span\": 2.1, \"spar_diameter\": 0.025, \"spar_wall\": 0.0012, \"sweep\": 0.04, \"tail_chord\": 0.17, \"tail_fraction\": 0.72, \"tail_incidence_deg\": 0.0, \"tail_span\": 0.72, \"tail_x\": 0.88, \"taper\": 0.75, \"twist_deg\": -1.0, \"wing_x\": 0.3}, \"subsystem\": \"vtol\", \"violations\": []}",
+          "score": 0.7957495450973511
+        }
+      ],
+      "source_commit": "dc031d127e696c74570ae141331be3e191fbc079",
+      "generator": "gpt-6-astra",
+      "assets": {
+        "model.step": "/models/vtol/survey-vtol-range-v2/05-model.step",
+        "model.glb": "/models/vtol/survey-vtol-range-v2/05-model.glb",
+        "internal.glb": "/models/vtol/survey-vtol-range-v2/05-internal.glb"
+      }
+    }
+  ],
+  "best_id": "survey-vtol-range-v2-03",
+  "improvement_percent": 24.00696659731736,
+  "publishable": false,
+  "validation": null,
+  "spent_usd": 15.00099508,
+  "current_cohort_spent_usd": 4.0771101000000005,
+  "superseded_cohort_spent_usd": 10.923884979999999,
+  "tool": {
+    "_id": "survey-vtol-range-v1-energy",
+    "schema_version": 1,
+    "created_at": "2026-09-27T02:56:32.061040+00:00",
+    "study_id": "survey-vtol-range-v1",
+    "explanation": "This is a constant-cruise energy sensitivity calculator, not a flight simulator. Supply all five inputs; invalid inputs raise ValueError. Reserve is deducted first, then non-cruise overhead. Your history does not explicitly specify reserve_fraction or overhead_wh, so these must be supplied rather than assuming all 150 Wh is available for cruise.\n\nCompare drag improvements by changing cruise_power_w at a matched speed, using an external propulsion-efficiency estimate to translate drag into electrical power. A 10% cruise-power reduction increases range by 11.11% when speed and cruise energy remain unchanged.\n\nCompare hover-energy improvements by changing overhead_wh. For constant hover power, hover energy is hover_power_w * hover_seconds / 3600; include transition and other non-cruise energy as appropriate. Each Wh saved adds 1 / wh_per_km kilometers without changing cruise Wh/km. At iteration 2's cruise point (67.4106 W, 14 m/s), consumption is approximately 1.33751 Wh/km, so saving 1 Wh of overhead adds about 0.748 km.\n\nYour iterations use different cruise speeds, so their changes do not isolate drag reduction alone. This utility does not evaluate geometry, stability, structural limits, or flight feasibility.",
+    "validation": [
+      {
+        "arguments": {
+          "battery_wh": 150,
+          "reserve_fraction": 0.2,
+          "overhead_wh": 25,
+          "cruise_power_w": 100,
+          "speed_m_s": 15
+        },
+        "result": {
+          "range_km": 51.3,
+          "wh_per_km": 1.8518518518518519
+        },
+        "passed": true
+      },
+      {
+        "arguments": {
+          "battery_wh": 150,
+          "reserve_fraction": 0.2,
+          "overhead_wh": 40,
+          "cruise_power_w": 130,
+          "speed_m_s": 18
+        },
+        "result": {
+          "range_km": 39.87692307692308,
+          "wh_per_km": 2.006172839506173
+        },
+        "passed": true
+      },
+      {
+        "arguments": {
+          "battery_wh": 135,
+          "reserve_fraction": 0.2,
+          "overhead_wh": 25,
+          "cruise_power_w": 100,
+          "speed_m_s": 15
+        },
+        "result": {
+          "range_km": 44.82,
+          "wh_per_km": 1.8518518518518519
+        },
+        "passed": true
+      },
+      {
+        "arguments": {
+          "battery_wh": 150,
+          "reserve_fraction": 0.2,
+          "overhead_wh": 25,
+          "cruise_power_w": 120,
+          "speed_m_s": 15
+        },
+        "result": {
+          "range_km": 42.75,
+          "wh_per_km": 2.2222222222222223
+        },
+        "passed": true
+      },
+      {
+        "invalid_field": "speed_m_s",
+        "passed": true
+      },
+      {
+        "invalid_field": "overhead_wh",
+        "passed": true
+      },
+      {
+        "invalid_field": "reserve_fraction",
+        "passed": true
+      },
+      {
+        "invalid_field": "cruise_power_w",
+        "passed": true
+      }
+    ],
+    "source_commit": "a6ee5fdde82754b1b8cf80429b58c4fd29738c94"
+  }
+}
