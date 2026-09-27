@@ -1,0 +1,11 @@
+.progress { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; padding: 18px 0 30px; }
+.progress section { min-width: 0; }
+.progress h3 { color: #52674c; font-size: 14px; margin: 0 0 15px; }
+.bars { display: flex; align-items: end; gap: 8px; min-height: 120px; }
+.bars a { display: flex; flex: 1; flex-direction: column; align-items: center; gap: 7px; text-decoration: none; color: #52674c; min-width: 0; font-size: 11px; }
+.bars i { width: 100%; max-width: 38px; display: block; background: #5c7954; border-radius: 4px 4px 0 0; }
+.bars .failed i { background: #c1a17c; }
+.filters { display: flex; gap: 8px; margin: 0 0 22px; flex-wrap: wrap; }
+.filters button { padding: 9px 15px; border: 1px solid #c9d3c2; background: white; border-radius: 6px; color: #52674c; cursor: pointer; }
+.filters button[aria-pressed=true] { background: #52674c; color: white; }
+@media(max-width:700px) { .progress { grid-template-columns: 1fr; } .bars { gap: 5px; } }
