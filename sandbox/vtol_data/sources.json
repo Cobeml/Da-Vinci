@@ -1,0 +1,47 @@
+[
+  {
+    "file": "apce_12x8_0622od_3026.txt",
+    "url": "https://m-selig.ae.illinois.edu/props/volume-4/data/apce_12x8_0622od_3026.txt",
+    "sha256": "5f8003ed39cb06c5af737a62c3c3f2e1eed111f04d76fb316d6d297fc3e7b9c3"
+  },
+  {
+    "file": "apce_12x8_0623od_3997.txt",
+    "url": "https://m-selig.ae.illinois.edu/props/volume-4/data/apce_12x8_0623od_3997.txt",
+    "sha256": "a18b101c6977b68b746dcc941bb3f101da7996f82be398b5830a35bb0d921a79"
+  },
+  {
+    "file": "apce_12x8_0624od_4043.txt",
+    "url": "https://m-selig.ae.illinois.edu/props/volume-4/data/apce_12x8_0624od_4043.txt",
+    "sha256": "a2325fde36fc208302569d5fedcb12a9edd62fd8d1f476462609099964984b9d"
+  },
+  {
+    "file": "apce_12x8_0625od_4991.txt",
+    "url": "https://m-selig.ae.illinois.edu/props/volume-4/data/apce_12x8_0625od_4991.txt",
+    "sha256": "c0fc3d1bbd9808bc645fd2adcf2d1dbabcd96324e01f2a6369fa570fc9cd142f"
+  },
+  {
+    "file": "apce_12x8_0626od_5045.txt",
+    "url": "https://m-selig.ae.illinois.edu/props/volume-4/data/apce_12x8_0626od_5045.txt",
+    "sha256": "e4332e2cc858265de6d03d72c5342aefa8ae5c2e69efdb63bc44a4e2fa65837f"
+  },
+  {
+    "file": "apce_12x8_0627od_5964.txt",
+    "url": "https://m-selig.ae.illinois.edu/props/volume-4/data/apce_12x8_0627od_5964.txt",
+    "sha256": "62e64805647b012bfe1021cd2d0074e31533a524c73df6b6eb60262b051e9a8a"
+  },
+  {
+    "file": "apce_12x8_0628od_6024.txt",
+    "url": "https://m-selig.ae.illinois.edu/props/volume-4/data/apce_12x8_0628od_6024.txt",
+    "sha256": "8d00aec2c0da3e2656d4184d0b9b7a9c1ee4a81f8ca08ea0a3f516de5313b089"
+  },
+  {
+    "file": "apce_12x8_static_0621od.txt",
+    "url": "https://m-selig.ae.illinois.edu/props/volume-4/data/apce_12x8_static_0621od.txt",
+    "sha256": "14fded27c1f9a676a183dbcd44fe120c4462c9852ebc1db36f5b5b364053457f"
+  },
+  {
+    "file": "apce_16x8_static_2150od.txt",
+    "url": "https://m-selig.ae.illinois.edu/props/volume-4/data/apce_16x8_static_2150od.txt",
+    "sha256": "2759d782136dcd55379df0a7b4442fdabaa28a64dd2101ebb301efea5d37e462"
+  }
+]

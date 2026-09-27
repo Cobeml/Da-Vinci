@@ -1,0 +1,8 @@
+FROM da-vinci-cad:local
+USER root
+RUN apt-get update && apt-get install -y --no-install-recommends gfortran make gcc libx11-dev && rm -rf /var/lib/apt/lists/*
+RUN pip install --no-cache-dir aerosandbox==4.2.6
+ADD --checksum=sha256:5c0250643f52ce0e75d7338ae2504ce7907f2d49a30f921826717b8ac12ebe40 https://web.mit.edu/drela/Public/web/xfoil/xfoil6.99.tgz /tmp/xfoil.tgz
+RUN tar -xzf /tmp/xfoil.tgz -C /tmp && make -C /tmp/Xfoil/plotlib PLTLIB=libPlt_gDP.a FFLAGS="-O2 -fdefault-real-8 -fallow-argument-mismatch" && make -C /tmp/Xfoil/bin xfoil BINDIR=/usr/local/bin FFLAGS="-O2 -fdefault-real-8 -fallow-argument-mismatch" FFLOPT="-O2 -fdefault-real-8 -fallow-argument-mismatch"
+ENV MPLCONFIGDIR=/tmp/matplotlib
+USER 65534:65534

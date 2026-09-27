@@ -1,5 +1,12 @@
 name: da-vinci
 services:
+  vtol-image:
+    image: da-vinci-vtol:local
+    build:
+      context: ./sandbox
+      dockerfile: Dockerfile.vtol
+    profiles: [build]
+    entrypoint: ["python", "-c", "import aerosandbox; print(aerosandbox.__version__)"]
   cad-image:
     image: da-vinci-cad:local
     build: ./sandbox
