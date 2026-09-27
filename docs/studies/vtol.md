@@ -35,3 +35,13 @@ docker compose --profile build build vtol-image
 ```
 
 Freeze the evaluator only after baseline validation. Changing its source, data or specification requires a new study ID. The sequential campaign reuses Atlas/GridFS/Vector Search; the existing workbench's Database Triggers do not drive this study.
+
+## Implementation notes
+
+The pitch control is an all-moving horizontal tail. VLM samples its incidence directly; the solver does not implement the flap metadata used during the first setup probe. The six-point lift/moment/induced-drag response surface provides a fast trim sweep. Profile drag uses XFOIL at matching Reynolds number and interpolated section lift; body/pod/boom drag uses the documented empirical buildup. These are engineering approximations, not a resolved wake model.
+
+The XFOIL source is compiled in double precision without debug floating-point traps. Polars accumulate in memory and export once, avoiding a legacy Fortran append-at-EOF error. The twelve committed tables contain only converged rows. The container image digest, source/data fingerprint and fixed spec identify the evaluation cohort.
+
+Three meshes are used: 10 spanwise panels per section for the campaign, then 14 and 18 for baseline/top-three checks. Promotion requires less than 3% change in range, supported maximum speed and best-range drag between the two finer resolutions. All nominal per-iteration metrics remain from the same campaign grid; finer-grid evidence is archived separately.
+
+Empty/truncated model outputs are retained and retried with up to 32,000 output tokens; their cost remains in the original ledger. No retry changes the evaluator or the $30 cap. The energy utility is checked on four numeric cases and four invalid-input cases before reuse.

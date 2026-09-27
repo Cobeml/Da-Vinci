@@ -107,3 +107,25 @@ assert float(r['CD'])>0
     Runner(Settings(_env_file=None, davinci_data_dir=tmp_path)).execute(
         "/input/check.py", files, image="da-vinci-vtol:local"
     )
+
+
+def test_weak_structure_and_mission_sensitivity():
+    from vtol_physics import structural
+
+    weak = {**BASELINE, "spar_diameter": 0.018, "spar_wall": 0.0008}
+    assert not structural(weak, 5, 0.5)["passed"]
+    assert structural(BASELINE, 4.47, 0.5)["passed"]
+
+
+def test_speed_and_payload_protection():
+    from scripts.vtol_study import protect
+
+    base = {"metrics": {"max_speed_m_s": {"value": 20}, "payload_capacity_kg": {"value": 1}}}
+    candidate = {
+        "outcome": "passed",
+        "violations": [],
+        "metrics": {"max_speed_m_s": {"value": 18}, "payload_capacity_kg": {"value": 0.9}},
+    }
+    result = protect(candidate, base)
+    assert result["outcome"] == "failed"
+    assert {x["code"] for x in result["violations"]} == {"SPEED_RETENTION", "PAYLOAD_RETENTION"}

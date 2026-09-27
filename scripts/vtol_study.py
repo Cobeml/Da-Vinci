@@ -7,6 +7,8 @@ import math
 import subprocess
 from pathlib import Path
 
+from pydantic import ValidationError
+
 from davinci.artifacts import Artifacts, Repository
 from davinci.budget import Budget
 from davinci.config import Settings
@@ -38,7 +40,25 @@ def protect(e, base):
 
 
 class Study:
-    structured = SharedStudy.structured
+    def structured(self, key, instructions, context, schema, output_limit=14000):
+        try:
+            return SharedStudy.structured(self, key, instructions, context, schema, output_limit)
+        except ValidationError:
+            raw = self.root / (key + ".response.json")
+            if not raw.exists():
+                raise
+            # Preserve truncated/empty evidence; API accounting is already settled.
+            attempt = len(list(self.root.glob(key + ".incomplete-*.json")))
+            raw.rename(self.root / f"{key}.incomplete-{attempt}.json")
+            return SharedStudy.structured(
+                self,
+                key,
+                instructions
+                + " Return the required JSON proposal now; the independent evaluator will perform the calculations.",
+                context,
+                schema,
+                32000,
+            )
 
     def __init__(self):
         self.settings = Settings()
