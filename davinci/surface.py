@@ -1,6 +1,7 @@
 """Versioned, isolated surface-tool API. Never imports secrets in CAD containers."""
 
 import json
+import subprocess
 from pathlib import Path
 
 from davinci.models import digest
@@ -26,18 +27,24 @@ def inputs():
     }
 
 
-def evaluator_version():
-    return "surface-" + digest({k: digest(v.decode()) for k, v in inputs().items()})[:16]
+def evaluator_version(bundle=None):
+    return "surface-" + digest({k: digest(v.decode()) for k, v in (bundle or inputs()).items()})[:16]
 
 
-def tool(runner, action, arguments):
+def image_digest():
+    return subprocess.check_output(
+        ["docker", "image", "inspect", "--format={{.Id}}", IMAGE], text=True
+    ).strip()
+
+
+def tool(runner, action, arguments, *, bundle=None, image=None):
     if "geometry" in arguments:
         validate(arguments["geometry"])
     files, log, seconds = runner.execute(
         "/input/surface_tools.py",
-        inputs() | {"request.json": json.dumps({"action": action, "arguments": arguments})},
+        (bundle or inputs()) | {"request.json": json.dumps({"action": action, "arguments": arguments})},
         timeout=240,
-        image=IMAGE,
+        image=image or image_digest(),
     )
     result = json.loads(files.pop("result.json"))
     result["elapsed_seconds"] = seconds
@@ -46,10 +53,19 @@ def tool(runner, action, arguments):
 
 def evaluate(runner, geometry, resolution=6, nonlinear=False):
     validate(geometry)
-    preview, built = tool(runner, "preview", {"geometry": geometry})
+    bundle = inputs()
+    image = image_digest()
+    execution = dict(
+        geometry_digest=digest(geometry),
+        evaluator_version=evaluator_version(bundle),
+        image_digest=image,
+        resolution=resolution,
+        nonlinear=nonlinear,
+    )
+    preview, built = tool(runner, "preview", {"geometry": geometry}, bundle=bundle, image=image)
     files, log, seconds = runner.execute(
         "/input/evaluate_surface.py",
-        inputs()
+        bundle
         | {
             "model.step": built["model.step"],
             "request.json": json.dumps(
@@ -57,10 +73,11 @@ def evaluate(runner, geometry, resolution=6, nonlinear=False):
             ),
         },
         timeout=3600 if nonlinear else 900,
-        image=IMAGE,
+        image=image,
     )
     result = json.loads(files.pop("result.json"))
     result["elapsed_seconds"] = seconds + preview["elapsed_seconds"]
+    result["execution"] = execution
     return result, {"model.step": built["model.step"], **files}
 
 
@@ -69,6 +86,6 @@ def crosscheck(runner, geometry, audit):
         "/input/surface_xfoil.py",
         inputs() | {"request.json": json.dumps({"geometry": geometry, "audit": audit})},
         timeout=240,
-        image=IMAGE,
+        image=image_digest(),
     )
     return json.loads(files["result.json"])

@@ -15,6 +15,8 @@ class ParametricNonlinear:
     """Build the implicit flow equations once; reuse them for each operating point."""
 
     def __init__(self, spec, cg, resolution):
+        import casadi
+
         self.opti = a.Opti()
         self.params = [self.opti.parameter(value=v) for v in (15.0, 4.0, 0.0, 0.0)]
         speed, alpha, elevator, beta = self.params
@@ -26,27 +28,31 @@ class ParametricNonlinear:
             opti=self.opti,
         )
         self.raw = self.analysis.run(solve=False)
+        # Register the variables with Opti before extracting its symbolic x/p vectors.
         self.opti.subject_to(self.raw["residuals"] == 0)
-        self.opti.solver(
-            "ipopt",
-            {"print_time": False, "ipopt.print_level": 0, "ipopt.max_iter": 100, "ipopt.max_cpu_time": 60},
+        self.residual = casadi.Function("residual", [self.opti.x, self.opti.p], [self.raw["residuals"]])
+        self.root = casadi.rootfinder("flow", "newton", self.residual, {"abstol": 1e-9, "max_iter": 80})
+        self.outputs = casadi.Function(
+            "outputs",
+            [self.opti.x, self.opti.p],
+            [casadi.vertcat(*[self.raw[k] for k in ("CL", "CD", "Cm", "Cn")])],
         )
-        self.solution = None
+        self.guess = np.zeros(self.opti.x.shape)
 
     def run(self, speed, alpha, elevator, beta):
         import casadi
 
-        for parameter, value in zip(self.params, (speed, alpha, elevator, beta)):
-            self.opti.set_value(parameter, value)
-        if self.solution is not None:
-            self.opti.set_initial(self.opti.x, self.solution.value(self.opti.x))
+        parameters = [speed, alpha, elevator, beta]
         try:
-            self.solution = casadi.Opti.solve(self.opti)
+            self.guess = self.root(self.guess, parameters)
         except RuntimeError:
             # A distant preceding grid point can be a poor initial condition.
-            self.opti.set_initial(self.opti.x, 0)
-            self.solution = casadi.Opti.solve(self.opti)
-        return {k: float(self.solution.value(self.raw[k])) for k in ("CL", "CD", "Cm", "Cn")}
+            self.guess = self.root(np.zeros(self.opti.x.shape), parameters)
+        residual = float(casadi.mmax(casadi.fabs(self.residual(self.guess, parameters))))
+        values = np.asarray(self.outputs(self.guess, parameters)).reshape(-1)
+        if not np.isfinite(values).all() or not math.isfinite(residual) or residual > 1e-7 or values[1] <= 0:
+            raise ValueError("Nonlinear flow residual or coefficients are unsupported")
+        return dict(zip(("CL", "CD", "Cm", "Cn"), map(float, values)))
 
 
 def airplane(spec, cg, elevator=0):

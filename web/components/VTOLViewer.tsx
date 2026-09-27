@@ -10,6 +10,7 @@ function Aircraft({ url, ready, internal }: { url: string; ready: () => void; in
     const clone = scene.clone(true);
     clone.traverse(o => {
       if (internal && /^(wing|tail)-?1$/.test(o.name)) o.visible = false;
+      if (internal && o.name.includes("fairing")) o.visible = false;
       if (o instanceof THREE.Mesh) {
         const original = o.material as THREE.MeshStandardMaterial;
         o.material = new THREE.MeshStandardMaterial({ color: original.color, metalness: .15, roughness: .6 });

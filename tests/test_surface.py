@@ -63,6 +63,57 @@ def test_control_tool_contract_and_budget_reservations(tmp_path):
     assert store.get("runs", "arm")["spent_usd"] == 26
 
 
+def test_cache_and_arm_memory_identities(tmp_path, monkeypatch):
+    import json
+    from types import SimpleNamespace
+
+    import scripts.surface_study as module
+    from davinci.models import digest
+
+    study = module.Study.__new__(module.Study)
+    study.root = tmp_path
+    study.version = "v"
+    study.image = "image"
+    study.runner = None
+    monkeypatch.setattr(module, "evaluator_version", lambda: "v")
+    monkeypatch.setattr(module, "image_digest", lambda: "image")
+    calls = []
+    monkeypatch.setattr(
+        module, "evaluate", lambda *args: (calls.append(args) or {"outcome": "passed", "metrics": {}}, {})
+    )
+    geometry = fixture()
+    folder = tmp_path / "evaluate-6"
+    folder.mkdir()
+    prepared = {
+        "outcome": "passed",
+        "metrics": {"range_km": {"value": 42}},
+        "execution": {
+            "geometry_digest": digest(geometry),
+            "evaluator_version": "v",
+            "image_digest": "image",
+            "resolution": 6,
+            "nonlinear": False,
+        },
+    }
+    (folder / "result.json").write_text(json.dumps(prepared))
+    assert study.cached_evaluation(geometry)[0]["metrics"]["range_km"]["value"] == 42
+    assert not calls
+    study.cached_evaluation(geometry, 8)
+    assert len(calls) == 1
+    monkeypatch.setattr(module, "evaluator_version", lambda: "changed")
+    with pytest.raises(ValueError, match="Frozen"):
+        study.cached_evaluation(geometry)
+    pipelines = []
+    study.store = SimpleNamespace(
+        db=SimpleNamespace(memories=SimpleNamespace(aggregate=lambda p: pipelines.append(p) or []))
+    )
+    provider = SimpleNamespace(embed=lambda *args: [0.0])
+    study.recall("control", provider)
+    study.recall("surface_tools", provider)
+    filters = [p[0]["$vectorSearch"]["filter"]["specification_id"] for p in pipelines]
+    assert filters == [module.STUDY + "-control", module.STUDY + "-surface_tools"]
+
+
 @pytest.mark.integration
 @pytest.mark.skipif(os.environ.get("DAVINCI_INTEGRATION") != "1", reason="Requires CAD container")
 def test_surface_section_sensitivity_and_smooth_step(tmp_path):
@@ -113,3 +164,28 @@ def test_constrained_section_optimizer_returns_supported_new_geometry(tmp_path):
     assert result["min_confidence"] >= 0.95
     assert result["seconds"] < 180
     assert result["numerical_evaluations"] > 1
+
+
+@pytest.mark.integration
+@pytest.mark.skipif(os.environ.get("DAVINCI_INTEGRATION") != "1", reason="Requires CAD container")
+def test_newton_flow_agrees_with_original_nonlinear_solver(tmp_path):
+    from davinci.config import Settings
+    from davinci.runner import Runner
+    from davinci.surface import IMAGE, inputs
+
+    source = """import os
+os.environ['OPENBLAS_NUM_THREADS']='1'
+os.environ['OMP_NUM_THREADS']='1'
+from surface_geometry import seed
+from surface_physics import solve
+from vtol_family import BASELINE
+g=seed(BASELINE)
+fast=solve(g,.4,15,4,-2,4,nonlinear=True)
+reference=solve(g,.4,15,4,-2,4,nonlinear=True,details=True)
+for key in ('CL','CD','Cm','Cn'):
+ assert abs(fast[key]-reference[key])<1e-6,(key,fast[key],reference[key])
+assert reference['min_confidence']>.9
+"""
+    Runner(Settings(_env_file=None, davinci_data_dir=tmp_path)).execute(
+        "/input/check.py", inputs() | {"check.py": source}, timeout=180, image=IMAGE
+    )

@@ -37,6 +37,9 @@ export default function SurfaceGallery({data}:{data:SurfaceData}) {
   const passing=data.designs.filter(d=>d.evaluation.outcome==="passed");
   const best=data.designs.find(d=>d._id===data.best_id) ?? [...passing].sort((a,b)=>score(b)-score(a))[0] ?? data.designs[0];
   const rows=data.designs.filter(d=>arm==="all"||d.arm===arm);
+  const base=data.designs.find(d=>d.arm==="control"&&d.iteration===1);
+  const control=[...passing].filter(d=>d.arm==="control").sort((a,b)=>score(b)-score(a))[0];
+  const treatment=[...passing].filter(d=>d.arm==="surface_tools").sort((a,b)=>score(b)-score(a))[0];
   return <main className={styles.page}>
     <header className={styles.header}><div><h1>Da Vinci <span>Recursive Improvement CAD Harness</span></h1><p>Streamlined VTOL · matched geometry-tool experiment</p></div><span className={styles.material}>0.5 kg payload · 150 Wh battery</span></header>
     {best && <section className={styles.overview} aria-label="Project overview"><Model design={best} hero/><div className={styles.overviewText}>
@@ -62,6 +65,7 @@ export default function SurfaceGallery({data}:{data:SurfaceData}) {
     <div className={styles.sectionHeading}><h2>Design progress</h2><span>Range estimates · km</span></div>
     <p className={view.notice}>{data.publishable?"The new-tool design passed the comparison and validation gates.":"Experiment results — no verified new-tool winner has passed all promotion gates."}</p>
     {!data.designs.length && <p>Preparing and validating the common baseline.</p>}
+    {base && <dl className={css.summary} aria-label="Best passing screening ranges">{[["Common baseline",base],["Best dimensional design",control],["Best surface-tool design",treatment]].map(([name,d])=><div key={String(name)}><dt>{String(name)}</dt><dd>{d?score(d as Design).toFixed(1):"—"} <small>km est.</small></dd></div>)}</dl>}
     <Progress designs={data.designs}/>
     <div className={css.filters} aria-label="Experiment filter">{["all","control","surface_tools"].map(a=><button key={a} aria-pressed={arm===a} onClick={()=>setArm(a)}>{a==="all"?"Both arms":label(a)}</button>)}</div>
     <section className={styles.grid} aria-label="Generated streamlined VTOL designs">{rows.map(d=>{

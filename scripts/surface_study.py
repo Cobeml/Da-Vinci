@@ -6,6 +6,7 @@ import fcntl
 import json
 import subprocess
 import time
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 from davinci.artifacts import Artifacts, Repository
@@ -16,7 +17,7 @@ from davinci.models import digest, document, now
 from davinci.providers import AstraProvider
 from davinci.runner import Runner, SandboxError
 from davinci.store import Store
-from davinci.surface import FILES, IMAGE, SANDBOX, crosscheck, evaluate, evaluator_version, tool
+from davinci.surface import FILES, IMAGE, SANDBOX, crosscheck, evaluate, evaluator_version, image_digest, tool
 from sandbox.surface_geometry import SHAPE_BOUNDS, validate
 from sandbox.vtol_family import BOUNDS
 
@@ -27,6 +28,24 @@ ARMS = ("control", "surface_tools")
 
 def metric(e, key):
     return e.get("metrics", {}).get(key, {}).get("value", 0)
+
+
+def public_evaluation(e):
+    """Keep full solver tables in the archive, not in the browser hydration payload."""
+    result = {k: v for k, v in e.items() if k not in ("components", "performance")}
+    if "performance" in e:
+        p = e["performance"]
+        result["performance"] = {
+            "nominal": {k: v for k, v in p["nominal"].items() if k != "curve"},
+            "scenarios": p["scenarios"],
+            "direct_audit": {
+                k: v
+                for k, v in (p.get("direct_audit") or {}).items()
+                if k in ("CL", "CD", "Cm", "min_confidence", "surrogate_errors")
+            },
+            "benchmark_audits": p.get("benchmark_audits", {}),
+        }
+    return result
 
 
 def tool_def(name, description, properties, required):
@@ -138,7 +157,26 @@ class Study:
     def spent(self, arm):
         return self.store.get("runs", STUDY + "-" + arm)["spent_usd"]
 
+    def preview(self, geometry):
+        folder = (
+            self.root
+            / "previews"
+            / digest({"geometry": geometry, "version": self.version, "image": self.image})
+        )
+        folder.mkdir(parents=True, exist_ok=True)
+        if (folder / "result.json").exists():
+            return json.loads((folder / "result.json").read_text()), {
+                p.name: p.read_bytes() for p in folder.iterdir() if p.name != "result.json"
+            }
+        result, files = tool(self.runner, "preview", {"geometry": geometry})
+        for name, data in files.items():
+            (folder / name).write_bytes(data)
+        (folder / "result.json").write_text(json.dumps(result))
+        return result, files
+
     def cached_evaluation(self, geometry, resolution=6, nonlinear=False):
+        if evaluator_version() != self.version or image_digest() != self.image:
+            raise ValueError("Frozen seed/evaluator/image changed; use a new study ID")
         key = digest(
             dict(
                 geometry=geometry,
@@ -155,6 +193,26 @@ class Study:
             return json.loads(saved.read_text()), {
                 p.name: p.read_bytes() for p in folder.iterdir() if p.name != "result.json"
             }
+        prepared = self.root / ("evaluate" + ("-nonlinear" if nonlinear else "") + "-" + str(resolution))
+        if (prepared / "result.json").exists():
+            e = json.loads((prepared / "result.json").read_text())
+            expected = dict(
+                geometry_digest=digest(geometry),
+                evaluator_version=self.version,
+                image_digest=self.image,
+                resolution=resolution,
+                nonlinear=nonlinear,
+            )
+            if e.get("execution") == expected:
+                files = {
+                    p.name: p.read_bytes()
+                    for p in prepared.iterdir()
+                    if p.name in ("model.step", "model.glb", "internal.glb")
+                }
+                for name, data in files.items():
+                    (folder / name).write_bytes(data)
+                saved.write_text(json.dumps(e, allow_nan=False))
+                return e, files
         try:
             e, files = evaluate(self.runner, geometry, resolution, nonlinear)
         except (ValueError, SandboxError) as exc:
@@ -263,7 +321,23 @@ class Study:
                 try:
                     args = json.loads(call["arguments"])
                     if name == "submit_design":
-                        tool(self.runner, "preview", {"geometry": current})
+                        required = {"title", "change", "lesson", "next_focus"}
+                        if set(args) != required or any(
+                            not isinstance(args[k], str) or not args[k].strip() for k in required
+                        ):
+                            raise ValueError(
+                                "Submission needs nonempty title, change, lesson and next_focus strings"
+                            )
+                        args = {
+                            k: args[k][:limit]
+                            for k, limit in [
+                                ("title", 70),
+                                ("change", 400),
+                                ("lesson", 1000),
+                                ("next_focus", 500),
+                            ]
+                        }
+                        self.preview(current)
                         result = dict(geometry=current, **args, calls=calls)
                         path.write_text(json.dumps(result, indent=2))
                         return result
@@ -271,7 +345,7 @@ class Study:
                         if arm == "control" and set(args["edits"]) != {"dimensions"}:
                             raise ValueError("Control arm may edit dimensions only")
                         r, _ = tool(self.runner, "edit", {"geometry": current, "edits": args["edits"]})
-                        preview, artifacts = tool(self.runner, "preview", {"geometry": r["geometry"]})
+                        preview, artifacts = self.preview(r["geometry"])
                         current = r["geometry"]
                         result = {
                             "geometry": current,
@@ -286,7 +360,7 @@ class Study:
                         result, _ = tool(self.runner, "analyze", {"geometry": current, **args})
                     elif name == "optimize_sections" and arm != "control":
                         r, _ = tool(self.runner, "optimize", {"geometry": current, **args})
-                        _, artifacts = tool(self.runner, "preview", {"geometry": r["geometry"]})
+                        _, artifacts = self.preview(r["geometry"])
                         current = r["geometry"]
                         result = r
                         result["geometry_id"] = digest(current)
@@ -434,7 +508,10 @@ class Study:
         limited = False
         for index in range(count):
             # Reserve enough room for both next proposals before starting a paired round.
-            if index and any(27 - self.spent(arm) < 3 for arm in ARMS):
+            missing = any(
+                not self.store.get("design_iterations", f"{STUDY}-{arm}-{index:02d}") for arm in ARMS
+            )
+            if index and missing and any(27 - self.spent(arm) < 3 for arm in ARMS):
                 self.store.update("surface_studies", STUDY, {"status": "budget_limited"})
                 limited = True
                 break
@@ -500,8 +577,12 @@ class Study:
                 reverse=True,
             )[:3]
             for d in {d["_id"]: d for d in [rows[0], *finalists]}.values():
-                medium, _ = self.cached_evaluation(d["geometry"], 8, True)
-                fine, _ = self.cached_evaluation(d["geometry"], 12, True)
+                print(f"Nonlinear refinement: {d['_id']}", flush=True)
+                with ThreadPoolExecutor(max_workers=2) as pool:
+                    medium_job = pool.submit(self.cached_evaluation, d["geometry"], 8, True)
+                    fine_job = pool.submit(self.cached_evaluation, d["geometry"], 12, True)
+                    medium, _ = medium_job.result()
+                    fine, _ = fine_job.result()
                 r0, r1 = metric(medium, "range_km"), metric(fine, "range_km")
                 change = abs(r1 / r0 - 1) if r0 else None
                 check = {"passed": False, "reason": "No supported optimum"}
@@ -545,12 +626,16 @@ class Study:
                     path.write_bytes(self.artifacts.read(ident))
                 assets[name] = "/models/vtol/" + STUDY + "/" + target
             rows.append(
-                {k: v for k, v in d.items() if k not in ("artifacts", "calls")}
+                {k: v for k, v in d.items() if k not in ("artifacts", "calls", "evaluation")}
                 | {
+                    "evaluation": public_evaluation(d["evaluation"]),
                     "assets": assets,
                     "tool_calls": len(d.get("calls", [])),
                     "tool_failures": sum(not x["result"]["ok"] for x in d.get("calls", [])),
                     "tool_seconds": sum(x["seconds"] for x in d.get("calls", [])),
+                    "numerical_evaluations": sum(
+                        x["result"].get("numerical_evaluations", 0) for x in d.get("calls", [])
+                    ),
                 }
             )
         saved = self.store.get("study_validations", STUDY)
@@ -592,7 +677,9 @@ class Study:
             study_id=STUDY,
             generated_at=now(),
             designs=rows,
-            validation=validation,
+            validation={
+                k: {**v, "evaluation": public_evaluation(v["evaluation"])} for k, v in validation.items()
+            },
             publishable=bool(winner),
             best_id=winner,
             spent_usd=sum(self.spent(a) for a in ("pilot", *ARMS)),
