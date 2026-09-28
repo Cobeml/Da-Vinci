@@ -6,7 +6,7 @@ from pathlib import Path
 
 from davinci.config import Settings
 from davinci.runner import Runner
-from davinci.surface import crosscheck, evaluate, evaluator_version, tool
+from davinci.surface import crosscheck, evaluate, evaluation_key, evaluator_version, tool
 
 
 def main():
@@ -17,6 +17,9 @@ def main():
     parser.add_argument("--nonlinear", action="store_true")
     parser.add_argument("--resolution", type=int, default=6)
     parser.add_argument("--geometry", default="runtime/survey-vtol-cst-v1/seed.json")
+    parser.add_argument(
+        "--cache", action="store_true", help="Cache an offline evaluation for exact study reuse"
+    )
     args = parser.parse_args()
     settings = Settings(_env_file=None)
     runner = Runner(settings)
@@ -39,6 +42,7 @@ def main():
         print("Saved common seed; no API calls")
         return
     geometry = json.loads(Path(args.geometry).read_text())
+    geometry = geometry.get("geometry", geometry)
     if args.action == "evaluate":
         r, files = evaluate(runner, geometry, args.resolution, args.nonlinear)
     elif args.action == "crosscheck":
@@ -49,8 +53,15 @@ def main():
     else:
         r, files = tool(runner, args.action, {"geometry": geometry, "cg": 0.397})
     key = args.action + ("-nonlinear" if args.nonlinear else "") + "-" + str(args.resolution)
+    if args.cache:
+        if args.action != "evaluate":
+            raise ValueError("Only evaluations can be cached")
+        e = r["execution"]
+        key = "evaluations/" + evaluation_key(
+            geometry, args.resolution, args.nonlinear, e["evaluator_version"], e["image_digest"]
+        )
     folder = root / key
-    folder.mkdir(exist_ok=True)
+    folder.mkdir(parents=True, exist_ok=True)
     for name, data in files.items():
         (folder / name).write_bytes(data)
     (folder / "result.json").write_text(json.dumps(r, indent=2))

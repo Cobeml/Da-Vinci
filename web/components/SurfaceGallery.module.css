@@ -15,3 +15,5 @@
 .sections { display: block; width: 100%; height: auto; margin-top: 12px; }
 @media(max-width:700px) { .progress { grid-template-columns: 1fr; } .bars { gap: 5px; } }
 @media(max-width:450px) { .summary { padding: 14px; gap: 10px; } .summary dd { font-size: 23px; } .summary small { display: block; margin-top: 4px; } }
+
+.toolOutput { font-size: 10px; white-space: pre-wrap; overflow-wrap: anywhere; max-height: 260px; overflow: auto; background: #f4f6f1; padding: 10px; border-radius: 5px; }

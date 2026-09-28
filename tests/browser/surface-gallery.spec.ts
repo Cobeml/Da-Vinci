@@ -1,6 +1,12 @@
 import { test, expect } from "@playwright/test";
 import data from "../../web/data/surface-gallery.json";
 
+test("homepage follows the validated promotion decision", async ({page})=>{
+  await page.goto("/");
+  await expect(page.getByTestId("surface-overview")).toHaveCount(data.publishable?1:0);
+  if (!data.publishable) await expect(page.getByTestId("overview-model")).toBeVisible();
+});
+
 test("surface study shows matched progress, CAD and benchmark evidence", async ({ page, request }) => {
   const errors:string[]=[];
   page.on("pageerror",e=>errors.push(e.message));

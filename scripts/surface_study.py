@@ -17,7 +17,17 @@ from davinci.models import digest, document, now
 from davinci.providers import AstraProvider
 from davinci.runner import Runner, SandboxError
 from davinci.store import Store
-from davinci.surface import FILES, IMAGE, SANDBOX, crosscheck, evaluate, evaluator_version, image_digest, tool
+from davinci.surface import (
+    FILES,
+    IMAGE,
+    SANDBOX,
+    crosscheck,
+    evaluate,
+    evaluation_key,
+    evaluator_version,
+    image_digest,
+    tool,
+)
 from sandbox.surface_geometry import SHAPE_BOUNDS, validate
 from sandbox.vtol_family import BOUNDS
 from sandbox.vtol_spec import SPECIFICATION
@@ -195,15 +205,7 @@ class Study:
     def cached_evaluation(self, geometry, resolution=6, nonlinear=False):
         if evaluator_version() != self.version or image_digest() != self.image:
             raise ValueError("Frozen seed/evaluator/image changed; use a new study ID")
-        key = digest(
-            dict(
-                geometry=geometry,
-                resolution=resolution,
-                nonlinear=nonlinear,
-                version=self.version,
-                image=self.image,
-            )
-        )
+        key = evaluation_key(geometry, resolution, nonlinear, self.version, self.image)
         folder = self.root / "evaluations" / key
         folder.mkdir(parents=True, exist_ok=True)
         saved = folder / "result.json"
@@ -687,6 +689,31 @@ class Study:
                     "tool_calls": len(d.get("calls", [])),
                     "tool_failures": sum(not x["result"]["ok"] for x in d.get("calls", [])),
                     "tool_seconds": sum(x["seconds"] for x in d.get("calls", [])),
+                    "tool_evidence": [
+                        {
+                            "name": x["name"],
+                            "seconds": x["seconds"],
+                            "arguments": x["arguments"],
+                            "result": {
+                                k: (str(value).strip().splitlines()[-1] if k == "error" else value)
+                                for k, value in x["result"].items()
+                                if k
+                                in (
+                                    "ok",
+                                    "sections",
+                                    "conditions",
+                                    "mean_cd",
+                                    "min_confidence",
+                                    "converged",
+                                    "numerical_evaluations",
+                                    "valid_solids",
+                                    "error",
+                                    "repair",
+                                )
+                            },
+                        }
+                        for x in d.get("calls", [])
+                    ],
                     "numerical_evaluations": sum(
                         x["result"].get("numerical_evaluations", 0) for x in d.get("calls", [])
                     ),

@@ -37,6 +37,12 @@ def image_digest():
     ).strip()
 
 
+def evaluation_key(geometry, resolution, nonlinear, version, image):
+    return digest(
+        dict(geometry=geometry, resolution=resolution, nonlinear=nonlinear, version=version, image=image)
+    )
+
+
 def tool(runner, action, arguments, *, bundle=None, image=None):
     if "geometry" in arguments:
         validate(arguments["geometry"])

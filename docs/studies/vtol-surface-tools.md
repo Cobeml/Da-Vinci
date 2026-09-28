@@ -20,7 +20,7 @@ Payload capacity is sampled in 0.048 kg increments and requires at least one sup
 
 Body drag uses measured CAD wetted area with a conservative empirical form factor. No wing/body interference discount is assigned to fairings. Wing panel loads add a bending screen to the existing conservative distributed-load beam check. Propulsion uses the same UIUC experimental propeller maps as the previous study. Battery, payload, reserve, hover and transition assumptions remain fixed.
 
-These are engineering estimates. Full-aircraft viscous CFD, body lift/moment, separated flow, rotor interaction, dynamic transition, joints, buckling, flutter, fatigue and flight control are not resolved. The airfoil confidence threshold is not a calibrated probability of physical correctness.
+These are engineering estimates. Lifting-line discretization interpolates the specified section stations; it is not a CFD mesh extracted from the smooth STEP surface. Full-aircraft viscous CFD, body lift/moment, separated flow, rotor interaction, dynamic transition, joints, buckling, flutter, fatigue and flight control are not resolved. The airfoil confidence threshold is not a calibrated probability of physical correctness.
 
 ## Experiment and accounting
 
@@ -43,11 +43,16 @@ Use the existing project environment and `da-vinci-vtol:local` container. Creden
 .venv/bin/python -m scripts.surface_prepare evaluate --nonlinear --resolution 8
 DAVINCI_INTEGRATION=1 .venv/bin/python -m pytest -q tests/test_surface.py
 .venv/bin/python -m scripts.surface_study --count 12
+node scripts/surface_assets.mjs
 ```
 
 Do not regenerate the seed or edit frozen evaluation files during a campaign. The runner refuses to resume when their identities change. `--export-only` republishes archived results; `--validate-only` runs finalist validation. `--pilot-only` spends only within the pilot allocation. Live results are exported to the Next.js `/vtol-tools` route; homepage promotion is conditional on the validation gate.
 
 The initial pilot exposed a positive-side fairing boolean failure on a 2% thickness edit. Mirroring one canonical fairing side fixed the regression. Fine nonlinear verification also required a limited-memory solver configuration. The failed pilot and its $0.19 accounting were retained; a second three-task pilot passed. `--amend-preflight` records such amendments and preserves spending, and is prohibited once any design has been scored. The matched campaign uses only the repaired frozen version.
+
+Offline `surface_prepare evaluate --geometry <saved-proposal.json> --nonlinear --resolution 12 --cache` can precompute a verification result without credentials or API calls. Cache identities include the exact geometry, solver resolution, source hash and image digest. These results do not enter either arm's proposal context.
+
+Browser GLBs use Meshopt display compression with 16-bit positions and 12-bit normals. The export utility verifies triangle counts, named parts and a maximum 0.5 mm change in scene bounds before replacing a web preview. Raw meshes remain in Atlas and runtime; STEP downloads and all engineering calculations are unchanged. No mesh simplification is applied.
 
 ## Research and implementation references
 
