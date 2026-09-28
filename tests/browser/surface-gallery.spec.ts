@@ -38,6 +38,14 @@ test("surface study shows matched progress, CAD and benchmark evidence", async (
       await card.scrollIntoViewIfNeeded();
       await expect(card.getByText("Range est.",{exact:true})).toBeVisible();
       if (rows[i].assets["model.glb"]) await expect(card.getByTestId("vtol-canvas")).toHaveAttribute("data-loaded","true",{timeout:30000});
+      const evidence=card.locator("details").filter({has:page.locator("summary",{hasText:"Recorded tool results"})});
+      if (await evidence.count()) {
+        await expect(evidence).not.toHaveAttribute("open","");
+        await evidence.locator("summary").click();
+        await expect(evidence.locator("pre").first()).toBeVisible();
+        expect(await evidence.locator("pre").count()).toBeGreaterThanOrEqual(2);
+        await evidence.locator("summary").click();
+      }
     }
     await page.getByRole("button",{name:"Dimensional controls",exact:true}).click();
     const controls=data.designs.filter(d=>d.arm==="control");
