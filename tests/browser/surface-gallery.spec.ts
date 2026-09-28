@@ -13,6 +13,8 @@ test("surface study shows matched progress, CAD and benchmark evidence", async (
   await page.goto("/vtol-tools");
   await expect(page.getByRole("heading",{name:"Design progress",exact:true})).toBeVisible();
   await expect(page.getByTestId("surface-card")).toHaveCount(data.designs.length);
+  await expect(page.getByText("Recorded tool results",{exact:true})).toHaveCount(data.designs.filter(d=>d.tool_evidence.length>0).length);
+  if (Object.keys(data.validation).length) await expect(page.getByRole("definition").filter({hasText:"km est."})).toHaveCount(3);
   if (data.designs.length) {
     const hero=page.getByTestId("surface-overview");
     await expect(hero.getByTestId("vtol-canvas")).toHaveAttribute("data-loaded","true",{timeout:30000});
