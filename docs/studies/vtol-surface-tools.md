@@ -14,7 +14,7 @@ The sandbox checks spar containment and actual battery/payload cavity fit. The i
 
 Screening uses AeroSandbox lifting-line with actual CST sections and NeuralFoil section forces and moments. Reynolds-dependent cubic tables support trim over an attached-flow domain: aircraft angle of attack −2° to 8°, tail adjustment −5° to 5°, and airspeed 10–30 m/s. No extrapolation outside that domain is accepted. Direct solves audit the range optimum, maximum-speed boundary, adverse optimum and payload-capacity condition.
 
-Finalists use nonlinear lifting-line at two spanwise resolutions (8 and 12 panels per section). Circulation, aircraft angle of attack and tail setting are solved together at each actual mission condition. The linear table supplies an initial guess only. Implicit flow derivatives determine static margin; unsupported roots are excluded. The nominal optimum is also checked with AeroSandbox's original nonlinear solver. Fixed-angle audit solves receive one cold-start retry after a failed warm start. Containers retain network isolation and bounded resources; nonlinear verification permits 12 GB memory for differentiated flow equations.
+Finalists use nonlinear lifting-line at two spanwise resolutions (8 and 12 panels per section). Circulation, aircraft angle of attack and tail setting are solved together at each actual mission condition. The linear table supplies an initial guess only. Implicit flow derivatives determine static margin; unsupported roots are excluded. The nominal optimum is also checked with AeroSandbox's original nonlinear solver, using a limited-memory Hessian approximation. Fixed-angle audit solves receive one cold-start retry after a failed warm start. Containers retain network isolation and bounded resources; nonlinear verification permits 12 GB memory for differentiated flow equations.
 
 Payload capacity is sampled in 0.048 kg increments and requires at least one supported cruise condition covering the fixed 10 km mission. Adverse cases reduce battery energy by 10%, increase total drag by 20%, increase empty mass by 10%, and combine those changes. XFOIL checks root and tip predictions near the actual operating conditions. This is consistency with NeuralFoil's training solver, not independent experimental evidence.
 
@@ -46,6 +46,8 @@ DAVINCI_INTEGRATION=1 .venv/bin/python -m pytest -q tests/test_surface.py
 ```
 
 Do not regenerate the seed or edit frozen evaluation files during a campaign. The runner refuses to resume when their identities change. `--export-only` republishes archived results; `--validate-only` runs finalist validation. `--pilot-only` spends only within the pilot allocation. Live results are exported to the Next.js `/vtol-tools` route; homepage promotion is conditional on the validation gate.
+
+The initial pilot exposed a positive-side fairing boolean failure on a 2% thickness edit. Mirroring one canonical fairing side fixed the regression. Fine nonlinear verification also required a limited-memory solver configuration. The failed pilot and its $0.19 accounting were retained; a second three-task pilot passed. `--amend-preflight` records such amendments and preserves spending, and is prohibited once any design has been scored. The matched campaign uses only the repaired frozen version.
 
 ## Research and implementation references
 

@@ -20,6 +20,7 @@ from davinci.store import Store
 from davinci.surface import FILES, IMAGE, SANDBOX, crosscheck, evaluate, evaluator_version, image_digest, tool
 from sandbox.surface_geometry import SHAPE_BOUNDS, validate
 from sandbox.vtol_family import BOUNDS
+from sandbox.vtol_spec import SPECIFICATION
 
 STUDY = "survey-vtol-cst-v1"
 ROOT = Path(__file__).resolve().parents[1]
@@ -557,6 +558,11 @@ class Study:
                             .get("performance", {})
                             .get("nominal", {})
                             .get("best"),
+                            "structural_checks": d["evaluation"]
+                            .get("performance", {})
+                            .get("nominal", {})
+                            .get("structure"),
+                            "adverse_scenarios": d["evaluation"].get("performance", {}).get("scenarios", {}),
                         }
                         for d in records[-5:]
                     ]
@@ -564,6 +570,21 @@ class Study:
                         iteration=index + 1,
                         history=history,
                         baseline_metrics=baseline["metrics"],
+                        constraints={
+                            k: SPECIFICATION[k]
+                            for k in (
+                                "static_margin_range",
+                                "max_mass_kg",
+                                "hover_thrust_ratio",
+                                "maneuver_g",
+                                "ultimate_factor",
+                                "aluminium_allowable_pa",
+                                "tip_deflection_span_fraction",
+                                "stall_speed_factor",
+                                "min_prop_clearance_m",
+                                "payload_mission_km",
+                            )
+                        },
                         retrieved_memory=self.recall(arm, self.provider(arm)),
                     )
                     proposal = self.propose(arm, f"{arm}-{index:02d}", best["geometry"], context)

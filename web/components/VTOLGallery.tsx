@@ -75,6 +75,6 @@ export default function VTOLGallery({ data }: { data: VTOLData }) {
           </details>
           <div className={styles.cardFooter}><span>{d.tool_id ? "Saved energy tool used" : "Initial aircraft exploration"}</span>{d.assets["model.step"] && <a href={d.assets["model.step"]} download><ArrowDownToLine size={13}/>STEP</a>}</div>
         </div></article>;
-    })}</section><div className={styles.bottom}><a href="/gripper">Gripper study ↗</a><a href="/sensor">Sensor study ↗</a><a href="/harness">Full harness ↗</a></div>
+    })}</section><div className={styles.bottom}><a href="/vtol-tools">CST geometry-tool experiment ↗</a><a href="/gripper">Gripper study ↗</a><a href="/sensor">Sensor study ↗</a><a href="/harness">Full harness ↗</a></div>
   </main>;
 }
