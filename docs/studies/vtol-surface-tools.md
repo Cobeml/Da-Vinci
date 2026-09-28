@@ -51,6 +51,18 @@ The initial pilot exposed a positive-side fairing boolean failure on a 2% thickn
 
 ## Research and implementation references
 
+The integration judgments below are engineering assessments for this repository, not measured probabilities of agent success. The live pilot and matched experiment supply the actual workflow evidence.
+
+| Tool family | Agent interface and integration assessment | Decision |
+| --- | --- | --- |
+| CST + NeuralFoil + AeroSandbox | Compact section coefficients, fast differentiable section analysis, and an existing Python aircraft solver. Thickness, spar fit and trim can be checked explicitly. | Implemented with semantic edits and a constrained optimizer. |
+| CadQuery/OpenCascade spline lofts | Preserve the existing solid/STEP pipeline while replacing faceted sections with smooth surfaces. Boolean robustness still needs regression coverage. | Implemented. |
+| [geomdl](https://nurbs-python.readthedocs.io/en/5.x/module_exchange.html) | Useful spline evaluation and control-point manipulation. Its documented exchange API lists mesh, JSON and OpenNURBS paths; a watertight STEP solid still needs a CAD-kernel bridge and topology checks. | Defer a separate dependency; use the existing CAD kernel first. |
+| [splinepy](https://github.com/isosuite/splinepy) | General spline prototyping and mesh FFD are useful for lattices or deformation experiments. Integration would need a verified conversion back to the harness's solid model. | Defer until a use case needs its additional capabilities. |
+| [pyGeo FFD](https://mdolab-pygeo.readthedocs-hosted.com/en/latest/advanced_ffd.html) | The tutorial deforms embedded surface point sets; that alone does not establish preservation of STEP topology, wall thickness, interfaces or a CAD feature history. | Defer; first add Jacobian, thickness, interface and CAD reconstruction checks. |
+| [OpenVSP/VSPAERO](https://openvsp.org/pyapi_docs/latest/groups/VSPAERO.html) | Aircraft-specific parameters and a Python analysis interface are a strong fit for later topology expansion. A second geometry representation would require consistency checks against the manufacturing CAD. | A worthwhile next-stage cross-check, not required for this experiment. |
+| [SU2](https://su2code.github.io/tutorials/Multi_Objective_Shape_Design/) | Can support higher-fidelity shape optimization, but adds volume meshing, boundary-condition, convergence and compute-management work. | Defer until a canonical meshed aircraft passes independent verification. |
+
 - [August 2026: natural-language-driven airfoil design with LLM/CST workflows](https://www.iisci.net/zh/article/doi/10.16356/j.2097-6771.2026.04.008/). The accessible abstract supports feasibility; no transferable improvement percentage is assumed.
 - [NeuralFoil implementation and benchmarks](https://github.com/peterdsharpe/NeuralFoil).
 - [AeroSandbox nonlinear lifting-line](https://aerosandbox.readthedocs.io/en/master/autoapi/aerosandbox/aerodynamics/aero_3D/nonlinear_lifting_line/).

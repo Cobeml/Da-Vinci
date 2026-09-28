@@ -455,6 +455,10 @@ class Study:
     def record(self, arm, index, proposal):
         ident = f"{STUDY}-{arm}-{index:02d}"
         e, files = self.cached_evaluation(proposal["geometry"])
+        if not files:
+            # A solver failure does not erase the already accepted CAD preview.
+            _, preview_files = self.preview(proposal["geometry"])
+            files = {k: v for k, v in preview_files.items() if k in ("model.step", "model.glb")}
         bundle = {
             "geometry.json": json.dumps(proposal["geometry"]),
             "policy.json": json.dumps({k: proposal[k] for k in ("lesson", "next_focus")}),
@@ -523,6 +527,7 @@ class Study:
         if baseline["outcome"] != "passed":
             raise ValueError("Common baseline must pass before paid campaign")
         self.pilot()
+        self.store.update("surface_studies", STUDY, {"status": "running"})
         limited = False
         for index in range(count):
             # Reserve enough room for both next proposals before starting a paired round.
@@ -589,6 +594,8 @@ class Study:
                     )
                     proposal = self.propose(arm, f"{arm}-{index:02d}", best["geometry"], context)
                 self.record(arm, index, proposal)
+        self.store.update("surface_studies", STUDY, {"status": "validating"})
+        self.export()
         self.validate_finalists()
         self.store.update(
             "surface_studies",

@@ -21,7 +21,7 @@ function Model({design,hero=false}:{design:Design;hero?:boolean}) {
   const url=design.assets[internal?"internal.glb":"model.glb"];
   return <div ref={ref} className={hero?view.hero:""}><div className={view.view} data-testid={hero?"surface-overview":"surface-model"} data-view={internal?"internal":"exterior"}>
     {url && visible ? <Viewer key={url} url={url} internal={internal}/> : <div className={styles.loading}>{url?"3D model":"No valid geometry"}</div>}
-    <div className={view.controls}><button aria-pressed={!internal} onClick={()=>setInternal(false)}>Exterior</button><button aria-pressed={internal} onClick={()=>setInternal(true)}>Internal layout</button></div>
+    <div className={view.controls}><button aria-pressed={!internal} onClick={()=>setInternal(false)}>Exterior</button>{design.assets["internal.glb"]&&<button aria-pressed={internal} onClick={()=>setInternal(true)}>Internal layout</button>}</div>
   </div></div>;
 }
 
