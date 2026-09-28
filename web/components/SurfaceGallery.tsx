@@ -6,9 +6,9 @@ import view from "./VTOLGallery.module.css";
 import css from "./SurfaceGallery.module.css";
 
 const Viewer = dynamic(() => import("./VTOLViewer"), { ssr: false });
-type Evaluation = { outcome: string; metrics: Record<string, {value:number;unit:string}>; violations: {code:string;message:string}[]; performance?: {nominal:{best:{alpha_deg:number;elevator_deg:number;drag_n:number;wh_km:number}|null};scenarios:Record<string,{range_km:number;violations:string[]}>;direct_audit?:{min_confidence:number;surrogate_errors:Record<string,number>}|null} };
+type Evaluation = { outcome: string; metrics: Record<string, {value:number;unit:string}|undefined>; violations: {code:string;message:string}[]; performance?: {nominal:{best:{alpha_deg:number;elevator_deg:number;drag_n:number;wh_km:number}|null};scenarios:Record<string,{range_km:number;violations:string[]}>;direct_audit?:{min_confidence?:number;surrogate_errors?:Record<string,number>}|null} };
 type Section = {upper_weights:number[];lower_weights:number[];leading_edge_weight?:number;TE_thickness?:number};
-type Design = {_id:string;arm:string;iteration:number;title:string;change:string;geometry:{dimensions:Record<string,number>;root:Section;tip:Section};evaluation:Evaluation;assets:Record<string,string>;reflection:{lesson:string;next_focus:string};tool_calls:number;tool_failures:number;tool_seconds:number;numerical_evaluations?:number};
+type Design = {_id:string;arm:string;iteration:number;title:string;change:string;geometry:{dimensions:Record<string,number>;root:Section;tip:Section};evaluation:Evaluation;assets:Record<string,string|undefined>;reflection:{lesson:string;next_focus:string};tool_calls:number;tool_failures:number;tool_seconds:number;numerical_evaluations?:number};
 type Validation = {evaluation:Evaluation;converged:boolean;relative_range_change:number|null;section_crosscheck?:{passed:boolean}};
 export type SurfaceData = {study_id:string;status:string;designs:Design[];validation:Record<string,Validation>;publishable:boolean;best_id:string|null;spent_usd:number;budget_usd:number};
 const label = (arm:string) => arm === "control" ? "Dimensional controls" : "CST + surface tools";
@@ -60,6 +60,9 @@ export default function SurfaceGallery({data}:{data:SurfaceData}) {
   const base=data.designs.find(d=>d.arm==="control"&&d.iteration===1);
   const control=[...passing].filter(d=>d.arm==="control").sort((a,b)=>score(b)-score(a))[0];
   const treatment=[...passing].filter(d=>d.arm==="surface_tools").sort((a,b)=>score(b)-score(a))[0];
+  const verified=(arm:string)=>data.designs.filter(d=>d.arm===arm&&data.validation[d._id]?.converged).sort((a,b)=>(data.validation[b._id].evaluation.metrics.range_km?.value??0)-(data.validation[a._id].evaluation.metrics.range_km?.value??0))[0];
+  const hasValidation=Object.keys(data.validation).length>0;
+  const summary=hasValidation ? [["Verified baseline",base&&data.validation[base._id]?.converged?base:undefined],["Best verified dimensional",verified("control")],["Best verified surface tools",verified("surface_tools")]] as const : [["Screening baseline",base],["Best dimensional screen",control],["Best surface-tool screen",treatment]] as const;
   return <main className={styles.page}>
     <header className={styles.header}><div><h1>Da Vinci <span>Recursive Improvement CAD Harness</span></h1><p>Streamlined VTOL · matched geometry-tool experiment</p></div><span className={styles.material}>0.5 kg payload · 150 Wh battery</span></header>
     {best && <section className={styles.overview} aria-label="Project overview"><Model design={best} hero/><div className={styles.overviewText}>
@@ -82,10 +85,10 @@ export default function SurfaceGallery({data}:{data:SurfaceData}) {
         <p>Promotion requires at least 5% more verified range than both the common baseline and control, at least 95% of baseline speed and payload, an adverse-case advantage, section cross-checks, and range convergence within 2%. Earlier VTOL results use a different evaluator and are not direct controls.</p>
       </div></details>
     </div></section>}
-    <div className={styles.sectionHeading}><h2>Design progress</h2><span>Range estimates · km</span></div>
+    <div className={styles.sectionHeading}><h2>Design progress</h2><span>Screening range · km · green passed · brown failed</span></div>
     <p className={view.notice}>{data.publishable?"The new-tool design passed the comparison and validation gates.":"Experiment results — no verified new-tool winner has passed all promotion gates."}</p>
     {!data.designs.length && <p>Preparing and validating the common baseline.</p>}
-    {base && <dl className={css.summary} aria-label="Best passing screening ranges">{[["Common baseline",base],["Best dimensional design",control],["Best surface-tool design",treatment]].map(([name,d])=><div key={String(name)}><dt>{String(name)}</dt><dd>{d?score(d as Design).toFixed(1):"—"} <small>km est.</small></dd></div>)}</dl>}
+    {base && <dl className={css.summary} aria-label={hasValidation?"Verified range comparison":"Screening range comparison"}>{summary.map(([name,d])=><div key={name}><dt>{name}</dt><dd>{d?(hasValidation?data.validation[d._id].evaluation.metrics.range_km?.value??0:score(d)).toFixed(1):"—"} <small>km est.</small></dd></div>)}</dl>}
     <Progress designs={data.designs}/>
     <div className={css.filters} aria-label="Experiment filter">{["all","control","surface_tools"].map(a=><button key={a} aria-pressed={arm===a} onClick={()=>setArm(a)}>{a==="all"?"Both arms":label(a)}</button>)}</div>
     <section className={styles.grid} aria-label="Generated streamlined VTOL designs">{rows.map(d=>{

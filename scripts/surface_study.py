@@ -109,7 +109,7 @@ class Study:
         self.lock = (self.root / "study.lock").open("a")
         fcntl.flock(self.lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         self.store = Store(self.settings.root, self.settings.mongodb_uri, self.settings.mongodb_database)
-        self.runner = Runner(self.settings)
+        self.runner = Runner(self.settings, concurrency=4)
         self.artifacts = Artifacts(self.settings.root, self.store)
         self.repository = Repository(self.settings.root)
         self.version = evaluator_version()
@@ -605,6 +605,7 @@ class Study:
 
     def validate_finalists(self):
         validation = {}
+        selected = []
         for arm in ARMS:
             rows = self.records(arm)
             if not rows:
@@ -614,13 +615,21 @@ class Study:
                 key=lambda d: metric(d["evaluation"], "range_km"),
                 reverse=True,
             )[:3]
-            for d in {d["_id"]: d for d in [rows[0], *finalists]}.values():
+            selected.extend({d["_id"]: d for d in [rows[0], *finalists]}.values())
+        # Schedule unique solver jobs together, so a completed medium check does
+        # not leave a core idle while its fine-resolution partner finishes.
+        geometries = {digest(d["geometry"]): d["geometry"] for d in selected}
+        with ThreadPoolExecutor(max_workers=4) as pool:
+            jobs = {
+                (key, resolution): pool.submit(self.cached_evaluation, geometry, resolution, True)
+                for key, geometry in geometries.items()
+                for resolution in (8, 12)
+            }
+            for d in selected:
                 print(f"Nonlinear refinement: {d['_id']}", flush=True)
-                with ThreadPoolExecutor(max_workers=2) as pool:
-                    medium_job = pool.submit(self.cached_evaluation, d["geometry"], 8, True)
-                    fine_job = pool.submit(self.cached_evaluation, d["geometry"], 12, True)
-                    medium, _ = medium_job.result()
-                    fine, _ = fine_job.result()
+                key = digest(d["geometry"])
+                medium, _ = jobs[key, 8].result()
+                fine, _ = jobs[key, 12].result()
                 r0, r1 = metric(medium, "range_km"), metric(fine, "range_km")
                 change = abs(r1 / r0 - 1) if r0 else None
                 check = {"passed": False, "reason": "No supported optimum"}

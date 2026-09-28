@@ -16,8 +16,11 @@ _slots = threading.BoundedSemaphore(2)
 
 
 class Runner:
-    def __init__(self, settings, cancelled=lambda: False):
+    def __init__(self, settings, cancelled=lambda: False, concurrency=None):
+        if concurrency is not None and (type(concurrency) is not int or not 1 <= concurrency <= 4):
+            raise ValueError("Sandbox concurrency must be an integer from 1 to 4")
         self.settings = settings
+        self.slots = _slots if concurrency is None else threading.BoundedSemaphore(concurrency)
         self.cancelled = cancelled
         self.root = settings.root / "sandboxes"
         self.root.mkdir(exist_ok=True)
@@ -47,7 +50,7 @@ class Runner:
     def execute(self, entrypoint, files, timeout=120, image=None, executable="python", memory_gb=4):
         if type(memory_gb) is not int or not 1 <= memory_gb <= 12:
             raise ValueError("Sandbox memory must be an integer from 1 to 12 GB")
-        with _slots:
+        with self.slots:
             return self._execute(entrypoint, files, timeout, image, executable, memory_gb)
 
     def _execute(self, entrypoint, files, timeout=120, image=None, executable="python", memory_gb=4):

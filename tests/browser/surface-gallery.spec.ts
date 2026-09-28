@@ -23,6 +23,10 @@ test("surface study shows matched progress, CAD and benchmark evidence", async (
     await page.getByRole("button",{name:"CST + surface tools",exact:true}).click();
     const rows=data.designs.filter(d=>d.arm==="surface_tools");
     await expect(page.getByTestId("surface-card")).toHaveCount(rows.length);
+    const first=page.getByTestId("surface-card").first();
+    await first.getByText("Airfoil sections",{exact:true}).click();
+    await expect(first.getByRole("img",{name:"Baseline, root and tip airfoil comparison"})).toBeVisible();
+    await first.getByText("Airfoil sections",{exact:true}).click();
     for (let i=0;i<rows.length;i++) {
       const card=page.getByTestId("surface-card").nth(i);
       await card.scrollIntoViewIfNeeded();
