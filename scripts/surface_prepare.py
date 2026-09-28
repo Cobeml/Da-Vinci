@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 
 from davinci.config import Settings
+from davinci.models import digest
 from davinci.runner import Runner
 from davinci.surface import crosscheck, evaluate, evaluation_key, evaluator_version, tool
 
@@ -48,6 +49,14 @@ def main():
     elif args.action == "crosscheck":
         source = "evaluate" + ("-nonlinear" if args.nonlinear else "") + "-" + str(args.resolution)
         evaluation = json.loads((root / source / "result.json").read_text())
+        provenance = evaluation.get("execution", {})
+        if (
+            provenance.get("geometry_digest") != digest(geometry)
+            or provenance.get("evaluator_version") != evaluator_version()
+        ):
+            raise ValueError(
+                "Crosscheck requires a prepared evaluation of this geometry and evaluator version"
+            )
         r = crosscheck(runner, geometry, evaluation["performance"]["direct_audit"])
         files = {}
     else:

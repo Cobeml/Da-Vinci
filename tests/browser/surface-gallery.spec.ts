@@ -39,6 +39,14 @@ test("surface study shows matched progress, CAD and benchmark evidence", async (
       await expect(card.getByText("Range est.",{exact:true})).toBeVisible();
       if (rows[i].assets["model.glb"]) await expect(card.getByTestId("vtol-canvas")).toHaveAttribute("data-loaded","true",{timeout:30000});
     }
+    await page.getByRole("button",{name:"Dimensional controls",exact:true}).click();
+    const controls=data.designs.filter(d=>d.arm==="control");
+    await expect(page.getByTestId("surface-card")).toHaveCount(controls.length);
+    for (let i=0;i<controls.length;i++) {
+      const card=page.getByTestId("surface-card").nth(i);
+      await card.scrollIntoViewIfNeeded();
+      if (controls[i].assets["model.glb"]) await expect(card.getByTestId("vtol-canvas")).toHaveAttribute("data-loaded","true",{timeout:30000});
+    }
     const withStep=data.designs.find(d=>d.assets["model.step"]);
     if (withStep) expect(await (await request.get(withStep.assets["model.step"])).text()).toContain("ISO-10303-21");
   }
