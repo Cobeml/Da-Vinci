@@ -6,12 +6,14 @@ from pathlib import Path
 
 from davinci.config import Settings
 from davinci.runner import Runner
-from davinci.surface import evaluate, evaluator_version, tool
+from davinci.surface import crosscheck, evaluate, evaluator_version, tool
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("action", choices=["seed", "preview", "evaluate", "optimize", "probe", "inspect"])
+    parser.add_argument(
+        "action", choices=["seed", "preview", "evaluate", "optimize", "probe", "inspect", "crosscheck"]
+    )
     parser.add_argument("--nonlinear", action="store_true")
     parser.add_argument("--resolution", type=int, default=6)
     parser.add_argument("--geometry", default="runtime/survey-vtol-cst-v1/seed.json")
@@ -39,6 +41,11 @@ def main():
     geometry = json.loads(Path(args.geometry).read_text())
     if args.action == "evaluate":
         r, files = evaluate(runner, geometry, args.resolution, args.nonlinear)
+    elif args.action == "crosscheck":
+        source = "evaluate" + ("-nonlinear" if args.nonlinear else "") + "-" + str(args.resolution)
+        evaluation = json.loads((root / source / "result.json").read_text())
+        r = crosscheck(runner, geometry, evaluation["performance"]["direct_audit"])
+        files = {}
     else:
         r, files = tool(runner, args.action, {"geometry": geometry, "cg": 0.397})
     key = args.action + ("-nonlinear" if args.nonlinear else "") + "-" + str(args.resolution)

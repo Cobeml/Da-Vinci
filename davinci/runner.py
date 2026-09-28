@@ -44,11 +44,13 @@ class Runner:
         except (OSError, subprocess.TimeoutExpired):
             return False
 
-    def execute(self, entrypoint, files, timeout=120, image=None, executable="python"):
+    def execute(self, entrypoint, files, timeout=120, image=None, executable="python", memory_gb=4):
+        if type(memory_gb) is not int or not 1 <= memory_gb <= 12:
+            raise ValueError("Sandbox memory must be an integer from 1 to 12 GB")
         with _slots:
-            return self._execute(entrypoint, files, timeout, image, executable)
+            return self._execute(entrypoint, files, timeout, image, executable, memory_gb)
 
-    def _execute(self, entrypoint, files, timeout=120, image=None, executable="python"):
+    def _execute(self, entrypoint, files, timeout=120, image=None, executable="python", memory_gb=4):
         if self.cancelled():
             raise SandboxError("Run stopped")
         name = identity("davinci")
@@ -76,9 +78,9 @@ class Runner:
                 "--cpus",
                 "2",
                 "--memory",
-                "4g",
+                f"{memory_gb}g",
                 "--memory-swap",
-                "4g",
+                f"{memory_gb}g",
                 "--pids-limit",
                 "128",
                 "--read-only",
@@ -121,7 +123,7 @@ class Runner:
                     log.seek(0)
                     logs = log.read(32000).decode(errors="replace")
                     if process.returncode:
-                        raise SandboxError(logs[-4000:])
+                        raise SandboxError(f"Sandbox exited with code {process.returncode}: " + logs[-4000:])
                     result = {}
                     for path in outgoing.iterdir():
                         if path.is_symlink() or not path.is_file():

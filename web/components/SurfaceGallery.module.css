@@ -12,5 +12,6 @@
 .summary dt { font-size: 12px; color: #64735c; }
 .summary dd { margin: 8px 0 0; font-size: 30px; color: #405738; }
 .summary small { font-size: 12px; }
+.sections { display: block; width: 100%; height: auto; margin-top: 12px; }
 @media(max-width:700px) { .progress { grid-template-columns: 1fr; } .bars { gap: 5px; } }
 @media(max-width:450px) { .summary { padding: 14px; gap: 10px; } .summary dd { font-size: 23px; } .summary small { display: block; margin-top: 4px; } }

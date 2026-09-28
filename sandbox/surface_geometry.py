@@ -6,11 +6,11 @@ import math
 import numpy as np
 
 try:
+    from vtol_family import BOUNDS
     from vtol_family import parts as legacy_parts
-    from vtol_family import validate as validate_dimensions
 except ImportError:
+    from sandbox.vtol_family import BOUNDS
     from sandbox.vtol_family import parts as legacy_parts
-    from sandbox.vtol_family import validate as validate_dimensions
 
 VERSION = 1
 SHAPE_BOUNDS = {
@@ -50,7 +50,21 @@ def seed(parameters):
 def validate(spec):
     if set(spec) != {"version", "dimensions", "root", "tip", "shape"} or spec["version"] != VERSION:
         raise ValueError("GeometrySpec requires version=1, dimensions, root, tip, shape")
-    validate_dimensions(spec["dimensions"])
+    p = spec["dimensions"]
+    if set(p) != set(BOUNDS):
+        raise ValueError("Use exactly the documented dimension fields")
+    for key, (low, high) in BOUNDS.items():
+        v = p[key]
+        if (
+            isinstance(v, bool)
+            or not isinstance(v, (float, int))
+            or not math.isfinite(v)
+            or not low <= v <= high
+        ):
+            raise ValueError(f"dimensions.{key} must be finite in [{low}, {high}]")
+    if p["tail_x"] + p["tail_chord"] > p["fuselage_length"] + 0.14:
+        raise ValueError("Tail trailing edge must remain near the fuselage tail")
+    # Actual CST/STEP containment replaces the fixed-NACA spar/chord restriction.
     if set(spec["shape"]) != set(SHAPE_BOUNDS):
         raise ValueError("Use exactly the documented shape fields")
     for key, (low, high) in SHAPE_BOUNDS.items():
@@ -170,7 +184,12 @@ def parts(spec):
     section_checks(spec)
     p = spec["dimensions"]
     # Retain fixed drive/landing equipment; replace the geometry being optimized.
-    out = [o for o in legacy_parts(p) if not o["name"].startswith(("fuselage", "wing", "fin", "tail"))]
+    equipment_parameters = {**p, "spar_diameter": min(p["spar_diameter"], 0.105 * p["root_chord"])}
+    out = [
+        o
+        for o in legacy_parts(equipment_parameters)
+        if not o["name"].startswith(("fuselage", "wing", "fin", "tail"))
+    ]
 
     def add(name, shape, density, color, kind="structure", **extra):
         if not shape.isValid() or not shape.Solids() or shape.Volume() <= 0:
@@ -212,19 +231,23 @@ def parts(spec):
         add("wing_spar" + str(sign), spar, 2700, dark)
         add("wing" + str(sign), envelope.cut(spar).cut(outer), 32, white, "foam", envelope=envelope)
         # Root fillet fairing: smooth, low-density volume, trimmed against wing/body.
+        # Build one canonical side and mirror it; identical root sections must not
+        # acquire different boolean topology from opposite loft orientations.
         fairing_wires = [
-            cq.Workplane("XZ", origin=(1000 * (p["wing_x"] + 0.40 * p["root_chord"]), sign * 1000 * y, 80))
+            cq.Workplane("XZ", origin=(1000 * (p["wing_x"] + 0.40 * p["root_chord"]), -1000 * y, 80))
             .ellipse(1000 * p["root_chord"] * 0.60 * f, 34 * f)
             .val()
             for y, f in ((0, 1), (p["fuselage_width"] * 0.55, 0.9), (p["fuselage_width"] * 0.85, 0.08))
         ]
         fairing = (
             cq.Solid.makeLoft(fairing_wires, ruled=False)
-            .cut(envelope, tol=0.001)
+            .cut(envelope if sign == -1 else envelope.mirror("XZ"), tol=0.001)
             .cut(outer, tol=0.001)
             .clean()
             .fix()
         )
+        if sign == 1:
+            fairing = fairing.mirror("XZ")
         add("root_fairing" + str(sign), fairing, 32, green, "foam")
         # Elliptical hollow covers enclose the existing circular structural booms.
         length = (p["rotor_rear_x"] - p["rotor_front_x"]) * 1000

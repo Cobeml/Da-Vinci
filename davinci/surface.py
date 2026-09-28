@@ -74,6 +74,7 @@ def evaluate(runner, geometry, resolution=6, nonlinear=False):
         },
         timeout=3600 if nonlinear else 900,
         image=image,
+        memory_gb=12 if nonlinear else 4,
     )
     result = json.loads(files.pop("result.json"))
     result["elapsed_seconds"] = seconds + preview["elapsed_seconds"]

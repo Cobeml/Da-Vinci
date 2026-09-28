@@ -42,6 +42,9 @@ def test_middle_chord_keeps_quarter_chord_line():
     new = stations(g)[1]
     assert old["x"] + 0.25 * old["chord"] == pytest.approx(new["x"] + 0.25 * new["chord"])
     assert new["chord"] > old["chord"]
+    # Thick CST sections may carry a larger spar; exact CAD containment is checked in the sandbox.
+    g["dimensions"]["spar_diameter"] = 0.035
+    validate(g)
 
 
 def test_control_tool_contract_and_budget_reservations(tmp_path):
@@ -117,6 +120,9 @@ def test_cache_and_arm_memory_identities(tmp_path, monkeypatch):
 @pytest.mark.integration
 @pytest.mark.skipif(os.environ.get("DAVINCI_INTEGRATION") != "1", reason="Requires CAD container")
 def test_surface_section_sensitivity_and_smooth_step(tmp_path):
+    import json
+    from pathlib import Path
+
     from davinci.config import Settings
     from davinci.runner import Runner
     from davinci.surface import tool
@@ -129,7 +135,15 @@ def test_surface_section_sensitivity_and_smooth_step(tmp_path):
     after, _ = tool(
         runner,
         "edit",
-        {"geometry": spec, "edits": {"camber_scale": 1.2, "shape": {"mid_chord_factor": 1.02}}},
+        {
+            "geometry": spec,
+            "edits": {
+                "camber_scale": 1.2,
+                "thickness_scale": 1.2,
+                "dimensions": {"spar_diameter": 0.035},
+                "shape": {"mid_chord_factor": 1.02},
+            },
+        },
     )
     aero, _ = tool(runner, "analyze", {"geometry": after["geometry"], "conditions": conditions})
     assert aero["sections"][0]["CL"] > before["sections"][0]["CL"]
@@ -140,6 +154,12 @@ def test_surface_section_sensitivity_and_smooth_step(tmp_path):
     assert b"ISO-10303-21" in files["model.step"]
     with pytest.raises(RuntimeError):
         tool(runner, "edit", {"geometry": spec, "edits": {"thickness_scale": 0.1}})
+    # Regression: a 2% thickness edit on the actual study seed invalidated only
+    # the positive-side fairing when opposite loft orientations were used.
+    common = json.loads(Path("docs/studies/vtol-surface-seed.json").read_text())
+    edited, _ = tool(runner, "edit", {"geometry": common, "edits": {"thickness_scale": 1.02}})
+    preview, _ = tool(runner, "preview", {"geometry": edited["geometry"]})
+    assert preview["valid_solids"] > 15
 
 
 @pytest.mark.integration
@@ -177,7 +197,8 @@ def test_newton_flow_agrees_with_original_nonlinear_solver(tmp_path):
 os.environ['OPENBLAS_NUM_THREADS']='1'
 os.environ['OMP_NUM_THREADS']='1'
 from surface_geometry import seed
-from surface_physics import solve
+from surface_physics import solve, DirectNonlinearTrim
+from types import SimpleNamespace
 from vtol_family import BASELINE
 g=seed(BASELINE)
 fast=solve(g,.4,15,4,-2,4,nonlinear=True)
@@ -185,6 +206,15 @@ reference=solve(g,.4,15,4,-2,4,nonlinear=True,details=True)
 for key in ('CL','CD','Cm','Cn'):
  assert abs(fast[key]-reference[key])<1e-6,(key,fast[key],reference[key])
 assert reference['min_confidence']>.9
+trim_solver=DirectNonlinearTrim(g,.4,4,SimpleNamespace(trim=lambda *args:(4.,0.,0.,0.)))
+trim=trim_solver.trim(15,.6,0)
+assert trim is not None
+actual=solve(g,.4,15,trim[0],trim[1],4,nonlinear=True)
+assert abs(actual['CL']-.6)<1e-6 and abs(actual['Cm'])<1e-6
+low=solve(g,.4,15,trim[0]-.01,trim[1],4,nonlinear=True)
+high=solve(g,.4,15,trim[0]+.01,trim[1],4,nonlinear=True)
+margin=-(high['Cm']-low['Cm'])/(high['CL']-low['CL'])
+assert abs(margin-trim[3])<.002,(margin,trim)
 """
     Runner(Settings(_env_file=None, davinci_data_dir=tmp_path)).execute(
         "/input/check.py", inputs() | {"check.py": source}, timeout=180, image=IMAGE

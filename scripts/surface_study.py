@@ -99,7 +99,7 @@ def definitions(arm):
 
 
 class Study:
-    def __init__(self):
+    def __init__(self, amend_preflight=False):
         self.settings = Settings()
         if not self.settings.mongodb_uri or not self.settings.openai_api_key:
             raise ValueError("Live credentials required")
@@ -127,7 +127,24 @@ class Study:
         )
         existing = self.store.get("surface_studies", STUDY)
         if any(existing[k] != v for k, v in freeze.items()):
-            raise ValueError("Frozen seed/evaluator/image changed; use a new study ID")
+            if not amend_preflight or self.records():
+                raise ValueError("Frozen seed/evaluator/image changed; use a new study ID")
+            # Pilot-only defects may be repaired before the matched experiment.
+            # Preserve every earlier response and all spending; never rescore an arm.
+            archive = self.root / ("preflight-" + existing["evaluator_version"])
+            archive.mkdir(exist_ok=True)
+            for path in self.root.glob("pilot*.json"):
+                path.rename(archive / path.name)
+            history = existing.get("preflight_amendments", []) + [
+                {
+                    "at": now(),
+                    "previous": {k: existing[k] for k in freeze},
+                    "reason": "Repair pilot fairing failure and nonlinear audit memory use before any scored designs",
+                }
+            ]
+            self.store.update("surface_studies", STUDY, {**freeze, "preflight_amendments": history})
+            for arm in ("pilot", *ARMS):
+                self.store.update("runs", STUDY + "-" + arm, freeze)
         for arm, cap in [("pilot", 6), ("control", 27), ("surface_tools", 27)]:
             self.store.insert(
                 "runs",
@@ -416,7 +433,7 @@ class Study:
             results.append(dict(task=task, passed=passed, calls=calls))
         result = dict(passed=all(x["passed"] for x in results), tasks=results, spent_usd=self.spent("pilot"))
         saved.write_text(json.dumps(result, indent=2))
-        self.store.insert("study_pilots", document("pilot", _id=STUDY, **result))
+        self.store.insert("study_pilots", document("pilot", _id=STUDY + "-" + self.version, **result))
         if not result["passed"]:
             raise ValueError("Pilot failed; campaign is disabled")
         files = {name: (SANDBOX / name).read_text() for name in FILES if name.startswith("surface_")}
@@ -697,9 +714,14 @@ def main():
     parser.add_argument("--pilot-only", action="store_true")
     parser.add_argument("--export-only", action="store_true")
     parser.add_argument("--validate-only", action="store_true")
+    parser.add_argument(
+        "--amend-preflight",
+        action="store_true",
+        help="Archive and repair a failed pilot; forbidden after any scored design",
+    )
     args = parser.parse_args()
     try:
-        study = Study()
+        study = Study(amend_preflight=args.amend_preflight)
         if args.export_only:
             study.export()
         elif args.pilot_only:

@@ -110,11 +110,25 @@ def solve(spec, cg, speed, alpha, elevator, resolution, nonlinear=False, details
             _NONLINEAR[key] = ParametricNonlinear(spec, cg, resolution)
         return _NONLINEAR[key].run(speed, alpha, elevator, beta)
     cls = a.NonlinearLiftingLine if nonlinear else a.LiftingLine
+    options = {}
+    if nonlinear:
+
+        class AuditOpti(a.Opti):
+            def solve(self, **kwargs):
+                return super().solve(
+                    **kwargs,
+                    max_iter=300,
+                    max_runtime=120,
+                    options={"ipopt.hessian_approximation": "limited-memory"},
+                )
+
+        options["opti"] = AuditOpti()
     analysis = cls(
         airplane(spec, cg, elevator),
         a.OperatingPoint(velocity=speed, alpha=alpha, beta=beta),
         spanwise_resolution=resolution,
         verbose=False,
+        **options,
     )
     raw = analysis.run()
     out = {k: float(raw[k]) for k in ("CL", "CD", "Cm", "Cn")}
@@ -246,6 +260,84 @@ class AeroTable:
         return float(alpha), float(elev), v["CD"], -d["Cm"] / d["CL"] - reference_shift
 
 
+class DirectNonlinearTrim:
+    """Solve circulation, angle of attack and tail setting together at actual mission points."""
+
+    def __init__(self, spec, cg, resolution, initialization):
+        import casadi as ca
+
+        self.initialization = initialization
+        self.cache = {}
+        self.failures = 0
+        self.solves = 0
+        o = a.Opti()
+        speed = o.parameter(value=15.0)
+        target = o.parameter(value=0.6)
+        shift = o.parameter(value=0.0)
+        alpha = o.variable(init_guess=4.0, scale=1)
+        elevator = o.variable(init_guess=0.0, scale=1)
+        analysis = a.NonlinearLiftingLine(
+            airplane(spec, cg, elevator),
+            a.OperatingPoint(velocity=speed, alpha=alpha),
+            spanwise_resolution=resolution,
+            verbose=False,
+            opti=o,
+        )
+        raw = analysis.run(solve=False)
+        residual = ca.vertcat(raw["residuals"], raw["CL"] - target, raw["Cm"] + shift * raw["CL"])
+        o.subject_to(residual == 0)
+        self.f = ca.Function("trim_residual", [o.x, o.p], [residual])
+        self.root = ca.rootfinder("trim", "newton", self.f, {"abstol": 1e-9, "max_iter": 25})
+        self.outputs = ca.Function(
+            "trim_outputs", [o.x, o.p], [ca.vertcat(alpha, elevator, raw["CL"], raw["CD"], raw["Cm"])]
+        )
+        self.derivatives = ca.Function(
+            "trim_derivatives",
+            [o.x, o.p],
+            [ca.jacobian(raw["residuals"], o.x), ca.jacobian(ca.vertcat(raw["CL"], raw["Cm"]), o.x)],
+        )
+        self.guess = np.asarray(o.debug.value(o.x, o.initial())).reshape(-1)
+
+    def trim(self, speed, target, reference_shift):
+        import casadi as ca
+
+        key = (float(speed), float(target), float(reference_shift))
+        if key in self.cache:
+            return self.cache[key]
+        initial = self.initialization.trim(*key)
+        guess = self.guess.copy()
+        if initial is not None:
+            guess[:2] = initial[:2]
+        try:
+            solution = self.root(guess, key)
+            residual = float(ca.mmax(ca.fabs(self.f(solution, key))))
+            values = np.asarray(self.outputs(solution, key)).reshape(-1)
+            jac_r, jac_out = [np.asarray(x) for x in self.derivatives(solution, key)]
+            # Hold tail setting fixed; include induced-flow response in dCL/dalpha and dCm/dalpha.
+            derivative = jac_out[:, 0] + jac_out[:, 2:] @ np.linalg.solve(jac_r[:, 2:], -jac_r[:, 0])
+            alpha, elevator, cl, cd, cm = values
+            if (
+                not np.isfinite(values).all()
+                or residual > 1e-7
+                or not -2 <= alpha <= 8
+                or abs(elevator) > 5
+                or cd <= 0
+                or derivative[0] <= 0
+            ):
+                raise ValueError("Unsupported nonlinear trim")
+            margin = -derivative[1] / derivative[0] - reference_shift
+            if not math.isfinite(margin):
+                raise ValueError("Unsupported static margin")
+            result = (float(alpha), float(elevator), float(cd), float(margin))
+            self.guess = np.asarray(solution).reshape(-1)
+        except (RuntimeError, ValueError, np.linalg.LinAlgError):
+            self.failures += 1
+            result = None
+        self.solves += 1
+        self.cache[key] = result
+        return result
+
+
 def mission(
     spec,
     components,
@@ -257,6 +349,7 @@ def mission(
     energy_factor=1.0,
     drag_factor=1.0,
     empty_factor=1.0,
+    capacity_only=False,
 ):
     p = spec["dimensions"]
     mass, cg = mass_properties(p, components, payload, empty_factor)
@@ -288,8 +381,10 @@ def mission(
     mac = aero["mac"]
     stall = math.sqrt(2 * weight / (S["rho"] * area * max(0.05, aero["cl_limit"])))
     curve = []
-    for speed in np.arange(10.0, 30.01, 0.25):
+    for speed in () if failures else np.arange(10.0, 30.01, 0.25):
         if speed < stall * S["stall_speed_factor"]:
+            continue
+        if props.cruise(speed, 0.01) is None:
             continue
         q = 0.5 * S["rho"] * speed**2
         target = weight / (q * area)
@@ -333,6 +428,8 @@ def mission(
                 static_margin=margin,
             )
         )
+        if capacity_only and curve[-1]["range_km"] >= S["payload_mission_km"]:
+            break
     if not curve:
         failures.append("NO_SUPPORTED_CRUISE")
     best = max(curve, key=lambda x: x["range_km"]) if curve else None
@@ -360,9 +457,17 @@ def mission(
 def evaluate_performance(spec, components, resolution=6, nonlinear=False, wetted=None):
     p = spec["dimensions"]
     _, cg = mass_properties(p, components)
-    aero = aero_model(spec, cg, resolution, nonlinear)
+    # The linear table initializes the implicit nonlinear solve; it does not supply finalist drag or trim.
+    aero = aero_model(spec, cg, resolution, False)
     props = Props()
     table = AeroTable(aero)
+    if nonlinear:
+        table = DirectNonlinearTrim(spec, cg, resolution, table)
+        aero["solver"] = "nonlinear_lifting_line_direct_trim"
+        aero["surrogate"] = (
+            "Lifting-line table used only for initialization; mission forces from coupled nonlinear trim"
+        )
+        aero["cnb_per_deg"] = solve(spec, cg, 20, 0, 0, resolution, True, beta=3)["Cn"] / 3
 
     def run(**kwargs):
         return mission(spec, components, aero, props, wetted, table, **kwargs)
@@ -372,7 +477,7 @@ def evaluate_performance(spec, components, resolution=6, nonlinear=False, wetted
         name: run(**kw)
         for name, kw in {
             "battery_minus_10": {"energy_factor": 0.9},
-            "parasite_plus_20": {"drag_factor": 1.2},
+            "total_drag_plus_20": {"drag_factor": 1.2},
             "empty_mass_plus_10": {"empty_factor": 1.1},
             "combined_adverse": {"energy_factor": 0.9, "drag_factor": 1.2, "empty_factor": 1.1},
         }.items()
@@ -380,7 +485,7 @@ def evaluate_performance(spec, components, resolution=6, nonlinear=False, wetted
     payloads = []
     payload_missions = []
     for payload in np.linspace(0, 0.96, 21):
-        n = run(payload=float(payload))
+        n = run(payload=float(payload), capacity_only=True)
         payload_missions.append(n)
         payloads.append(
             dict(
@@ -492,6 +597,7 @@ def evaluate_performance(spec, components, resolution=6, nonlinear=False, wetted
         aero=aero,
         direct_audit=audit,
         benchmark_audits=benchmark_audits,
+        nonlinear_solves={"count": table.solves, "unsupported_points": table.failures} if nonlinear else None,
         payload_capacity_kg=max(
             (x["payload_kg"] for x in payloads if x["feasible"] and x["range_km"] >= 10), default=0
         ),

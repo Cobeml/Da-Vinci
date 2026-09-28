@@ -7,7 +7,8 @@ import css from "./SurfaceGallery.module.css";
 
 const Viewer = dynamic(() => import("./VTOLViewer"), { ssr: false });
 type Evaluation = { outcome: string; metrics: Record<string, {value:number;unit:string}>; violations: {code:string;message:string}[]; performance?: {nominal:{best:{alpha_deg:number;elevator_deg:number;drag_n:number;wh_km:number}|null};scenarios:Record<string,{range_km:number;violations:string[]}>;direct_audit?:{min_confidence:number;surrogate_errors:Record<string,number>}|null} };
-type Design = {_id:string;arm:string;iteration:number;title:string;change:string;geometry:{dimensions:Record<string,number>;root:{upper_weights:number[];lower_weights:number[]};tip:{upper_weights:number[];lower_weights:number[]}};evaluation:Evaluation;assets:Record<string,string>;reflection:{lesson:string;next_focus:string};tool_calls:number;tool_failures:number;tool_seconds:number};
+type Section = {upper_weights:number[];lower_weights:number[];leading_edge_weight?:number;TE_thickness?:number};
+type Design = {_id:string;arm:string;iteration:number;title:string;change:string;geometry:{dimensions:Record<string,number>;root:Section;tip:Section};evaluation:Evaluation;assets:Record<string,string>;reflection:{lesson:string;next_focus:string};tool_calls:number;tool_failures:number;tool_seconds:number;numerical_evaluations?:number};
 type Validation = {evaluation:Evaluation;converged:boolean;relative_range_change:number|null;section_crosscheck?:{passed:boolean}};
 export type SurfaceData = {study_id:string;status:string;designs:Design[];validation:Record<string,Validation>;publishable:boolean;best_id:string|null;spent_usd:number;budget_usd:number};
 const label = (arm:string) => arm === "control" ? "Dimensional controls" : "CST + surface tools";
@@ -22,6 +23,25 @@ function Model({design,hero=false}:{design:Design;hero?:boolean}) {
     {url && visible ? <Viewer key={url} url={url} internal={internal}/> : <div className={styles.loading}>{url?"3D model":"No valid geometry"}</div>}
     <div className={view.controls}><button aria-pressed={!internal} onClick={()=>setInternal(false)}>Exterior</button><button aria-pressed={internal} onClick={()=>setInternal(true)}>Internal layout</button></div>
   </div></div>;
+}
+
+function SectionPlot({design,baseline}:{design:Design;baseline:Design}) {
+  const path=(section:Section)=>{
+    const choose=[1,7,21,35,35,21,7,1];
+    const surface=(upper:boolean)=>Array.from({length:81},(_,i)=>{
+      const x=(1-Math.cos(Math.PI*i/80))/2;
+      const weights=upper?section.upper_weights:section.lower_weights;
+      const shape=weights.reduce((sum,w,j)=>sum+w*choose[j]*x**j*(1-x)**(7-j),0);
+      const y=Math.sqrt(x)*(1-x)*shape+(upper?1:-1)*x*(section.TE_thickness??0)/2+(section.leading_edge_weight??0)*x*(1-x)**8.5;
+      return `${20+300*x},${55-300*y}`;
+    });
+    return [...surface(true),...surface(false).reverse()].join(" ");
+  };
+  return <><svg viewBox="0 0 340 95" role="img" aria-label="Baseline, root and tip airfoil comparison" className={css.sections}>
+    <polyline points={path(baseline.geometry.root)} fill="none" stroke="#9a9f97" strokeWidth="1.5" strokeDasharray="4 3"/>
+    <polyline points={path(design.geometry.root)} fill="none" stroke="#496b46" strokeWidth="2"/>
+    <polyline points={path(design.geometry.tip)} fill="none" stroke="#5983a2" strokeWidth="1.5" strokeDasharray="2 3"/>
+  </svg><p>Same normalized chord · gray baseline · green root · blue tip</p></>;
 }
 
 function Progress({designs}:{designs:Design[]}) {
@@ -75,10 +95,10 @@ export default function SurfaceGallery({data}:{data:SurfaceData}) {
         <Model design={d}/><div className={styles.cardDetails}><p className={styles.description}>{label(d.arm)} · {d.geometry.dimensions.span.toFixed(2)} m span</p>
           <dl className={styles.metrics}>{[["range_km","Range","km",1],["max_speed_m_s","Max speed","m/s",1],["payload_capacity_kg","Payload capacity","kg",2],["endurance_min","Endurance","min",1],["mass_kg","Mass","kg",2],["hover_power_w","Hover power","W",0]].map(([key,name,unit,digits])=><div key={key}><dt>{name} est.</dt><dd>{d.evaluation.metrics[String(key)]?.value.toFixed(Number(digits))??"—"} <small>{unit}</small></dd></div>)}</dl>
           {!ok && <p className={view.notice}>{d.evaluation.violations.map(v=>v.code.toLowerCase().replaceAll("_"," ")).join(" · ")}</p>}
-          <details className={view.evidence}><summary>Changes, tools and validation</summary><p>{d.change}</p><p>{d.reflection.lesson}</p><p>Next: {d.reflection.next_focus}</p><p>{d.tool_calls} tool calls · {d.tool_failures} returned errors · {d.tool_seconds.toFixed(0)} seconds in tools</p>
+          <details className={view.evidence}><summary>Changes, tools and validation</summary><p>{d.change}</p><p>{d.reflection.lesson}</p><p>Next: {d.reflection.next_focus}</p><p>{d.tool_calls} tool calls · {d.tool_failures} returned errors · {d.tool_seconds.toFixed(0)} seconds in tools · {d.numerical_evaluations??0} section-optimizer evaluations</p>
             {d.evaluation.performance?.nominal.best && <p>Trim: {d.evaluation.performance.nominal.best.alpha_deg.toFixed(2)}° angle of attack · {d.evaluation.performance.nominal.best.elevator_deg.toFixed(2)}° tail adjustment. Consumption: {d.evaluation.performance.nominal.best.wh_km.toFixed(2)} Wh/km.</p>}
             {validation && <p>Nonlinear finalist check: {validation.converged?"passed":"not passed"}. Range: {validation.evaluation.metrics.range_km?.value.toFixed(1)??"unsupported"} km. Refinement change: {validation.relative_range_change===null?"unavailable":(100*validation.relative_range_change).toFixed(2)+"%"}. XFOIL consistency: {validation.section_crosscheck?.passed?"passed":"not passed"}.</p>}
-          </details><div className={styles.cardFooter}><span>{d.iteration===1?"Shared baseline":"Agent-generated revision"}</span>{d.assets["model.step"]&&<a href={d.assets["model.step"]} download>Download STEP</a>}</div>
+          </details>{base && <details className={view.evidence}><summary>Airfoil sections</summary><SectionPlot design={d} baseline={base}/></details>}<div className={styles.cardFooter}><span>{d.iteration===1?"Shared baseline":"Agent-generated revision"}</span>{d.assets["model.step"]&&<a href={d.assets["model.step"]} download>Download STEP</a>}</div>
         </div></article>;
     })}</section><div className={styles.bottom}><a href="/vtol">Previous VTOL study ↗</a><a href="/gripper">Gripper study ↗</a><a href="/sensor">Sensor study ↗</a><a href="/harness">Full harness ↗</a></div>
   </main>;
