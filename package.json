@@ -7,16 +7,20 @@
     "build": "next build web",
     "start": "next start web --hostname 127.0.0.1 --port 3215",
     "test:e2e": "playwright test",
-    "typecheck": "tsc --noEmit -p web/tsconfig.json"
+    "typecheck": "tsc --noEmit -p web/tsconfig.json",
+    "build:ui": "next build ui && node scripts/build_product_ui.mjs",
+    "test:product": "playwright test -c playwright.product.config.ts"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.0",
     "@react-three/fiber": "^9.3.0",
     "lucide-react": "^0.468.0",
+    "marked": "^18.0.14",
     "next": "^16.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "three": "^0.180.0"
+    "three": "^0.180.0",
+    "yaml": "^2.9.1"
   },
   "devDependencies": {
     "@gltf-transform/core": "4.5.0",

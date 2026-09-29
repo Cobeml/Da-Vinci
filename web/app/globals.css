@@ -1584,3 +1584,5 @@ footer i {
     transition: none !important;
   }
 }
+/* Product guides are trusted, repository-authored Markdown rendered at build time. */
+.product-guide{max-width:850px;margin:40px auto;color:#263a2f;font:15px/1.7 Arial,sans-serif}.product-guide h1{font-size:40px;line-height:1.15;font-weight:500;letter-spacing:-1px}.product-guide h2{font-size:23px;font-weight:500;margin-top:36px}.product-guide pre{background:#e6eadf;overflow:auto;padding:18px;font-size:12px;border-radius:4px}.product-guide table{border-collapse:collapse;width:100%;font-size:13px;display:block;overflow:auto}.product-guide th,.product-guide td{text-align:left;padding:10px;border-bottom:1px solid #cbd4c2}.product-guide blockquote{border-left:3px solid #a4b696;padding-left:20px}.product-guide a{color:#46673e;text-decoration:underline}
