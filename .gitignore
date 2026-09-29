@@ -14,3 +14,9 @@ test-results/
 docs/demo/index.html
 docs/demo/index_files/
 docs/demo/.quarto/
+.davinci/
+ui/out/
+davinci/product/static/
+build/
+dist/
+*.egg-info/

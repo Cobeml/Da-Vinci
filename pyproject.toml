@@ -1,16 +1,33 @@
 [project]
 name = "da-vinci-harness"
-version = "0.1.0"
+version = "0.2.0"
 description = "A versioned multi-agent CAD workbench with independent evaluation"
 requires-python = ">=3.11,<3.12"
 dependencies = [
   "fastapi>=0.115,<1", "uvicorn>=0.34,<1", "pydantic-settings>=2.8,<3",
-  "pymongo>=4.11,<5", "openai>=1.68,<3", "cadquery>=2.5,<3",
-  "numpy>=2,<3", "jsonschema>=4.23,<5", "playwright>=1.51,<2"
+  "pymongo>=4.11,<5", "openai>=1.68,<3", "PyYAML>=6,<7",
+  "jsonschema>=4.23,<5"
 ]
 
+[project.scripts]
+davinci = "davinci.product.cli:main"
+
+[project.optional-dependencies]
+studies = ["cadquery>=2.5,<3", "numpy>=2,<3", "playwright>=1.51,<2"]
+
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["davinci*", "sandbox"]
+
+[tool.setuptools.package-data]
+"davinci.product" = ["resources/**/*", "static/**/*", "static/*"]
+sandbox = ["Dockerfile", "Dockerfile.vtol", "requirements.lock", "ui/*", "vtol_data/*"]
+
 [dependency-groups]
-dev = ["pytest>=8,<10", "httpx>=0.28,<1", "ruff>=0.11,<1"]
+dev = ["pytest>=8,<10", "httpx>=0.28,<1", "ruff>=0.11,<1", "build>=1.2,<2", "setuptools>=77", "wheel"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

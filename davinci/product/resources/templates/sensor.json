@@ -1,0 +1,91 @@
+{
+  "name": "sensor",
+  "baseline": {
+    "base_mm": 6,
+    "wall_mm": 6,
+    "window_mm": 0,
+    "window_style": 0,
+    "base_slots": 0,
+    "gusset_mm": 0
+  },
+  "specification": {
+    "_id": "sensor-cradle-pa12-v1",
+    "material": "PA12 (nominal)",
+    "density_g_mm3": 0.00101,
+    "youngs_modulus_mpa": 1700,
+    "load_n": 20,
+    "allowable_stress_mpa": 28,
+    "max_deflection_mm": 0.65,
+    "max_mass_g": 100,
+    "footprint_mm": [
+      100,
+      72
+    ],
+    "bolt_pattern_mm": [
+      80,
+      52
+    ],
+    "sensor_diameter_mm": 32,
+    "sensor_width_mm": 48
+  },
+  "source": "import cadquery as cq\nfrom sensor_family import build_cradle\n\ndef build(parameters, interfaces):\n    assembly = cq.Assembly(name=\"sensor_cradle\")\n    assembly.add(build_cradle(parameters), name=\"mount\", color=cq.Color(.9, .4, .14))\n    return assembly\n",
+  "parameters_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "base_mm",
+      "wall_mm",
+      "window_mm",
+      "window_style",
+      "base_slots",
+      "gusset_mm"
+    ],
+    "properties": {
+      "base_mm": {
+        "type": "number",
+        "minimum": 2.5,
+        "maximum": 7
+      },
+      "wall_mm": {
+        "type": "number",
+        "minimum": 2,
+        "maximum": 7
+      },
+      "window_mm": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 66
+      },
+      "window_style": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 2
+      },
+      "base_slots": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 3
+      },
+      "gusset_mm": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 16
+      }
+    }
+  },
+  "metrics": {
+    "mass_g": "g",
+    "deflection_mm": "mm",
+    "stress_mpa": "MPa",
+    "safety_factor": "ratio",
+    "volume_cm3": "cm\u00b3"
+  },
+  "files": [
+    "sensor_family.py",
+    "evaluate_sensor.py"
+  ],
+  "image": "da-vinci-cad:local",
+  "entrypoint": "evaluate_sensor.py",
+  "timeout": 180,
+  "tool_contract": "Implement run(arguments) returning {\"delta_percent\": number}: 100*(current-baseline)/abs(baseline), negate for direction=\"minimize\". Inputs baseline/current must be finite numbers; baseline must be nonzero; direction must be minimize or maximize. Raise ValueError for invalid inputs. Import only math. This utility summarizes measured results; it never supplies trusted scores."
+}

@@ -1,0 +1,177 @@
+{
+  "name": "gripper",
+  "baseline": {
+    "depth_mm": 24,
+    "nodes": [
+      [
+        8,
+        0
+      ],
+      [
+        36,
+        0
+      ],
+      [
+        8,
+        70
+      ],
+      [
+        36,
+        70
+      ],
+      [
+        8,
+        35
+      ],
+      [
+        36,
+        35
+      ]
+    ],
+    "edges": [
+      [
+        0,
+        4,
+        12
+      ],
+      [
+        4,
+        2,
+        12
+      ],
+      [
+        1,
+        5,
+        12
+      ],
+      [
+        5,
+        3,
+        12
+      ],
+      [
+        0,
+        1,
+        12
+      ],
+      [
+        4,
+        5,
+        12
+      ],
+      [
+        2,
+        3,
+        12
+      ],
+      [
+        0,
+        5,
+        12
+      ],
+      [
+        4,
+        3,
+        12
+      ]
+    ]
+  },
+  "specification": {
+    "_id": "parallel-gripper-frame-v1",
+    "material": "Aluminium (nominal)",
+    "density_g_mm3": 0.0027,
+    "youngs_modulus_mpa": 69000,
+    "allowable_stress_mpa": 80,
+    "max_deflection_mm": 0.25,
+    "min_buckling_factor": 2,
+    "min_clearance_mm": 0.25,
+    "gap_range_mm": [
+      20,
+      60
+    ],
+    "load_cases": {
+      "pinch": [
+        100,
+        0,
+        0
+      ],
+      "payload": [
+        0,
+        0,
+        -25
+      ],
+      "lateral": [
+        0,
+        15,
+        0
+      ],
+      "combined": [
+        100,
+        15,
+        -25
+      ]
+    },
+    "objective": "minimize moving jaw-pair STEP mass; fixed guide base excluded from objective"
+  },
+  "source": "from gripper_family import build_gripper\n\ndef build(parameters, interfaces):\n    return build_gripper(parameters)\n",
+  "parameters_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "depth_mm",
+      "nodes",
+      "edges"
+    ],
+    "properties": {
+      "depth_mm": {
+        "type": "number",
+        "minimum": 10,
+        "maximum": 24
+      },
+      "nodes": {
+        "type": "array",
+        "minItems": 3,
+        "maxItems": 10,
+        "items": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "type": "number"
+          }
+        }
+      },
+      "edges": {
+        "type": "array",
+        "minItems": 2,
+        "maxItems": 20,
+        "items": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "number"
+          }
+        }
+      }
+    }
+  },
+  "metrics": {
+    "mass_g": "g",
+    "total_mass_g": "g",
+    "deflection_mm": "mm",
+    "stress_mpa": "MPa",
+    "buckling_factor": "ratio",
+    "clearance_mm": "mm",
+    "travel_mm": "mm"
+  },
+  "files": [
+    "gripper_family.py",
+    "gripper_frame.py",
+    "evaluate_gripper.py"
+  ],
+  "image": "da-vinci-cad:local",
+  "entrypoint": "evaluate_gripper.py",
+  "timeout": 180,
+  "tool_contract": "Implement run(arguments) returning {\"delta_percent\": number}: 100*(current-baseline)/abs(baseline), negate for direction=\"minimize\". Inputs baseline/current must be finite numbers; baseline must be nonzero; direction must be minimize or maximize. Raise ValueError for invalid inputs. Import only math. This utility summarizes measured results; it never supplies trusted scores."
+}

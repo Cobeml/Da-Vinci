@@ -1,0 +1,7 @@
+{
+  "name": "Cantilever plate", "image": "da-vinci-cad:local",
+  "baseline": {"thickness_mm": 6},
+  "parameters_schema": {"type":"object", "required":["thickness_mm"], "additionalProperties":false, "properties":{"thickness_mm":{"type":"number","minimum":2,"maximum":8}}},
+  "metrics": {"mass_g":"g", "deflection_mm":"mm", "stress_mpa":"MPa"},
+  "specification": {"length_mm":80,"width_mm":40,"load_n":20,"youngs_modulus_mpa":69000,"density_g_mm3":0.0027,"max_deflection_mm":0.8,"allowable_stress_mpa":95}
+}
