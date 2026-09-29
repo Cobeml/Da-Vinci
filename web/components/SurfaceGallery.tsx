@@ -64,7 +64,7 @@ export default function SurfaceGallery({data}:{data:SurfaceData}) {
   const hasValidation=Object.keys(data.validation).length>0;
   const summary=hasValidation ? [["Verified baseline",base&&data.validation[base._id]?.converged?base:undefined],["Best verified dimensional",verified("control")],["Best verified surface tools",verified("surface_tools")]] as const : [["Screening baseline",base],["Best dimensional screen",control],["Best surface-tool screen",treatment]] as const;
   return <main className={styles.page}>
-    <header className={styles.header}><div><h1>Da Vinci <span>Recursive Improvement CAD Harness</span></h1><p>Streamlined VTOL · matched geometry-tool experiment</p></div><span className={styles.material}>0.5 kg payload · 150 Wh battery</span></header>
+    <header className={styles.header}><div><h1>Da Vinci <span>Recursive Improvement CAD Harness</span></h1><p>Beta · paused VTOL geometry-tool experiment</p></div><span className={styles.material}>0.5 kg payload · 150 Wh battery</span></header>
     {best && <section className={styles.overview} aria-label="Project overview"><Model design={best} hero/><div className={styles.overviewText}>
       <section><h2>Self-improvement methods</h2>
         <div className={styles.method}><h3>1. Change the surface</h3><p>Generate CST airfoils and smooth three-section wings. Edit a hollow fuselage and its fairings.</p></div>

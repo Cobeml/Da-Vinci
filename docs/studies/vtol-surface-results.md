@@ -1,10 +1,12 @@
 # VTOL surface-tool experiment results
 
+**Status: paused beta.** See [known issues and resumption notes](../beta/vtol-surface-tools.md).
+
 **Screening range:** 70.9 km baseline → 76.0 km with dimensional controls (**7.3%**) and 74.4 km with surface tools (**5.0%**). These use one frozen evaluator; the previous VTOL study is a separate comparison.
 
 **Verified range:** 71.2 km baseline, 77.2 km dimensional controls, 74.4 km surface tools. Verified gains over the baseline are **8.4% for dimensional controls** and **4.4% for surface tools**. The surface-tool arm changes verified range by **-3.7% relative to the control**.
 
-No new-tool design passed all promotion gates. The experiment is published at `/vtol-tools`; the previous validated study remains on the homepage.
+No new-tool design passed all promotion gates. The archived experiment remains accessible at the unlisted beta route `/vtol-tools`; the previous validated study remains on the homepage.
 
 | Verified design | Range est. (km) | Max speed est. (m/s) | Payload capacity est. (kg) | Endurance est. (min) | Mass (kg) |
 | --- | ---: | ---: | ---: | ---: | ---: |

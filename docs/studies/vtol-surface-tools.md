@@ -1,5 +1,7 @@
 # Streamlined VTOL: matched geometry-tool experiment
 
+**Status: paused beta.** See [beta status and resumption notes](../beta/vtol-surface-tools.md).
+
 This study compares existing dimensional controls with CST airfoils, three-section spline wings and a constrained section optimizer. Both arms use the same smooth, hollow fuselage, wing-root fairings, covered booms, mission and evaluator. The previous study remains archived and is not a direct numerical control.
 
 ## Geometry and tool interface
@@ -46,7 +48,7 @@ DAVINCI_INTEGRATION=1 .venv/bin/python -m pytest -q tests/test_surface.py
 node scripts/surface_assets.mjs
 ```
 
-Do not regenerate the seed or edit frozen evaluation files during a campaign. The runner refuses to resume when their identities change. `--export-only` republishes archived results; `--validate-only` runs finalist validation. `--pilot-only` spends only within the pilot allocation. Live results are exported to the Next.js `/vtol-tools` route; homepage promotion is conditional on the validation gate.
+Do not regenerate the seed or edit frozen evaluation files during a campaign. The runner refuses to resume when their identities change. `--export-only` republishes archived results; `--validate-only` runs finalist validation. `--pilot-only` spends only within the pilot allocation. Results are exported to the unlisted Next.js `/vtol-tools` beta route. Homepage promotion is disabled while this work is in beta, regardless of the archived `publishable` validation flag.
 
 The initial pilot exposed a positive-side fairing boolean failure on a 2% thickness edit. Mirroring one canonical fairing side fixed the regression. Fine nonlinear verification also required a limited-memory solver configuration. The failed pilot and its $0.19 accounting were retained; a second three-task pilot passed. `--amend-preflight` records such amendments and preserves spending, and is prohibited once any design has been scored. The matched campaign uses only the repaired frozen version.
 

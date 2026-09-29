@@ -1,16 +1,19 @@
 import { test, expect } from "@playwright/test";
 import data from "../../web/data/surface-gallery.json";
 
-test("homepage follows the validated promotion decision", async ({page})=>{
+test("homepage does not advertise paused beta tools", async ({page})=>{
   await page.goto("/");
-  await expect(page.getByTestId("surface-overview")).toHaveCount(data.publishable?1:0);
-  if (!data.publishable) await expect(page.getByTestId("overview-model")).toBeVisible();
+  await expect(page.getByTestId("surface-overview")).toHaveCount(0);
+  await expect(page.locator('a[href="/vtol-tools"]')).toHaveCount(0);
+  await expect(page.getByTestId("overview-model")).toBeVisible();
 });
 
 test("surface study shows matched progress, CAD and benchmark evidence", async ({ page, request }) => {
   const errors:string[]=[];
   page.on("pageerror",e=>errors.push(e.message));
   await page.goto("/vtol-tools");
+  await expect(page.getByText("Beta · paused VTOL geometry-tool experiment",{exact:true})).toBeVisible();
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content","noindex, nofollow");
   await expect(page.getByRole("heading",{name:"Design progress",exact:true})).toBeVisible();
   await expect(page.getByTestId("surface-card")).toHaveCount(data.designs.length);
   await expect(page.getByText("Recorded tool results",{exact:true})).toHaveCount(data.designs.filter(d=>d.tool_evidence.length>0).length);

@@ -1,0 +1,50 @@
+{
+  "reference_count": 32,
+  "step_count": 32,
+  "rows": [
+    {
+      "name": "root_fairing-1",
+      "reference_volume": 485462.4208859267,
+      "step_volume": 601950.1766109176,
+      "center_delta": 13.372486203472784,
+      "bounds_delta": 7.489120434911456e-12,
+      "default_difference": 876956.5386753281,
+      "difference_valid": [
+        false,
+        false
+      ],
+      "reference_valid": true,
+      "step_valid": true,
+      "reference_faces": 8,
+      "step_faces": 8,
+      "fuzzy_difference": {
+        "1e-06": 876956.5386753281,
+        "1e-05": 876956.5386753281,
+        "0.0001": 876956.5386753281,
+        "0.001": 876956.5386753281
+      }
+    },
+    {
+      "name": "root_fairing1",
+      "reference_volume": 485462.4208859267,
+      "step_volume": 601950.1766113172,
+      "center_delta": 13.372486203469723,
+      "bounds_delta": 7.489120434911456e-12,
+      "default_difference": 876956.538675706,
+      "difference_valid": [
+        false,
+        false
+      ],
+      "reference_valid": true,
+      "step_valid": true,
+      "reference_faces": 8,
+      "step_faces": 8,
+      "fuzzy_difference": {
+        "1e-06": 876956.538675706,
+        "1e-05": 876956.538675706,
+        "0.0001": 876956.538675706,
+        "0.001": 876956.538675706
+      }
+    }
+  ]
+}
