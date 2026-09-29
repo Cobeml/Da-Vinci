@@ -65,6 +65,7 @@ def snapshot(config: RunConfig, workspace: Path):
                 }
             )
         task["resources"] = sources
+        task["tool_test_source"] = RESOURCES.joinpath("tool_check.py").read_text()
     else:
         folder = (workspace / (config.task.path or "task")).resolve()
         if not folder.is_relative_to(workspace.resolve()):

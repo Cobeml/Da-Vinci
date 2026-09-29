@@ -10,7 +10,7 @@ from davinci.artifacts import Artifacts, Repository
 from davinci.budget import Budget, BudgetExceeded
 from davinci.config import Settings
 from davinci.errors import safe_error
-from davinci.models import document, now
+from davinci.models import digest, document, now
 from davinci.product.config import RunConfig, parse_yaml, workspace_settings
 from davinci.product.provider import Provider, UncertainRequest
 from davinci.product.tasks import RESOURCES, check_parameters, evaluate, score_evaluation, snapshot
@@ -69,6 +69,11 @@ class Engine:
 
     def create_run(self, config, task, content, image):
         """Called after preflight; kept separate to exercise lifecycle without Docker."""
+        task = {
+            **task,
+            "source_version": task["version"],
+            "version": digest({"source_version": task["version"], "runtime_image_digest": image}),
+        }
         seed, parent = None, None
         if config.continuation:
             seed = self.store.get("candidates", config.continuation.seed_candidate_id)
@@ -100,6 +105,7 @@ class Engine:
             revision=0,
             budget_usd=config.run.budget_usd,
             model=self.options.model,
+            provider_settings=self.options.model_dump(),
             seed_parameters=seed["parameters"] if seed else task["baseline"],
             seed_source=seed["source"]
             if seed and parent["task_version"] == task["version"]
@@ -121,6 +127,8 @@ class Engine:
                         "template": config.task.template,
                     },
                 )
+                if existing and existing["name"] != config.object.name:
+                    self.store.update("objects", config.object.slug, {"name": config.object.name})
                 self.store.insert("runs", run)
                 self.store.event(run["_id"], "run_started", "Run started", object_id=run["object_id"])
             except Exception:

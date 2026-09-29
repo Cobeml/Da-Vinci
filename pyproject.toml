@@ -1,7 +1,10 @@
 [project]
 name = "da-vinci-harness"
 version = "0.2.0"
-description = "A versioned multi-agent CAD workbench with independent evaluation"
+description = "Local CAD optimization workspace with independent evaluation"
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE", "THIRD_PARTY_NOTICES.md"]
 requires-python = ">=3.11,<3.12"
 dependencies = [
   "fastapi>=0.115,<1", "uvicorn>=0.34,<1", "pydantic-settings>=2.8,<3",
@@ -19,12 +22,19 @@ studies = ["cadquery>=2.5,<3", "numpy>=2,<3", "playwright>=1.51,<2"]
 requires = ["setuptools>=77", "wheel"]
 build-backend = "setuptools.build_meta"
 
+[tool.setuptools]
+include-package-data = false
+
 [tool.setuptools.packages.find]
-include = ["davinci*", "sandbox"]
+include = ["davinci", "davinci.product", "sandbox"]
+namespaces = false
 
 [tool.setuptools.package-data]
 "davinci.product" = ["resources/**/*", "static/**/*", "static/*"]
 sandbox = ["Dockerfile", "Dockerfile.vtol", "requirements.lock", "ui/*", "vtol_data/*"]
+
+[tool.setuptools.exclude-package-data]
+"*" = ["**/__pycache__/*", "**/*.pyc"]
 
 [dependency-groups]
 dev = ["pytest>=8,<10", "httpx>=0.28,<1", "ruff>=0.11,<1", "build>=1.2,<2", "setuptools>=77", "wheel"]

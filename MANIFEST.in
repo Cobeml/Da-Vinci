@@ -1,0 +1,11 @@
+include LICENSE THIRD_PARTY_NOTICES.md CONTRIBUTING.md package.json package-lock.json
+recursive-include docs/product *.md
+recursive-include ui *.tsx *.ts *.css *.json
+prune ui/.next
+prune ui/out
+include scripts/build_product_ui.mjs scripts/render_product_docs.mjs
+include scripts/product_browser.py scripts/product_smoke.py
+recursive-include tests/product *.py *.ts
+include playwright.product.config.ts
+global-exclude *.pyc
+global-exclude __pycache__

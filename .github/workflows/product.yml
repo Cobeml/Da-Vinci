@@ -1,0 +1,59 @@
+name: Python package and workspace
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync --extra studies --frozen
+      - run: npm ci
+      - run: npm run build:ui
+      - run: uv run pytest -m 'not integration' -q
+      - run: npm run build
+      - run: uv build --no-build-isolation
+      - name: Check wheel in a fresh environment
+        run: |
+          uv venv /tmp/wheel-check
+          uv pip install --python /tmp/wheel-check/bin/python dist/*.whl
+          cd /tmp
+          /tmp/wheel-check/bin/davinci init installed-example --template custom
+          /tmp/wheel-check/bin/davinci --workspace installed-example validate installed-example/run.yaml
+      - uses: actions/upload-artifact@v4
+        with:
+          name: da-vinci-package
+          path: dist/*
+  cad-and-browser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync --extra studies --frozen
+      - run: npm ci
+      - run: npm run build:ui
+      - run: npx playwright install --with-deps chromium
+      - run: uv run davinci setup --template vtol
+      - run: DAVINCI_INTEGRATION=1 uv run pytest tests/product/test_cad.py -q
+      - run: npm run test:product
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: workspace-browser-evidence
+          path: |
+            test-results/
+            runtime/product-screenshots/

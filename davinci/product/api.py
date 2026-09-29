@@ -112,8 +112,34 @@ def create_app(workspace: Path, *, engine=None, run_worker=True):
             preview = best or next(
                 (c for c in reversed(candidates) if c.get("artifacts", {}).get("model.glb")), None
             )
+            baseline = next(
+                (
+                    c
+                    for c in candidates
+                    if c["iteration"] == 0 and c.get("evaluation") and c["evaluation"]["outcome"] == "passed"
+                ),
+                None,
+            )
+            improvement = None
+            if best and baseline:
+                metric = latest["config"]["objective"]["metric"]
+                initial = baseline["evaluation"]["metrics"][metric]["value"]
+                value = best["evaluation"]["metrics"][metric]["value"]
+                if initial:
+                    improvement = (
+                        100
+                        * (value - initial)
+                        / abs(initial)
+                        * (-1 if latest["config"]["objective"]["direction"] == "minimize" else 1)
+                    )
             result.append(
-                {**obj, "run": latest, "preview": preview, "iteration_count": len(detail["designs"])}
+                {
+                    **obj,
+                    "run": latest,
+                    "preview": preview,
+                    "iteration_count": len(detail["designs"]),
+                    "improvement_percent": improvement,
+                }
             )
         return result
 

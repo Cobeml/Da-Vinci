@@ -168,3 +168,14 @@ def test_incompatible_object_continuation_rejected(engine, monkeypatch):
     c["continuation"] = {"seed_candidate_id": r["_id"] + "-000"}
     with pytest.raises(ValueError, match="this object"):
         start(engine, yaml.safe_dump(c))
+
+
+def test_runtime_image_changes_memory_compatibility(engine):
+    first = start(engine)
+    engine.store.update("runs", first["_id"], {"status": "stopped"})
+    engine.release(first["_id"])
+    content = config()
+    c, t = engine.validate(content)
+    second = engine.create_run(c, t, content, "sha256:new-runtime")
+    assert first["task_version"] != second["task_version"]
+    assert second["provider_settings"]["model"] == engine.options.model
