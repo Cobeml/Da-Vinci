@@ -1,4 +1,4 @@
-# Optional MongoDB Atlas
+# MongoDB Atlas for Scalable Model Improvement
 
 Local storage is the default. To use Atlas, create a separate workspace and select it explicitly in `workspace.yaml`:
 

@@ -56,7 +56,7 @@ export default function Docs() {
               "architecture.md",
               "Reflection, memory, tools, and independent evaluation",
             ],
-            ["atlas.md", "Optional MongoDB Atlas"],
+            ["atlas.md", "MongoDB Atlas for Scalable Model Improvement"],
             ["development.md", "Development and release"],
           ].map(([file, title]) => (
             <p key={file}>
