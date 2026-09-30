@@ -1,9 +1,20 @@
-import VTOLGallery from "../components/VTOLGallery";
-import GripperGallery from "../components/GripperGallery";
-import SensorGallery from "../components/SensorGallery";
-import vtol from "../data/vtol-gallery.json";
-import data from "../data/gripper-gallery.json";
-import sensorData from "../data/sensor-gallery.json";
+import type { Metadata } from "next";
+import Landing from "../components/Landing";
+import sensor from "../data/sensor-gallery.json";
+
+export const metadata: Metadata = {
+  title: "Da Vinci — Recursive Improvement CAD harness",
+  description:
+    "A recursive improvement CAD harness. Explore the interactive demos and documentation.",
+};
+
 export default function Page() {
-  return vtol.publishable ? <VTOLGallery data={vtol}/> : data.publishable ? <GripperGallery data={data} /> : <SensorGallery data={sensorData} />;
+  const best = sensor.designs
+    .filter((design) => design.evaluation.outcome === "passed")
+    .reduce((a, b) =>
+      a.evaluation.metrics.mass_g.value < b.evaluation.metrics.mass_g.value
+        ? a
+        : b,
+    );
+  return <Landing modelUrl={best.model_url} />;
 }

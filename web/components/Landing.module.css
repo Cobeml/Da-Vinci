@@ -1,0 +1,117 @@
+.page {
+  min-height: 100svh;
+  max-width: 1520px;
+  margin: 0 auto;
+  padding: 48px 5vw;
+  display: grid;
+  grid-template-columns: minmax(310px, 0.85fr) minmax(0, 1.35fr);
+  align-items: center;
+  gap: 36px;
+}
+.identity {
+  position: relative;
+  z-index: 1;
+}
+.logo {
+  display: inline-block;
+  color: #304f3c;
+  font:
+    italic 72px Georgia,
+    serif;
+  letter-spacing: -14px;
+  padding-right: 14px;
+  margin-bottom: 34px;
+}
+.logo span {
+  color: #a65d3b;
+}
+.identity h1 {
+  font-size: clamp(64px, 7vw, 106px);
+  font-weight: 500;
+  letter-spacing: -0.065em;
+  line-height: 1.02;
+  margin: 0 0 20px;
+  white-space: nowrap;
+}
+.identity p {
+  font-size: clamp(15px, 1.5vw, 20px);
+  color: #687464;
+  letter-spacing: -0.3px;
+  line-height: 1.5;
+  margin: 0;
+}
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 38px;
+}
+.actions a {
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 42px;
+  padding: 15px 21px;
+  border-radius: 5px;
+  font-size: 14px;
+  border: 1px solid #304f3c;
+}
+.primary {
+  background: #304f3c;
+  color: #fff;
+}
+.secondary {
+  background: transparent;
+  color: #304f3c;
+}
+.primary:hover {
+  background: #233d2d;
+}
+.secondary:hover {
+  background: #e8ede2;
+}
+.model {
+  min-width: 0;
+  height: min(72vh, 680px);
+  min-height: 380px;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #edf0ea;
+}
+@media (max-width: 800px) {
+  .page {
+    grid-template-columns: 1fr;
+    gap: 34px;
+    padding: 36px 24px;
+    align-content: center;
+  }
+  .logo {
+    font-size: 55px;
+    letter-spacing: -10px;
+    margin-bottom: 22px;
+  }
+  .identity h1 {
+    font-size: 70px;
+    margin-bottom: 12px;
+  }
+  .identity p {
+    font-size: 17px;
+  }
+  .actions {
+    margin-top: 24px;
+  }
+  .model {
+    height: 42svh;
+    min-height: 290px;
+  }
+}
+@media (max-width: 380px) {
+  .identity h1 {
+    font-size: 60px;
+  }
+  .identity p {
+    font-size: 15px;
+  }
+  .actions a {
+    gap: 30px;
+  }
+}
