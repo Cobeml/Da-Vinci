@@ -13,7 +13,10 @@ test("landing contains only branding, navigation and the mounted sensor preview"
   await expect(
     page.getByText("Recursive Improvement CAD harness", { exact: true }),
   ).toBeVisible();
-  await expect(page.getByRole("link")).toHaveCount(2);
+  await expect(page.getByRole("link")).toHaveCount(3);
+  await expect(page.getByRole("link", { name: "GitHub" })).toHaveAttribute(
+    "href", "https://github.com/Cobeml/Da-Vinci",
+  );
   const model = page.getByTestId("sensor-canvas");
   await expect(model).toHaveAttribute("data-mounted", "true");
   await expect(model).toHaveAttribute("data-loaded", "true", {

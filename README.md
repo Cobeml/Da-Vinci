@@ -6,7 +6,14 @@ The object gallery shows interactive 3D models. Each object has its own run hist
 
 ## Run locally
 
-The MVP supports Python 3.11 on Linux and Windows through WSL2, with Git and Docker. It is not yet published to PyPI. [Build or install the wheel](docs/product/quickstart.md), then:
+The MVP supports Python 3.11 on Linux and Windows through WSL2, with Git and Docker. It is not yet published to PyPI. Clone the [repository](https://github.com/Cobeml/Da-Vinci):
+
+```bash
+git clone https://github.com/Cobeml/Da-Vinci.git
+cd Da-Vinci
+```
+
+Follow the [source installation guide](docs/product/quickstart.md) to build and install the package (requires Node.js 22 and uv). Then, from your workspace parent directory:
 
 ```bash
 davinci init my-project --template sensor

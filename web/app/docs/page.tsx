@@ -25,9 +25,17 @@ export default function Docs() {
         <div>
           <h2>Get started</h2>
           <p>
-            The MVP runs on Python 3.11, Linux or WSL2, Git, and Docker. Install
-            the wheel using the linked guide; PyPI publication is pending.
+            The MVP runs on Python 3.11, Linux or WSL2, Git, and Docker. PyPI
+            publication is pending. Clone the repository to install from source;
+            building the interface also requires Node.js 22 and uv.
           </p>
+          <pre>{"git clone https://github.com/Cobeml/Da-Vinci.git\ncd Da-Vinci"}</pre>
+          <p>
+            <a href="https://github.com/Cobeml/Da-Vinci">GitHub repository ↗</a>
+            {" · "}
+            <a href={base + "quickstart/"}>Installation guide ↗</a>
+          </p>
+          <p>Follow the installation guide, then create and start a workspace:</p>
           <pre>
             {
               "davinci init my-project --template sensor\ncd my-project\ndavinci setup --template sensor\ndavinci doctor\ndavinci serve"
@@ -37,7 +45,6 @@ export default function Docs() {
             Set OPENAI_API_KEY in your environment or workspace .env. Local
             storage works without MongoDB Atlas.
           </p>
-          <a href={base + "quickstart/"}>Installation guide ↗</a>
         </div>
         <div>
           <h2>Guides</h2>

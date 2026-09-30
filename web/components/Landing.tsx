@@ -22,6 +22,9 @@ export default function Landing({ modelUrl }: { modelUrl: string }) {
             Docs <span aria-hidden="true">↗</span>
           </a>
         </nav>
+        <a className={styles.repository} href="https://github.com/Cobeml/Da-Vinci">
+          GitHub <span aria-hidden="true">↗</span>
+        </a>
       </section>
       <div
         className={styles.model}

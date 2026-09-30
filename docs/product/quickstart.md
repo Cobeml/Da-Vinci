@@ -2,9 +2,18 @@
 
 Supported MVP environment: Python 3.11, Linux, Git, and Docker Engine. Windows users run the package inside WSL2 with Docker Desktop's WSL integration enabled. Native Windows and macOS have not been validated.
 
-## Install this release
+## Clone and install
 
-The package is not yet published to PyPI. Build a wheel from this checkout (Node 22 is needed only by contributors):
+The package is not yet published to PyPI. Install from the [GitHub repository](https://github.com/Cobeml/Da-Vinci). In addition to the prerequisites above, building from source requires Node.js 22 (with npm) and uv. Node.js is only needed to build the web interface; it is not needed to run the installed package.
+
+Clone the repository and enter its directory:
+
+```bash
+git clone https://github.com/Cobeml/Da-Vinci.git
+cd Da-Vinci
+```
+
+Build the web interface and Python wheel:
 
 ```bash
 npm ci
@@ -13,19 +22,22 @@ uv sync --extra studies
 uv build --no-build-isolation
 ```
 
-Install the resulting wheel into a Python 3.11 virtual environment:
+From the same directory, install the resulting wheel into a separate Python 3.11 virtual environment. Keep this environment activated for the remaining commands:
 
 ```bash
-python3.11 -m venv .venv
-source .venv/bin/activate
-pip install /path/to/da_vinci_harness-0.2.0-py3-none-any.whl
+python3.11 -m venv .venv-client
+source .venv-client/bin/activate
+python -m pip install dist/da_vinci_harness-0.2.0-py3-none-any.whl
 ```
 
-Once a release is published, installation will be `pip install da-vinci-harness`. Users of a wheel do not need Node.js, a repository checkout, or CadQuery installed on the host.
+The installed wheel includes the localhost web interface. CAD generation runs in Docker; no separate host CadQuery installation is required to use the package.
 
 ## Create a workspace
 
+Create the workspace alongside the repository so its run data stays separate from the source checkout:
+
 ```bash
+cd ..
 davinci init my-project --template sensor
 cd my-project
 davinci setup --template sensor
