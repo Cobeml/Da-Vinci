@@ -41,6 +41,8 @@ dev = ["pytest>=8,<10", "httpx>=0.28,<1", "ruff>=0.11,<1", "build>=1.2,<2", "set
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# Study tests import checkout-only scripts, which are not wheel packages.
+pythonpath = ["."]
 markers = ["integration: requires the Docker CAD image"]
 
 [tool.ruff]
