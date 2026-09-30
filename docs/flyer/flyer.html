@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vote for Da Vinci — MongoDB Atlas Hackathon</title>
+<style>
+@page { size: Letter; margin: 0; }
+* { box-sizing: border-box; }
+body { margin: 0; background: #fff; color: #263a2f; font-family: Arial, Helvetica, sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.sheet { width: 816px; height: 1056px; padding: 32px 44px 28px; overflow: hidden; }
+a { color: inherit; text-decoration: none; }
+.top { display: flex; align-items: center; justify-content: space-between; }
+.eyebrow { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; }
+.logo { font: italic 42px/1 Georgia, serif; letter-spacing: -8px; padding-right: 8px; color: #304f3c; }
+.logo span { color: #a65d3b; }
+.vote { margin: 1px 0 3px; color: #a65d3b; font-size: 23px; font-weight: 600; }
+h1 { margin: 0; font-size: 68px; font-weight: 500; letter-spacing: -4px; line-height: 1.04; }
+.tagline { margin: 9px 0 0; font-size: 20px; letter-spacing: -.4px; }
+.hero { margin: 21px 0 0; }
+.hero img { display: block; width: 728px; height: 206px; object-fit: cover; border-radius: 8px; }
+figcaption { font-size: 9px; color: #586452; margin-top: 6px; }
+.results { display: grid; grid-template-columns: 270px 1fr 1fr; align-items: center; gap: 14px; margin-top: 17px; }
+.number { font-size: 62px; line-height: 1; letter-spacing: -3px; font-weight: 600; }
+.result-label { font-size: 17px; margin-top: 5px; }
+.comparison { margin-top: 9px; font-size: 12px; color: #586452; }
+.sample { margin: 0; }
+.sample img { width: 100%; height: 116px; object-fit: cover; border-radius: 5px; }
+.sample figcaption { margin-top: 5px; color: #263a2f; font-size: 11px; }
+.scope { margin: 11px 0 0; font-size: 9px; line-height: 1.4; color: #586452; }
+.description { margin: 19px 0 10px; font-size: 16px; line-height: 1.4; max-width: 680px; }
+.methods { display: flex; justify-content: space-between; gap: 15px; font-size: 12px; font-weight: 600; }
+.methods span { white-space: nowrap; }
+.atlas { margin-top: 17px; padding-top: 13px; border-top: 1px solid #ced5c6; }
+.atlas h2 { margin: 0 0 5px; font-size: 14px; }
+.atlas p { margin: 0; font-size: 11.5px; line-height: 1.5; }
+.scan { margin-top: 14px; display: grid; grid-template-columns: 1fr 127px 127px; column-gap: 24px; align-items: center; }
+.scan h2 { margin: 0 0 8px; font-size: 25px; line-height: 1.12; letter-spacing: -.7px; font-weight: 500; }
+.scan p { margin: 0; font-size: 12px; line-height: 1.6; color: #586452; }
+.code { text-align: center; }
+.code img { width: 112px; height: 112px; display: block; margin: 0 auto; }
+.code strong { display: block; margin-top: 1px; font-size: 11px; }
+.url { margin-top: 12px; font-size: 11px; }
+footer { margin-top: 13px; padding-top: 10px; border-top: 1px solid #ced5c6; display: flex; justify-content: space-between; gap: 12px; font-size: 10px; }
+</style>
+</head>
+<body><main class="sheet">
+  <div class="top"><span class="eyebrow">MongoDB Atlas Hackathon</span><span class="logo" aria-label="Da Vinci logo">d<span>v</span></span></div>
+  <p class="vote">Vote for</p>
+  <h1>Da Vinci</h1>
+  <p class="tagline">Recursive Improvement CAD harness</p>
+  <figure class="hero"><img src="assets/mounted-sensor.png" alt="Da Vinci's orange sensor mount installed on a VTOL reference drone"><figcaption>Sensor mount on a VTOL reference model · actual website CAD render</figcaption></figure>
+  <section class="results" aria-label="Recorded sensor mount improvement">
+    <div><div class="number">63.7%</div><div class="result-label">less sensor-mount mass</div><div class="comparison">83.54 g → 30.33 g · 8 design iterations</div></div>
+    <figure class="sample"><img src="assets/mount-before.png" alt="Baseline solid sensor cradle"><figcaption>Baseline · <strong>83.54 g</strong></figcaption></figure>
+    <figure class="sample"><img src="assets/mount-after.png" alt="Improved open-window sensor cradle"><figcaption>Best passing design · <strong>30.33 g</strong></figcaption></figure>
+  </section>
+  <p class="scope">Recorded sensor-mount study under fixed engineering screening checks. Simulation estimates; not physical validation.</p>
+  <p class="description">AI agents generate CAD, evaluate designs, and improve their tools and working context between attempts.</p>
+  <div class="methods"><span>1. Reflect and remember</span><span>2. Create and reuse tools</span><span>3. Evaluate and revise</span></div>
+  <section class="atlas"><h2>MongoDB Atlas for Scalable Model Improvement</h2><p><strong>Documents</strong> preserve designs and evaluations. <strong>Vector Search</strong> retrieves prior results.<br><strong>GridFS</strong> stores CAD files and source snapshots.</p></section>
+  <section class="scan" aria-label="Explore the project">
+    <div><h2>Explore the designs.<br>Vote for Da Vinci.</h2><p>Sensor mount · Parallel gripper · VTOL<br>Interactive 3D models and measured results.</p></div>
+    <a class="code" href="https://da-vinci-psi.vercel.app/demo"><img src="assets/qr-demo.svg" alt="QR code to the live demo"><strong>Explore the demo</strong></a>
+    <a class="code" href="https://github.com/Cobeml/Da-Vinci"><img src="assets/qr-github.svg" alt="QR code to the GitHub repository"><strong>Source &amp; docs</strong></a>
+  </section>
+  <div class="url"><a href="https://da-vinci-psi.vercel.app">da-vinci-psi.vercel.app</a></div>
+  <footer><span>Cobe Liu · <a href="mailto:liucobe@gmail.com">liucobe@gmail.com</a></span><a href="https://www.linkedin.com/in/cobe-liu">linkedin.com/in/cobe-liu</a></footer>
+</main></body></html>

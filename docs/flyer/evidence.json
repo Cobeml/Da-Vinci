@@ -1,0 +1,14 @@
+{
+  "source": "https://da-vinci-psi.vercel.app",
+  "captured_at": "2026-09-30T12:37:50.892Z",
+  "links": {
+    "demo": "https://da-vinci-psi.vercel.app/demo",
+    "github": "https://github.com/Cobeml/Da-Vinci"
+  },
+  "baseline_mass_g": 83.5353604433992,
+  "best_mass_g": 30.332204550592497,
+  "best_iteration": 6,
+  "mass_reduction_percent": 63.68938328680033,
+  "qr_codes_verified": true,
+  "image_source": "Screenshots of the live website's actual CAD viewers; no generated replacement geometry."
+}
