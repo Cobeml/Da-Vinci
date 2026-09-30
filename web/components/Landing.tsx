@@ -25,6 +25,12 @@ export default function Landing({ modelUrl }: { modelUrl: string }) {
         <a className={styles.repository} href="https://github.com/Cobeml/Da-Vinci">
           GitHub <span aria-hidden="true">↗</span>
         </a>
+        <nav className={styles.contact} aria-label="Contact Cobe Liu">
+          <a href="mailto:liucobe@gmail.com">liucobe@gmail.com</a>
+          <a href="https://www.linkedin.com/in/cobe-liu">
+            LinkedIn <span aria-hidden="true">↗</span>
+          </a>
+        </nav>
       </section>
       <div
         className={styles.model}

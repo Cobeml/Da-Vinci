@@ -80,6 +80,17 @@
 .repository:hover {
   text-decoration: underline;
 }
+.contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 22px;
+  margin-top: 16px;
+  font-size: 14px;
+  color: #304f3c;
+}
+.contact a:hover {
+  text-decoration: underline;
+}
 .model {
   min-width: 0;
   height: min(72vh, 680px);
