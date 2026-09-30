@@ -26,6 +26,10 @@ test("create, evaluate, inspect and continue a local object", async ({
       { timeout: 150000 },
     )
     .toBe("completed");
+  // API completion can precede the UI's last live refresh and model swap.
+  await expect(
+    page.getByRole("region", { name: "Run progress" }).locator("strong"),
+  ).toHaveText("completed");
   await expect(page.getByTestId("iteration-card")).toHaveCount(2);
   await expect(page.getByText("Best passing", { exact: true })).toBeVisible();
   await expect(
@@ -34,22 +38,27 @@ test("create, evaluate, inspect and continue a local object", async ({
   await expect(page.locator("canvas").first()).toBeVisible();
   const canvas = page.locator("canvas").first(),
     box = await canvas.boundingBox();
-  await expect
-    .poll(
-      async () =>
-        canvas.evaluate((c: HTMLCanvasElement) => {
-          const gl = c.getContext("webgl2");
-          if (!gl) return 0;
-          const p = new Uint8Array(c.width * c.height * 4);
-          gl.readPixels(0, 0, c.width, c.height, gl.RGBA, gl.UNSIGNED_BYTE, p);
-          let colored = 0;
-          for (let i = 0; i < p.length; i += 4)
-            if (p[i] > p[i + 1] * 1.12 && p[i] > p[i + 2] * 1.12) colored++;
-          return colored;
-        }),
-      { timeout: 10000 },
-    )
-    .toBeGreaterThan(100);
+  await expect(async () => {
+    // Inspect the composited image the user sees, not the renderer's
+    // currently bound WebGL framebuffer. Keep the visible-geometry check.
+    const screenshot = await canvas.screenshot({ timeout: 3000 });
+    const colored = await page.evaluate(async (png) => {
+      const image = new Image();
+      image.src = `data:image/png;base64,${png}`;
+      await image.decode();
+      const copy = document.createElement("canvas");
+      copy.width = image.width;
+      copy.height = image.height;
+      const context = copy.getContext("2d")!;
+      context.drawImage(image, 0, 0);
+      const p = context.getImageData(0, 0, copy.width, copy.height).data;
+      let colored = 0;
+      for (let i = 0; i < p.length; i += 4)
+        if (p[i] > p[i + 1] * 1.12 && p[i] > p[i + 2] * 1.12) colored++;
+      return colored;
+    }, screenshot.toString("base64"));
+    expect(colored).toBeGreaterThan(100);
+  }).toPass({ timeout: 10000 });
   if (box) {
     await page.mouse.move(box.x + 100, box.y + 100);
     await page.mouse.down();
