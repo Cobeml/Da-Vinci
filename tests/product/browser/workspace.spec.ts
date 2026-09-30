@@ -131,7 +131,9 @@ test("invalid YAML and cross-origin starts are rejected", async ({
     .getByLabel("YAML configuration", { exact: true })
     .fill("version: 999\nobject: bad");
   await page.getByRole("button", { name: "Apply YAML" }).click();
-  await expect(page.getByRole("alert")).toBeVisible();
+  await expect(
+    page.getByRole("dialog", { name: "New object" }).getByRole("alert"),
+  ).toBeVisible();
   const r = await request.post("/api/v1/runs", {
     headers: { Origin: "https://foreign.example" },
     data: { yaml: "version: 1" },
