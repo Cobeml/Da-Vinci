@@ -26,3 +26,11 @@ Persistent memory: use `davinci memory search QUERY --experiment ID`, then `memo
 ## Managed natural-language requests
 
 A user with configured generation credentials can call `davinci managed request` or `POST /api/v2/managed-experiments` without task files. Inspect `GET /api/v2/test-recipes` for supported automatic verification (currently rectangular cantilever screening only). Questions use `POST /api/v2/experiments/{id}/answers`. The worker owns resumable stages; do not combine external design operations with an automatic managed experiment. Unavailable physics remains blocked; no passing evidence transfers from memory. Use the same result, artifact and memory APIs for inspection.
+
+## Installed shared UI, continuation and ownership
+
+Open the local workspace URL to inspect both external and managed experiments in the same object/run views. The external connection section exposes only workspace/localhost details and public commands; model credentials remain server-side. A completed execution is not a validated-design claim. Read coverage, typed outcomes, evidence completeness, fidelity and uncertainty, and keep objective target attainment separate from acceptance.
+
+At a frozen idle checkpoint, `davinci experiment handoff ID --driver external --owner coding-agent --operation-id handoff-1 --reason "Explicit driver change"` atomically transfers ownership. Old-owner commands and queued/running transfers fail. `davinci experiment continue ID --candidate CANDIDATE_ID --driver external --owner coding-agent --operation-id continue-1` opens a linked same-suite run with an unevaluated seed. Schedule evaluation explicitly; no passing score is inherited. Both routes can finish without handoff. Do not rewrite the frozen suite; requirement/evaluator changes use a linked revision.
+
+Handoff and continuation schemas are `Handoff` and `ContinueExperiment` in the installed catalog. Public endpoints are `POST /api/v2/experiments/{id}/handoff` and `/continue`. Browser presentation is read-only at `/api/v2/workspace/objects`; use lifecycle operations for mutations.

@@ -447,8 +447,16 @@ class ManagedWorkflow:
             self.life.freeze(eid, self.cmd(row, "freeze"))
             return self.move(eid, "propose")
         if stage == "propose":
+            if s.get("adopted_frozen_suite") and not s.get("experience_retrieved"):
+                return self.save(
+                    row,
+                    experience=self.life.retrieve(row["description"], experiment_id=eid),
+                    experience_retrieved=True,
+                )
             candidate = (
-                self.coordinate(row) if s["policy"]["search"] == "coordinate" and s["iteration"] else None
+                self.coordinate(row)
+                if s["policy"]["search"] == "coordinate" and s["iteration"] and s.get("requirements")
+                else None
             )
             if s.get("rerun_candidates") and s["iteration"] < len(s["rerun_candidates"]):
                 candidate = Candidate.model_validate(s["rerun_candidates"][s["iteration"]])
@@ -458,7 +466,7 @@ class ManagedWorkflow:
                     Candidate,
                     "Generate or revise a CadQuery build(parameters, interfaces) returning an Assembly. "
                     "Only edit design geometry/parameters under the frozen suite. Use measured failures and diagnosis. "
-                    "Honor rectangular recipe applicability; source must not contain evaluator or policy edits.",
+                    "Honor the frozen geometry and physics applicability; source must not contain evaluator or policy edits.",
                     {
                         "diagnosis": s.get("diagnosis"),
                         "builder_example": s["references"][0]["candidate"]["source"],
@@ -551,6 +559,10 @@ class ManagedWorkflow:
 
     def correct_evaluator(self, row):
         s, eid = row["managed"], row["_id"]
+        if s.get("adopted_frozen_suite") and not s.get("requirements"):
+            return self.save(
+                row, status="blocked", stop_reason="adopted_evaluator_requires_external_reference_revision"
+            )
         remaining = row["budget_usd"] - row["spent_usd"]
         if s.get("correction_depth", 0) >= s["policy"]["max_repairs"] or remaining <= 0:
             return self.save(row, status="blocked", stop_reason="evaluator_revision_limit")
@@ -625,6 +637,7 @@ class ManagedWorkflow:
 
     def stopping(self, row, count):
         policy = row["managed"]["policy"]
+        row = {**row, "results": row["results"][row["managed"].get("session_result_start", 0) :]}
         if count >= policy["max_candidates"]:
             return "candidate_limit"
         if count < max(policy["min_candidates"], len(row["managed"].get("rerun_candidates", []))):

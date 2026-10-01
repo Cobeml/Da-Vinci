@@ -2,6 +2,8 @@
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useState } from "react";
 import Gallery from "./Gallery";
+import ExperimentPanel from "./ExperimentPanel";
+import ExternalConnection from "./ExternalConnection";
 import RunForm from "./RunForm";
 import {
   artifactUrl,
@@ -29,16 +31,18 @@ export default function Workspace({
     [loading, setLoading] = useState(true),
     [form, setForm] = useState<Config | true | null>(null);
   useEffect(() => {
-    if (objectPage)
+    if (objectPage) {
       setId(new URLSearchParams(window.location.search).get("id") || "");
+      setRunId(new URLSearchParams(window.location.search).get("run") || "");
+    }
   }, [objectPage]);
   const refresh = useCallback(async () => {
     if (objectPage && !id) return;
     try {
       const r = await fetch(
         objectPage
-          ? `/api/v1/objects/${encodeURIComponent(id)}`
-          : "/api/v1/objects",
+          ? `/api/v2/workspace/objects/${encodeURIComponent(id)}`
+          : "/api/v2/workspace/objects",
       );
       const d = await r.json();
       if (!r.ok) throw Error(d.detail);
@@ -59,7 +63,7 @@ export default function Workspace({
   const run = detail?.runs.find((r) => r._id === runId) || detail?.runs[0],
     active = run?.status === "running";
   useEffect(() => {
-    if (!run?._id) return;
+    if (!run?._id || run.experiment) return;
     const source = new EventSource(`/api/v1/runs/${run._id}/events`);
     source.onmessage = () => refresh();
     return () => source.close();
@@ -134,7 +138,7 @@ export default function Workspace({
               <span className={s.eyebrow}>NO OBJECTS YET</span>
               <h2>Start with a task.</h2>
               <p>
-                Choose a template or load your run YAML.
+                Choose an external agent, the built-in agent, or advanced YAML.
                 <br />
                 Each object keeps its designs, metrics, and run history.
               </p>
@@ -144,6 +148,7 @@ export default function Workspace({
               <code>davinci run run.yaml</code>
             </section>
           )}
+          <ExternalConnection />
           <Gallery objects={objects} />
         </>
       ) : (
@@ -157,9 +162,13 @@ export default function Workspace({
                 <div>
                   <span className={s.eyebrow}>
                     {detail.template} ·{" "}
-                    {run.config.run.mode === "replay"
-                      ? "DETERMINISTIC REPLAY"
-                      : "LIVE MODEL"}
+                    {run.experiment
+                      ? run.experiment.driver === "external"
+                        ? "EXTERNAL AGENT"
+                        : "BUILT-IN AGENT"
+                      : run.config.run.mode === "replay"
+                        ? "DETERMINISTIC REPLAY · LEGACY"
+                        : "LIVE MODEL · LEGACY"}
                   </span>
                   <h1>{detail.name}</h1>
                   <p>{run.config.task.description}</p>
@@ -180,7 +189,7 @@ export default function Workspace({
                       ))}
                     </select>
                   </label>
-                  {best && (
+                  {best && !run.experiment && (
                     <button
                       className={s.button}
                       disabled={active}
@@ -191,232 +200,255 @@ export default function Workspace({
                   )}
                 </div>
               </header>
-              <section className={s.status} aria-label="Run progress">
-                <div>
-                  <span className={s.dot} data-active={active} />
-                  <strong>{run.status}</strong>
-                  <span>{run.phase.replaceAll("_", " ")}</span>
-                </div>
-                <span>
-                  {run.completed_iterations} / {run.config.run.iterations} new
-                  iterations
-                </span>
-                <span>
-                  ${run.spent_usd.toFixed(3)} / ${run.config.run.budget_usd} API
-                  accounting
-                </span>
-                <div className={s.actions}>
-                  {active ? (
-                    <button className={s.quiet} onClick={() => action("stop")}>
-                      Stop run
-                    </button>
-                  ) : ["paused", "stopped"].includes(run.status) ? (
-                    <button
-                      className={s.quiet}
-                      onClick={() => action("resume")}
-                    >
-                      Resume
-                    </button>
-                  ) : null}
-                  <a href={`/api/v1/runs/${run._id}/yaml`}>YAML ↓</a>
-                </div>
-              </section>
-              {run.error && <p className={s.error}>{run.error}</p>}
-              {run.parent_run_id && (
-                <p className={s.muted}>
-                  Continued from{" "}
-                  <button
-                    className={s.inlineButton}
-                    onClick={() => setRunId(run.parent_run_id!)}
-                  >
-                    a previous run
-                  </button>
-                  . Seed reevaluated under this run’s constraints.
-                </p>
-              )}
-              <section className={s.overview}>
-                <div className={s.hero}>
-                  <Model
-                    url={
-                      (best || designs.find((d) => d.artifacts["model.glb"]))
-                        ?.artifacts["model.glb"]
-                        ? artifactUrl(
-                            (best ||
-                              designs.find((d) => d.artifacts["model.glb"]))!
-                              .artifacts["model.glb"],
-                          )
-                        : undefined
-                    }
-                  />
-                </div>
-                <div className={s.progress}>
-                  <span className={s.eyebrow}>
-                    BEST PASSING {metric.replaceAll("_", " ")}
-                  </span>
-                  <div className={s.bigMetric}>
-                    {bestValue !== undefined ? number(bestValue) : "—"}{" "}
-                    <small>{best?.evaluation?.metrics[metric]?.unit}</small>
-                  </div>
-                  {gain !== null ? (
-                    <p className={s.gain}>
-                      {number(gain)}% improvement from baseline
-                    </p>
-                  ) : (
-                    <p className={s.muted}>
-                      No comparable passing baseline yet.
-                    </p>
-                  )}
-                  <div className={s.chart} aria-label="Iteration progress">
-                    {designs.map((d) => {
-                      const value = d.evaluation?.metrics[metric]?.value;
-                      return (
-                        <a
-                          key={d._id}
-                          href={`#${d._id}`}
-                          className={
-                            d.evaluation?.outcome === "passed"
-                              ? s.chartPoint
-                              : s.failedPoint
-                          }
-                        >
-                          <span>
-                            {value === undefined ? "—" : number(value)}
-                          </span>
-                          <div
-                            style={{
-                              height: `${value === undefined ? 3 : Math.max(3, (Math.abs(value) / maximum) * 72)}px`,
-                            }}
-                          />
-                          <small>
-                            {d.iteration === 0
-                              ? "Base"
-                              : String(d.iteration).padStart(2, "0")}
-                          </small>
-                        </a>
-                      );
-                    })}
-                  </div>
-                  <p className={s.muted}>
-                    Engineering estimates. Failed checks are excluded from the
-                    best design.
-                  </p>
-                  <details>
-                    <summary>Task and evaluation</summary>
-                    <p>
-                      Objective: {run.config.objective.direction} {metric}
-                      {run.config.objective.target != null
-                        ? ` · target ${run.config.objective.target}`
-                        : ""}
-                      .
-                    </p>
-                    {run.config.constraints.map((c, i) => (
-                      <p key={i}>
-                        {c.metric} {c.operator} {c.value} {c.unit}
-                      </p>
-                    ))}
-                    <p>
-                      {best?.evaluation?.limitations ||
-                        base?.evaluation?.limitations ||
-                        "Independent task evaluation. View iteration details for checks."}
-                    </p>
-                    <p>
-                      Task version: <code>{run.task_version.slice(0, 16)}</code>
-                    </p>
-                  </details>
-                </div>
-              </section>
-              <div className={s.sectionHeading}>
-                <h2>Design iterations</h2>
-                <span>{designs.length} designs · baseline included</span>
-              </div>
-              <section className={s.grid} aria-label="Design iterations">
-                {designs.map((d) => (
-                  <article
-                    className={`${s.card} ${d._id === run.best_id ? s.bestCard : ""}`}
-                    id={d._id}
-                    key={d._id}
-                    data-testid="iteration-card"
-                  >
-                    <div className={s.cardHeading}>
-                      <span className={s.eyebrow}>
-                        {d.iteration === 0
-                          ? "BASELINE"
-                          : String(d.iteration).padStart(2, "0")}
-                      </span>
-                      <span
-                        className={
-                          d.evaluation?.outcome === "failed"
-                            ? s.failed
-                            : s.badge
-                        }
-                      >
-                        {d._id === run.best_id
-                          ? "Best passing"
-                          : d.evaluation?.outcome || "Evaluating"}
-                      </span>
+              {run.experiment ? (
+                <ExperimentPanel
+                  key={run._id}
+                  experiment={run.experiment}
+                  refresh={refresh}
+                  onContinued={(newId) => {
+                    setRunId(newId);
+                    refresh();
+                  }}
+                />
+              ) : (
+                <>
+                  <section className={s.status} aria-label="Run progress">
+                    <div>
+                      <span className={s.dot} data-active={active} />
+                      <strong>{run.status}</strong>
+                      <span>{run.phase.replaceAll("_", " ")}</span>
                     </div>
-                    <Model
-                      url={
-                        d.artifacts["model.glb"]
-                          ? artifactUrl(d.artifacts["model.glb"])
-                          : undefined
-                      }
-                    />
-                    <div className={s.cardBody}>
-                      <h2>{d.title}</h2>
-                      <p>{d.change}</p>
-                      <dl className={s.metrics}>
-                        {Object.entries(d.evaluation?.metrics || {}).map(
-                          ([k, m]) => (
-                            <div key={k}>
-                              <dt>{k.replaceAll("_", " ")}</dt>
-                              <dd>
-                                {number(m.value)} <small>{m.unit}</small>
-                              </dd>
-                            </div>
-                          ),
-                        )}
-                      </dl>
-                      {d.evaluation?.violations.map((v, i) => (
-                        <p key={i} className={s.error}>
-                          {v.code.replaceAll("_", " ")}: {v.message}
-                        </p>
-                      ))}
-                      <details>
-                        <summary>Reflection, checks, and source</summary>
-                        <p>{d.reflection?.lesson || "Reflection pending."}</p>
-                        <p>{d.reflection?.next_focus}</p>
-                        <p>{d.evaluation?.limitations}</p>
-                        {d.tool_use && (
-                          <p>
-                            Tested tool output:{" "}
-                            <code>{JSON.stringify(d.tool_use.result)}</code>
-                          </p>
-                        )}
-                        <pre>{JSON.stringify(d.parameters, null, 2)}</pre>
-                        <pre>{d.source}</pre>
-                      </details>
-                      <div className={s.cardFooter}>
-                        {d.artifacts["model.step"] && (
-                          <a
-                            href={artifactUrl(d.artifacts["model.step"])}
-                            download
-                          >
-                            STEP ↓
-                          </a>
-                        )}
+                    <span>
+                      {run.completed_iterations} / {run.config.run.iterations}{" "}
+                      new iterations
+                    </span>
+                    <span>
+                      ${run.spent_usd.toFixed(3)} / ${run.config.run.budget_usd}{" "}
+                      API accounting
+                    </span>
+                    <div className={s.actions}>
+                      {active ? (
                         <button
                           className={s.quiet}
-                          disabled={active || !d.artifacts["model.step"]}
-                          onClick={() => continueFrom(d)}
+                          onClick={() => action("stop")}
                         >
-                          Continue from here →
+                          Stop run
                         </button>
-                      </div>
+                      ) : ["paused", "stopped"].includes(run.status) ? (
+                        <button
+                          className={s.quiet}
+                          onClick={() => action("resume")}
+                        >
+                          Resume
+                        </button>
+                      ) : null}
+                      <a href={`/api/v1/runs/${run._id}/yaml`}>YAML ↓</a>
                     </div>
-                  </article>
-                ))}
-              </section>
+                  </section>
+                  {run.error && <p className={s.error}>{run.error}</p>}
+                  {run.parent_run_id && (
+                    <p className={s.muted}>
+                      Continued from{" "}
+                      <button
+                        className={s.inlineButton}
+                        onClick={() => setRunId(run.parent_run_id!)}
+                      >
+                        a previous run
+                      </button>
+                      . Seed reevaluated under this run’s constraints.
+                    </p>
+                  )}
+                  <section className={s.overview}>
+                    <div className={s.hero}>
+                      <Model
+                        url={
+                          (
+                            best ||
+                            designs.find((d) => d.artifacts["model.glb"])
+                          )?.artifacts["model.glb"]
+                            ? artifactUrl(
+                                (best ||
+                                  designs.find(
+                                    (d) => d.artifacts["model.glb"],
+                                  ))!.artifacts["model.glb"],
+                              )
+                            : undefined
+                        }
+                      />
+                    </div>
+                    <div className={s.progress}>
+                      <span className={s.eyebrow}>
+                        BEST PASSING {metric.replaceAll("_", " ")}
+                      </span>
+                      <div className={s.bigMetric}>
+                        {bestValue !== undefined ? number(bestValue) : "—"}{" "}
+                        <small>{best?.evaluation?.metrics[metric]?.unit}</small>
+                      </div>
+                      {gain !== null ? (
+                        <p className={s.gain}>
+                          {number(gain)}% improvement from baseline
+                        </p>
+                      ) : (
+                        <p className={s.muted}>
+                          No comparable passing baseline yet.
+                        </p>
+                      )}
+                      <div className={s.chart} aria-label="Iteration progress">
+                        {designs.map((d) => {
+                          const value = d.evaluation?.metrics[metric]?.value;
+                          return (
+                            <a
+                              key={d._id}
+                              href={`#${d._id}`}
+                              className={
+                                d.evaluation?.outcome === "passed"
+                                  ? s.chartPoint
+                                  : s.failedPoint
+                              }
+                            >
+                              <span>
+                                {value === undefined ? "—" : number(value)}
+                              </span>
+                              <div
+                                style={{
+                                  height: `${value === undefined ? 3 : Math.max(3, (Math.abs(value) / maximum) * 72)}px`,
+                                }}
+                              />
+                              <small>
+                                {d.iteration === 0
+                                  ? "Base"
+                                  : String(d.iteration).padStart(2, "0")}
+                              </small>
+                            </a>
+                          );
+                        })}
+                      </div>
+                      <p className={s.muted}>
+                        Engineering estimates. Failed checks are excluded from
+                        the best design.
+                      </p>
+                      <details>
+                        <summary>Task and evaluation</summary>
+                        <p>
+                          Objective: {run.config.objective.direction} {metric}
+                          {run.config.objective.target != null
+                            ? ` · target ${run.config.objective.target}`
+                            : ""}
+                          .
+                        </p>
+                        {run.config.constraints.map((c, i) => (
+                          <p key={i}>
+                            {c.metric} {c.operator} {c.value} {c.unit}
+                          </p>
+                        ))}
+                        <p>
+                          {best?.evaluation?.limitations ||
+                            base?.evaluation?.limitations ||
+                            "Independent task evaluation. View iteration details for checks."}
+                        </p>
+                        <p>
+                          Task version:{" "}
+                          <code>{run.task_version.slice(0, 16)}</code>
+                        </p>
+                      </details>
+                    </div>
+                  </section>
+                  <div className={s.sectionHeading}>
+                    <h2>Design iterations</h2>
+                    <span>{designs.length} designs · baseline included</span>
+                  </div>
+                  <section className={s.grid} aria-label="Design iterations">
+                    {designs.map((d) => (
+                      <article
+                        className={`${s.card} ${d._id === run.best_id ? s.bestCard : ""}`}
+                        id={d._id}
+                        key={d._id}
+                        data-testid="iteration-card"
+                      >
+                        <div className={s.cardHeading}>
+                          <span className={s.eyebrow}>
+                            {d.iteration === 0
+                              ? "BASELINE"
+                              : String(d.iteration).padStart(2, "0")}
+                          </span>
+                          <span
+                            className={
+                              d.evaluation?.outcome === "failed"
+                                ? s.failed
+                                : s.badge
+                            }
+                          >
+                            {d._id === run.best_id
+                              ? "Best passing"
+                              : d.evaluation?.outcome || "Evaluating"}
+                          </span>
+                        </div>
+                        <Model
+                          url={
+                            d.artifacts["model.glb"]
+                              ? artifactUrl(d.artifacts["model.glb"])
+                              : undefined
+                          }
+                        />
+                        <div className={s.cardBody}>
+                          <h2>{d.title}</h2>
+                          <p>{d.change}</p>
+                          <dl className={s.metrics}>
+                            {Object.entries(d.evaluation?.metrics || {}).map(
+                              ([k, m]) => (
+                                <div key={k}>
+                                  <dt>{k.replaceAll("_", " ")}</dt>
+                                  <dd>
+                                    {number(m.value)} <small>{m.unit}</small>
+                                  </dd>
+                                </div>
+                              ),
+                            )}
+                          </dl>
+                          {d.evaluation?.violations.map((v, i) => (
+                            <p key={i} className={s.error}>
+                              {v.code.replaceAll("_", " ")}: {v.message}
+                            </p>
+                          ))}
+                          <details>
+                            <summary>Reflection, checks, and source</summary>
+                            <p>
+                              {d.reflection?.lesson || "Reflection pending."}
+                            </p>
+                            <p>{d.reflection?.next_focus}</p>
+                            <p>{d.evaluation?.limitations}</p>
+                            {d.tool_use && (
+                              <p>
+                                Tested tool output:{" "}
+                                <code>{JSON.stringify(d.tool_use.result)}</code>
+                              </p>
+                            )}
+                            <pre>{JSON.stringify(d.parameters, null, 2)}</pre>
+                            <pre>{d.source}</pre>
+                          </details>
+                          <div className={s.cardFooter}>
+                            {d.artifacts["model.step"] && (
+                              <a
+                                href={artifactUrl(d.artifacts["model.step"])}
+                                download
+                              >
+                                STEP ↓
+                              </a>
+                            )}
+                            <button
+                              className={s.quiet}
+                              disabled={active || !d.artifacts["model.step"]}
+                              onClick={() => continueFrom(d)}
+                            >
+                              Continue from here →
+                            </button>
+                          </div>
+                        </div>
+                      </article>
+                    ))}
+                  </section>
+                </>
+              )}
             </>
           )}
         </>

@@ -1,8 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
-import { parse, stringify } from "yaml";
-import type { Config, Task } from "./types";
+import AdvancedRunForm from "./AdvancedRunForm";
+import type { Config, Connection } from "./types";
 import s from "./workspace.module.css";
+
 export default function RunForm({
   initial,
   onClose,
@@ -12,72 +13,85 @@ export default function RunForm({
   onClose: () => void;
   onStarted: (id: string) => void;
 }) {
-  const [tasks, setTasks] = useState<Task[]>([]),
-    [config, setConfig] = useState<Config | null>(initial || null),
-    [error, setError] = useState(""),
-    [busy, setBusy] = useState(false),
-    [yaml, setYaml] = useState("");
+  const [route, setRoute] = useState<"managed" | "external" | "advanced">(
+    initial ? "advanced" : "managed",
+  );
+  const [connection, setConnection] = useState<Connection>();
+  const [name, setName] = useState(""),
+    [slug, setSlug] = useState("");
+  const [description, setDescription] = useState(""),
+    [image, setImage] = useState("da-vinci-cad:local");
+  const [budget, setBudget] = useState(10),
+    [iterations, setIterations] = useState(4);
+  const [busy, setBusy] = useState(false),
+    [error, setError] = useState("");
+  const [operation] = useState(() => crypto.randomUUID());
   useEffect(() => {
-    fetch("/api/v1/tasks")
+    fetch("/api/v2/workspace/connection")
       .then((r) => r.json())
-      .then((items: Task[]) => {
-        setTasks(items);
-        if (!initial) setConfig(parse(items[0].yaml));
-      })
-      .catch(() => setError("Cannot load task templates."));
-  }, [initial]);
-  const task = tasks.find((t) => t.id === config?.task.template),
-    metrics = task?.metrics || {};
-  const change = (value: Partial<Config>) =>
-    setConfig((c) => (c ? { ...c, ...value } : c));
-  async function loadYaml(text: string) {
-    setYaml(text);
-    setError("");
-    try {
-      const r = await fetch("/api/v1/validate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ yaml: text }),
-      });
-      const d = await r.json();
-      if (!r.ok) throw Error(d.detail);
-      setConfig(d.config);
-      if (task?.id === "custom")
-        setTasks((ts) =>
-          ts.map((t) => (t.id === "custom" ? { ...t, metrics: d.metrics } : t)),
-        );
-    } catch (e) {
-      setError(String(e));
-    }
-  }
-  async function submit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!config) return;
+      .then(setConnection)
+      .catch(() => setError("Cannot connect to the workspace service."));
+  }, []);
+  if (route === "advanced")
+    return (
+      <AdvancedRunForm
+        initial={initial}
+        onClose={onClose}
+        onStarted={onStarted}
+      />
+    );
+  async function submit(event: React.FormEvent) {
+    event.preventDefault();
     setBusy(true);
     setError("");
     try {
-      const r = await fetch("/api/v1/runs", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ yaml: stringify(config) }),
-      });
-      const d = await r.json();
-      if (!r.ok) throw Error(d.detail);
-      onStarted(d.object_id);
+      const body: Record<string, unknown> = {
+        object: { slug, name },
+        description,
+        driver: route,
+        actor: route === "external" ? "coding-agent" : "user",
+        operation_id: operation,
+      };
+      if (route === "managed") {
+        const response = await fetch(
+          `/api/v2/runtimes/resolve?image=${encodeURIComponent(image)}`,
+        );
+        const runtime = await response.json();
+        if (!response.ok) throw Error(runtime.detail);
+        body.runtime = {
+          image: runtime.image,
+          solver: "Configured recipe runtime",
+          provenance: `User-selected local image ${image}`,
+        };
+        body.budget_usd = budget;
+        body.policy = {
+          max_candidates: iterations,
+          min_candidates: Math.min(2, iterations),
+        };
+      }
+      const response = await fetch(
+        route === "managed"
+          ? "/api/v2/managed-experiments"
+          : "/api/v2/experiments",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        },
+      );
+      const result = await response.json();
+      if (!response.ok)
+        throw Error(
+          typeof result.detail === "string"
+            ? result.detail
+            : JSON.stringify(result.detail),
+        );
+      onStarted(result.object_id);
     } catch (e) {
       setError(String(e));
     } finally {
       setBusy(false);
     }
-  }
-  function download() {
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(
-      new Blob([stringify(config)], { type: "application/yaml" }),
-    );
-    a.download = "run.yaml";
-    a.click();
-    URL.revokeObjectURL(a.href);
   }
   return (
     <div className={s.overlay}>
@@ -85,364 +99,153 @@ export default function RunForm({
         className={s.dialog}
         role="dialog"
         aria-modal="true"
-        aria-label={initial ? "Continue from iteration" : "New object"}
+        aria-label="New object"
       >
         <div className={s.sectionHeading}>
-          <h2>{initial ? "Continue from iteration" : "New object"}</h2>
-          <button
-            type="button"
-            className={s.quiet}
-            onClick={onClose}
-            aria-label="Close"
-          >
+          <h2>New object</h2>
+          <button className={s.quiet} onClick={onClose} aria-label="Close">
             ×
           </button>
         </div>
-        {config && (
-          <form onSubmit={submit}>
-            {initial && (
-              <p className={s.muted}>
-                A new run will start from the selected geometry. Earlier results
-                stay unchanged.
-              </p>
-            )}
-            <div className={s.fields}>
-              <label>
-                Object name
-                <input
-                  required
-                  maxLength={100}
-                  value={config.object.name}
-                  onChange={(e) =>
-                    change({
-                      object: { ...config.object, name: e.target.value },
-                    })
-                  }
-                />
-              </label>
-              <label>
-                Object ID
-                <input
-                  required
-                  disabled={!!initial}
-                  pattern="[a-z][a-z0-9-]{0,63}"
-                  value={config.object.slug}
-                  onChange={(e) =>
-                    change({
-                      object: { ...config.object, slug: e.target.value },
-                    })
-                  }
-                />
-              </label>
-            </div>
-            <label>
-              Task template
-              <select
-                disabled={!!initial}
-                value={config.task.template}
-                onChange={(e) => {
-                  const t = tasks.find((t) => t.id === e.target.value);
-                  if (t) setConfig(parse(t.yaml));
-                }}
-              >
-                {tasks.map((t) => (
-                  <option key={t.id} value={t.id}>
-                    {t.name}
-                  </option>
-                ))}
-              </select>
-            </label>
-            {config.task.template === "custom" && (
-              <label>
-                Task directory (inside workspace)
-                <input
-                  required
-                  value={config.task.path || "task"}
-                  onChange={(e) =>
-                    change({ task: { ...config.task, path: e.target.value } })
-                  }
-                />
-              </label>
-            )}
-            <label>
-              Task description
-              <textarea
-                required
-                rows={3}
-                value={config.task.description}
-                onChange={(e) =>
-                  change({
-                    task: { ...config.task, description: e.target.value },
-                  })
-                }
-              />
-            </label>
-            <div className={s.fields}>
-              <label>
-                Objective metric
-                {Object.keys(metrics).length ? (
-                  <select
-                    value={config.objective.metric}
-                    onChange={(e) =>
-                      change({
-                        objective: {
-                          ...config.objective,
-                          metric: e.target.value,
-                        },
-                      })
-                    }
-                  >
-                    {Object.entries(metrics).map(([m, u]) => (
-                      <option key={m} value={m}>
-                        {m} ({u})
-                      </option>
-                    ))}
-                  </select>
-                ) : (
-                  <input
-                    value={config.objective.metric}
-                    onChange={(e) =>
-                      change({
-                        objective: {
-                          ...config.objective,
-                          metric: e.target.value,
-                        },
-                      })
-                    }
-                  />
-                )}
-              </label>
-              <label>
-                Direction
-                <select
-                  value={config.objective.direction}
-                  onChange={(e) =>
-                    change({
-                      objective: {
-                        ...config.objective,
-                        direction: e.target.value as "minimize" | "maximize",
-                      },
-                    })
-                  }
-                >
-                  <option value="minimize">Minimize</option>
-                  <option value="maximize">Maximize</option>
-                </select>
-              </label>
-              <label>
-                Target (optional)
-                <input
-                  type="number"
-                  step="any"
-                  value={config.objective.target ?? ""}
-                  onChange={(e) =>
-                    change({
-                      objective: {
-                        ...config.objective,
-                        target:
-                          e.target.value === "" ? null : Number(e.target.value),
-                      },
-                    })
-                  }
-                />
-              </label>
-            </div>
-            <fieldset>
-              <legend>Additional constraints</legend>
-              <p className={s.muted}>Fixed template checks always apply.</p>
-              {config.constraints.map((c, i) => (
-                <div className={s.constraint} key={i}>
-                  <input
-                    aria-label={`Constraint ${i + 1} metric`}
-                    value={c.metric}
-                    placeholder="Metric"
-                    onChange={(e) =>
-                      change({
-                        constraints: config.constraints.map((x, j) =>
-                          j === i
-                            ? {
-                                ...x,
-                                metric: e.target.value,
-                                unit: metrics[e.target.value] || x.unit,
-                              }
-                            : x,
-                        ),
-                      })
-                    }
-                  />
-                  <select
-                    aria-label={`Constraint ${i + 1} operator`}
-                    value={c.operator}
-                    onChange={(e) =>
-                      change({
-                        constraints: config.constraints.map((x, j) =>
-                          j === i
-                            ? { ...x, operator: e.target.value as "<=" | ">=" }
-                            : x,
-                        ),
-                      })
-                    }
-                  >
-                    <option>{"<="}</option>
-                    <option>{">="}</option>
-                  </select>
-                  <input
-                    aria-label={`Constraint ${i + 1} value`}
-                    type="number"
-                    step="any"
-                    required
-                    value={c.value}
-                    onChange={(e) =>
-                      change({
-                        constraints: config.constraints.map((x, j) =>
-                          j === i ? { ...x, value: Number(e.target.value) } : x,
-                        ),
-                      })
-                    }
-                  />
-                  <input
-                    aria-label={`Constraint ${i + 1} unit`}
-                    value={c.unit}
-                    onChange={(e) =>
-                      change({
-                        constraints: config.constraints.map((x, j) =>
-                          j === i ? { ...x, unit: e.target.value } : x,
-                        ),
-                      })
-                    }
-                  />
-                  <button
-                    type="button"
-                    className={s.quiet}
-                    onClick={() =>
-                      change({
-                        constraints: config.constraints.filter(
-                          (_, j) => j !== i,
-                        ),
-                      })
-                    }
-                    aria-label={`Remove constraint ${i + 1}`}
-                  >
-                    ×
-                  </button>
-                </div>
-              ))}
-              <button
-                type="button"
-                className={s.quiet}
-                onClick={() =>
-                  change({
-                    constraints: [
-                      ...config.constraints,
-                      {
-                        metric: "deflection_mm",
-                        operator: "<=",
-                        value: 0.5,
-                        unit: "mm",
-                      },
-                    ],
-                  })
-                }
-              >
-                + Add constraint
-              </button>
-            </fieldset>
-            <div className={s.fields}>
-              <label>
-                New iterations
-                <input
-                  type="number"
-                  required
-                  min={1}
-                  max={50}
-                  value={config.run.iterations}
-                  onChange={(e) =>
-                    change({
-                      run: {
-                        ...config.run,
-                        iterations: Number(e.target.value),
-                      },
-                    })
-                  }
-                />
-              </label>
-              <label>
-                API budget (USD)
-                <input
-                  type="number"
-                  required
-                  min={0.01}
-                  max={1000}
-                  step="any"
-                  value={config.run.budget_usd}
-                  onChange={(e) =>
-                    change({
-                      run: {
-                        ...config.run,
-                        budget_usd: Number(e.target.value),
-                      },
-                    })
-                  }
-                />
-              </label>
-              <label>
-                Provider
-                <select
-                  value={config.run.mode}
-                  onChange={(e) =>
-                    change({
-                      run: {
-                        ...config.run,
-                        mode: e.target.value as "live" | "replay",
-                      },
-                    })
-                  }
-                >
-                  <option value="live">Live model</option>
-                  <option value="replay">Deterministic replay</option>
-                </select>
-              </label>
-            </div>
-            <details>
-              <summary>Load YAML configuration</summary>
-              <label>
-                YAML file
-                <input
-                  type="file"
-                  accept=".yaml,.yml"
-                  onChange={(e) => e.target.files?.[0]?.text().then(loadYaml)}
-                />
-              </label>
-              <textarea
-                aria-label="YAML configuration"
-                rows={7}
-                value={yaml}
-                onChange={(e) => setYaml(e.target.value)}
-              />
-              <button
-                type="button"
-                className={s.quiet}
-                onClick={() => loadYaml(yaml)}
-              >
-                Apply YAML
-              </button>
-            </details>
-            {error && (
-              <p role="alert" className={s.error}>
-                {error}
-              </p>
-            )}
-            <div className={s.actions}>
-              <button type="button" className={s.quiet} onClick={download}>
-                Download YAML
-              </button>
-              <button className={s.button} disabled={busy}>
-                {busy ? "Starting…" : "Start run"}
-              </button>
-            </div>
-          </form>
+        <div className={s.actions} aria-label="Choose a driver">
+          <button
+            type="button"
+            className={s.quiet}
+            aria-pressed={route === "managed"}
+            onClick={() => setRoute("managed")}
+          >
+            Built-in agent
+          </button>
+          <button
+            type="button"
+            className={s.quiet}
+            aria-pressed={route === "external"}
+            onClick={() => setRoute("external")}
+          >
+            External agent
+          </button>
+          <button
+            type="button"
+            className={s.quiet}
+            onClick={() => setRoute("advanced")}
+          >
+            Advanced YAML / custom task
+          </button>
+        </div>
+        <p>
+          {route === "managed"
+            ? "Describe the request. The built-in agent defines and verifies tests before generating designs."
+            : "Your coding agent supplies reasoning and CAD. Da Vinci runs the tests and preserves evidence. No model key is required."}
+        </p>
+        {route === "managed" && (
+          <p className={s.muted}>
+            Automatic test authoring currently supports rectangular cantilever
+            screening. Unsupported physics stops before design generation.{" "}
+            <a href="/docs/managed-requests/">Scope and setup</a>
+          </p>
         )}
-        {!config && <p>{error || "Loading templates…"}</p>}
+        {route === "managed" && connection && !connection.managed_available && (
+          <p role="status" className={s.error}>
+            Configure OPENAI_API_KEY on the server and restart the service.
+            Credentials are never entered in this browser.
+          </p>
+        )}
+        <form onSubmit={submit}>
+          <div className={s.fields}>
+            <label>
+              Object name
+              <input
+                required
+                maxLength={100}
+                value={name}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  setSlug(
+                    e.target.value
+                      .toLowerCase()
+                      .replace(/[^a-z0-9]+/g, "-")
+                      .replace(/^-|-$/g, "")
+                      .slice(0, 64),
+                  );
+                }}
+              />
+            </label>
+            <label>
+              Object ID
+              <input
+                required
+                pattern="[a-z][a-z0-9-]{0,63}"
+                value={slug}
+                onChange={(e) => setSlug(e.target.value)}
+              />
+            </label>
+          </div>
+          <label>
+            Engineering request
+            <textarea
+              required
+              maxLength={12000}
+              rows={5}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Describe the part, loads, material, fixed interfaces, acceptance limits and objective."
+            />
+          </label>
+          {route === "managed" && (
+            <>
+              <label>
+                Installed solver image
+                <input
+                  required
+                  value={image}
+                  onChange={(e) => setImage(e.target.value)}
+                />
+              </label>
+              <div className={s.fields}>
+                <label>
+                  Candidate limit
+                  <input
+                    required
+                    type="number"
+                    min={1}
+                    max={20}
+                    value={iterations}
+                    onChange={(e) => setIterations(Number(e.target.value))}
+                  />
+                </label>
+                <label>
+                  API budget (USD)
+                  <input
+                    required
+                    type="number"
+                    min={0.01}
+                    max={1000}
+                    step="any"
+                    value={budget}
+                    onChange={(e) => setBudget(Number(e.target.value))}
+                  />
+                </label>
+              </div>
+            </>
+          )}
+          {error && (
+            <p role="alert" className={s.error}>
+              {error}
+            </p>
+          )}
+          <button
+            className={s.button}
+            disabled={
+              busy || (route === "managed" && !connection?.managed_available)
+            }
+          >
+            {busy
+              ? "Opening…"
+              : route === "managed"
+                ? "Start managed request"
+                : "Open external experiment"}
+          </button>
+        </form>
       </section>
     </div>
   );

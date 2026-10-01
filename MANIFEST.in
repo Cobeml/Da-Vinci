@@ -4,7 +4,9 @@ recursive-include ui *.tsx *.ts *.css *.json
 prune ui/.next
 prune ui/out
 include scripts/build_product_ui.mjs scripts/render_product_docs.mjs
-include scripts/product_browser.py scripts/product_smoke.py
+include scripts/product_browser.py scripts/product_smoke.py scripts/check_external_install.py
+include scripts/required_native.py scripts/check_installed_routes.py
+recursive-include davinci/product/resources *
 recursive-include tests/product *.py *.ts
 include playwright.product.config.ts
 global-exclude *.pyc

@@ -43,6 +43,7 @@ def execution_identity():
     sources["inspect_regions.py"] = (
         files("davinci.product").joinpath("resources/inspect_regions.py").read_text()
     )
+    sources["preview.py"] = files("davinci.product").joinpath("resources/preview.py").read_text()
     sources["runner.py"] = files("davinci").joinpath("runner.py").read_text()
     sources["build.py"] = SANDBOX.joinpath("build.py").read_text()
     return digest(sources), sources
@@ -332,3 +333,25 @@ def evaluate_test(runner, step, plan, test, evaluator, runtime):
             "\n".join(logs),
             elapsed,
         )
+
+
+def preview(runner, step, runtime, *, elapsed=0):
+    """Optional display artifact; failure is retained but cannot supply physical scores."""
+    remaining = min(runtime.job_seconds, runtime.compute_seconds / runtime.cpu_cores) - elapsed
+    if remaining <= 0:
+        return {"preview-error.txt": b"Preview skipped: execution budget exhausted"}, "", 0
+    options = limits(runtime)
+    options["timeout"] = min(options["timeout"], remaining)
+    try:
+        outputs, log, duration = runner.execute(
+            "/input/_preview.py",
+            {
+                "_preview.py": files("davinci.product").joinpath("resources/preview.py").read_text(),
+                "model.step": step,
+            },
+            **options,
+        )
+        ensure_output_budget(outputs, runtime)
+        return {k: v for k, v in outputs.items() if k == "model.glb"}, log, duration
+    except (SandboxError, OSError) as exc:
+        return {"preview-error.txt": safe_error(exc).encode()}, "", getattr(exc, "duration", 0)

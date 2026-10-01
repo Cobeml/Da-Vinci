@@ -588,6 +588,23 @@ class Lifecycle:
                 trusted = {k: v for k, v in build_outputs.items() if k in ("model.step", "resources.json")}
                 trusted["timing.json"] = json.dumps({"duration_seconds": duration}).encode()
                 artifacts = self._archive_outputs(trusted, log, runtime.artifact_bytes)
+                # Derive an interactive preview from STEP in a separate trusted container.
+                # A candidate cannot substitute its own glTF, fields, or scores.
+                from davinci.product.execution import preview
+
+                preview_outputs, preview_log, preview_seconds = preview(
+                    self.engine.runner, step, runtime, elapsed=max(duration, time.monotonic() - started)
+                )
+                duration += preview_seconds
+                used = sum(self.store.get("artifacts", a)["size"] for a in artifacts.values())
+                artifacts.update(
+                    {
+                        (k if k == "model.glb" else "preview/" + k): v
+                        for k, v in self._archive_outputs(
+                            preview_outputs, preview_log, max(0, runtime.artifact_bytes - used)
+                        ).items()
+                    }
+                )
             except (SandboxError, OSError) as exc:
                 results = [execution_failure(t.id, exc, building=True) for t in plan.tests]
                 artifacts = self._archive_outputs(
@@ -818,7 +835,7 @@ class Lifecycle:
             "validation_gaps": row["validation_gaps"],
             "guarantees": row["guarantees"],
         }
-        if row.get("managed"):
+        if row.get("managed") and row["driver"] == "managed":
             final_id = row["managed"].get("final_result_id")
             final = next((d for d in decisions if d["result_id"] == final_id), None)
             report["managed"] = {

@@ -1,0 +1,51 @@
+{
+  "description": "Minimize mass of a rectangular prismatic aluminium cantilever: 40 mm long, 20 mm wide, thickness 2 to 8 mm, clamped root, transverse tip force 100 N. Nominal E=70000 MPa and density=0.0027 g/mm3 supplied for an analytic small-deflection screen. Hard limits: stress <=100 MPa and tip deflection <=0.5 mm. No fatigue, joints or dynamic loads.",
+  "requirements": {
+    "requirements": [
+      {
+        "id": "strength",
+        "description": "Minimize mass of a rectangular prismatic aluminium cantilever: 40 mm long, 20 mm wide, thickness 2 to 8 mm, clamped root, transverse tip force 100 N. Nominal E=70000 MPa and density=0.0027 g/mm3 supplied for an analytic small-deflection screen. Hard limits: stress <=100 MPa and tip deflection <=0.5 mm. No fatigue, joints or dynamic loads.",
+        "source": "User request"
+      }
+    ],
+    "assumptions": [
+      {
+        "description": "Analytic small-deflection screen",
+        "source": "User request",
+        "applicability": "Rectangular beam, no joints or fatigue; not certification"
+      }
+    ],
+    "recipe": "rectangular-beam-v1",
+    "inputs": {
+      "length_mm": 40,
+      "width_mm": 20,
+      "thickness_min_mm": 2,
+      "thickness_max_mm": 8,
+      "force_n": 100,
+      "youngs_mpa": 70000,
+      "density_g_mm3": 0.0027,
+      "stress_limit_mpa": 100,
+      "deflection_limit_mm": 0.5,
+      "material": "Nominal aluminium",
+      "material_provenance": "User-supplied nominal values",
+      "input_provenance": {
+        "length_mm": "Explicit user request",
+        "width_mm": "Explicit user request",
+        "thickness_min_mm": "Explicit user request",
+        "thickness_max_mm": "Explicit user request",
+        "force_n": "Explicit user request",
+        "youngs_mpa": "Explicit user request",
+        "density_g_mm3": "Explicit user request",
+        "stress_limit_mpa": "Explicit user request",
+        "deflection_limit_mm": "Explicit user request"
+      },
+      "phenomena": [
+        "mass",
+        "linear_static",
+        "geometry"
+      ],
+      "material_model": "linear_isotropic",
+      "geometry": "rectangular_prismatic_cantilever"
+    }
+  }
+}

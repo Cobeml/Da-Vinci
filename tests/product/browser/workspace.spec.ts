@@ -11,6 +11,9 @@ test("create, evaluate, inspect and continue a local object", async ({
     page.getByRole("heading", { name: "Objects", exact: true }),
   ).toBeVisible();
   await page.getByRole("button", { name: "+ New object" }).click();
+  await page
+    .getByRole("button", { name: "Advanced YAML / custom task" })
+    .click();
   await page.getByLabel("Object name", { exact: true }).fill("Browser sensor");
   await page.getByLabel("Object ID", { exact: true }).fill("browser-sensor");
   await page.getByLabel("New iterations").fill("1");
@@ -97,7 +100,9 @@ test("create, evaluate, inspect and continue a local object", async ({
   await page.reload();
   await expect(page.getByTestId("iteration-card")).toHaveCount(2);
   await page.goto("/");
-  await expect(page.getByTestId("object-card")).toHaveCount(1);
+  await expect(
+    page.getByTestId("object-card").filter({ hasText: "Browser sensor" }),
+  ).toHaveCount(1);
   await expect(
     page.locator("[data-geometry-ready=true]").first(),
   ).toBeVisible();
@@ -111,7 +116,11 @@ test("create, evaluate, inspect and continue a local object", async ({
       () => document.documentElement.scrollWidth <= window.innerWidth,
     ),
   ).toBe(true);
-  await page.getByRole("link", { name: "View iterations" }).click();
+  await page
+    .getByTestId("object-card")
+    .filter({ hasText: "Browser sensor" })
+    .getByRole("link", { name: "View iterations" })
+    .click();
   await expect(page.getByTestId("iteration-card")).toHaveCount(2);
   expect(
     await page.evaluate(
@@ -126,6 +135,9 @@ test("invalid YAML and cross-origin starts are rejected", async ({
 }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "+ New object" }).click();
+  await page
+    .getByRole("button", { name: "Advanced YAML / custom task" })
+    .click();
   await page.getByText("Load YAML configuration", { exact: true }).click();
   await page
     .getByLabel("YAML configuration", { exact: true })

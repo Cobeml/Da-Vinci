@@ -60,9 +60,22 @@ def command(body):
 
 def router(engine):
     from davinci.product.managed_contracts import Answers, ManagedRequest
+    from davinci.product.transfers import ContinueExperiment, Handoff
 
     api = APIRouter(prefix="/api/v2")
     life = engine.lifecycle
+
+    @api.post("/experiments/{eid}/handoff")
+    def transfer(eid: str, body: Handoff):
+        from davinci.product.transfers import handoff
+
+        return handoff(engine, eid, body)
+
+    @api.post("/experiments/{eid}/continue", status_code=201)
+    def continue_experiment(eid: str, body: ContinueExperiment):
+        from davinci.product.transfers import continuation
+
+        return continuation(engine, eid, body)
 
     @api.post("/managed-experiments", status_code=202)
     def managed_request(body: ManagedRequest):
@@ -230,7 +243,7 @@ def router(engine):
 
 
 def next_actions(row):
-    if row.get("managed") and row["phase"] not in ("cancelled", "interrupted"):
+    if row["driver"] == "managed" and row.get("managed") and row["phase"] not in ("cancelled", "interrupted"):
         state = row["managed"]
         return {
             "ready": ["poll_status", "inspect_evidence", "cancel"],

@@ -51,8 +51,16 @@ jobs:
       - run: npm run build:ui
       - run: npx playwright install --with-deps chromium
       - run: uv run davinci setup --template vtol
-      - run: DAVINCI_INTEGRATION=1 uv run pytest tests/product/test_cad.py tests/product/test_external_cli.py tests/product/test_simulation.py tests/product/test_managed.py -m integration -q
+      - name: Required native physics and route parity (fail if images or checks are missing)
+        run: uv run python scripts/required_native.py
       - run: npm run test:product
+      - name: Native parity from a freshly installed wheel outside the checkout
+        run: |
+          uv build --no-build-isolation
+          uv venv /tmp/native-wheel-check
+          uv pip install --python /tmp/native-wheel-check/bin/python dist/*.whl
+          cd /tmp
+          /tmp/native-wheel-check/bin/python "$GITHUB_WORKSPACE/scripts/check_installed_routes.py"
       - uses: actions/upload-artifact@v4
         if: always()
         with:

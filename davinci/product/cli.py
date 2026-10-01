@@ -136,13 +136,18 @@ def main():
     from davinci.product.managed_cli import add_commands as managed_commands
 
     managed_commands(sub)
+    from davinci.product.transfer_cli import add_commands as transfer_commands
+
+    transfer_commands(sub)
     args = parser.parse_args()
     root = args.workspace.resolve()
     try:
-        if args.command in ("external", "service", "memory", "managed"):
+        if args.command in ("external", "service", "memory", "managed", "experiment"):
             from davinci.product.client import ClientError
             from davinci.product.external_cli import output, run
 
+            if args.command == "experiment":
+                from davinci.product.transfer_cli import run
             if args.command == "managed":
                 from davinci.product.managed_cli import run
             if args.command == "memory":

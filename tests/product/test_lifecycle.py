@@ -141,6 +141,8 @@ class FixtureRunner:
     def execute(self, entry, files, **kwargs):
         if self.cancelled():
             raise SandboxError("cancelled", reason="cancelled")
+        if entry == "/input/_preview.py":
+            return {}, "Preview intentionally absent in orchestration fixture", 0
         if entry == "/input/_build.py":
             params = json.loads(files["request.json"])["parameters"]
             return (
@@ -637,6 +639,8 @@ def test_pending_evaluation_blocks_other_driver(engine, monkeypatch):
     original = engine.runner.execute
 
     def execute(entry, files, **kwargs):
+        if entry == "/input/_preview.py":
+            return {}, "Preview intentionally absent in orchestration fixture", 0
         if entry == "/input/_build.py":
             engine.credentials.openai_api_key = "fixture-placeholder"
             with pytest.raises(Conflict, match="Another execution"):

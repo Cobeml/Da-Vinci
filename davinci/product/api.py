@@ -92,6 +92,31 @@ def create_app(workspace: Path, *, engine=None, run_worker=True):
             "model": engine.options.model,
         }
 
+    @app.get("/api/v2/workspace/connection")
+    def connection():
+        return {
+            "base_url": f"http://127.0.0.1:{engine.options.port}",
+            "workspace": str(engine.workspace),
+            "external_available": True,
+            "managed_available": bool(engine.credentials.openai_api_key),
+            "model": engine.options.model,
+            "storage": engine.store.backend,
+            "instructions_url": "/api/v2/instructions",
+            "schemas_url": "/api/v2/schemas",
+        }
+
+    @app.get("/api/v2/workspace/objects")
+    def workspace_objects():
+        from davinci.product.presentation import gallery
+
+        return gallery(engine)
+
+    @app.get("/api/v2/workspace/objects/{object_id}")
+    def workspace_object(object_id: str):
+        from davinci.product.presentation import detail
+
+        return detail(engine, object_id)
+
     @app.get("/api/v1/tasks")
     def tasks():
         return [

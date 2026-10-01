@@ -566,3 +566,68 @@
     font-size: 48px;
   }
 }
+.panel {
+  margin: 24px 0;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 22px;
+  background: #fafbf6;
+  overflow-wrap: anywhere;
+}
+.panel h2 {
+  font-size: 22px;
+  font-weight: 500;
+}
+.panel p {
+  line-height: 1.6;
+}
+.panel pre,
+.command pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 400px;
+  overflow: auto;
+  font-size: 12px;
+}
+.panel details {
+  margin: 16px 0;
+}
+.panel label {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0;
+  font-size: 13px;
+}
+.panel input,
+.panel select,
+.panel textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: #fff;
+  color: var(--ink);
+}
+.command {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.command pre {
+  flex: 1;
+  min-width: 0;
+}
+.quiet[aria-pressed="true"] {
+  background: #e0e9d9;
+  border-color: var(--ink);
+}
+.card .badge,
+.card .failed {
+  white-space: normal;
+}
+.panel .fields > *,
+.overview > *,
+.grid > * {
+  min-width: 0;
+}

@@ -13,7 +13,7 @@ from davinci.models import digest, document, now
 from davinci.product.compatibility import LegacyAdapter, identities
 from davinci.product.config import RunConfig, parse_yaml, workspace_settings
 from davinci.product.experience import ExperienceMemory
-from davinci.product.lifecycle import Lifecycle
+from davinci.product.lifecycle import Conflict, Lifecycle
 from davinci.product.managed import ManagedDriver
 from davinci.product.provider import Provider, UncertainRequest
 from davinci.product.tasks import RESOURCES, check_parameters, evaluate, snapshot
@@ -243,6 +243,8 @@ class Engine:
                     eid = automatic[0]["_id"]
                     try:
                         self.managed.workflow.tick(eid)
+                    except Conflict:
+                        continue  # A concurrent ownership/revision change fences this stage.
                     except Exception as exc:
                         self.store.event(eid, "managed_stage_interrupted", safe_error(exc))
                         current = self.lifecycle.get(eid)

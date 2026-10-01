@@ -12,8 +12,11 @@ def build_catalog():
     from davinci.product import memory_contracts as memory
     from davinci.product.memory_api import Capture, Reindex
     from davinci.product.simulation_contracts import AdapterDescriptor, ArtifactManifest, SimulationSpec
+    from davinci.product.transfers import ContinueExperiment, Handoff
 
     models = [
+        ContinueExperiment,
+        Handoff,
         managed.ManagedRequest,
         managed.SearchPolicy,
         managed.RequirementsOutput,

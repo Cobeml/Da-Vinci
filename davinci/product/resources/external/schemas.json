@@ -1,6 +1,279 @@
 {
   "version": 2,
   "schemas": {
+    "ContinueExperiment": {
+      "$defs": {
+        "SearchPolicy": {
+          "additionalProperties": false,
+          "properties": {
+            "max_candidates": {
+              "default": 6,
+              "maximum": 20,
+              "minimum": 1,
+              "title": "Max Candidates",
+              "type": "integer"
+            },
+            "min_candidates": {
+              "default": 2,
+              "maximum": 20,
+              "minimum": 1,
+              "title": "Min Candidates",
+              "type": "integer"
+            },
+            "patience": {
+              "default": 3,
+              "maximum": 20,
+              "minimum": 1,
+              "title": "Patience",
+              "type": "integer"
+            },
+            "min_improvement": {
+              "default": 0.001,
+              "minimum": 0,
+              "title": "Min Improvement",
+              "type": "number"
+            },
+            "optimize": {
+              "default": true,
+              "title": "Optimize",
+              "type": "boolean"
+            },
+            "stop_on_target": {
+              "default": true,
+              "title": "Stop On Target",
+              "type": "boolean"
+            },
+            "max_repairs": {
+              "default": 1,
+              "maximum": 3,
+              "minimum": 0,
+              "title": "Max Repairs",
+              "type": "integer"
+            },
+            "solver_compute_seconds": {
+              "default": 100000,
+              "maximum": 1000000,
+              "minimum": 1,
+              "title": "Solver Compute Seconds",
+              "type": "number"
+            },
+            "max_solver_jobs": {
+              "default": 40,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Max Solver Jobs",
+              "type": "integer"
+            },
+            "search": {
+              "default": "agent",
+              "enum": [
+                "agent",
+                "coordinate"
+              ],
+              "title": "Search",
+              "type": "string"
+            }
+          },
+          "title": "SearchPolicy",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "actor": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Actor",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "operation_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Operation Id",
+          "type": "string"
+        },
+        "candidate_id": {
+          "title": "Candidate Id",
+          "type": "string"
+        },
+        "driver": {
+          "enum": [
+            "managed",
+            "external"
+          ],
+          "title": "Driver",
+          "type": "string"
+        },
+        "new_actor": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "New Actor",
+          "type": "string"
+        },
+        "budget_usd": {
+          "default": 10,
+          "exclusiveMinimum": 0,
+          "maximum": 1000,
+          "title": "Budget Usd",
+          "type": "number"
+        },
+        "focus": {
+          "default": "",
+          "maxLength": 2000,
+          "title": "Focus",
+          "type": "string"
+        },
+        "policy": {
+          "$ref": "#/$defs/SearchPolicy"
+        }
+      },
+      "required": [
+        "actor",
+        "revision",
+        "operation_id",
+        "candidate_id",
+        "driver",
+        "new_actor"
+      ],
+      "title": "ContinueExperiment",
+      "type": "object"
+    },
+    "Handoff": {
+      "$defs": {
+        "SearchPolicy": {
+          "additionalProperties": false,
+          "properties": {
+            "max_candidates": {
+              "default": 6,
+              "maximum": 20,
+              "minimum": 1,
+              "title": "Max Candidates",
+              "type": "integer"
+            },
+            "min_candidates": {
+              "default": 2,
+              "maximum": 20,
+              "minimum": 1,
+              "title": "Min Candidates",
+              "type": "integer"
+            },
+            "patience": {
+              "default": 3,
+              "maximum": 20,
+              "minimum": 1,
+              "title": "Patience",
+              "type": "integer"
+            },
+            "min_improvement": {
+              "default": 0.001,
+              "minimum": 0,
+              "title": "Min Improvement",
+              "type": "number"
+            },
+            "optimize": {
+              "default": true,
+              "title": "Optimize",
+              "type": "boolean"
+            },
+            "stop_on_target": {
+              "default": true,
+              "title": "Stop On Target",
+              "type": "boolean"
+            },
+            "max_repairs": {
+              "default": 1,
+              "maximum": 3,
+              "minimum": 0,
+              "title": "Max Repairs",
+              "type": "integer"
+            },
+            "solver_compute_seconds": {
+              "default": 100000,
+              "maximum": 1000000,
+              "minimum": 1,
+              "title": "Solver Compute Seconds",
+              "type": "number"
+            },
+            "max_solver_jobs": {
+              "default": 40,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Max Solver Jobs",
+              "type": "integer"
+            },
+            "search": {
+              "default": "agent",
+              "enum": [
+                "agent",
+                "coordinate"
+              ],
+              "title": "Search",
+              "type": "string"
+            }
+          },
+          "title": "SearchPolicy",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "actor": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Actor",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "operation_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Operation Id",
+          "type": "string"
+        },
+        "driver": {
+          "enum": [
+            "managed",
+            "external"
+          ],
+          "title": "Driver",
+          "type": "string"
+        },
+        "new_actor": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "New Actor",
+          "type": "string"
+        },
+        "reason": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "policy": {
+          "$ref": "#/$defs/SearchPolicy"
+        }
+      },
+      "required": [
+        "actor",
+        "revision",
+        "operation_id",
+        "driver",
+        "new_actor",
+        "reason"
+      ],
+      "title": "Handoff",
+      "type": "object"
+    },
     "ManagedRequest": {
       "$defs": {
         "ObjectConfig": {

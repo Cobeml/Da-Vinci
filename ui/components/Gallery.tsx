@@ -19,7 +19,7 @@ export default function Gallery({
         return (
           <article className={s.card} key={o._id} data-testid="object-card">
             <div className={s.cardHeading}>
-              <span className={s.eyebrow}>{o.template}</span>
+              <span className={s.eyebrow}>{o.run?.driver || o.template}</span>
               <span className={s.badge}>
                 {recorded ? "Recorded run" : o.run?.status || "Ready"}
               </span>
@@ -51,9 +51,15 @@ export default function Gallery({
                 {o.improvement_percent != null
                   ? `${o.improvement_percent.toFixed(1)}% improvement · `
                   : ""}
-                {o.preview?.evaluation?.outcome === "passed"
-                  ? "Best passing design"
-                  : "Latest available design"}{" "}
+                {o.run?.experiment?.report &&
+                !o.run.experiment.report.accepted_candidate_ids.length
+                  ? "No design accepted in final report"
+                  : o.preview?.evaluation?.outcome === "passed"
+                    ? "Best passing legacy design"
+                    : o.preview?.evaluation?.outcome ===
+                        "accepted_under_stated_tests"
+                      ? "Accepted under stated tests"
+                      : "Latest design · acceptance not established"}{" "}
                 · engineering estimates
               </p>
               <a

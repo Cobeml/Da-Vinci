@@ -26,7 +26,7 @@ build-backend = "setuptools.build_meta"
 include-package-data = false
 
 [tool.setuptools.packages.find]
-include = ["davinci", "davinci.product", "sandbox"]
+include = ["davinci", "davinci.*", "sandbox", "sandbox.*"]
 namespaces = false
 
 [tool.setuptools.package-data]
