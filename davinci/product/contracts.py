@@ -368,7 +368,7 @@ class Command(Strict):
 class Verification(Strict):
     test_id: str
     fixture_artifact: str
-    expected_status: Literal["pass", "physical_failure"]
+    expected_status: Literal["pass", "physical_failure", "invalid_setup"]
     # Independent reference values and tolerances, not evaluator-generated expected values.
     reference_metrics: dict[str, Quantity]
     tolerances: dict[str, float]

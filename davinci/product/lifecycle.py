@@ -334,9 +334,14 @@ class Lifecycle:
         test = next((t for t in plan.tests if t.id == verification.test_id), None)
         if not test or verification.fixture_artifact not in [f["artifact"] for f in row["fixtures"]]:
             raise ValueError("Verification requires a declared test and reference fixture")
-        if set(verification.reference_metrics) != set(test.metrics):
+        if verification.expected_status != "invalid_setup" and set(verification.reference_metrics) != set(
+            test.metrics
+        ):
             raise ValueError("Verification must cover every declared metric")
-        if any(verification.reference_metrics[k].unit != unit for k, unit in test.metrics.items()):
+        if any(
+            k not in test.metrics or v.unit != test.metrics[k]
+            for k, v in verification.reference_metrics.items()
+        ):
             raise ValueError("Reference metric units differ from test")
         job_id = identity("verification")
         job = {"id": job_id, "owner": cmd.actor, "operation_id": cmd.operation_id, "status": "running"}
@@ -405,7 +410,7 @@ class Lifecycle:
             ]
             good = [v for v in checks if v["matched"]]
             kinds = {v["request"]["expected_status"] for v in good}
-            status = "verified" if kinds == {"pass", "physical_failure"} else "unverified"
+            status = "verified" if {"pass", "physical_failure"} <= kinds else "unverified"
             if any(not check["matched"] for check in checks):
                 status = "unverified"
             if checks and checks[-1]["result"]["status"] == "unsupported_capability":
@@ -813,6 +818,18 @@ class Lifecycle:
             "validation_gaps": row["validation_gaps"],
             "guarantees": row["guarantees"],
         }
+        if row.get("managed"):
+            final_id = row["managed"].get("final_result_id")
+            final = next((d for d in decisions if d["result_id"] == final_id), None)
+            report["managed"] = {
+                "stop_reason": row["managed"].get("stop_reason"),
+                "final_result_id": final_id,
+                "final_evidence_complete": bool(final and final["evidence_complete"]),
+                "solver_compute_reserved_seconds": sum(row["managed"]["solver_reservations"].values()),
+            }
+            report["accepted_candidate_ids"] = (
+                [final["candidate_id"]] if final and final["design_accepted"] else []
+            )
         artifact = self.artifacts.put(json.dumps(report).encode(), "report.json", "application/json")
         return self._commit(
             row,
@@ -966,8 +983,12 @@ class Lifecycle:
             test = next((t for t in plan.tests if t.id == payload["test_id"]), None)
             if not test or payload["fixture_artifact"] not in [f["artifact"] for f in row["fixtures"]]:
                 raise ValueError("Verification requires a declared test and reference fixture")
-            if set(payload["reference_metrics"]) != set(test.metrics) or any(
-                payload["reference_metrics"][k]["unit"] != u for k, u in test.metrics.items()
+            if (
+                payload["expected_status"] != "invalid_setup"
+                and set(payload["reference_metrics"]) != set(test.metrics)
+            ) or any(
+                k not in test.metrics or v["unit"] != test.metrics[k]
+                for k, v in payload["reference_metrics"].items()
             ):
                 raise ValueError("Verification must cover declared metrics in their exact units")
         if kind == "reference_build":

@@ -16,6 +16,13 @@ for face in shape.faces().vals():
     faces.append(dict(kind='PLANE', center=face.Center().toTuple(), normal=face.normalAt().toTuple(),
                       extent=[bb.xlen, bb.ylen, bb.zlen], area=face.Area()))
 Path('/output/faces.json').write_text(json.dumps(faces, allow_nan=False))
+bb = shape.val().BoundingBox()
+Path('/output/geometry.json').write_text(json.dumps({
+    'solids': len(solids), 'planar_faces': len(faces),
+    'extent': [bb.xlen, bb.ylen, bb.zlen],
+    'center': [(bb.xmin+bb.xmax)/2, (bb.ymin+bb.ymax)/2, (bb.zmin+bb.zmax)/2],
+    'volume': sum(s.Volume() for s in solids),
+}, allow_nan=False))
 
 request = json.loads(Path('/input/preparation.json').read_text())
 scale = request['cad_to_solver_scale']

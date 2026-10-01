@@ -8,6 +8,9 @@ class ManagedDriver:
     def __init__(self, engine):
         self.engine = engine
         self.lifecycle = engine.lifecycle
+        from davinci.product.managed_workflow import ManagedWorkflow
+
+        self.workflow = ManagedWorkflow(engine)
 
     def advance(self, eid, command, stage):
         """Author a draft, propose under a frozen suite, or reflect on measured evidence.
@@ -19,6 +22,8 @@ class ManagedDriver:
         if stage not in allowed:
             raise ValueError("Unknown managed stage")
         row, cmd, sig, done = self.lifecycle._begin(eid, command, "managed_" + stage, None, allowed[stage])
+        if row.get("managed"):
+            raise Conflict("Automatic managed experiments are advanced only by the workspace worker")
         if row["driver"] != "managed":
             raise Conflict("External experiments cannot invoke a managed provider")
         if done:

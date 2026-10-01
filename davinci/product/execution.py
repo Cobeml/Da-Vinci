@@ -36,6 +36,8 @@ def execution_identity():
             "units.py",
             "regions.py",
             "evidence.py",
+            "recipes.py",
+            "managed_contracts.py",
         )
     }
     sources["inspect_regions.py"] = (
@@ -218,6 +220,23 @@ def evaluate_test(runner, step, plan, test, evaluator, runtime):
                 "cad_to_solver_scale": scale,
             }
             request["validated_bindings"] = bound
+            recipe_geometry = None
+            if plan.metadata.get("recipe") == "rectangular-beam-v1":
+                from davinci.product.recipes import check_geometry
+
+                recipe_geometry = json.loads(prepared["geometry.json"])
+                if not check_geometry(plan, recipe_geometry):
+                    return (
+                        failure(
+                            test.id,
+                            "invalid_setup",
+                            "invalid_geometry",
+                            "Independent BRep recipe check failed",
+                        ),
+                        outputs,
+                        "\n".join(logs),
+                        elapsed,
+                    )
             if not all(bindings.values()):
                 return (
                     failure(
@@ -248,6 +267,19 @@ def evaluate_test(runner, step, plan, test, evaluator, runtime):
             if bindings is not None:
                 raw["bindings"] = bindings
             result = score(test, plan, raw)
+            if plan.metadata.get("recipe") == "rectangular-beam-v1" and result.status in (
+                "pass",
+                "physical_failure",
+            ):
+                from davinci.product.recipes import check_measurements
+
+                if not check_measurements(plan, recipe_geometry, result):
+                    result = failure(
+                        test.id,
+                        "invalid_setup",
+                        "verification_failed",
+                        "Evaluator differs from independent analytic recipe",
+                    )
         except (ValueError, KeyError, TypeError) as exc:
             result = failure(test.id, "invalid_setup", "invalid_result", safe_error(exc))
         if test.simulation:

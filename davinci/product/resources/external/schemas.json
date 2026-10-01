@@ -1,6 +1,1682 @@
 {
   "version": 2,
   "schemas": {
+    "ManagedRequest": {
+      "$defs": {
+        "ObjectConfig": {
+          "additionalProperties": false,
+          "properties": {
+            "slug": {
+              "pattern": "^[a-z][a-z0-9-]{0,63}$",
+              "title": "Slug",
+              "type": "string"
+            },
+            "name": {
+              "maxLength": 100,
+              "minLength": 1,
+              "title": "Name",
+              "type": "string"
+            }
+          },
+          "required": [
+            "slug",
+            "name"
+          ],
+          "title": "ObjectConfig",
+          "type": "object"
+        },
+        "Runtime": {
+          "additionalProperties": false,
+          "properties": {
+            "version": {
+              "const": 2,
+              "default": 2,
+              "title": "Version",
+              "type": "integer"
+            },
+            "metadata": {
+              "additionalProperties": true,
+              "title": "Metadata",
+              "type": "object"
+            },
+            "image": {
+              "pattern": "^sha256:[a-f0-9]{64}$",
+              "title": "Image",
+              "type": "string"
+            },
+            "solver": {
+              "minLength": 1,
+              "title": "Solver",
+              "type": "string"
+            },
+            "provenance": {
+              "minLength": 1,
+              "title": "Provenance",
+              "type": "string"
+            },
+            "timeout_seconds": {
+              "default": 180,
+              "maximum": 600,
+              "minimum": 1,
+              "title": "Timeout Seconds",
+              "type": "integer"
+            },
+            "memory_gb": {
+              "default": 4,
+              "maximum": 12,
+              "minimum": 1,
+              "title": "Memory Gb",
+              "type": "integer"
+            },
+            "backend": {
+              "default": "docker",
+              "enum": [
+                "docker",
+                "remote"
+              ],
+              "title": "Backend",
+              "type": "string"
+            },
+            "accelerator": {
+              "default": "none",
+              "enum": [
+                "none",
+                "gpu"
+              ],
+              "title": "Accelerator",
+              "type": "string"
+            },
+            "cpu_cores": {
+              "default": 2,
+              "maximum": 8,
+              "minimum": 0.25,
+              "title": "Cpu Cores",
+              "type": "number"
+            },
+            "job_seconds": {
+              "default": 1800,
+              "maximum": 3600,
+              "minimum": 1,
+              "title": "Job Seconds",
+              "type": "integer"
+            },
+            "compute_seconds": {
+              "default": 3600,
+              "maximum": 28800,
+              "minimum": 1,
+              "title": "Compute Seconds",
+              "type": "number"
+            },
+            "artifact_bytes": {
+              "default": 64000000,
+              "maximum": 256000000,
+              "minimum": 1024,
+              "title": "Artifact Bytes",
+              "type": "integer"
+            },
+            "file_bytes": {
+              "default": 32000000,
+              "maximum": 128000000,
+              "minimum": 1024,
+              "title": "File Bytes",
+              "type": "integer"
+            },
+            "log_bytes": {
+              "default": 8000000,
+              "maximum": 16000000,
+              "minimum": 1024,
+              "title": "Log Bytes",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "image",
+            "solver",
+            "provenance"
+          ],
+          "title": "Runtime",
+          "type": "object"
+        },
+        "SearchPolicy": {
+          "additionalProperties": false,
+          "properties": {
+            "max_candidates": {
+              "default": 6,
+              "maximum": 20,
+              "minimum": 1,
+              "title": "Max Candidates",
+              "type": "integer"
+            },
+            "min_candidates": {
+              "default": 2,
+              "maximum": 20,
+              "minimum": 1,
+              "title": "Min Candidates",
+              "type": "integer"
+            },
+            "patience": {
+              "default": 3,
+              "maximum": 20,
+              "minimum": 1,
+              "title": "Patience",
+              "type": "integer"
+            },
+            "min_improvement": {
+              "default": 0.001,
+              "minimum": 0,
+              "title": "Min Improvement",
+              "type": "number"
+            },
+            "optimize": {
+              "default": true,
+              "title": "Optimize",
+              "type": "boolean"
+            },
+            "stop_on_target": {
+              "default": true,
+              "title": "Stop On Target",
+              "type": "boolean"
+            },
+            "max_repairs": {
+              "default": 1,
+              "maximum": 3,
+              "minimum": 0,
+              "title": "Max Repairs",
+              "type": "integer"
+            },
+            "solver_compute_seconds": {
+              "default": 100000,
+              "maximum": 1000000,
+              "minimum": 1,
+              "title": "Solver Compute Seconds",
+              "type": "number"
+            },
+            "max_solver_jobs": {
+              "default": 40,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Max Solver Jobs",
+              "type": "integer"
+            },
+            "search": {
+              "default": "agent",
+              "enum": [
+                "agent",
+                "coordinate"
+              ],
+              "title": "Search",
+              "type": "string"
+            }
+          },
+          "title": "SearchPolicy",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "const": 2,
+          "default": 2,
+          "title": "Version",
+          "type": "integer"
+        },
+        "metadata": {
+          "additionalProperties": true,
+          "title": "Metadata",
+          "type": "object"
+        },
+        "object": {
+          "$ref": "#/$defs/ObjectConfig"
+        },
+        "description": {
+          "maxLength": 12000,
+          "minLength": 1,
+          "title": "Description",
+          "type": "string"
+        },
+        "driver": {
+          "const": "managed",
+          "default": "managed",
+          "title": "Driver",
+          "type": "string"
+        },
+        "mode": {
+          "default": "live",
+          "enum": [
+            "live",
+            "replay"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "actor": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Actor",
+          "type": "string"
+        },
+        "operation_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Operation Id",
+          "type": "string"
+        },
+        "parent_experiment_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parent Experiment Id"
+        },
+        "budget_usd": {
+          "default": 10,
+          "exclusiveMinimum": 0,
+          "maximum": 1000,
+          "title": "Budget Usd",
+          "type": "number"
+        },
+        "runtime": {
+          "$ref": "#/$defs/Runtime"
+        },
+        "policy": {
+          "$ref": "#/$defs/SearchPolicy"
+        },
+        "existing_experiment_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Existing Experiment Id"
+        },
+        "existing_candidate_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Existing Candidate Id"
+        }
+      },
+      "required": [
+        "object",
+        "description",
+        "actor",
+        "operation_id",
+        "runtime"
+      ],
+      "title": "ManagedRequest",
+      "type": "object"
+    },
+    "SearchPolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "max_candidates": {
+          "default": 6,
+          "maximum": 20,
+          "minimum": 1,
+          "title": "Max Candidates",
+          "type": "integer"
+        },
+        "min_candidates": {
+          "default": 2,
+          "maximum": 20,
+          "minimum": 1,
+          "title": "Min Candidates",
+          "type": "integer"
+        },
+        "patience": {
+          "default": 3,
+          "maximum": 20,
+          "minimum": 1,
+          "title": "Patience",
+          "type": "integer"
+        },
+        "min_improvement": {
+          "default": 0.001,
+          "minimum": 0,
+          "title": "Min Improvement",
+          "type": "number"
+        },
+        "optimize": {
+          "default": true,
+          "title": "Optimize",
+          "type": "boolean"
+        },
+        "stop_on_target": {
+          "default": true,
+          "title": "Stop On Target",
+          "type": "boolean"
+        },
+        "max_repairs": {
+          "default": 1,
+          "maximum": 3,
+          "minimum": 0,
+          "title": "Max Repairs",
+          "type": "integer"
+        },
+        "solver_compute_seconds": {
+          "default": 100000,
+          "maximum": 1000000,
+          "minimum": 1,
+          "title": "Solver Compute Seconds",
+          "type": "number"
+        },
+        "max_solver_jobs": {
+          "default": 40,
+          "maximum": 100,
+          "minimum": 1,
+          "title": "Max Solver Jobs",
+          "type": "integer"
+        },
+        "search": {
+          "default": "agent",
+          "enum": [
+            "agent",
+            "coordinate"
+          ],
+          "title": "Search",
+          "type": "string"
+        }
+      },
+      "title": "SearchPolicy",
+      "type": "object"
+    },
+    "RequirementsOutput": {
+      "$defs": {
+        "Assumption": {
+          "additionalProperties": false,
+          "properties": {
+            "description": {
+              "minLength": 1,
+              "title": "Description",
+              "type": "string"
+            },
+            "source": {
+              "minLength": 1,
+              "title": "Source",
+              "type": "string"
+            },
+            "applicability": {
+              "minLength": 1,
+              "title": "Applicability",
+              "type": "string"
+            }
+          },
+          "required": [
+            "description",
+            "source",
+            "applicability"
+          ],
+          "title": "Assumption",
+          "type": "object"
+        },
+        "BeamInputs": {
+          "additionalProperties": false,
+          "description": "Canonical recipe units, converted explicitly during request authoring.",
+          "properties": {
+            "length_mm": {
+              "exclusiveMinimum": 0,
+              "maximum": 10000,
+              "title": "Length Mm",
+              "type": "number"
+            },
+            "width_mm": {
+              "exclusiveMinimum": 0,
+              "maximum": 10000,
+              "title": "Width Mm",
+              "type": "number"
+            },
+            "thickness_min_mm": {
+              "exclusiveMinimum": 0,
+              "title": "Thickness Min Mm",
+              "type": "number"
+            },
+            "thickness_max_mm": {
+              "exclusiveMinimum": 0,
+              "title": "Thickness Max Mm",
+              "type": "number"
+            },
+            "force_n": {
+              "exclusiveMinimum": 0,
+              "title": "Force N",
+              "type": "number"
+            },
+            "youngs_mpa": {
+              "exclusiveMinimum": 0,
+              "title": "Youngs Mpa",
+              "type": "number"
+            },
+            "density_g_mm3": {
+              "exclusiveMinimum": 0,
+              "title": "Density G Mm3",
+              "type": "number"
+            },
+            "stress_limit_mpa": {
+              "exclusiveMinimum": 0,
+              "title": "Stress Limit Mpa",
+              "type": "number"
+            },
+            "deflection_limit_mm": {
+              "exclusiveMinimum": 0,
+              "title": "Deflection Limit Mm",
+              "type": "number"
+            },
+            "material": {
+              "minLength": 1,
+              "title": "Material",
+              "type": "string"
+            },
+            "material_provenance": {
+              "minLength": 1,
+              "title": "Material Provenance",
+              "type": "string"
+            },
+            "input_provenance": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "minProperties": 1,
+              "title": "Input Provenance",
+              "type": "object"
+            },
+            "phenomena": {
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "title": "Phenomena",
+              "type": "array"
+            },
+            "material_model": {
+              "title": "Material Model",
+              "type": "string"
+            },
+            "geometry": {
+              "const": "rectangular_prismatic_cantilever",
+              "title": "Geometry",
+              "type": "string"
+            },
+            "objective_target_g": {
+              "anyOf": [
+                {
+                  "exclusiveMinimum": 0,
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Objective Target G"
+            }
+          },
+          "required": [
+            "length_mm",
+            "width_mm",
+            "thickness_min_mm",
+            "thickness_max_mm",
+            "force_n",
+            "youngs_mpa",
+            "density_g_mm3",
+            "stress_limit_mpa",
+            "deflection_limit_mm",
+            "material",
+            "material_provenance",
+            "input_provenance",
+            "phenomena",
+            "material_model",
+            "geometry"
+          ],
+          "title": "BeamInputs",
+          "type": "object"
+        },
+        "Quantity": {
+          "additionalProperties": false,
+          "properties": {
+            "value": {
+              "title": "Value",
+              "type": "number"
+            },
+            "unit": {
+              "minLength": 1,
+              "title": "Unit",
+              "type": "string"
+            },
+            "dimension": {
+              "minLength": 1,
+              "title": "Dimension",
+              "type": "string"
+            }
+          },
+          "required": [
+            "value",
+            "unit",
+            "dimension"
+          ],
+          "title": "Quantity",
+          "type": "object"
+        },
+        "Requirement": {
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "minLength": 1,
+              "title": "Id",
+              "type": "string"
+            },
+            "description": {
+              "minLength": 1,
+              "title": "Description",
+              "type": "string"
+            },
+            "critical": {
+              "default": true,
+              "title": "Critical",
+              "type": "boolean"
+            },
+            "resolved": {
+              "default": true,
+              "title": "Resolved",
+              "type": "boolean"
+            },
+            "quantity": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/Quantity"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "source": {
+              "minLength": 1,
+              "title": "Source",
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "description",
+            "source"
+          ],
+          "title": "Requirement",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "requirements": {
+          "items": {
+            "$ref": "#/$defs/Requirement"
+          },
+          "maxItems": 30,
+          "minItems": 1,
+          "title": "Requirements",
+          "type": "array"
+        },
+        "assumptions": {
+          "items": {
+            "$ref": "#/$defs/Assumption"
+          },
+          "maxItems": 30,
+          "title": "Assumptions",
+          "type": "array"
+        },
+        "questions": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "maxProperties": 10,
+          "title": "Questions",
+          "type": "object"
+        },
+        "recipe": {
+          "enum": [
+            "rectangular-beam-v1",
+            "unavailable"
+          ],
+          "title": "Recipe",
+          "type": "string"
+        },
+        "inputs": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/BeamInputs"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "unavailable_reason": {
+          "default": "",
+          "title": "Unavailable Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "requirements",
+        "recipe"
+      ],
+      "title": "RequirementsOutput",
+      "type": "object"
+    },
+    "TestPlanOutput": {
+      "$defs": {
+        "Accuracy": {
+          "additionalProperties": false,
+          "properties": {
+            "method": {
+              "minLength": 1,
+              "title": "Method",
+              "type": "string"
+            },
+            "max_numerical_error": {
+              "minimum": 0,
+              "title": "Max Numerical Error",
+              "type": "number"
+            },
+            "max_uncertainty": {
+              "minimum": 0,
+              "title": "Max Uncertainty",
+              "type": "number"
+            }
+          },
+          "required": [
+            "method",
+            "max_numerical_error",
+            "max_uncertainty"
+          ],
+          "title": "Accuracy",
+          "type": "object"
+        },
+        "Assumption": {
+          "additionalProperties": false,
+          "properties": {
+            "description": {
+              "minLength": 1,
+              "title": "Description",
+              "type": "string"
+            },
+            "source": {
+              "minLength": 1,
+              "title": "Source",
+              "type": "string"
+            },
+            "applicability": {
+              "minLength": 1,
+              "title": "Applicability",
+              "type": "string"
+            }
+          },
+          "required": [
+            "description",
+            "source",
+            "applicability"
+          ],
+          "title": "Assumption",
+          "type": "object"
+        },
+        "Criterion": {
+          "additionalProperties": false,
+          "properties": {
+            "metric": {
+              "title": "Metric",
+              "type": "string"
+            },
+            "operator": {
+              "enum": [
+                "<=",
+                ">="
+              ],
+              "title": "Operator",
+              "type": "string"
+            },
+            "limit": {
+              "title": "Limit",
+              "type": "number"
+            },
+            "unit": {
+              "title": "Unit",
+              "type": "string"
+            }
+          },
+          "required": [
+            "metric",
+            "operator",
+            "limit",
+            "unit"
+          ],
+          "title": "Criterion",
+          "type": "object"
+        },
+        "Interface": {
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "title": "Id",
+              "type": "string"
+            },
+            "description": {
+              "title": "Description",
+              "type": "string"
+            },
+            "binding_rule": {
+              "minLength": 1,
+              "title": "Binding Rule",
+              "type": "string"
+            },
+            "unit": {
+              "minLength": 1,
+              "title": "Unit",
+              "type": "string"
+            },
+            "tolerance": {
+              "minimum": 0,
+              "title": "Tolerance",
+              "type": "number"
+            },
+            "region": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/RegionRule"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            }
+          },
+          "required": [
+            "id",
+            "description",
+            "binding_rule",
+            "unit",
+            "tolerance"
+          ],
+          "title": "Interface",
+          "type": "object"
+        },
+        "LoadCase": {
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "title": "Id",
+              "type": "string"
+            },
+            "description": {
+              "title": "Description",
+              "type": "string"
+            },
+            "quantities": {
+              "additionalProperties": {
+                "$ref": "#/$defs/Quantity"
+              },
+              "title": "Quantities",
+              "type": "object"
+            },
+            "boundary_conditions": {
+              "minLength": 1,
+              "title": "Boundary Conditions",
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "description",
+            "quantities",
+            "boundary_conditions"
+          ],
+          "title": "LoadCase",
+          "type": "object"
+        },
+        "Material": {
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "minLength": 1,
+              "title": "Name",
+              "type": "string"
+            },
+            "provenance": {
+              "minLength": 1,
+              "title": "Provenance",
+              "type": "string"
+            },
+            "properties": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/$defs/Quantity"
+              },
+              "title": "Properties"
+            }
+          },
+          "required": [
+            "name",
+            "provenance",
+            "properties"
+          ],
+          "title": "Material",
+          "type": "object"
+        },
+        "Objective": {
+          "additionalProperties": false,
+          "properties": {
+            "metric": {
+              "title": "Metric",
+              "type": "string"
+            },
+            "direction": {
+              "enum": [
+                "minimize",
+                "maximize"
+              ],
+              "title": "Direction",
+              "type": "string"
+            },
+            "target": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Target"
+            }
+          },
+          "required": [
+            "metric",
+            "direction"
+          ],
+          "title": "Objective",
+          "type": "object"
+        },
+        "Plan": {
+          "additionalProperties": false,
+          "properties": {
+            "version": {
+              "const": 2,
+              "default": 2,
+              "title": "Version",
+              "type": "integer"
+            },
+            "metadata": {
+              "additionalProperties": true,
+              "title": "Metadata",
+              "type": "object"
+            },
+            "requirements": {
+              "items": {
+                "$ref": "#/$defs/Requirement"
+              },
+              "title": "Requirements",
+              "type": "array"
+            },
+            "assumptions": {
+              "items": {
+                "$ref": "#/$defs/Assumption"
+              },
+              "title": "Assumptions",
+              "type": "array"
+            },
+            "materials": {
+              "items": {
+                "$ref": "#/$defs/Material"
+              },
+              "title": "Materials",
+              "type": "array"
+            },
+            "interfaces": {
+              "items": {
+                "$ref": "#/$defs/Interface"
+              },
+              "title": "Interfaces",
+              "type": "array"
+            },
+            "tests": {
+              "items": {
+                "$ref": "#/$defs/Test"
+              },
+              "maxItems": 30,
+              "title": "Tests",
+              "type": "array"
+            },
+            "objective": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/Objective"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "design_schema": {
+              "additionalProperties": true,
+              "title": "Design Schema",
+              "type": "object"
+            },
+            "design_units": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "title": "Design Units",
+              "type": "object"
+            }
+          },
+          "title": "Plan",
+          "type": "object"
+        },
+        "Quantity": {
+          "additionalProperties": false,
+          "properties": {
+            "value": {
+              "title": "Value",
+              "type": "number"
+            },
+            "unit": {
+              "minLength": 1,
+              "title": "Unit",
+              "type": "string"
+            },
+            "dimension": {
+              "minLength": 1,
+              "title": "Dimension",
+              "type": "string"
+            }
+          },
+          "required": [
+            "value",
+            "unit",
+            "dimension"
+          ],
+          "title": "Quantity",
+          "type": "object"
+        },
+        "RegionRule": {
+          "additionalProperties": false,
+          "description": "Plan-owned planar face selector, expressed in interface units, never CAD indices.",
+          "properties": {
+            "kind": {
+              "const": "planar_face",
+              "default": "planar_face",
+              "title": "Kind",
+              "type": "string"
+            },
+            "center": {
+              "maxItems": 3,
+              "minItems": 3,
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "title": "Center",
+              "type": "array"
+            },
+            "normal": {
+              "maxItems": 3,
+              "minItems": 3,
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "title": "Normal",
+              "type": "array"
+            },
+            "center_tolerance": {
+              "maxItems": 3,
+              "minItems": 3,
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "title": "Center Tolerance",
+              "type": "array"
+            },
+            "normal_tolerance_degrees": {
+              "default": 1,
+              "maximum": 45,
+              "minimum": 0,
+              "title": "Normal Tolerance Degrees",
+              "type": "number"
+            },
+            "extent_min": {
+              "maxItems": 3,
+              "minItems": 3,
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "title": "Extent Min",
+              "type": "array"
+            },
+            "extent_max": {
+              "maxItems": 3,
+              "minItems": 3,
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "title": "Extent Max",
+              "type": "array"
+            },
+            "expected_count": {
+              "default": 1,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Expected Count",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "center",
+            "normal",
+            "center_tolerance",
+            "extent_min",
+            "extent_max"
+          ],
+          "title": "RegionRule",
+          "type": "object"
+        },
+        "Requirement": {
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "minLength": 1,
+              "title": "Id",
+              "type": "string"
+            },
+            "description": {
+              "minLength": 1,
+              "title": "Description",
+              "type": "string"
+            },
+            "critical": {
+              "default": true,
+              "title": "Critical",
+              "type": "boolean"
+            },
+            "resolved": {
+              "default": true,
+              "title": "Resolved",
+              "type": "boolean"
+            },
+            "quantity": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/Quantity"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "source": {
+              "minLength": 1,
+              "title": "Source",
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "description",
+            "source"
+          ],
+          "title": "Requirement",
+          "type": "object"
+        },
+        "ResourceEstimate": {
+          "additionalProperties": false,
+          "properties": {
+            "cpu_cores": {
+              "default": 1,
+              "exclusiveMinimum": 0,
+              "maximum": 64,
+              "title": "Cpu Cores",
+              "type": "number"
+            },
+            "memory_mb": {
+              "default": 512,
+              "minimum": 1,
+              "title": "Memory Mb",
+              "type": "integer"
+            },
+            "disk_mb": {
+              "default": 128,
+              "minimum": 1,
+              "title": "Disk Mb",
+              "type": "integer"
+            },
+            "wall_seconds": {
+              "default": 30,
+              "exclusiveMinimum": 0,
+              "title": "Wall Seconds",
+              "type": "number"
+            },
+            "basis": {
+              "default": "Conservative starting estimate; refine from measured execution",
+              "title": "Basis",
+              "type": "string"
+            },
+            "uncertainty": {
+              "default": "Unknown geometry-dependent peak; estimate is not proof of adequacy",
+              "title": "Uncertainty",
+              "type": "string"
+            }
+          },
+          "title": "ResourceEstimate",
+          "type": "object"
+        },
+        "SimulationSpec": {
+          "additionalProperties": false,
+          "properties": {
+            "version": {
+              "const": 1,
+              "default": 1,
+              "title": "Version",
+              "type": "integer"
+            },
+            "adapter": {
+              "default": "authored-screen",
+              "enum": [
+                "authored-screen",
+                "sensor-screen",
+                "gripper-screen",
+                "vtol-screen"
+              ],
+              "title": "Adapter",
+              "type": "string"
+            },
+            "phenomena": {
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "title": "Phenomena",
+              "type": "array"
+            },
+            "material_model": {
+              "minLength": 1,
+              "title": "Material Model",
+              "type": "string"
+            },
+            "geometry_assumptions": {
+              "minLength": 1,
+              "title": "Geometry Assumptions",
+              "type": "string"
+            },
+            "fidelity": {
+              "minLength": 1,
+              "title": "Fidelity",
+              "type": "string"
+            },
+            "stage": {
+              "default": "final",
+              "enum": [
+                "preliminary",
+                "final"
+              ],
+              "title": "Stage",
+              "type": "string"
+            },
+            "cad_unit": {
+              "default": "mm",
+              "title": "Cad Unit",
+              "type": "string"
+            },
+            "solver_length_unit": {
+              "default": "mm",
+              "title": "Solver Length Unit",
+              "type": "string"
+            },
+            "required_software": {
+              "additionalProperties": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "title": "Required Software",
+              "type": "object"
+            },
+            "estimate": {
+              "$ref": "#/$defs/ResourceEstimate"
+            },
+            "required_evidence": {
+              "items": {
+                "enum": [
+                  "mesh",
+                  "solver_deck",
+                  "fields",
+                  "convergence",
+                  "uncertainty"
+                ],
+                "type": "string"
+              },
+              "title": "Required Evidence",
+              "type": "array"
+            }
+          },
+          "required": [
+            "phenomena",
+            "material_model",
+            "geometry_assumptions",
+            "fidelity"
+          ],
+          "title": "SimulationSpec",
+          "type": "object"
+        },
+        "Test": {
+          "additionalProperties": false,
+          "properties": {
+            "version": {
+              "const": 2,
+              "default": 2,
+              "title": "Version",
+              "type": "integer"
+            },
+            "metadata": {
+              "additionalProperties": true,
+              "title": "Metadata",
+              "type": "object"
+            },
+            "id": {
+              "pattern": "^[a-z][a-z0-9_-]{0,63}$",
+              "title": "Id",
+              "type": "string"
+            },
+            "requirements": {
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "title": "Requirements",
+              "type": "array"
+            },
+            "required": {
+              "default": true,
+              "title": "Required",
+              "type": "boolean"
+            },
+            "capability": {
+              "minLength": 1,
+              "title": "Capability",
+              "type": "string"
+            },
+            "applicability": {
+              "minLength": 1,
+              "title": "Applicability",
+              "type": "string"
+            },
+            "fixed_inputs": {
+              "additionalProperties": true,
+              "title": "Fixed Inputs",
+              "type": "object"
+            },
+            "load_cases": {
+              "items": {
+                "$ref": "#/$defs/LoadCase"
+              },
+              "title": "Load Cases",
+              "type": "array"
+            },
+            "metrics": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "minProperties": 1,
+              "title": "Metrics",
+              "type": "object"
+            },
+            "criteria": {
+              "items": {
+                "$ref": "#/$defs/Criterion"
+              },
+              "title": "Criteria",
+              "type": "array"
+            },
+            "accuracy": {
+              "additionalProperties": {
+                "$ref": "#/$defs/Accuracy"
+              },
+              "title": "Accuracy",
+              "type": "object"
+            },
+            "mesh_rule": {
+              "minLength": 1,
+              "title": "Mesh Rule",
+              "type": "string"
+            },
+            "simulation": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/SimulationSpec"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            }
+          },
+          "required": [
+            "id",
+            "requirements",
+            "capability",
+            "applicability",
+            "metrics",
+            "accuracy",
+            "mesh_rule"
+          ],
+          "title": "Test",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "plan": {
+          "$ref": "#/$defs/Plan"
+        },
+        "applicability_explanation": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "title": "Applicability Explanation",
+          "type": "string"
+        }
+      },
+      "required": [
+        "plan",
+        "applicability_explanation"
+      ],
+      "title": "TestPlanOutput",
+      "type": "object"
+    },
+    "SetupOutput": {
+      "$defs": {
+        "Evaluator": {
+          "additionalProperties": false,
+          "properties": {
+            "version": {
+              "const": 2,
+              "default": 2,
+              "title": "Version",
+              "type": "integer"
+            },
+            "metadata": {
+              "additionalProperties": true,
+              "title": "Metadata",
+              "type": "object"
+            },
+            "resources": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "minProperties": 1,
+              "title": "Resources",
+              "type": "object"
+            },
+            "provenance": {
+              "minLength": 1,
+              "title": "Provenance",
+              "type": "string"
+            }
+          },
+          "required": [
+            "resources",
+            "provenance"
+          ],
+          "title": "Evaluator",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "evaluator": {
+          "$ref": "#/$defs/Evaluator"
+        }
+      },
+      "required": [
+        "evaluator"
+      ],
+      "title": "SetupOutput",
+      "type": "object"
+    },
+    "DiagnosisOutput": {
+      "additionalProperties": false,
+      "properties": {
+        "lesson": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "title": "Lesson",
+          "type": "string"
+        },
+        "action": {
+          "enum": [
+            "design",
+            "numerical",
+            "evaluator_defect",
+            "capability",
+            "stop"
+          ],
+          "title": "Action",
+          "type": "string"
+        },
+        "explanation": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "title": "Explanation",
+          "type": "string"
+        }
+      },
+      "required": [
+        "lesson",
+        "action",
+        "explanation"
+      ],
+      "title": "DiagnosisOutput",
+      "type": "object"
+    },
+    "Answers": {
+      "additionalProperties": false,
+      "properties": {
+        "actor": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Actor",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "operation_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Operation Id",
+          "type": "string"
+        },
+        "answers": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "maxProperties": 10,
+          "minProperties": 1,
+          "title": "Answers",
+          "type": "object"
+        }
+      },
+      "required": [
+        "actor",
+        "revision",
+        "operation_id",
+        "answers"
+      ],
+      "title": "Answers",
+      "type": "object"
+    },
+    "StageInput": {
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "const": 1,
+          "default": 1,
+          "title": "Version",
+          "type": "integer"
+        },
+        "stage": {
+          "title": "Stage",
+          "type": "string"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        },
+        "answers": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Answers",
+          "type": "array"
+        },
+        "requirements": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Requirements"
+        },
+        "plan": {
+          "additionalProperties": true,
+          "title": "Plan",
+          "type": "object"
+        },
+        "experience": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Experience",
+          "type": "array"
+        },
+        "candidates": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Candidates",
+          "type": "array"
+        },
+        "results": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Results",
+          "type": "array"
+        },
+        "existing": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Existing"
+        },
+        "output_schema": {
+          "additionalProperties": true,
+          "title": "Output Schema",
+          "type": "object"
+        },
+        "guidance": {
+          "additionalProperties": true,
+          "title": "Guidance",
+          "type": "object"
+        }
+      },
+      "required": [
+        "stage",
+        "description",
+        "plan",
+        "output_schema"
+      ],
+      "title": "StageInput",
+      "type": "object"
+    },
     "Experience": {
       "$defs": {
         "Applicability": {
@@ -3957,7 +5633,8 @@
         "expected_status": {
           "enum": [
             "pass",
-            "physical_failure"
+            "physical_failure",
+            "invalid_setup"
           ],
           "title": "Expected Status",
           "type": "string"
@@ -5656,7 +7333,8 @@
             "expected_status": {
               "enum": [
                 "pass",
-                "physical_failure"
+                "physical_failure",
+                "invalid_setup"
               ],
               "title": "Expected Status",
               "type": "string"

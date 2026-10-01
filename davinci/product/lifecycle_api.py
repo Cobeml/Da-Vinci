@@ -59,8 +59,24 @@ def command(body):
 
 
 def router(engine):
+    from davinci.product.managed_contracts import Answers, ManagedRequest
+
     api = APIRouter(prefix="/api/v2")
     life = engine.lifecycle
+
+    @api.post("/managed-experiments", status_code=202)
+    def managed_request(body: ManagedRequest):
+        return engine.managed.workflow.start(body)
+
+    @api.get("/test-recipes")
+    def test_recipes():
+        from davinci.product.recipes import catalog
+
+        return catalog()
+
+    @api.post("/experiments/{eid}/answers")
+    def managed_answers(eid: str, body: Answers):
+        return engine.managed.workflow.answer(eid, body)
 
     @api.get("/simulation-adapters")
     def simulation_adapters():
@@ -214,6 +230,14 @@ def router(engine):
 
 
 def next_actions(row):
+    if row.get("managed") and row["phase"] not in ("cancelled", "interrupted"):
+        state = row["managed"]
+        return {
+            "ready": ["poll_status", "inspect_evidence", "cancel"],
+            "awaiting_input": ["answer_pending_questions"],
+            "blocked": ["inspect_managed_error_and_capabilities", "open_linked_revision"],
+            "completed": ["export_report", "inspect_experience"],
+        }.get(state["status"], ["inspect_status"])
     return {
         "draft": ["update_plan", "reference_build_or_upload", "verify", "validate_plan", "freeze"],
         "awaiting_input": ["answer_pending_input", "update_plan"],

@@ -62,7 +62,7 @@ def initialize(root, template, driver="managed"):
         )
     else:
         print(
-            f"Created {root}. Edit run.yaml, set OPENAI_API_KEY, then run davinci setup --template {template} and davinci serve."
+            f"Created {root}. Set OPENAI_API_KEY, run davinci setup --template {template}, then davinci service ensure. Use davinci managed request --help for natural-language authoring, or edit run.yaml for the legacy task route."
         )
 
 
@@ -133,13 +133,18 @@ def main():
     from davinci.product.memory_cli import add_commands as memory_commands
 
     memory_commands(sub)
+    from davinci.product.managed_cli import add_commands as managed_commands
+
+    managed_commands(sub)
     args = parser.parse_args()
     root = args.workspace.resolve()
     try:
-        if args.command in ("external", "service", "memory"):
+        if args.command in ("external", "service", "memory", "managed"):
             from davinci.product.client import ClientError
             from davinci.product.external_cli import output, run
 
+            if args.command == "managed":
+                from davinci.product.managed_cli import run
             if args.command == "memory":
                 from davinci.product.memory_cli import run
             try:

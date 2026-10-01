@@ -218,6 +218,46 @@ class Engine:
             if queued_id:
                 self.lifecycle.execute_scheduled(queued_id)
                 continue
+            if not self.store.get("pointers", "product-active-run")["run_id"]:
+                automatic = self.store.list(
+                    "runs",
+                    {
+                        "lifecycle_version": 2,
+                        "driver": "managed",
+                        "managed.status": "ready",
+                        **self.experience.scope,
+                        "phase": {
+                            "$in": [
+                                "draft",
+                                "frozen",
+                                "candidate_submitted",
+                                "evaluated",
+                                "reflected",
+                                "completed",
+                            ]
+                        },
+                    },
+                    limit=1,
+                )
+                if automatic:
+                    eid = automatic[0]["_id"]
+                    try:
+                        self.managed.workflow.tick(eid)
+                    except Exception as exc:
+                        self.store.event(eid, "managed_stage_interrupted", safe_error(exc))
+                        current = self.lifecycle.get(eid)
+                        if current["phase"] not in ("cancelled", "interrupted"):
+                            self.store.update(
+                                "runs",
+                                eid,
+                                {
+                                    "phase": "interrupted",
+                                    "resume_phase": current["phase"],
+                                    "revision": current["revision"] + 1,
+                                },
+                                {"revision": current["revision"]},
+                            )
+                    continue
             with self.lock:
                 pointer = self.store.get("pointers", "product-active-run")
                 if not pointer["run_id"]:

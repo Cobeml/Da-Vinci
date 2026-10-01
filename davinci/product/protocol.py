@@ -8,11 +8,20 @@ from davinci.product.tasks import RESOURCES
 def build_catalog():
     from davinci.product import contracts as c
     from davinci.product import lifecycle_api as api
+    from davinci.product import managed_contracts as managed
     from davinci.product import memory_contracts as memory
     from davinci.product.memory_api import Capture, Reindex
     from davinci.product.simulation_contracts import AdapterDescriptor, ArtifactManifest, SimulationSpec
 
     models = [
+        managed.ManagedRequest,
+        managed.SearchPolicy,
+        managed.RequirementsOutput,
+        managed.TestPlanOutput,
+        managed.SetupOutput,
+        managed.DiagnosisOutput,
+        managed.Answers,
+        managed.StageInput,
         memory.Experience,
         memory.MemorySearch,
         memory.MemoryNote,

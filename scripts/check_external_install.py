@@ -52,10 +52,12 @@ def main():
         }
         assert "ArtifactManifest" in cli("external", "schemas")["schemas"]
         assert "CandidateCommand" in cli("external", "schemas")["schemas"]
+        assert "ManagedRequest" in cli("external", "schemas")["schemas"]
         assert "Da Vinci external-agent instructions" in cli("external", "instructions")["instructions"]
         health = cli("service", "ensure")
         try:
             assert health["external_available"] and not health["live_available"]
+            assert cli("managed", "recipes")[0]["id"] == "rectangular-beam-v1"
             assert "started_pid" not in cli("service", "ensure")
             opened = cli("external", "open", "--file", str(root / "experiment.json"))
             assert opened["driver"] == "external" and opened["mode"] == "live"
@@ -98,6 +100,7 @@ def main():
                         "service_start_and_reconnect": True,
                         "keyless_external_open": True,
                         "memory_search_export_import": True,
+                        "managed_recipes_and_schemas": True,
                     }
                 )
             )
