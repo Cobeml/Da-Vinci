@@ -1,0 +1,7 @@
+{
+  "image": "da-vinci-cad:local",
+  "solver": "NumPy Euler-Bernoulli cantilever stiffness solve",
+  "provenance": "Locally built CAD runtime; image ID resolved by service",
+  "timeout_seconds": 180,
+  "memory_gb": 4
+}

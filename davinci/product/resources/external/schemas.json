@@ -1,0 +1,2648 @@
+{
+  "version": 2,
+  "schemas": {
+    "OperationStatus": {
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "const": 2,
+          "default": 2,
+          "title": "Version",
+          "type": "integer"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "experiment_id": {
+          "title": "Experiment Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "evaluate",
+            "verify",
+            "reference_build"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "owner": {
+          "title": "Owner",
+          "type": "string"
+        },
+        "operation_id": {
+          "title": "Operation Id",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "queued",
+            "running",
+            "completed",
+            "interrupted",
+            "cancelled"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "created_at": {
+          "title": "Created At",
+          "type": "string"
+        },
+        "started_at": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Started At"
+        },
+        "plan_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Plan Id"
+        },
+        "evaluator_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evaluator Id"
+        },
+        "execution_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Execution Id"
+        },
+        "runtime_id": {
+          "title": "Runtime Id",
+          "type": "string"
+        },
+        "suite_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Suite Id"
+        },
+        "candidate_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Candidate Id"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        },
+        "error_type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error Type"
+        },
+        "result_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Result Ids",
+          "type": "array"
+        },
+        "verification_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Verification Ids",
+          "type": "array"
+        },
+        "fixture_artifacts": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Fixture Artifacts",
+          "type": "array"
+        },
+        "failures": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Failures",
+          "type": "array"
+        },
+        "next_actions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Next Actions",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "experiment_id",
+        "kind",
+        "owner",
+        "operation_id",
+        "status",
+        "created_at",
+        "runtime_id"
+      ],
+      "title": "OperationStatus",
+      "type": "object"
+    },
+    "PlanReadiness": {
+      "$defs": {
+        "CapabilityReport": {
+          "additionalProperties": false,
+          "properties": {
+            "version": {
+              "const": 2,
+              "default": 2,
+              "title": "Version",
+              "type": "integer"
+            },
+            "metadata": {
+              "additionalProperties": true,
+              "title": "Metadata",
+              "type": "object"
+            },
+            "runtime_id": {
+              "title": "Runtime Id",
+              "type": "string"
+            },
+            "test_id": {
+              "title": "Test Id",
+              "type": "string"
+            },
+            "status": {
+              "enum": [
+                "verified",
+                "unavailable",
+                "unverified"
+              ],
+              "title": "Status",
+              "type": "string"
+            },
+            "reason": {
+              "title": "Reason",
+              "type": "string"
+            },
+            "verification_ids": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Verification Ids",
+              "type": "array"
+            }
+          },
+          "required": [
+            "runtime_id",
+            "test_id",
+            "status",
+            "reason"
+          ],
+          "title": "CapabilityReport",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "const": 2,
+          "default": 2,
+          "title": "Version",
+          "type": "integer"
+        },
+        "experiment_id": {
+          "title": "Experiment Id",
+          "type": "string"
+        },
+        "revision": {
+          "title": "Revision",
+          "type": "integer"
+        },
+        "issues": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Issues",
+          "type": "array"
+        },
+        "capabilities": {
+          "items": {
+            "$ref": "#/$defs/CapabilityReport"
+          },
+          "title": "Capabilities",
+          "type": "array"
+        },
+        "ready_to_freeze": {
+          "title": "Ready To Freeze",
+          "type": "boolean"
+        },
+        "ready_for_draft": {
+          "title": "Ready For Draft",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "experiment_id",
+        "revision",
+        "issues",
+        "capabilities",
+        "ready_to_freeze",
+        "ready_for_draft"
+      ],
+      "title": "PlanReadiness",
+      "type": "object"
+    },
+    "ReportExport": {
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "const": 2,
+          "default": 2,
+          "title": "Version",
+          "type": "integer"
+        },
+        "experiment": {
+          "additionalProperties": true,
+          "title": "Experiment",
+          "type": "object"
+        },
+        "report": {
+          "additionalProperties": true,
+          "title": "Report",
+          "type": "object"
+        },
+        "artifacts_base_url": {
+          "const": "/api/v1/artifacts/",
+          "default": "/api/v1/artifacts/",
+          "title": "Artifacts Base Url",
+          "type": "string"
+        },
+        "contains_geometry_bytes": {
+          "const": false,
+          "default": false,
+          "title": "Contains Geometry Bytes",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "experiment",
+        "report"
+      ],
+      "title": "ReportExport",
+      "type": "object"
+    },
+    "CLIEnvelope": {
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "const": 2,
+          "default": 2,
+          "title": "Version",
+          "type": "integer"
+        },
+        "ok": {
+          "title": "Ok",
+          "type": "boolean"
+        },
+        "data": {
+          "title": "Data"
+        }
+      },
+      "required": [
+        "ok",
+        "data"
+      ],
+      "title": "CLIEnvelope",
+      "type": "object"
+    },
+    "OpenExperiment": {
+      "$defs": {
+        "ObjectConfig": {
+          "additionalProperties": false,
+          "properties": {
+            "slug": {
+              "pattern": "^[a-z][a-z0-9-]{0,63}$",
+              "title": "Slug",
+              "type": "string"
+            },
+            "name": {
+              "maxLength": 100,
+              "minLength": 1,
+              "title": "Name",
+              "type": "string"
+            }
+          },
+          "required": [
+            "slug",
+            "name"
+          ],
+          "title": "ObjectConfig",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "const": 2,
+          "default": 2,
+          "title": "Version",
+          "type": "integer"
+        },
+        "metadata": {
+          "additionalProperties": true,
+          "title": "Metadata",
+          "type": "object"
+        },
+        "object": {
+          "$ref": "#/$defs/ObjectConfig"
+        },
+        "description": {
+          "maxLength": 12000,
+          "minLength": 1,
+          "title": "Description",
+          "type": "string"
+        },
+        "driver": {
+          "default": "external",
+          "enum": [
+            "external",
+            "managed"
+          ],
+          "title": "Driver",
+          "type": "string"
+        },
+        "mode": {
+          "default": "live",
+          "enum": [
+            "live",
+            "replay"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "actor": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Actor",
+          "type": "string"
+        },
+        "operation_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Operation Id",
+          "type": "string"
+        },
+        "parent_experiment_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parent Experiment Id"
+        },
+        "budget_usd": {
+          "default": 10,
+          "exclusiveMinimum": 0,
+          "maximum": 1000,
+          "title": "Budget Usd",
+          "type": "number"
+        }
+      },
+      "required": [
+        "object",
+        "description",
+        "actor",
+        "operation_id"
+      ],
+      "title": "OpenExperiment",
+      "type": "object"
+    },
+    "Command": {
+      "additionalProperties": false,
+      "properties": {
+        "actor": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Actor",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "operation_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Operation Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "actor",
+        "revision",
+        "operation_id"
+      ],
+      "title": "Command",
+      "type": "object"
+    },
+    "Plan": {
+      "$defs": {
+        "Accuracy": {
+          "additionalProperties": false,
+          "properties": {
+            "method": {
+              "minLength": 1,
+              "title": "Method",
+              "type": "string"
+            },
+            "max_numerical_error": {
+              "minimum": 0,
+              "title": "Max Numerical Error",
+              "type": "number"
+            },
+            "max_uncertainty": {
+              "minimum": 0,
+              "title": "Max Uncertainty",
+              "type": "number"
+            }
+          },
+          "required": [
+            "method",
+            "max_numerical_error",
+            "max_uncertainty"
+          ],
+          "title": "Accuracy",
+          "type": "object"
+        },
+        "Assumption": {
+          "additionalProperties": false,
+          "properties": {
+            "description": {
+              "minLength": 1,
+              "title": "Description",
+              "type": "string"
+            },
+            "source": {
+              "minLength": 1,
+              "title": "Source",
+              "type": "string"
+            },
+            "applicability": {
+              "minLength": 1,
+              "title": "Applicability",
+              "type": "string"
+            }
+          },
+          "required": [
+            "description",
+            "source",
+            "applicability"
+          ],
+          "title": "Assumption",
+          "type": "object"
+        },
+        "Criterion": {
+          "additionalProperties": false,
+          "properties": {
+            "metric": {
+              "title": "Metric",
+              "type": "string"
+            },
+            "operator": {
+              "enum": [
+                "<=",
+                ">="
+              ],
+              "title": "Operator",
+              "type": "string"
+            },
+            "limit": {
+              "title": "Limit",
+              "type": "number"
+            },
+            "unit": {
+              "title": "Unit",
+              "type": "string"
+            }
+          },
+          "required": [
+            "metric",
+            "operator",
+            "limit",
+            "unit"
+          ],
+          "title": "Criterion",
+          "type": "object"
+        },
+        "Interface": {
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "title": "Id",
+              "type": "string"
+            },
+            "description": {
+              "title": "Description",
+              "type": "string"
+            },
+            "binding_rule": {
+              "minLength": 1,
+              "title": "Binding Rule",
+              "type": "string"
+            },
+            "unit": {
+              "minLength": 1,
+              "title": "Unit",
+              "type": "string"
+            },
+            "tolerance": {
+              "minimum": 0,
+              "title": "Tolerance",
+              "type": "number"
+            }
+          },
+          "required": [
+            "id",
+            "description",
+            "binding_rule",
+            "unit",
+            "tolerance"
+          ],
+          "title": "Interface",
+          "type": "object"
+        },
+        "LoadCase": {
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "title": "Id",
+              "type": "string"
+            },
+            "description": {
+              "title": "Description",
+              "type": "string"
+            },
+            "quantities": {
+              "additionalProperties": {
+                "$ref": "#/$defs/Quantity"
+              },
+              "title": "Quantities",
+              "type": "object"
+            },
+            "boundary_conditions": {
+              "minLength": 1,
+              "title": "Boundary Conditions",
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "description",
+            "quantities",
+            "boundary_conditions"
+          ],
+          "title": "LoadCase",
+          "type": "object"
+        },
+        "Material": {
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "minLength": 1,
+              "title": "Name",
+              "type": "string"
+            },
+            "provenance": {
+              "minLength": 1,
+              "title": "Provenance",
+              "type": "string"
+            },
+            "properties": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/$defs/Quantity"
+              },
+              "title": "Properties"
+            }
+          },
+          "required": [
+            "name",
+            "provenance",
+            "properties"
+          ],
+          "title": "Material",
+          "type": "object"
+        },
+        "Objective": {
+          "additionalProperties": false,
+          "properties": {
+            "metric": {
+              "title": "Metric",
+              "type": "string"
+            },
+            "direction": {
+              "enum": [
+                "minimize",
+                "maximize"
+              ],
+              "title": "Direction",
+              "type": "string"
+            },
+            "target": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Target"
+            }
+          },
+          "required": [
+            "metric",
+            "direction"
+          ],
+          "title": "Objective",
+          "type": "object"
+        },
+        "Quantity": {
+          "additionalProperties": false,
+          "properties": {
+            "value": {
+              "title": "Value",
+              "type": "number"
+            },
+            "unit": {
+              "minLength": 1,
+              "title": "Unit",
+              "type": "string"
+            },
+            "dimension": {
+              "minLength": 1,
+              "title": "Dimension",
+              "type": "string"
+            }
+          },
+          "required": [
+            "value",
+            "unit",
+            "dimension"
+          ],
+          "title": "Quantity",
+          "type": "object"
+        },
+        "Requirement": {
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "minLength": 1,
+              "title": "Id",
+              "type": "string"
+            },
+            "description": {
+              "minLength": 1,
+              "title": "Description",
+              "type": "string"
+            },
+            "critical": {
+              "default": true,
+              "title": "Critical",
+              "type": "boolean"
+            },
+            "resolved": {
+              "default": true,
+              "title": "Resolved",
+              "type": "boolean"
+            },
+            "quantity": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/Quantity"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "source": {
+              "minLength": 1,
+              "title": "Source",
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "description",
+            "source"
+          ],
+          "title": "Requirement",
+          "type": "object"
+        },
+        "Test": {
+          "additionalProperties": false,
+          "properties": {
+            "version": {
+              "const": 2,
+              "default": 2,
+              "title": "Version",
+              "type": "integer"
+            },
+            "metadata": {
+              "additionalProperties": true,
+              "title": "Metadata",
+              "type": "object"
+            },
+            "id": {
+              "pattern": "^[a-z][a-z0-9_-]{0,63}$",
+              "title": "Id",
+              "type": "string"
+            },
+            "requirements": {
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "title": "Requirements",
+              "type": "array"
+            },
+            "required": {
+              "default": true,
+              "title": "Required",
+              "type": "boolean"
+            },
+            "capability": {
+              "minLength": 1,
+              "title": "Capability",
+              "type": "string"
+            },
+            "applicability": {
+              "minLength": 1,
+              "title": "Applicability",
+              "type": "string"
+            },
+            "fixed_inputs": {
+              "additionalProperties": true,
+              "title": "Fixed Inputs",
+              "type": "object"
+            },
+            "load_cases": {
+              "items": {
+                "$ref": "#/$defs/LoadCase"
+              },
+              "title": "Load Cases",
+              "type": "array"
+            },
+            "metrics": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "minProperties": 1,
+              "title": "Metrics",
+              "type": "object"
+            },
+            "criteria": {
+              "items": {
+                "$ref": "#/$defs/Criterion"
+              },
+              "title": "Criteria",
+              "type": "array"
+            },
+            "accuracy": {
+              "additionalProperties": {
+                "$ref": "#/$defs/Accuracy"
+              },
+              "title": "Accuracy",
+              "type": "object"
+            },
+            "mesh_rule": {
+              "minLength": 1,
+              "title": "Mesh Rule",
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "requirements",
+            "capability",
+            "applicability",
+            "metrics",
+            "accuracy",
+            "mesh_rule"
+          ],
+          "title": "Test",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "const": 2,
+          "default": 2,
+          "title": "Version",
+          "type": "integer"
+        },
+        "metadata": {
+          "additionalProperties": true,
+          "title": "Metadata",
+          "type": "object"
+        },
+        "requirements": {
+          "items": {
+            "$ref": "#/$defs/Requirement"
+          },
+          "title": "Requirements",
+          "type": "array"
+        },
+        "assumptions": {
+          "items": {
+            "$ref": "#/$defs/Assumption"
+          },
+          "title": "Assumptions",
+          "type": "array"
+        },
+        "materials": {
+          "items": {
+            "$ref": "#/$defs/Material"
+          },
+          "title": "Materials",
+          "type": "array"
+        },
+        "interfaces": {
+          "items": {
+            "$ref": "#/$defs/Interface"
+          },
+          "title": "Interfaces",
+          "type": "array"
+        },
+        "tests": {
+          "items": {
+            "$ref": "#/$defs/Test"
+          },
+          "maxItems": 30,
+          "title": "Tests",
+          "type": "array"
+        },
+        "objective": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Objective"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "design_schema": {
+          "additionalProperties": true,
+          "title": "Design Schema",
+          "type": "object"
+        },
+        "design_units": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Design Units",
+          "type": "object"
+        }
+      },
+      "title": "Plan",
+      "type": "object"
+    },
+    "Candidate": {
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "const": 2,
+          "default": 2,
+          "title": "Version",
+          "type": "integer"
+        },
+        "metadata": {
+          "additionalProperties": true,
+          "title": "Metadata",
+          "type": "object"
+        },
+        "title": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "change": {
+          "default": "",
+          "maxLength": 2000,
+          "title": "Change",
+          "type": "string"
+        },
+        "source": {
+          "maxLength": 40000,
+          "minLength": 1,
+          "title": "Source",
+          "type": "string"
+        },
+        "parameters": {
+          "additionalProperties": true,
+          "title": "Parameters",
+          "type": "object"
+        }
+      },
+      "required": [
+        "title",
+        "source",
+        "parameters"
+      ],
+      "title": "Candidate",
+      "type": "object"
+    },
+    "Verification": {
+      "$defs": {
+        "Quantity": {
+          "additionalProperties": false,
+          "properties": {
+            "value": {
+              "title": "Value",
+              "type": "number"
+            },
+            "unit": {
+              "minLength": 1,
+              "title": "Unit",
+              "type": "string"
+            },
+            "dimension": {
+              "minLength": 1,
+              "title": "Dimension",
+              "type": "string"
+            }
+          },
+          "required": [
+            "value",
+            "unit",
+            "dimension"
+          ],
+          "title": "Quantity",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "test_id": {
+          "title": "Test Id",
+          "type": "string"
+        },
+        "fixture_artifact": {
+          "title": "Fixture Artifact",
+          "type": "string"
+        },
+        "expected_status": {
+          "enum": [
+            "pass",
+            "physical_failure"
+          ],
+          "title": "Expected Status",
+          "type": "string"
+        },
+        "reference_metrics": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Quantity"
+          },
+          "title": "Reference Metrics",
+          "type": "object"
+        },
+        "tolerances": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Tolerances",
+          "type": "object"
+        },
+        "provenance": {
+          "minLength": 1,
+          "title": "Provenance",
+          "type": "string"
+        }
+      },
+      "required": [
+        "test_id",
+        "fixture_artifact",
+        "expected_status",
+        "reference_metrics",
+        "tolerances",
+        "provenance"
+      ],
+      "title": "Verification",
+      "type": "object"
+    },
+    "TestResult": {
+      "$defs": {
+        "Measurement": {
+          "additionalProperties": false,
+          "properties": {
+            "value": {
+              "title": "Value",
+              "type": "number"
+            },
+            "unit": {
+              "title": "Unit",
+              "type": "string"
+            },
+            "numerical_error": {
+              "minimum": 0,
+              "title": "Numerical Error",
+              "type": "number"
+            },
+            "uncertainty": {
+              "minimum": 0,
+              "title": "Uncertainty",
+              "type": "number"
+            }
+          },
+          "required": [
+            "value",
+            "unit",
+            "numerical_error",
+            "uncertainty"
+          ],
+          "title": "Measurement",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "const": 2,
+          "default": 2,
+          "title": "Version",
+          "type": "integer"
+        },
+        "metadata": {
+          "additionalProperties": true,
+          "title": "Metadata",
+          "type": "object"
+        },
+        "test_id": {
+          "title": "Test Id",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "pass",
+            "physical_failure",
+            "invalid_setup",
+            "numerical_failure",
+            "not_run",
+            "unsupported_capability"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "reason": {
+          "enum": [
+            "ok",
+            "acceptance_limit",
+            "build_failed",
+            "timeout",
+            "cancelled",
+            "resource_exhaustion",
+            "invalid_geometry",
+            "invalid_binding",
+            "invalid_result",
+            "missing_evidence",
+            "solver_error",
+            "unavailable_runtime",
+            "unsupported_physics",
+            "interrupted",
+            "verification_failed"
+          ],
+          "title": "Reason",
+          "type": "string"
+        },
+        "message": {
+          "default": "",
+          "maxLength": 4000,
+          "title": "Message",
+          "type": "string"
+        },
+        "metrics": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Measurement"
+          },
+          "title": "Metrics",
+          "type": "object"
+        },
+        "bindings": {
+          "additionalProperties": {
+            "type": "boolean"
+          },
+          "title": "Bindings",
+          "type": "object"
+        },
+        "mesh_valid": {
+          "default": false,
+          "title": "Mesh Valid",
+          "type": "boolean"
+        },
+        "applicable": {
+          "default": false,
+          "title": "Applicable",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "test_id",
+        "status",
+        "reason"
+      ],
+      "title": "TestResult",
+      "type": "object"
+    },
+    "EvaluationResult": {
+      "$defs": {
+        "Measurement": {
+          "additionalProperties": false,
+          "properties": {
+            "value": {
+              "title": "Value",
+              "type": "number"
+            },
+            "unit": {
+              "title": "Unit",
+              "type": "string"
+            },
+            "numerical_error": {
+              "minimum": 0,
+              "title": "Numerical Error",
+              "type": "number"
+            },
+            "uncertainty": {
+              "minimum": 0,
+              "title": "Uncertainty",
+              "type": "number"
+            }
+          },
+          "required": [
+            "value",
+            "unit",
+            "numerical_error",
+            "uncertainty"
+          ],
+          "title": "Measurement",
+          "type": "object"
+        },
+        "SimulationJob": {
+          "additionalProperties": false,
+          "properties": {
+            "version": {
+              "const": 2,
+              "default": 2,
+              "title": "Version",
+              "type": "integer"
+            },
+            "metadata": {
+              "additionalProperties": true,
+              "title": "Metadata",
+              "type": "object"
+            },
+            "id": {
+              "title": "Id",
+              "type": "string"
+            },
+            "candidate_id": {
+              "title": "Candidate Id",
+              "type": "string"
+            },
+            "suite_id": {
+              "title": "Suite Id",
+              "type": "string"
+            },
+            "runtime_id": {
+              "title": "Runtime Id",
+              "type": "string"
+            },
+            "owner": {
+              "title": "Owner",
+              "type": "string"
+            },
+            "status": {
+              "enum": [
+                "running",
+                "completed",
+                "interrupted",
+                "cancelled"
+              ],
+              "title": "Status",
+              "type": "string"
+            },
+            "operation_id": {
+              "title": "Operation Id",
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "candidate_id",
+            "suite_id",
+            "runtime_id",
+            "owner",
+            "status",
+            "operation_id"
+          ],
+          "title": "SimulationJob",
+          "type": "object"
+        },
+        "TestResult": {
+          "additionalProperties": false,
+          "properties": {
+            "version": {
+              "const": 2,
+              "default": 2,
+              "title": "Version",
+              "type": "integer"
+            },
+            "metadata": {
+              "additionalProperties": true,
+              "title": "Metadata",
+              "type": "object"
+            },
+            "test_id": {
+              "title": "Test Id",
+              "type": "string"
+            },
+            "status": {
+              "enum": [
+                "pass",
+                "physical_failure",
+                "invalid_setup",
+                "numerical_failure",
+                "not_run",
+                "unsupported_capability"
+              ],
+              "title": "Status",
+              "type": "string"
+            },
+            "reason": {
+              "enum": [
+                "ok",
+                "acceptance_limit",
+                "build_failed",
+                "timeout",
+                "cancelled",
+                "resource_exhaustion",
+                "invalid_geometry",
+                "invalid_binding",
+                "invalid_result",
+                "missing_evidence",
+                "solver_error",
+                "unavailable_runtime",
+                "unsupported_physics",
+                "interrupted",
+                "verification_failed"
+              ],
+              "title": "Reason",
+              "type": "string"
+            },
+            "message": {
+              "default": "",
+              "maxLength": 4000,
+              "title": "Message",
+              "type": "string"
+            },
+            "metrics": {
+              "additionalProperties": {
+                "$ref": "#/$defs/Measurement"
+              },
+              "title": "Metrics",
+              "type": "object"
+            },
+            "bindings": {
+              "additionalProperties": {
+                "type": "boolean"
+              },
+              "title": "Bindings",
+              "type": "object"
+            },
+            "mesh_valid": {
+              "default": false,
+              "title": "Mesh Valid",
+              "type": "boolean"
+            },
+            "applicable": {
+              "default": false,
+              "title": "Applicable",
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "test_id",
+            "status",
+            "reason"
+          ],
+          "title": "TestResult",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "const": 2,
+          "default": 2,
+          "title": "Version",
+          "type": "integer"
+        },
+        "metadata": {
+          "additionalProperties": true,
+          "title": "Metadata",
+          "type": "object"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "candidate_id": {
+          "title": "Candidate Id",
+          "type": "string"
+        },
+        "job": {
+          "$ref": "#/$defs/SimulationJob"
+        },
+        "suite_id": {
+          "title": "Suite Id",
+          "type": "string"
+        },
+        "plan_id": {
+          "title": "Plan Id",
+          "type": "string"
+        },
+        "evaluator_id": {
+          "title": "Evaluator Id",
+          "type": "string"
+        },
+        "runtime_id": {
+          "title": "Runtime Id",
+          "type": "string"
+        },
+        "execution_id": {
+          "title": "Execution Id",
+          "type": "string"
+        },
+        "source_artifact": {
+          "title": "Source Artifact",
+          "type": "string"
+        },
+        "candidate_version": {
+          "title": "Candidate Version",
+          "type": "string"
+        },
+        "tests": {
+          "items": {
+            "$ref": "#/$defs/TestResult"
+          },
+          "title": "Tests",
+          "type": "array"
+        },
+        "artifacts": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Artifacts",
+          "type": "object"
+        },
+        "duration_seconds": {
+          "minimum": 0,
+          "title": "Duration Seconds",
+          "type": "number"
+        },
+        "at": {
+          "title": "At",
+          "type": "string"
+        },
+        "actor": {
+          "const": "harness",
+          "default": "harness",
+          "title": "Actor",
+          "type": "string"
+        },
+        "execution_completed": {
+          "title": "Execution Completed",
+          "type": "boolean"
+        },
+        "evidence_complete": {
+          "title": "Evidence Complete",
+          "type": "boolean"
+        },
+        "design_accepted": {
+          "title": "Design Accepted",
+          "type": "boolean"
+        },
+        "objective_target_attained": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Objective Target Attained"
+        }
+      },
+      "required": [
+        "id",
+        "candidate_id",
+        "job",
+        "suite_id",
+        "plan_id",
+        "evaluator_id",
+        "runtime_id",
+        "execution_id",
+        "source_artifact",
+        "candidate_version",
+        "tests",
+        "artifacts",
+        "duration_seconds",
+        "at",
+        "execution_completed",
+        "evidence_complete",
+        "design_accepted",
+        "objective_target_attained"
+      ],
+      "title": "EvaluationResult",
+      "type": "object"
+    },
+    "ExperienceReference": {
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "const": 2,
+          "default": 2,
+          "title": "Version",
+          "type": "integer"
+        },
+        "metadata": {
+          "additionalProperties": true,
+          "title": "Metadata",
+          "type": "object"
+        },
+        "experiment_id": {
+          "title": "Experiment Id",
+          "type": "string"
+        },
+        "candidate_id": {
+          "title": "Candidate Id",
+          "type": "string"
+        },
+        "result_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result Id"
+        },
+        "lesson": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "title": "Lesson",
+          "type": "string"
+        },
+        "support": {
+          "default": "hypothesis",
+          "enum": [
+            "hypothesis",
+            "linked_observation"
+          ],
+          "title": "Support",
+          "type": "string"
+        },
+        "transfers_acceptance": {
+          "const": false,
+          "default": false,
+          "title": "Transfers Acceptance",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "experiment_id",
+        "candidate_id",
+        "lesson"
+      ],
+      "title": "ExperienceReference",
+      "type": "object"
+    },
+    "PlanCommand": {
+      "$defs": {
+        "Accuracy": {
+          "additionalProperties": false,
+          "properties": {
+            "method": {
+              "minLength": 1,
+              "title": "Method",
+              "type": "string"
+            },
+            "max_numerical_error": {
+              "minimum": 0,
+              "title": "Max Numerical Error",
+              "type": "number"
+            },
+            "max_uncertainty": {
+              "minimum": 0,
+              "title": "Max Uncertainty",
+              "type": "number"
+            }
+          },
+          "required": [
+            "method",
+            "max_numerical_error",
+            "max_uncertainty"
+          ],
+          "title": "Accuracy",
+          "type": "object"
+        },
+        "Assumption": {
+          "additionalProperties": false,
+          "properties": {
+            "description": {
+              "minLength": 1,
+              "title": "Description",
+              "type": "string"
+            },
+            "source": {
+              "minLength": 1,
+              "title": "Source",
+              "type": "string"
+            },
+            "applicability": {
+              "minLength": 1,
+              "title": "Applicability",
+              "type": "string"
+            }
+          },
+          "required": [
+            "description",
+            "source",
+            "applicability"
+          ],
+          "title": "Assumption",
+          "type": "object"
+        },
+        "Criterion": {
+          "additionalProperties": false,
+          "properties": {
+            "metric": {
+              "title": "Metric",
+              "type": "string"
+            },
+            "operator": {
+              "enum": [
+                "<=",
+                ">="
+              ],
+              "title": "Operator",
+              "type": "string"
+            },
+            "limit": {
+              "title": "Limit",
+              "type": "number"
+            },
+            "unit": {
+              "title": "Unit",
+              "type": "string"
+            }
+          },
+          "required": [
+            "metric",
+            "operator",
+            "limit",
+            "unit"
+          ],
+          "title": "Criterion",
+          "type": "object"
+        },
+        "Evaluator": {
+          "additionalProperties": false,
+          "properties": {
+            "version": {
+              "const": 2,
+              "default": 2,
+              "title": "Version",
+              "type": "integer"
+            },
+            "metadata": {
+              "additionalProperties": true,
+              "title": "Metadata",
+              "type": "object"
+            },
+            "resources": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "minProperties": 1,
+              "title": "Resources",
+              "type": "object"
+            },
+            "provenance": {
+              "minLength": 1,
+              "title": "Provenance",
+              "type": "string"
+            }
+          },
+          "required": [
+            "resources",
+            "provenance"
+          ],
+          "title": "Evaluator",
+          "type": "object"
+        },
+        "Interface": {
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "title": "Id",
+              "type": "string"
+            },
+            "description": {
+              "title": "Description",
+              "type": "string"
+            },
+            "binding_rule": {
+              "minLength": 1,
+              "title": "Binding Rule",
+              "type": "string"
+            },
+            "unit": {
+              "minLength": 1,
+              "title": "Unit",
+              "type": "string"
+            },
+            "tolerance": {
+              "minimum": 0,
+              "title": "Tolerance",
+              "type": "number"
+            }
+          },
+          "required": [
+            "id",
+            "description",
+            "binding_rule",
+            "unit",
+            "tolerance"
+          ],
+          "title": "Interface",
+          "type": "object"
+        },
+        "LoadCase": {
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "title": "Id",
+              "type": "string"
+            },
+            "description": {
+              "title": "Description",
+              "type": "string"
+            },
+            "quantities": {
+              "additionalProperties": {
+                "$ref": "#/$defs/Quantity"
+              },
+              "title": "Quantities",
+              "type": "object"
+            },
+            "boundary_conditions": {
+              "minLength": 1,
+              "title": "Boundary Conditions",
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "description",
+            "quantities",
+            "boundary_conditions"
+          ],
+          "title": "LoadCase",
+          "type": "object"
+        },
+        "Material": {
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "minLength": 1,
+              "title": "Name",
+              "type": "string"
+            },
+            "provenance": {
+              "minLength": 1,
+              "title": "Provenance",
+              "type": "string"
+            },
+            "properties": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/$defs/Quantity"
+              },
+              "title": "Properties"
+            }
+          },
+          "required": [
+            "name",
+            "provenance",
+            "properties"
+          ],
+          "title": "Material",
+          "type": "object"
+        },
+        "Objective": {
+          "additionalProperties": false,
+          "properties": {
+            "metric": {
+              "title": "Metric",
+              "type": "string"
+            },
+            "direction": {
+              "enum": [
+                "minimize",
+                "maximize"
+              ],
+              "title": "Direction",
+              "type": "string"
+            },
+            "target": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Target"
+            }
+          },
+          "required": [
+            "metric",
+            "direction"
+          ],
+          "title": "Objective",
+          "type": "object"
+        },
+        "Plan": {
+          "additionalProperties": false,
+          "properties": {
+            "version": {
+              "const": 2,
+              "default": 2,
+              "title": "Version",
+              "type": "integer"
+            },
+            "metadata": {
+              "additionalProperties": true,
+              "title": "Metadata",
+              "type": "object"
+            },
+            "requirements": {
+              "items": {
+                "$ref": "#/$defs/Requirement"
+              },
+              "title": "Requirements",
+              "type": "array"
+            },
+            "assumptions": {
+              "items": {
+                "$ref": "#/$defs/Assumption"
+              },
+              "title": "Assumptions",
+              "type": "array"
+            },
+            "materials": {
+              "items": {
+                "$ref": "#/$defs/Material"
+              },
+              "title": "Materials",
+              "type": "array"
+            },
+            "interfaces": {
+              "items": {
+                "$ref": "#/$defs/Interface"
+              },
+              "title": "Interfaces",
+              "type": "array"
+            },
+            "tests": {
+              "items": {
+                "$ref": "#/$defs/Test"
+              },
+              "maxItems": 30,
+              "title": "Tests",
+              "type": "array"
+            },
+            "objective": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/Objective"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "design_schema": {
+              "additionalProperties": true,
+              "title": "Design Schema",
+              "type": "object"
+            },
+            "design_units": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "title": "Design Units",
+              "type": "object"
+            }
+          },
+          "title": "Plan",
+          "type": "object"
+        },
+        "Quantity": {
+          "additionalProperties": false,
+          "properties": {
+            "value": {
+              "title": "Value",
+              "type": "number"
+            },
+            "unit": {
+              "minLength": 1,
+              "title": "Unit",
+              "type": "string"
+            },
+            "dimension": {
+              "minLength": 1,
+              "title": "Dimension",
+              "type": "string"
+            }
+          },
+          "required": [
+            "value",
+            "unit",
+            "dimension"
+          ],
+          "title": "Quantity",
+          "type": "object"
+        },
+        "Requirement": {
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "minLength": 1,
+              "title": "Id",
+              "type": "string"
+            },
+            "description": {
+              "minLength": 1,
+              "title": "Description",
+              "type": "string"
+            },
+            "critical": {
+              "default": true,
+              "title": "Critical",
+              "type": "boolean"
+            },
+            "resolved": {
+              "default": true,
+              "title": "Resolved",
+              "type": "boolean"
+            },
+            "quantity": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/Quantity"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "source": {
+              "minLength": 1,
+              "title": "Source",
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "description",
+            "source"
+          ],
+          "title": "Requirement",
+          "type": "object"
+        },
+        "Runtime": {
+          "additionalProperties": false,
+          "properties": {
+            "version": {
+              "const": 2,
+              "default": 2,
+              "title": "Version",
+              "type": "integer"
+            },
+            "metadata": {
+              "additionalProperties": true,
+              "title": "Metadata",
+              "type": "object"
+            },
+            "image": {
+              "pattern": "^sha256:[a-f0-9]{64}$",
+              "title": "Image",
+              "type": "string"
+            },
+            "solver": {
+              "minLength": 1,
+              "title": "Solver",
+              "type": "string"
+            },
+            "provenance": {
+              "minLength": 1,
+              "title": "Provenance",
+              "type": "string"
+            },
+            "timeout_seconds": {
+              "default": 180,
+              "maximum": 600,
+              "minimum": 1,
+              "title": "Timeout Seconds",
+              "type": "integer"
+            },
+            "memory_gb": {
+              "default": 4,
+              "maximum": 12,
+              "minimum": 1,
+              "title": "Memory Gb",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "image",
+            "solver",
+            "provenance"
+          ],
+          "title": "Runtime",
+          "type": "object"
+        },
+        "Test": {
+          "additionalProperties": false,
+          "properties": {
+            "version": {
+              "const": 2,
+              "default": 2,
+              "title": "Version",
+              "type": "integer"
+            },
+            "metadata": {
+              "additionalProperties": true,
+              "title": "Metadata",
+              "type": "object"
+            },
+            "id": {
+              "pattern": "^[a-z][a-z0-9_-]{0,63}$",
+              "title": "Id",
+              "type": "string"
+            },
+            "requirements": {
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "title": "Requirements",
+              "type": "array"
+            },
+            "required": {
+              "default": true,
+              "title": "Required",
+              "type": "boolean"
+            },
+            "capability": {
+              "minLength": 1,
+              "title": "Capability",
+              "type": "string"
+            },
+            "applicability": {
+              "minLength": 1,
+              "title": "Applicability",
+              "type": "string"
+            },
+            "fixed_inputs": {
+              "additionalProperties": true,
+              "title": "Fixed Inputs",
+              "type": "object"
+            },
+            "load_cases": {
+              "items": {
+                "$ref": "#/$defs/LoadCase"
+              },
+              "title": "Load Cases",
+              "type": "array"
+            },
+            "metrics": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "minProperties": 1,
+              "title": "Metrics",
+              "type": "object"
+            },
+            "criteria": {
+              "items": {
+                "$ref": "#/$defs/Criterion"
+              },
+              "title": "Criteria",
+              "type": "array"
+            },
+            "accuracy": {
+              "additionalProperties": {
+                "$ref": "#/$defs/Accuracy"
+              },
+              "title": "Accuracy",
+              "type": "object"
+            },
+            "mesh_rule": {
+              "minLength": 1,
+              "title": "Mesh Rule",
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "requirements",
+            "capability",
+            "applicability",
+            "metrics",
+            "accuracy",
+            "mesh_rule"
+          ],
+          "title": "Test",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "actor": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Actor",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "operation_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Operation Id",
+          "type": "string"
+        },
+        "plan": {
+          "$ref": "#/$defs/Plan"
+        },
+        "evaluator": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Evaluator"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "runtime": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Runtime"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "actor",
+        "revision",
+        "operation_id",
+        "plan"
+      ],
+      "title": "PlanCommand",
+      "type": "object"
+    },
+    "FixtureCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "actor": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Actor",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "operation_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Operation Id",
+          "type": "string"
+        },
+        "step_base64": {
+          "maxLength": 43000000,
+          "title": "Step Base64",
+          "type": "string"
+        },
+        "provenance": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "title": "Provenance",
+          "type": "string"
+        }
+      },
+      "required": [
+        "actor",
+        "revision",
+        "operation_id",
+        "step_base64",
+        "provenance"
+      ],
+      "title": "FixtureCommand",
+      "type": "object"
+    },
+    "VerificationCommand": {
+      "$defs": {
+        "Quantity": {
+          "additionalProperties": false,
+          "properties": {
+            "value": {
+              "title": "Value",
+              "type": "number"
+            },
+            "unit": {
+              "minLength": 1,
+              "title": "Unit",
+              "type": "string"
+            },
+            "dimension": {
+              "minLength": 1,
+              "title": "Dimension",
+              "type": "string"
+            }
+          },
+          "required": [
+            "value",
+            "unit",
+            "dimension"
+          ],
+          "title": "Quantity",
+          "type": "object"
+        },
+        "Verification": {
+          "additionalProperties": false,
+          "properties": {
+            "test_id": {
+              "title": "Test Id",
+              "type": "string"
+            },
+            "fixture_artifact": {
+              "title": "Fixture Artifact",
+              "type": "string"
+            },
+            "expected_status": {
+              "enum": [
+                "pass",
+                "physical_failure"
+              ],
+              "title": "Expected Status",
+              "type": "string"
+            },
+            "reference_metrics": {
+              "additionalProperties": {
+                "$ref": "#/$defs/Quantity"
+              },
+              "title": "Reference Metrics",
+              "type": "object"
+            },
+            "tolerances": {
+              "additionalProperties": {
+                "type": "number"
+              },
+              "title": "Tolerances",
+              "type": "object"
+            },
+            "provenance": {
+              "minLength": 1,
+              "title": "Provenance",
+              "type": "string"
+            }
+          },
+          "required": [
+            "test_id",
+            "fixture_artifact",
+            "expected_status",
+            "reference_metrics",
+            "tolerances",
+            "provenance"
+          ],
+          "title": "Verification",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "actor": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Actor",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "operation_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Operation Id",
+          "type": "string"
+        },
+        "verification": {
+          "$ref": "#/$defs/Verification"
+        }
+      },
+      "required": [
+        "actor",
+        "revision",
+        "operation_id",
+        "verification"
+      ],
+      "title": "VerificationCommand",
+      "type": "object"
+    },
+    "FreezeCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "actor": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Actor",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "operation_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Operation Id",
+          "type": "string"
+        },
+        "draft_only": {
+          "default": false,
+          "title": "Draft Only",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "actor",
+        "revision",
+        "operation_id"
+      ],
+      "title": "FreezeCommand",
+      "type": "object"
+    },
+    "CandidateCommand": {
+      "$defs": {
+        "Candidate": {
+          "additionalProperties": false,
+          "properties": {
+            "version": {
+              "const": 2,
+              "default": 2,
+              "title": "Version",
+              "type": "integer"
+            },
+            "metadata": {
+              "additionalProperties": true,
+              "title": "Metadata",
+              "type": "object"
+            },
+            "title": {
+              "maxLength": 100,
+              "minLength": 1,
+              "title": "Title",
+              "type": "string"
+            },
+            "change": {
+              "default": "",
+              "maxLength": 2000,
+              "title": "Change",
+              "type": "string"
+            },
+            "source": {
+              "maxLength": 40000,
+              "minLength": 1,
+              "title": "Source",
+              "type": "string"
+            },
+            "parameters": {
+              "additionalProperties": true,
+              "title": "Parameters",
+              "type": "object"
+            }
+          },
+          "required": [
+            "title",
+            "source",
+            "parameters"
+          ],
+          "title": "Candidate",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "actor": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Actor",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "operation_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Operation Id",
+          "type": "string"
+        },
+        "candidate": {
+          "$ref": "#/$defs/Candidate"
+        }
+      },
+      "required": [
+        "actor",
+        "revision",
+        "operation_id",
+        "candidate"
+      ],
+      "title": "CandidateCommand",
+      "type": "object"
+    },
+    "ReflectionCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "actor": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Actor",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "operation_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Operation Id",
+          "type": "string"
+        },
+        "lesson": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "title": "Lesson",
+          "type": "string"
+        },
+        "result_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result Id"
+        }
+      },
+      "required": [
+        "actor",
+        "revision",
+        "operation_id",
+        "lesson"
+      ],
+      "title": "ReflectionCommand",
+      "type": "object"
+    },
+    "ReferenceBuildCommand": {
+      "$defs": {
+        "Candidate": {
+          "additionalProperties": false,
+          "properties": {
+            "version": {
+              "const": 2,
+              "default": 2,
+              "title": "Version",
+              "type": "integer"
+            },
+            "metadata": {
+              "additionalProperties": true,
+              "title": "Metadata",
+              "type": "object"
+            },
+            "title": {
+              "maxLength": 100,
+              "minLength": 1,
+              "title": "Title",
+              "type": "string"
+            },
+            "change": {
+              "default": "",
+              "maxLength": 2000,
+              "title": "Change",
+              "type": "string"
+            },
+            "source": {
+              "maxLength": 40000,
+              "minLength": 1,
+              "title": "Source",
+              "type": "string"
+            },
+            "parameters": {
+              "additionalProperties": true,
+              "title": "Parameters",
+              "type": "object"
+            }
+          },
+          "required": [
+            "title",
+            "source",
+            "parameters"
+          ],
+          "title": "Candidate",
+          "type": "object"
+        },
+        "ReferenceBuild": {
+          "additionalProperties": false,
+          "properties": {
+            "candidate": {
+              "$ref": "#/$defs/Candidate"
+            },
+            "provenance": {
+              "maxLength": 4000,
+              "minLength": 1,
+              "title": "Provenance",
+              "type": "string"
+            }
+          },
+          "required": [
+            "candidate",
+            "provenance"
+          ],
+          "title": "ReferenceBuild",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "actor": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Actor",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "operation_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Operation Id",
+          "type": "string"
+        },
+        "reference": {
+          "$ref": "#/$defs/ReferenceBuild"
+        }
+      },
+      "required": [
+        "actor",
+        "revision",
+        "operation_id",
+        "reference"
+      ],
+      "title": "ReferenceBuildCommand",
+      "type": "object"
+    }
+  },
+  "cli_envelope": {
+    "version": 2,
+    "ok": "boolean",
+    "data": "JSON value"
+  },
+  "exit_codes": {
+    "0": "operation succeeded (does not imply design acceptance)",
+    "1": "unexpected or local IO error",
+    "2": "invalid input",
+    "3": "service unavailable",
+    "4": "revision, ownership or idempotency conflict",
+    "5": "not found",
+    "6": "job interrupted or cancelled",
+    "7": "wait timed out; job may still be running"
+  },
+  "job_states": [
+    "queued",
+    "running",
+    "completed",
+    "interrupted",
+    "cancelled"
+  ]
+}

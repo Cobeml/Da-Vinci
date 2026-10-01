@@ -12,7 +12,11 @@ from davinci.product.contracts import (
     Command,
     Evaluator,
     OpenExperiment,
+    OperationStatus,
     Plan,
+    PlanReadiness,
+    ReferenceBuild,
+    ReportExport,
     Runtime,
     Verification,
 )
@@ -27,6 +31,10 @@ class PlanCommand(Command):
 class FixtureCommand(Command):
     step_base64: str = Field(max_length=43_000_000)
     provenance: str = Field(min_length=1, max_length=4000)
+
+
+class ReferenceBuildCommand(Command):
+    reference: ReferenceBuild
 
 
 class VerificationCommand(Command):
@@ -54,6 +62,37 @@ def router(engine):
     api = APIRouter(prefix="/api/v2")
     life = engine.lifecycle
 
+    @api.get("/schemas")
+    def schemas():
+        from davinci.product.protocol import schema_catalog
+
+        return schema_catalog()
+
+    @api.get("/instructions")
+    def instructions():
+        from davinci.product.tasks import RESOURCES
+
+        return {"version": 2, "instructions": RESOURCES.joinpath("external/AGENT.md").read_text()}
+
+    @api.get("/runtimes/resolve")
+    def resolve_runtime(image: str = Query(min_length=1, max_length=200)):
+        import subprocess
+
+        if image.startswith("-"):
+            raise ValueError("Expected a Docker image name or digest")
+        try:
+            image_id = subprocess.check_output(
+                ["docker", "image", "inspect", "--format={{.Id}}", image],
+                stderr=subprocess.PIPE,
+                text=True,
+                timeout=10,
+            ).strip()
+        except (OSError, subprocess.SubprocessError):
+            raise ValueError(
+                "Runtime unavailable; run davinci setup or build your custom Docker image"
+            ) from None
+        return {"version": 2, "image": image_id, "requested_image": image}
+
     @api.post("/experiments", status_code=201)
     def open_experiment(body: OpenExperiment):
         return life.open(body)
@@ -71,7 +110,8 @@ def router(engine):
 
     @api.get("/experiments/{eid}")
     def detail(eid: str):
-        return life.get(eid)
+        row = life.get(eid)
+        return {**row, "next_actions": next_actions(row)}
 
     @api.post("/experiments/{eid}/plan")
     def plan(eid: str, body: PlanCommand):
@@ -85,9 +125,44 @@ def router(engine):
             raise ValueError("Invalid base64 STEP") from None
         return life.fixture(eid, command(body), step=step, provenance=body.provenance)
 
-    @api.post("/experiments/{eid}/verify")
+    @api.post("/experiments/{eid}/verify", status_code=202, response_model=OperationStatus)
     def verify(eid: str, body: VerificationCommand):
-        return life.verify(eid, command(body), body.verification)
+        return life.schedule(eid, command(body), "verify", body.verification)
+
+    @api.post("/experiments/{eid}/reference-builds", status_code=202, response_model=OperationStatus)
+    def reference_build(eid: str, body: ReferenceBuildCommand):
+        return life.schedule(eid, command(body), "reference_build", body.reference)
+
+    @api.get("/experiments/{eid}/plan-validation", response_model=PlanReadiness)
+    def validate_plan(eid: str):
+        return life.validate_plan(eid)
+
+    @api.get("/experiments/{eid}/jobs/{job_id}", response_model=OperationStatus)
+    def job(eid: str, job_id: str):
+        result = life.job(eid, job_id)
+        row = life.get(eid)
+        return {
+            **result,
+            "result_ids": [r["id"] for r in row["results"] if r["job"]["id"] == job_id],
+            "verification_ids": [v["id"] for v in row["verifications"] if v["id"] == job_id],
+            "fixture_artifacts": [f["artifact"] for f in row["fixtures"] if f.get("job_id") == job_id],
+            "failures": [f for f in row.get("reference_failures", []) if f["job_id"] == job_id],
+            "next_actions": next_actions(row),
+        }
+
+    @api.get("/experiments/{eid}/results")
+    def results(eid: str):
+        row = life.get(eid)
+        return {
+            "version": 2,
+            "results": row["results"],
+            "verifications": row["verifications"],
+            "reference_failures": row.get("reference_failures", []),
+        }
+
+    @api.get("/experiments/{eid}/report", response_model=ReportExport)
+    def report(eid: str):
+        return life.export_report(eid)
 
     @api.get("/experiments/{eid}/capabilities")
     def capabilities(eid: str):
@@ -101,9 +176,9 @@ def router(engine):
     def candidate(eid: str, body: CandidateCommand):
         return life.submit_candidate(eid, command(body), body.candidate)
 
-    @api.post("/experiments/{eid}/evaluate")
+    @api.post("/experiments/{eid}/evaluate", status_code=202, response_model=OperationStatus)
     def evaluate(eid: str, body: Command):
-        return life.request_evaluation(eid, body)
+        return life.schedule(eid, body, "evaluate")
 
     @api.post("/experiments/{eid}/reflections")
     def reflect(eid: str, body: ReflectionCommand):
@@ -130,3 +205,20 @@ def router(engine):
         return engine.managed.advance(eid, body, stage)
 
     return api
+
+
+def next_actions(row):
+    return {
+        "draft": ["update_plan", "reference_build_or_upload", "verify", "validate_plan", "freeze"],
+        "awaiting_input": ["answer_pending_input", "update_plan"],
+        "queued": ["poll_job", "cancel"],
+        "evaluating": ["poll_job", "cancel"],
+        "verifying": ["poll_job", "cancel"],
+        "frozen": ["submit_candidate"],
+        "candidate_submitted": ["evaluate"],
+        "evaluated": ["inspect_results", "reflect"],
+        "reflected": ["submit_candidate", "finalize"],
+        "completed": ["export_report", "revise"],
+        "interrupted": ["inspect_job", "resume_or_revise"],
+        "cancelled": ["inspect_job", "resume_or_revise"],
+    }.get(row.get("phase"), ["inspect_status"])

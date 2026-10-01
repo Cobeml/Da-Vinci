@@ -10,6 +10,7 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, JSONResponse, Response, StreamingResponse
 from pydantic import BaseModel, Field, ValidationError
 
+from davinci.models import digest
 from davinci.product.engine import Engine
 from davinci.product.lifecycle import Conflict
 from davinci.product.lifecycle_api import router
@@ -80,6 +81,9 @@ def create_app(workspace: Path, *, engine=None, run_worker=True):
     def health():
         return {
             "status": "ok",
+            "workspace_id": digest(str(engine.workspace)),
+            "protocol_versions": [1, 2],
+            "external_available": True,
             "storage": engine.store.backend,
             "live_available": bool(engine.credentials.openai_api_key),
             "model": engine.options.model,

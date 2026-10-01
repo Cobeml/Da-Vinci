@@ -91,6 +91,7 @@ class WorkspaceSettings(BaseSettings):
     daily_budget_usd: float = Field(default=50, gt=0)
     output_tokens: int = Field(default=6000, ge=1000, le=32000)
     embeddings: bool = False
+    default_driver: Literal["external", "managed"] = "managed"
 
 
 def workspace_settings(root: Path):

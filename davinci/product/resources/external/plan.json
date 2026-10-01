@@ -1,0 +1,137 @@
+{
+  "version": 2,
+  "metadata": {},
+  "requirements": [
+    {
+      "id": "strength",
+      "description": "Cantilever supports 100 N",
+      "critical": true,
+      "resolved": true,
+      "quantity": null,
+      "source": "fixture specification"
+    }
+  ],
+  "assumptions": [
+    {
+      "description": "Linear elastic rectangular beam",
+      "source": "Euler-Bernoulli theory",
+      "applicability": "small deflections; no fatigue or local fixture stress"
+    }
+  ],
+  "materials": [
+    {
+      "name": "reference aluminium",
+      "provenance": "nominal fixture values, not batch certification",
+      "properties": {
+        "youngs": {
+          "value": 70000.0,
+          "unit": "MPa",
+          "dimension": "pressure"
+        },
+        "density": {
+          "value": 0.0027,
+          "unit": "g/mm3",
+          "dimension": "density"
+        }
+      }
+    }
+  ],
+  "interfaces": [
+    {
+      "id": "root",
+      "description": "40 by 20 mm beam envelope",
+      "binding_rule": "check STEP bounding box and rectangular volume",
+      "unit": "mm",
+      "tolerance": 1e-05
+    }
+  ],
+  "tests": [
+    {
+      "version": 2,
+      "metadata": {},
+      "id": "beam",
+      "requirements": [
+        "strength"
+      ],
+      "required": true,
+      "capability": "linear_beam_screen",
+      "applicability": "Rectangular prismatic cantilever only",
+      "fixed_inputs": {
+        "force_n": 100
+      },
+      "load_cases": [
+        {
+          "id": "tip",
+          "description": "vertical tip force",
+          "quantities": {
+            "force": {
+              "value": 100.0,
+              "unit": "N",
+              "dimension": "force"
+            }
+          },
+          "boundary_conditions": "clamped root; free tip"
+        }
+      ],
+      "metrics": {
+        "mass_g": "g",
+        "stress_mpa": "MPa",
+        "deflection_mm": "mm"
+      },
+      "criteria": [
+        {
+          "metric": "stress_mpa",
+          "operator": "<=",
+          "limit": 100.0,
+          "unit": "MPa"
+        },
+        {
+          "metric": "deflection_mm",
+          "operator": "<=",
+          "limit": 0.5,
+          "unit": "mm"
+        }
+      ],
+      "accuracy": {
+        "mass_g": {
+          "method": "analytic beam reference comparison",
+          "max_numerical_error": 0.01,
+          "max_uncertainty": 1.0
+        },
+        "stress_mpa": {
+          "method": "analytic beam reference comparison",
+          "max_numerical_error": 0.01,
+          "max_uncertainty": 1.0
+        },
+        "deflection_mm": {
+          "method": "analytic beam reference comparison",
+          "max_numerical_error": 0.01,
+          "max_uncertainty": 1.0
+        }
+      },
+      "mesh_rule": "one exact prismatic beam element; independently verify STEP dimensions and volume"
+    }
+  ],
+  "objective": {
+    "metric": "mass_g",
+    "direction": "minimize",
+    "target": 1.0
+  },
+  "design_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "thickness"
+    ],
+    "properties": {
+      "thickness": {
+        "type": "number",
+        "minimum": 1,
+        "maximum": 10
+      }
+    }
+  },
+  "design_units": {
+    "thickness": "mm"
+  }
+}

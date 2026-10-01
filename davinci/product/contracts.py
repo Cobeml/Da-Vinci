@@ -351,3 +351,57 @@ class Verification(Strict):
         ):
             raise ValueError("Reference metrics need nonnegative tolerances")
         return self
+
+
+class ReferenceBuild(Strict):
+    candidate: Candidate
+    provenance: str = Field(min_length=1, max_length=4000)
+
+
+class OperationStatus(Strict):
+    version: Literal[2] = 2
+    id: str
+    experiment_id: str
+    kind: Literal["evaluate", "verify", "reference_build"]
+    owner: str
+    operation_id: str
+    status: Literal["queued", "running", "completed", "interrupted", "cancelled"]
+    created_at: str
+    started_at: str | None = None
+    plan_id: str | None = None
+    evaluator_id: str | None = None
+    execution_id: str | None = None
+    runtime_id: str
+    suite_id: str | None = None
+    candidate_id: str | None = None
+    reason: str | None = None
+    error_type: str | None = None
+    result_ids: list[str] = Field(default_factory=list)
+    verification_ids: list[str] = Field(default_factory=list)
+    fixture_artifacts: list[str] = Field(default_factory=list)
+    failures: list[dict[str, Any]] = Field(default_factory=list)
+    next_actions: list[str] = Field(default_factory=list)
+
+
+class PlanReadiness(Strict):
+    version: Literal[2] = 2
+    experiment_id: str
+    revision: int
+    issues: list[str]
+    capabilities: list[CapabilityReport]
+    ready_to_freeze: bool
+    ready_for_draft: bool
+
+
+class ReportExport(Strict):
+    version: Literal[2] = 2
+    experiment: dict[str, Any]
+    report: dict[str, Any]
+    artifacts_base_url: Literal["/api/v1/artifacts/"] = "/api/v1/artifacts/"
+    contains_geometry_bytes: Literal[False] = False
+
+
+class CLIEnvelope(Strict):
+    version: Literal[2] = 2
+    ok: bool
+    data: Any

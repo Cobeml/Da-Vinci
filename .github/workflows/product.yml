@@ -48,7 +48,7 @@ jobs:
       - run: npm run build:ui
       - run: npx playwright install --with-deps chromium
       - run: uv run davinci setup --template vtol
-      - run: DAVINCI_INTEGRATION=1 uv run pytest tests/product/test_cad.py -q
+      - run: DAVINCI_INTEGRATION=1 uv run pytest tests/product/test_cad.py tests/product/test_external_cli.py -m integration -q
       - run: npm run test:product
       - uses: actions/upload-artifact@v4
         if: always()

@@ -125,6 +125,7 @@ class Lifecycle:
             command.operation_id: {
                 "signature": signature,
                 "action": action,
+                **({"job_id": fields["job"]["id"]} if fields.get("job") else {}),
                 "revision": row["revision"] + 1,
             },
         }
@@ -280,6 +281,10 @@ class Lifecycle:
                 "phase": "cancelled" if cancelled else fields["phase"],
                 "status": "cancelled" if cancelled else "active",
                 "job": {**job, "status": "cancelled" if cancelled else "completed"},
+                "jobs": {
+                    **row.get("jobs", {}),
+                    job_id: {**job, "status": "cancelled" if cancelled else "completed"},
+                },
                 "history": [
                     *row["history"],
                     {"action": "execution_finished", "job_id": job_id, "actor": "harness", "at": now()},
@@ -308,6 +313,12 @@ class Lifecycle:
         job_id = identity("verification")
         job = {"id": job_id, "owner": cmd.actor, "operation_id": cmd.operation_id, "status": "running"}
         row = self._execution_claim(row, cmd, sig, "verify", job)
+        return self._run_verification(row, verification)
+
+    def _run_verification(self, row, verification):
+        eid, job = row["_id"], row["job"]
+        plan, evaluator, runtime = self._context(row)
+        test = next(t for t in plan.tests if t.id == verification.test_id)
         self.engine.runner.cancelled = lambda: self._cancel_check(eid)
         try:
             result, outputs, log, duration = evaluate_test(
@@ -324,7 +335,7 @@ class Lifecycle:
                 for k, value in verification.reference_metrics.items()
             )
             record = {
-                "id": job_id,
+                "id": job["id"],
                 "plan_id": row["plan_id"],
                 "evaluator_id": row["evaluator_id"],
                 "runtime_id": row["runtime_id"],
@@ -334,11 +345,11 @@ class Lifecycle:
                 "matched": matched and not self._cancel_check(eid),
                 "evidence": self._archive_outputs(outputs, log),
                 "duration_seconds": duration,
-                "actor": cmd.actor,
+                "actor": job["owner"],
                 "at": now(),
             }
             return self._finish(
-                eid, job_id, {"phase": "draft", "verifications": [*row["verifications"], record]}
+                eid, job["id"], {"phase": "draft", "verifications": [*row["verifications"], record]}
             )
         finally:
             self.engine.runner.cancelled = lambda: False
@@ -465,6 +476,7 @@ class Lifecycle:
             "source_artifact": source,
             "source_commit": commit,
             "candidate_version": digest(candidate.model_dump()),
+            "metadata": candidate.metadata,
             "suite_id": row["suite_id"],
             "actor": cmd.actor,
             "operation_id": cmd.operation_id,
@@ -504,6 +516,12 @@ class Lifecycle:
             operation_id=cmd.operation_id,
         ).model_dump()
         row = self._execution_claim(row, cmd, sig, "evaluate", job)
+        return self._run_evaluation(row)
+
+    def _run_evaluation(self, row):
+        eid, job = row["_id"], row["job"]
+        plan, evaluator, runtime = self._context(row)
+        candidate = row["candidates"][-1]
         self.engine.runner.cancelled = lambda: self._cancel_check(eid)
         try:
             proposal = Candidate(
@@ -532,7 +550,18 @@ class Lifecycle:
             record = {
                 "id": identity("result"),
                 "candidate_id": candidate["id"],
-                "job": job,
+                "job": {
+                    k: job[k]
+                    for k in (
+                        "id",
+                        "candidate_id",
+                        "suite_id",
+                        "runtime_id",
+                        "owner",
+                        "status",
+                        "operation_id",
+                    )
+                },
                 "suite_id": row["suite_id"],
                 "plan_id": row["plan_id"],
                 "evaluator_id": row["evaluator_id"],
@@ -599,7 +628,7 @@ class Lifecycle:
             candidate_id=candidate["id"],
             result_id=result_id,
             lesson=lesson,
-            support="linked_observation" if result_id else "hypothesis",
+            support="linked_observation" if result_id and row["driver"] == "managed" else "hypothesis",
         ).model_dump()
         return self._commit(
             row, cmd, sig, "reflect", {"phase": "reflected", "experiences": [*row["experiences"], experience]}
@@ -646,6 +675,8 @@ class Lifecycle:
         # Recompute final checks, never trust a previously serialized acceptance flag.
         references = [row["suite_artifact"], row["execution_artifact"], *row["plan_revisions"]]
         references.extend(f["artifact"] for f in row["fixtures"])
+        references.extend(f["source_artifact"] for f in row["fixtures"] if f.get("source_artifact"))
+        references.extend(a for f in row["fixtures"] for a in f.get("evidence", {}).values())
         references.extend(artifact for v in row["verifications"] for artifact in v["evidence"].values())
         for artifact in references:
             self.artifacts.read(artifact)
@@ -691,8 +722,19 @@ class Lifecycle:
             {
                 "phase": "cancelled",
                 "status": "cancelled",
+                **(
+                    {
+                        "job": {**row["job"], "status": "cancelled"},
+                        "jobs": {
+                            **row.get("jobs", {}),
+                            row["job"]["id"]: {**row["job"], "status": "cancelled"},
+                        },
+                    }
+                    if row.get("job") and row["job"]["status"] == "queued"
+                    else {}
+                ),
                 "resume_phase": row.get("resume_phase")
-                if row["phase"] in ("evaluating", "verifying")
+                if row["phase"] in ("evaluating", "verifying", "queued")
                 else row["phase"],
             },
         )
@@ -727,6 +769,14 @@ class Lifecycle:
                         "phase": "cancelled" if cancelled else "interrupted",
                         "status": "cancelled" if cancelled else "paused",
                         "revision": row["revision"] + 1,
+                        "jobs": {
+                            **row.get("jobs", {}),
+                            row["job"]["id"]: {
+                                **row["job"],
+                                "status": "cancelled" if cancelled else "interrupted",
+                                "reason": "cancelled" if cancelled else "interrupted",
+                            },
+                        },
                         "job": {
                             **row["job"],
                             "status": "cancelled" if cancelled else "interrupted",
@@ -752,3 +802,228 @@ class Lifecycle:
                 old["runtime"],
             )
         return new
+
+    def validate_plan(self, eid):
+        """Read-only readiness report; shares freeze's validation path without committing."""
+        row = self.get(eid)
+        plan = Plan.model_validate(row["plan"])
+        covered = {r for t in plan.tests if t.required for r in t.requirements}
+        issues = [
+            f"Uncovered requirement: {r.id}" for r in plan.requirements if r.critical and r.id not in covered
+        ]
+        issues.extend(row["pending_input"])
+        if not plan.requirements or not plan.tests:
+            issues.append("Define requirements and tests")
+        try:
+            self._context(row)
+        except (ValueError, Conflict) as exc:
+            issues.append(str(exc))
+        capabilities = self.capabilities(eid)
+        gaps = [r for r in capabilities if r["status"] != "verified"]
+        return {
+            "version": 2,
+            "experiment_id": eid,
+            "revision": row["revision"],
+            "issues": issues,
+            "capabilities": capabilities,
+            "ready_to_freeze": not issues and not gaps,
+            "ready_for_draft": not issues and all(r["status"] == "unavailable" for r in gaps),
+        }
+
+    def schedule(self, eid, command, kind, payload=None):
+        """Persist explicit physical work for the single workspace worker. Never infer a proposal."""
+        phases = {"evaluate": {"candidate_submitted"}, "verify": {"draft"}, "reference_build": {"draft"}}
+        if kind not in phases:
+            raise ValueError("Unknown simulation operation")
+        if kind == "verify":
+            payload = Verification.model_validate(payload).model_dump()
+        elif kind == "reference_build":
+            from davinci.product.contracts import ReferenceBuild
+
+            payload = ReferenceBuild.model_validate(payload).model_dump()
+        elif payload is not None:
+            raise ValueError("Evaluation accepts no caller-supplied results or inputs")
+        row, cmd, sig, done = self._begin(eid, command, kind, payload, phases[kind])
+        if done:
+            receipt = row["operations"][cmd.operation_id]
+            return self.job(eid, receipt["job_id"])
+        plan, _, _ = self._context(row)
+        if kind == "verify":
+            test = next((t for t in plan.tests if t.id == payload["test_id"]), None)
+            if not test or payload["fixture_artifact"] not in [f["artifact"] for f in row["fixtures"]]:
+                raise ValueError("Verification requires a declared test and reference fixture")
+            if set(payload["reference_metrics"]) != set(test.metrics) or any(
+                payload["reference_metrics"][k]["unit"] != u for k, u in test.metrics.items()
+            ):
+                raise ValueError("Verification must cover declared metrics in their exact units")
+        if kind == "reference_build":
+            validate(payload["candidate"]["parameters"], plan.design_schema)
+        jid = identity("job")
+        job = {
+            "version": 2,
+            "id": jid,
+            "experiment_id": eid,
+            "kind": kind,
+            "owner": cmd.actor,
+            "operation_id": cmd.operation_id,
+            "status": "queued",
+            "created_at": now(),
+            "payload": payload,
+            "suite_id": row.get("suite_id"),
+            "runtime_id": row["runtime_id"],
+            "plan_id": row["plan_id"],
+            "evaluator_id": row["evaluator_id"],
+            "execution_id": row["execution_id"],
+            "candidate_id": row["candidates"][-1]["id"] if kind == "evaluate" else None,
+        }
+        # Commit the queue entry and receipt together; no cross-document handoff can be lost.
+        updated = self._commit(
+            row,
+            cmd,
+            sig,
+            kind,
+            {
+                "phase": "queued",
+                "status": "queued",
+                "resume_phase": row["phase"],
+                "job": job,
+                "jobs": {**row.get("jobs", {}), jid: job},
+            },
+        )
+        return self.job(eid, updated["job"]["id"])
+
+    def job(self, eid, job_id):
+        row = self.get(eid)
+        job = (
+            row.get("job") if (row.get("job") or {}).get("id") == job_id else row.get("jobs", {}).get(job_id)
+        )
+        if not job:
+            raise KeyError(job_id)
+        return {
+            **{k: v for k, v in job.items() if k != "payload"},
+            "next_actions": ["poll_job", "cancel"]
+            if job["status"] in ("queued", "running")
+            else ["inspect_results", "inspect_status"],
+        }
+
+    def execute_scheduled(self, eid):
+        """Called only by Engine.work in the workspace service."""
+        with self.engine.lock:
+            row = self.get(eid)
+            if row["phase"] != "queued" or row["job"]["status"] != "queued":
+                return
+            if self.engine.busy or not self.store.update(
+                "pointers", "product-active-run", {"run_id": eid}, {"run_id": None}
+            ):
+                return
+            job = {**row["job"], "status": "running", "started_at": now()}
+            claimed = self.store.update(
+                "runs",
+                eid,
+                {
+                    "phase": "verifying" if job["kind"] == "verify" else "evaluating",
+                    "status": "running",
+                    "revision": row["revision"] + 1,
+                    "job": job,
+                    "jobs": {**row.get("jobs", {}), job["id"]: job},
+                },
+                {"revision": row["revision"], "phase": "queued"},
+            )
+            if not claimed:
+                self.engine.release(eid)
+                return
+        try:
+            if job["kind"] == "evaluate":
+                self._run_evaluation(claimed)
+            elif job["kind"] == "verify":
+                self._run_verification(claimed, Verification.model_validate(job["payload"]))
+            else:
+                self._run_reference(claimed)
+        except Exception as exc:
+            # Unexpected host failure is not physical evidence. A new command is required after resume.
+            current = self.get(eid)
+            if current.get("job", {}).get("id") == job["id"] and current["job"]["status"] == "running":
+                stopped = current["phase"] == "cancelled"
+                failed = {
+                    **current["job"],
+                    "status": "cancelled" if stopped else "interrupted",
+                    "reason": "cancelled" if stopped else "interrupted",
+                    "error_type": type(exc).__name__,
+                }
+                self.store.update(
+                    "runs",
+                    eid,
+                    {
+                        "phase": "cancelled" if stopped else "interrupted",
+                        "status": "cancelled" if stopped else "paused",
+                        "job": failed,
+                        "jobs": {**current.get("jobs", {}), job["id"]: failed},
+                        "revision": current["revision"] + 1,
+                    },
+                    {"revision": current["revision"]},
+                )
+        finally:
+            self.engine.runner.cancelled = lambda: False
+            self.engine.release(eid)
+
+    def _run_reference(self, row):
+        eid, job = row["_id"], row["job"]
+        plan, _, runtime = self._context(row)
+        proposal = Candidate.model_validate(job["payload"]["candidate"])
+        self.engine.runner.cancelled = lambda: self._cancel_check(eid)
+        source = self.artifacts.put(proposal.source.encode(), "reference-build.py", "text/x-python")
+        commit = self.engine.repository.commit(
+            job["id"],
+            {
+                "build.py": proposal.source,
+                "parameters.json": json.dumps(proposal.parameters),
+                "purpose.txt": "reference_only",
+            },
+        )
+        try:
+            step, log, duration = build(self.engine.runner, proposal, plan, runtime)
+            if self._cancel_check(eid):
+                raise SandboxError("Reference build cancelled", reason="cancelled")
+            artifact = self.artifacts.put(step, "reference.step", "application/step")
+            evidence = self._archive_outputs({}, log)
+            record = {
+                "artifact": artifact,
+                "provenance": job["payload"]["provenance"],
+                "purpose": "reference_only",
+                "actor": job["owner"],
+                "job_id": job["id"],
+                "source_artifact": source,
+                "source_commit": commit,
+                "parameters": proposal.parameters,
+                "evidence": evidence,
+                "duration_seconds": duration,
+                "plan_id": row["plan_id"],
+                "runtime_id": row["runtime_id"],
+                "execution_id": row["execution_id"],
+            }
+            return self._finish(eid, job["id"], {"phase": "draft", "fixtures": [*row["fixtures"], record]})
+        except (SandboxError, OSError) as exc:
+            result = execution_failure("reference_build", exc, building=True).model_dump()
+            return self._finish(
+                eid,
+                job["id"],
+                {
+                    "phase": "draft",
+                    "reference_failures": [
+                        *row.get("reference_failures", []),
+                        {"job_id": job["id"], "result": result, "source_artifact": source},
+                    ],
+                },
+            )
+
+    def export_report(self, eid):
+        row = self.get(eid)
+        if row["phase"] != "completed" or not row["report"]:
+            raise Conflict("Finalize the experiment before exporting its report")
+        return {
+            "version": 2,
+            "experiment": row,
+            "report": row["report"],
+            "artifacts_base_url": "/api/v1/artifacts/",
+            "contains_geometry_bytes": False,
+        }

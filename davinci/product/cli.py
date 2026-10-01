@@ -17,20 +17,53 @@ from davinci.product.config import parse_yaml, workspace_settings
 from davinci.product.tasks import RESOURCES, SANDBOX, snapshot, template_config
 
 
-def initialize(root, template):
+def initialize(root, template, driver="managed"):
     root.mkdir(parents=True, exist_ok=True)
     if any((root / n).exists() for n in ("run.yaml", "workspace.yaml")):
         raise ValueError("Workspace configuration already exists; choose a new directory")
     (root / "run.yaml").write_text(yaml.safe_dump(template_config(template), sort_keys=False))
     (root / "workspace.yaml").write_text(
+        f"default_driver: {driver}\n"
         "storage: local\nport: 8741\nmodel: gpt-6-astra\npricing_model: gpt-6-astra\n# Conservative accounting estimates, USD per million tokens. Verify for your account.\ninput_usd_per_million: 20\noutput_usd_per_million: 75\ndaily_budget_usd: 50\n"
     )
     (root / ".gitignore").write_text(".env\n.davinci/\n")
     if template == "custom":
         shutil.copytree(str(RESOURCES.joinpath("templates/custom")), root / "task")
-    print(
-        f"Created {root}. Edit run.yaml, set OPENAI_API_KEY, then run davinci setup --template {template} and davinci serve."
-    )
+    if driver == "external":
+        shutil.copytree(str(RESOURCES.joinpath("external")), root / "external")
+        (root / "AGENTS.md").write_text(RESOURCES.joinpath("external/AGENT.md").read_text())
+        (root / "experiment.json").write_text(
+            json.dumps(
+                {
+                    "version": 2,
+                    "object": {"slug": "my-part", "name": "My part"},
+                    "description": "Describe the engineering request",
+                    "driver": "external",
+                    "mode": "live",
+                    "actor": "coding-agent",
+                    "operation_id": "open-1",
+                },
+                indent=2,
+            )
+        )
+        from davinci.product.external_cli import output
+
+        output(
+            {
+                "workspace": str(root.resolve()),
+                "driver": driver,
+                "model_key_required": False,
+                "next_actions": [
+                    "edit experiment.json",
+                    "davinci service ensure",
+                    "davinci external open --file experiment.json",
+                ],
+            }
+        )
+    else:
+        print(
+            f"Created {root}. Edit run.yaml, set OPENAI_API_KEY, then run davinci setup --template {template} and davinci serve."
+        )
 
 
 def setup(root, template):
@@ -69,26 +102,54 @@ def setup(root, template):
         )
 
 
+class ProtocolParser(argparse.ArgumentParser):
+    def error(self, message):
+        from davinci.product.external_cli import output
+
+        output({"error": message, "exit_code": 2}, ok=False)
+        raise SystemExit(2)
+
+
 def main():
-    parser = argparse.ArgumentParser(prog="davinci", description="Local CAD optimization workspace")
+    parser = ProtocolParser(prog="davinci", description="Local CAD optimization workspace")
     parser.add_argument("--workspace", type=Path, default=Path.cwd())
     sub = parser.add_subparsers(dest="command", required=True)
     init = sub.add_parser("init")
     init.add_argument("directory", type=Path)
+    init.add_argument("--driver", choices=["external", "managed"], default="managed")
     init.add_argument("--template", choices=["sensor", "gripper", "vtol", "custom"], default="sensor")
     for name in ("validate", "run"):
         command = sub.add_parser(name)
         command.add_argument("yaml", type=Path)
     prep = sub.add_parser("setup")
     prep.add_argument("--template", choices=["sensor", "gripper", "vtol", "custom"], default="sensor")
-    sub.add_parser("doctor")
+    doctor = sub.add_parser("doctor")
+    doctor.add_argument("--driver", choices=["external", "managed"])
     serve = sub.add_parser("serve")
     serve.add_argument("--no-browser", action="store_true")
+    from davinci.product.external_cli import add_commands
+
+    add_commands(sub)
     args = parser.parse_args()
     root = args.workspace.resolve()
     try:
-        if args.command == "init":
-            initialize(args.directory, args.template)
+        if args.command in ("external", "service"):
+            from davinci.product.client import ClientError
+            from davinci.product.external_cli import output, run
+
+            try:
+                data, code = run(args, root)
+                output(data, ok=code == 0)
+                if code:
+                    raise SystemExit(code)
+            except ClientError as exc:
+                output({"error": str(exc), "exit_code": exc.code}, ok=False)
+                raise SystemExit(exc.code) from None
+            except (ValueError, OSError, KeyError) as exc:
+                output({"error": str(exc), "exit_code": 2}, ok=False)
+                raise SystemExit(2) from None
+        elif args.command == "init":
+            initialize(args.directory, args.template, args.driver)
         elif args.command == "validate":
             c = parse_yaml(args.yaml.read_text())
             t = snapshot(c, root)
@@ -100,7 +161,11 @@ def main():
         elif args.command == "doctor":
             options = workspace_settings(root)
             credentials = Settings(_env_file=root / ".env")
+            driver = args.driver or options.default_driver
             results = {
+                "driver": driver,
+                "model_key_required": driver == "managed",
+                "next_actions": ["davinci service ensure"] if driver == "external" else ["davinci serve"],
                 "python": sys.version.split()[0],
                 "git": bool(shutil.which("git")),
                 "docker": False,
@@ -115,7 +180,7 @@ def main():
                 )
             except (OSError, subprocess.SubprocessError):
                 pass
-            if (root / "run.yaml").exists():
+            if driver == "managed" and (root / "run.yaml").exists():
                 config = parse_yaml((root / "run.yaml").read_text())
                 task = snapshot(config, root)
                 try:
@@ -127,17 +192,15 @@ def main():
                     )
                 except (OSError, subprocess.SubprocessError):
                     results["task_image"] = False
-            print(json.dumps(results, indent=2))
-            if not results["git"]:
-                print("Install Git to archive source snapshots.")
-            if not results["docker"]:
-                print("Install/start Docker Engine, or enable Docker Desktop integration in WSL2.")
-            if results.get("task_image") is False:
-                print("Run davinci setup --template " + config.task.template)
-            if not results["openai_key_configured"]:
-                print("Set OPENAI_API_KEY in the environment or workspace .env for live runs.")
+            from davinci.product.external_cli import output
+
+            output(results)
         elif args.command == "run":
             options = workspace_settings(root)
+            if options.default_driver == "external":
+                raise ValueError(
+                    "This is an external workspace; use davinci external open/submit/evaluate. The run command is the managed v1 route."
+                )
             content = args.yaml.read_text()
             snapshot(parse_yaml(content), root)
             data = json.dumps({"yaml": content}).encode()

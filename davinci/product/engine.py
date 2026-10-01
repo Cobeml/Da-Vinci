@@ -209,11 +209,21 @@ class Engine:
             with self.lock:
                 pointer = self.store.get("pointers", "product-active-run")
                 if not pointer["run_id"]:
+                    queued = self.store.list("runs", {"lifecycle_version": 2, "phase": "queued"}, limit=1)
+                    queued_id = queued[0]["_id"] if queued else None
+                else:
+                    queued_id = None
+            if queued_id:
+                self.lifecycle.execute_scheduled(queued_id)
+                continue
+            with self.lock:
+                pointer = self.store.get("pointers", "product-active-run")
+                if not pointer["run_id"]:
                     continue
                 run_id = pointer["run_id"]
                 active = self.store.get("runs", run_id)
                 if active and active.get("lifecycle_version") == 2:
-                    continue  # synchronous lifecycle execution owns the shared slot
+                    continue  # lifecycle work owns the shared slot; never enter the model loop
                 self.busy = True
             try:
                 self.execute(run_id)
