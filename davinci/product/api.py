@@ -224,10 +224,22 @@ def create_app(workspace: Path, *, engine=None, run_worker=True):
         record = engine.store.get("artifacts", artifact_id)
         if not record:
             raise KeyError(artifact_id)
-        return Response(
-            engine.artifacts.read(artifact_id),
-            media_type=record["media_type"],
-            headers={"Content-Disposition": f'inline; filename="{record["name"]}"'},
+        stream = engine.artifacts.verified_open(artifact_id)
+        # Never render evaluator-produced HTML/script in the trusted localhost origin.
+        media = (
+            record["media_type"]
+            if record["media_type"]
+            in ("model/gltf-binary", "application/step", "application/json", "text/plain")
+            else "application/octet-stream"
+        )
+        return StreamingResponse(
+            engine.artifacts.chunks(stream),
+            media_type=media,
+            headers={
+                "X-Content-Type-Options": "nosniff",
+                "Content-Disposition": "attachment",
+                "Content-Length": str(record["size"]),
+            },
         )
 
     ui = Path(str(files("davinci.product").joinpath("static")))

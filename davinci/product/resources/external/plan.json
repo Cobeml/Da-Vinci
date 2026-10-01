@@ -39,10 +39,40 @@
   "interfaces": [
     {
       "id": "root",
-      "description": "40 by 20 mm beam envelope",
-      "binding_rule": "check STEP bounding box and rectangular volume",
+      "description": "Clamped beam root at x=-20 mm",
+      "binding_rule": "One outward -X planar face at x=-20, width 20 and thickness 1..10 mm; measured independently after STEP import",
       "unit": "mm",
-      "tolerance": 1e-05
+      "tolerance": 1e-05,
+      "region": {
+        "kind": "planar_face",
+        "center": [
+          -20,
+          0,
+          0
+        ],
+        "normal": [
+          -1,
+          0,
+          0
+        ],
+        "center_tolerance": [
+          1e-05,
+          1e-05,
+          1e-05
+        ],
+        "normal_tolerance_degrees": 1,
+        "extent_min": [
+          0,
+          20,
+          1
+        ],
+        "extent_max": [
+          1e-05,
+          20,
+          10
+        ],
+        "expected_count": 1
+      }
     }
   ],
   "tests": [
@@ -109,7 +139,34 @@
           "max_uncertainty": 1.0
         }
       },
-      "mesh_rule": "one exact prismatic beam element; independently verify STEP dimensions and volume"
+      "mesh_rule": "one exact prismatic beam element; independently verify STEP dimensions and volume",
+      "simulation": {
+        "version": 1,
+        "adapter": "authored-screen",
+        "phenomena": [
+          "mass",
+          "linear_static"
+        ],
+        "material_model": "linear_isotropic",
+        "geometry_assumptions": "Single 40 by 20 mm rectangular cantilever with thickness 1..10 mm. Independently check envelope and volume.",
+        "fidelity": "analytic_screen",
+        "stage": "final",
+        "cad_unit": "mm",
+        "solver_length_unit": "mm",
+        "required_software": {
+          "cadquery": null,
+          "numpy": null
+        },
+        "estimate": {
+          "cpu_cores": 1,
+          "memory_mb": 512,
+          "disk_mb": 128,
+          "wall_seconds": 30,
+          "basis": "Small analytic beam and OCP geometry operations",
+          "uncertainty": "Peak memory not measured; pilot timing refines estimate, not proof of adequacy"
+        },
+        "required_evidence": []
+      }
     }
   ],
   "objective": {

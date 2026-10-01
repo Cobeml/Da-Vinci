@@ -6,11 +6,13 @@ an interrupted write, but cannot become accepted evidence without its CAS commit
 
 import json
 import re
+import time
 from copy import deepcopy
 
 from jsonschema import validate
 
 from davinci.models import digest, identity, now
+from davinci.product.adapters import assess
 from davinci.product.contracts import (
     Candidate,
     CapabilityReport,
@@ -25,6 +27,7 @@ from davinci.product.contracts import (
     SimulationJob,
     Verification,
 )
+from davinci.product.evidence import archive, manifest
 from davinci.product.execution import build, evaluate_test, execution_failure, execution_identity, failure
 from davinci.runner import SandboxError
 
@@ -334,6 +337,12 @@ class Lifecycle:
                 and abs(result.metrics[k].value - value.value) <= verification.tolerances[k]
                 for k, value in verification.reference_metrics.items()
             )
+            refs = self._archive_outputs(outputs, log, runtime.artifact_bytes)
+            evidence_manifest = manifest(
+                self.artifacts,
+                refs,
+                {k: row[k] for k in ("plan_id", "evaluator_id", "runtime_id", "execution_id")},
+            )
             record = {
                 "id": job["id"],
                 "plan_id": row["plan_id"],
@@ -342,8 +351,9 @@ class Lifecycle:
                 "execution_id": row["execution_id"],
                 "request": verification.model_dump(),
                 "result": result.model_dump(),
-                "matched": matched and not self._cancel_check(eid),
-                "evidence": self._archive_outputs(outputs, log),
+                "matched": matched and evidence_manifest.complete and not self._cancel_check(eid),
+                "evidence": refs,
+                "manifest": evidence_manifest.model_dump(),
                 "duration_seconds": duration,
                 "actor": job["owner"],
                 "at": now(),
@@ -375,15 +385,27 @@ class Lifecycle:
                 status = "unverified"
             if checks and checks[-1]["result"]["status"] == "unsupported_capability":
                 status = "unavailable"
+            assessment = (
+                assess(self.engine.runner, plan, test, Runtime.model_validate(row["runtime"]))
+                if row.get("runtime")
+                else {}
+            )
+            if assessment.get("issues"):
+                status = "unavailable"
             reports.append(
                 CapabilityReport(
                     runtime_id=row.get("runtime_id") or "unconfigured",
                     test_id=test.id,
                     status=status,
-                    reason="Positive and negative reference checks matched"
-                    if status == "verified"
-                    else "Missing or failed positive/negative reference checks",
+                    reason="; ".join(i["needed"] for i in assessment.get("issues", []))
+                    if assessment.get("issues")
+                    else (
+                        "Positive and negative reference checks matched"
+                        if status == "verified"
+                        else "Missing or failed positive/negative reference checks"
+                    ),
                     verification_ids=[v["id"] for v in good],
+                    simulation=assessment,
                 ).model_dump()
             )
         return reports
@@ -493,12 +515,8 @@ class Lifecycle:
             },
         )
 
-    def _archive_outputs(self, outputs, log):
-        # Artifacts are provenance only; only validated result.json supplies measurements.
-        return {
-            name: self.artifacts.put(data, name, "application/octet-stream")
-            for name, data in {**outputs, "execution.log": log.encode()}.items()
-        }
+    def _archive_outputs(self, outputs, log, limit=256_000_000):
+        return archive(self.artifacts, outputs, log, limit=limit)
 
     def request_evaluation(self, eid, command):
         row, cmd, sig, done = self._begin(eid, command, "evaluate", None, {"candidate_submitted"})
@@ -530,19 +548,57 @@ class Lifecycle:
                 source=self.artifacts.read(candidate["source_artifact"]).decode(),
             )
             results, artifacts, duration = [], {}, 0
+            started = time.monotonic()
+            build_outputs = {}
             try:
-                step, log, duration = build(self.engine.runner, proposal, plan, runtime)
-                artifacts = self._archive_outputs({"model.step": step}, log)
+                step, log, duration = build(
+                    self.engine.runner, proposal, plan, runtime, evidence=build_outputs
+                )
+                # Builder outputs other than CAD/resources remain untrusted and do not enter evidence.
+                trusted = {k: v for k, v in build_outputs.items() if k in ("model.step", "resources.json")}
+                trusted["timing.json"] = json.dumps({"duration_seconds": duration}).encode()
+                artifacts = self._archive_outputs(trusted, log, runtime.artifact_bytes)
             except (SandboxError, OSError) as exc:
                 results = [execution_failure(t.id, exc, building=True) for t in plan.tests]
+                artifacts = self._archive_outputs(
+                    getattr(exc, "outputs", {}), getattr(exc, "log", ""), runtime.artifact_bytes
+                )
+                duration = getattr(exc, "duration", 0)
             if not results:
                 for test in plan.tests:
+                    spent = sum(self.store.get("artifacts", a)["size"] for a in artifacts.values())
+                    remaining = min(runtime.job_seconds, runtime.compute_seconds / runtime.cpu_cores) - max(
+                        duration, time.monotonic() - started
+                    )
+                    if spent >= runtime.artifact_bytes or remaining < 1:
+                        results.append(
+                            failure(
+                                test.id,
+                                "not_run",
+                                "resource_exhaustion",
+                                "Cumulative job time/compute/artifact budget exhausted",
+                            )
+                        )
+                        continue
+                    bounded = runtime.model_copy(
+                        update={
+                            "job_seconds": remaining,
+                            "compute_seconds": remaining * runtime.cpu_cores,
+                            "artifact_bytes": runtime.artifact_bytes - spent,
+                        }
+                    )
+                    if bounded.artifact_bytes < 1024:
+                        results.append(failure(test.id, "not_run", "artifact_quota"))
+                        continue
                     result, outputs, log, seconds = evaluate_test(
-                        self.engine.runner, step, plan, test, evaluator, runtime
+                        self.engine.runner, step, plan, test, evaluator, bounded
                     )
                     results.append(result)
                     artifacts.update(
-                        {test.id + "/" + k: v for k, v in self._archive_outputs(outputs, log).items()}
+                        {
+                            test.id + "/" + k: v
+                            for k, v in self._archive_outputs(outputs, log, bounded.artifact_bytes).items()
+                        }
                     )
                     duration += seconds
             if self._cancel_check(eid):
@@ -575,6 +631,25 @@ class Lifecycle:
                 "at": now(),
                 "actor": "harness",
             }
+            record["manifest"] = manifest(
+                self.artifacts,
+                artifacts,
+                {
+                    "job_id": job["id"],
+                    **{
+                        k: record[k]
+                        for k in (
+                            "suite_id",
+                            "plan_id",
+                            "evaluator_id",
+                            "runtime_id",
+                            "execution_id",
+                            "candidate_version",
+                            "source_artifact",
+                        )
+                    },
+                },
+            ).model_dump()
             record.update(self._decision(row, record))
             record = EvaluationResult.model_validate(record).model_dump()
             return self._finish(eid, job["id"], {"phase": "evaluated", "results": [*row["results"], record]})
@@ -586,8 +661,26 @@ class Lifecycle:
         plan = Plan.model_validate(row["plan"])
         results = {r["test_id"]: r for r in record["tests"]}
         required = [t for t in plan.tests if t.required]
-        complete = bool(required) and all(
-            t.id in results and results[t.id]["status"] in ("pass", "physical_failure") for t in required
+
+        def prescribed(test):
+            if test.id not in results or results[test.id]["status"] not in ("pass", "physical_failure"):
+                return False
+            spec = test.simulation
+            if spec:
+                metadata = results[test.id].get("metadata", {})
+                if any(metadata.get(k) != getattr(spec, k) for k in ("adapter", "fidelity", "stage")):
+                    return False
+            return True
+
+        final_coverage = {
+            r for t in required if not t.simulation or t.simulation.stage == "final" for r in t.requirements
+        }
+        critical = {r.id for r in plan.requirements if r.critical}
+        complete = (
+            bool(required)
+            and critical <= final_coverage
+            and all(prescribed(t) for t in required)
+            and record.get("manifest", {}).get("complete", False)
         )
         accepted = (
             complete and not row["draft_only"] and all(results[t.id]["status"] == "pass" for t in required)
@@ -679,12 +772,18 @@ class Lifecycle:
         references.extend(a for f in row["fixtures"] for a in f.get("evidence", {}).values())
         references.extend(artifact for v in row["verifications"] for artifact in v["evidence"].values())
         for artifact in references:
-            self.artifacts.read(artifact)
+            self.artifacts.verify(artifact)
         for candidate in row["candidates"]:
             self.artifacts.read(candidate["source_artifact"])
         for result in row["results"]:
             for artifact in result["artifacts"].values():
-                self.artifacts.read(artifact)
+                self.artifacts.verify(artifact)
+            if result.get("manifest"):
+                regenerated = manifest(
+                    self.artifacts, result["artifacts"], result["manifest"]["provenance"]
+                ).model_dump()
+                if regenerated != result["manifest"]:
+                    raise ValueError("Simulation artifact manifest mismatch")
         decisions = [
             {"result_id": r["id"], "candidate_id": r["candidate_id"], **self._decision(row, r)}
             for r in row["results"]
@@ -981,11 +1080,16 @@ class Lifecycle:
             },
         )
         try:
-            step, log, duration = build(self.engine.runner, proposal, plan, runtime)
+            build_outputs = {}
+            step, log, duration = build(self.engine.runner, proposal, plan, runtime, evidence=build_outputs)
             if self._cancel_check(eid):
                 raise SandboxError("Reference build cancelled", reason="cancelled")
             artifact = self.artifacts.put(step, "reference.step", "application/step")
-            evidence = self._archive_outputs({}, log)
+            evidence = self._archive_outputs(
+                {k: v for k, v in build_outputs.items() if k in ("model.step", "resources.json")},
+                log,
+                runtime.artifact_bytes,
+            )
             record = {
                 "artifact": artifact,
                 "provenance": job["payload"]["provenance"],
@@ -996,6 +1100,16 @@ class Lifecycle:
                 "source_commit": commit,
                 "parameters": proposal.parameters,
                 "evidence": evidence,
+                "manifest": manifest(
+                    self.artifacts,
+                    evidence,
+                    {
+                        "runtime_id": row["runtime_id"],
+                        "execution_id": row["execution_id"],
+                        "source_artifact": source,
+                        "purpose": "reference_only",
+                    },
+                ).model_dump(),
                 "duration_seconds": duration,
                 "plan_id": row["plan_id"],
                 "runtime_id": row["runtime_id"],
@@ -1011,7 +1125,14 @@ class Lifecycle:
                     "phase": "draft",
                     "reference_failures": [
                         *row.get("reference_failures", []),
-                        {"job_id": job["id"], "result": result, "source_artifact": source},
+                        {
+                            "job_id": job["id"],
+                            "result": result,
+                            "source_artifact": source,
+                            "evidence": self._archive_outputs(
+                                getattr(exc, "outputs", {}), getattr(exc, "log", ""), runtime.artifact_bytes
+                            ),
+                        },
                     ],
                 },
             )

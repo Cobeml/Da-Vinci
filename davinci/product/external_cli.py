@@ -25,7 +25,7 @@ def add_commands(sub):
         "external", help="Keyless external-agent workflow over localhost HTTP (JSON output)"
     )
     commands = external.add_subparsers(dest="action", required=True)
-    for name in ("schemas", "instructions", "list"):
+    for name in ("schemas", "instructions", "list", "adapters"):
         commands.add_parser(name)
     create = commands.add_parser("open", help="Open an external experiment from OpenExperiment JSON")
     create.add_argument("--file", type=Path, required=True)
@@ -197,6 +197,10 @@ def run(args, root):
     if args.command == "service":
         return service(root, args.action), 0
     action = args.action
+    if action == "adapters":
+        from davinci.product.adapters import catalog
+
+        return catalog(), 0
     if action == "schemas":
         from davinci.product.protocol import schema_catalog
 

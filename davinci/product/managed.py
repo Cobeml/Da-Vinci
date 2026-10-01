@@ -50,7 +50,13 @@ class ManagedDriver:
                     "evaluator": Evaluator.model_json_schema(),
                     "runtime": Runtime.model_json_schema(),
                 }
+                from davinci.product.adapters import catalog
+
+                context["simulation_adapters"] = catalog()
                 instruction = (
+                    "Declare simulation adapter, supported physics/material/fidelity, CAD/solver units, structured planar interface regions, and required final evidence for every new test. "
+                    "Only shipped scoped adapters are available; do not invent a generic structural/dynamics solver. "
+                    "Use unsupported requirements to request missing capabilities, never silently substitute a preliminary screen. "
                     "Author an engineering test plan before any candidate. Return plan, evaluator, runtime. "
                     "Mark missing critical engineering requirements resolved=false; never invent user loads or material data. "
                     "Evaluator/runtime may be null until configured. Do not create candidate geometry. "

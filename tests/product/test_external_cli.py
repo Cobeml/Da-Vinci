@@ -11,7 +11,7 @@ import time
 import pytest
 import uvicorn
 from test_external import ForbiddenProvider
-from test_lifecycle import FixtureRunner
+from test_simulation import SimulationRunner as FixtureRunner
 
 from davinci.config import Settings
 from davinci.product.api import create_app
@@ -67,6 +67,8 @@ def test_cli_public_contract_and_service_connection(service):
     assert code == 0 and health["data"]["external_available"]
     code, doctor = cli(root, "doctor", "--driver", "external")
     assert code == 0 and not doctor["data"]["model_key_required"]
+    code, adapters = cli(root, "external", "adapters")
+    assert code == 0 and any(a["id"] == "authored-screen" for a in adapters["data"])
     code, schemas = cli(root, "external", "schemas")
     assert code == 0 and "CandidateCommand" in schemas["data"]["schemas"]
     code, opened = cli(root, "external", "open", "--file", str(root / "experiment.json"))

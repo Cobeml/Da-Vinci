@@ -95,7 +95,7 @@ def fake_evaluate(runner, task, p, source, image):
             "deflection_mm": {"value": 0.1, "unit": "mm"},
         },
         "violations": [],
-    }, {"model.step": b"step", "model.glb": b"glb"}
+    }, {"model.step": b"step", "model.glb": b"glTFfixture"}
 
 
 def fake_execute(entry, files, **kw):

@@ -4,6 +4,7 @@ import json
 
 from davinci.errors import safe_error
 from davinci.models import digest, document
+from davinci.product.evidence import archive, manifest
 from davinci.product.tasks import score_evaluation
 from davinci.runner import SandboxError
 
@@ -83,17 +84,29 @@ class LegacyAdapter:
                     "violations": [{"code": "BUILD_OR_EVALUATION", "message": safe_error(exc)}],
                     "fidelity": "not_evaluated",
                 }
-                artifacts = {}
+                artifacts = {**getattr(exc, "outputs", {}), "execution.log": getattr(exc, "log", "").encode()}
             else:
                 raise
         cid = candidate["_id"]
-        refs = {
-            name: self.engine.artifacts.put(
-                data, name, "model/gltf-binary" if name.endswith(".glb") else "application/step"
+        log = artifacts.pop("execution.log", b"").decode(errors="replace")
+        refs = archive(self.engine.artifacts, artifacts, log)
+        evidence = manifest(
+            self.engine.artifacts,
+            refs,
+            {
+                "run_id": run["_id"],
+                "candidate_id": cid,
+                "runtime_image": run["runtime_image_digest"],
+                "task_version": task["version"],
+                "guarantees": "legacy-unverified-coverage",
+            },
+        )
+        result["artifact_manifest"] = evidence.model_dump()
+        if not evidence.complete:
+            result["outcome"] = "failed"
+            result["violations"].append(
+                {"code": "ARTIFACT_QUOTA", "message": "Simulation evidence incomplete"}
             )
-            for name, data in artifacts.items()
-            if name.endswith((".step", ".glb"))
-        }
         self.store.update("candidates", cid, {"artifacts": refs})
         evaluation = document(
             "evaluation", _id="evaluation-" + cid, run_id=run["_id"], candidate_id=cid, **result

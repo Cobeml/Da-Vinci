@@ -8,8 +8,12 @@ from davinci.product.tasks import RESOURCES
 def build_catalog():
     from davinci.product import contracts as c
     from davinci.product import lifecycle_api as api
+    from davinci.product.simulation_contracts import AdapterDescriptor, ArtifactManifest, SimulationSpec
 
     models = [
+        AdapterDescriptor,
+        ArtifactManifest,
+        SimulationSpec,
         c.OperationStatus,
         c.PlanReadiness,
         c.ReportExport,

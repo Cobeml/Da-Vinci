@@ -35,6 +35,22 @@ def test_packaged_task_baseline(tmp_path, name):
     assert result["metrics"][config.objective.metric]["value"] > 0
     assert assets["model.glb"][:4] == b"glTF"
     assert b"ISO-10303" in assets["model.step"][:100]
+    assert assets["execution.log"] is not None and assets["timing.json"]
+    if name == "sensor":
+        p, spec = task["baseline"], task["specification"]
+        width = 88 - (p["window_mm"] if p["window_style"] else 0)
+        inertia = width * p["wall_mm"] ** 3 / 12
+        # Closed-form two-strip cantilever reference, independent of output values.
+        stress = spec["load_n"] / 2 * 35 * p["wall_mm"] / (2 * inertia)
+        displacement = spec["load_n"] / 2 * 35**3 / (3 * spec["youngs_modulus_mpa"] * inertia)
+        assert result["metrics"]["stress_mpa"]["value"] == pytest.approx(stress)
+        assert result["metrics"]["deflection_mm"]["value"] == pytest.approx(displacement)
+    if name == "vtol":
+        nominal = result["performance"]["nominal"]
+        best = nominal["best"]
+        assert best["range_km"] * best["wh_km"] + nominal["overhead_wh"] + nominal[
+            "reserve_wh"
+        ] == pytest.approx(150)
     if name == "custom":
         invalid = {**task["baseline"], "thickness_mm": 2}
         bad, _ = evaluate(runner, task, invalid, task["source"], image)

@@ -44,6 +44,13 @@ def main():
             sock.bind(("127.0.0.1", 0))
             port = sock.getsockname()[1]
         (root / "workspace.yaml").write_text(f"storage: local\ndefault_driver: external\nport: {port}\n")
+        assert {a["id"] for a in cli("external", "adapters")} == {
+            "authored-screen",
+            "sensor-screen",
+            "gripper-screen",
+            "vtol-screen",
+        }
+        assert "ArtifactManifest" in cli("external", "schemas")["schemas"]
         assert "CandidateCommand" in cli("external", "schemas")["schemas"]
         assert "Da Vinci external-agent instructions" in cli("external", "instructions")["instructions"]
         health = cli("service", "ensure")

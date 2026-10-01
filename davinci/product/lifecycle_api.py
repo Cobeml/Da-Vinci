@@ -62,6 +62,12 @@ def router(engine):
     api = APIRouter(prefix="/api/v2")
     life = engine.lifecycle
 
+    @api.get("/simulation-adapters")
+    def simulation_adapters():
+        from davinci.product.adapters import catalog
+
+        return catalog()
+
     @api.get("/schemas")
     def schemas():
         from davinci.product.protocol import schema_catalog

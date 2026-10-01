@@ -105,6 +105,9 @@ def snapshot(config: RunConfig, workspace: Path):
     for c in config.constraints:
         if task["metrics"].get(c.metric) != c.unit:
             raise ValueError(f"Unknown metric or wrong unit: {c.metric}")
+    from davinci.product.adapters import legacy_descriptor
+
+    task["simulation_adapter"] = legacy_descriptor(task).model_dump()
     task["version"] = digest(task)
     return task
 
@@ -146,6 +149,30 @@ def score_evaluation(task, config, evaluation):
 
 def evaluate(runner, task, parameters, source, image):
     check_parameters(task, parameters)
+    from davinci.product.adapters import legacy_descriptor
+    from davinci.product.contracts import Runtime
+
+    descriptor = legacy_descriptor(task)
+    if hasattr(runner, "probe"):
+        probe = runner.probe(Runtime(image=image, solver=descriptor.id, provenance="legacy pinned runtime"))
+        missing = [
+            name
+            for name, version in descriptor.required_software.items()
+            if not probe.get("software", {}).get(name) or (version and probe["software"][name] != version)
+        ]
+        if not probe.get("available") or missing:
+            return {
+                "outcome": "failed",
+                "metrics": {},
+                "violations": [
+                    {
+                        "code": "UNSUPPORTED_CAPABILITY",
+                        "message": "Unavailable pinned runtime/software: " + ", ".join(missing),
+                    }
+                ],
+                "fidelity": "not_evaluated",
+                "simulation_adapter": descriptor.model_dump(),
+            }, {"capability.json": json.dumps(probe).encode()}
     request = json.dumps(
         {
             "parameters": parameters,
@@ -155,14 +182,14 @@ def evaluate(runner, task, parameters, source, image):
         }
     )
     resources = task["resources"]
-    built, _, _ = runner.execute(
+    built, build_log, build_time = runner.execute(
         "/input/_build.py",
         resources | {"source.py": source, "request.json": request},
         image=image,
         timeout=180,
     )
     try:
-        measured, _, _ = runner.execute(
+        measured, log, seconds = runner.execute(
             "/input/" + task["entrypoint"],
             resources | {"model.step": built["model.step"], "request.json": request},
             image=image,
@@ -174,5 +201,25 @@ def evaluate(runner, task, parameters, source, image):
             "metrics": {},
             "violations": [{"code": "EVALUATION_ERROR", "message": str(exc)[:2000]}],
             "fidelity": "not_evaluated",
-        }, {"model.step": built["model.step"]}
-    return json.loads(measured.pop("result.json")), {"model.step": built["model.step"], **measured}
+            "execution_status": exc.reason,
+        }, {
+            **getattr(exc, "outputs", {}),
+            "model.step": built["model.step"],
+            "build.log": build_log.encode(),
+            "execution.log": exc.log.encode(),
+            "timing.json": json.dumps(
+                {"build_seconds": build_time, "evaluation_seconds": exc.duration}
+            ).encode(),
+        }
+    result = json.loads(measured["result.json"])
+    from davinci.product.adapters import legacy_descriptor
+
+    result["simulation_adapter"] = legacy_descriptor(task).model_dump()
+    result["coverage_guarantee"] = "legacy-unverified-coverage"
+    return result, {
+        **measured,
+        "model.step": built["model.step"],
+        "build.log": build_log.encode(),
+        "execution.log": log.encode(),
+        "timing.json": json.dumps({"build_seconds": build_time, "evaluation_seconds": seconds}).encode(),
+    }

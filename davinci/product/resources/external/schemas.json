@@ -1,6 +1,361 @@
 {
   "version": 2,
   "schemas": {
+    "AdapterDescriptor": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "version": {
+          "const": 1,
+          "default": 1,
+          "title": "Version",
+          "type": "integer"
+        },
+        "phenomena": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Phenomena",
+          "type": "array"
+        },
+        "material_models": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Material Models",
+          "type": "array"
+        },
+        "geometry_assumptions": {
+          "title": "Geometry Assumptions",
+          "type": "string"
+        },
+        "fidelities": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Fidelities",
+          "type": "array"
+        },
+        "limitations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Limitations",
+          "type": "array"
+        },
+        "required_software": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": "Required Software",
+          "type": "object"
+        },
+        "reference_checks": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Reference Checks",
+          "type": "array"
+        },
+        "lifecycle": {
+          "default": [
+            "validate_setup",
+            "estimate",
+            "prepare",
+            "execute",
+            "extract",
+            "reference_check"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "title": "Lifecycle",
+          "type": "array"
+        },
+        "routes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Routes",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "phenomena",
+        "material_models",
+        "geometry_assumptions",
+        "fidelities",
+        "limitations",
+        "required_software",
+        "reference_checks",
+        "routes"
+      ],
+      "title": "AdapterDescriptor",
+      "type": "object"
+    },
+    "ArtifactManifest": {
+      "$defs": {
+        "ArtifactEntry": {
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "title": "Name",
+              "type": "string"
+            },
+            "artifact_id": {
+              "title": "Artifact Id",
+              "type": "string"
+            },
+            "sha256": {
+              "pattern": "^[a-f0-9]{64}$",
+              "title": "Sha256",
+              "type": "string"
+            },
+            "size": {
+              "minimum": 0,
+              "title": "Size",
+              "type": "integer"
+            },
+            "media_type": {
+              "title": "Media Type",
+              "type": "string"
+            },
+            "kind": {
+              "enum": [
+                "cad",
+                "mesh",
+                "bindings",
+                "solver_deck",
+                "log",
+                "resources",
+                "fields",
+                "convergence",
+                "uncertainty",
+                "result",
+                "other"
+              ],
+              "title": "Kind",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "artifact_id",
+            "sha256",
+            "size",
+            "media_type",
+            "kind"
+          ],
+          "title": "ArtifactEntry",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "const": 1,
+          "default": 1,
+          "title": "Version",
+          "type": "integer"
+        },
+        "provenance": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Provenance",
+          "type": "object"
+        },
+        "entries": {
+          "items": {
+            "$ref": "#/$defs/ArtifactEntry"
+          },
+          "title": "Entries",
+          "type": "array"
+        },
+        "total_bytes": {
+          "minimum": 0,
+          "title": "Total Bytes",
+          "type": "integer"
+        },
+        "complete": {
+          "default": true,
+          "title": "Complete",
+          "type": "boolean"
+        },
+        "omissions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Omissions",
+          "type": "array"
+        }
+      },
+      "required": [
+        "provenance",
+        "entries",
+        "total_bytes"
+      ],
+      "title": "ArtifactManifest",
+      "type": "object"
+    },
+    "SimulationSpec": {
+      "$defs": {
+        "ResourceEstimate": {
+          "additionalProperties": false,
+          "properties": {
+            "cpu_cores": {
+              "default": 1,
+              "exclusiveMinimum": 0,
+              "maximum": 64,
+              "title": "Cpu Cores",
+              "type": "number"
+            },
+            "memory_mb": {
+              "default": 512,
+              "minimum": 1,
+              "title": "Memory Mb",
+              "type": "integer"
+            },
+            "disk_mb": {
+              "default": 128,
+              "minimum": 1,
+              "title": "Disk Mb",
+              "type": "integer"
+            },
+            "wall_seconds": {
+              "default": 30,
+              "exclusiveMinimum": 0,
+              "title": "Wall Seconds",
+              "type": "number"
+            },
+            "basis": {
+              "default": "Conservative starting estimate; refine from measured execution",
+              "title": "Basis",
+              "type": "string"
+            },
+            "uncertainty": {
+              "default": "Unknown geometry-dependent peak; estimate is not proof of adequacy",
+              "title": "Uncertainty",
+              "type": "string"
+            }
+          },
+          "title": "ResourceEstimate",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "const": 1,
+          "default": 1,
+          "title": "Version",
+          "type": "integer"
+        },
+        "adapter": {
+          "default": "authored-screen",
+          "enum": [
+            "authored-screen",
+            "sensor-screen",
+            "gripper-screen",
+            "vtol-screen"
+          ],
+          "title": "Adapter",
+          "type": "string"
+        },
+        "phenomena": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Phenomena",
+          "type": "array"
+        },
+        "material_model": {
+          "minLength": 1,
+          "title": "Material Model",
+          "type": "string"
+        },
+        "geometry_assumptions": {
+          "minLength": 1,
+          "title": "Geometry Assumptions",
+          "type": "string"
+        },
+        "fidelity": {
+          "minLength": 1,
+          "title": "Fidelity",
+          "type": "string"
+        },
+        "stage": {
+          "default": "final",
+          "enum": [
+            "preliminary",
+            "final"
+          ],
+          "title": "Stage",
+          "type": "string"
+        },
+        "cad_unit": {
+          "default": "mm",
+          "title": "Cad Unit",
+          "type": "string"
+        },
+        "solver_length_unit": {
+          "default": "mm",
+          "title": "Solver Length Unit",
+          "type": "string"
+        },
+        "required_software": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": "Required Software",
+          "type": "object"
+        },
+        "estimate": {
+          "$ref": "#/$defs/ResourceEstimate"
+        },
+        "required_evidence": {
+          "items": {
+            "enum": [
+              "mesh",
+              "solver_deck",
+              "fields",
+              "convergence",
+              "uncertainty"
+            ],
+            "type": "string"
+          },
+          "title": "Required Evidence",
+          "type": "array"
+        }
+      },
+      "required": [
+        "phenomena",
+        "material_model",
+        "geometry_assumptions",
+        "fidelity"
+      ],
+      "title": "SimulationSpec",
+      "type": "object"
+    },
     "OperationStatus": {
       "additionalProperties": false,
       "properties": {
@@ -243,6 +598,11 @@
               },
               "title": "Verification Ids",
               "type": "array"
+            },
+            "simulation": {
+              "additionalProperties": true,
+              "title": "Simulation",
+              "type": "object"
             }
           },
           "required": [
@@ -617,6 +977,17 @@
               "minimum": 0,
               "title": "Tolerance",
               "type": "number"
+            },
+            "region": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/RegionRule"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
             }
           },
           "required": [
@@ -752,6 +1123,126 @@
           "title": "Quantity",
           "type": "object"
         },
+        "RegionRule": {
+          "additionalProperties": false,
+          "description": "Plan-owned planar face selector, expressed in interface units, never CAD indices.",
+          "properties": {
+            "kind": {
+              "const": "planar_face",
+              "default": "planar_face",
+              "title": "Kind",
+              "type": "string"
+            },
+            "center": {
+              "maxItems": 3,
+              "minItems": 3,
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "title": "Center",
+              "type": "array"
+            },
+            "normal": {
+              "maxItems": 3,
+              "minItems": 3,
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "title": "Normal",
+              "type": "array"
+            },
+            "center_tolerance": {
+              "maxItems": 3,
+              "minItems": 3,
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "title": "Center Tolerance",
+              "type": "array"
+            },
+            "normal_tolerance_degrees": {
+              "default": 1,
+              "maximum": 45,
+              "minimum": 0,
+              "title": "Normal Tolerance Degrees",
+              "type": "number"
+            },
+            "extent_min": {
+              "maxItems": 3,
+              "minItems": 3,
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "title": "Extent Min",
+              "type": "array"
+            },
+            "extent_max": {
+              "maxItems": 3,
+              "minItems": 3,
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "title": "Extent Max",
+              "type": "array"
+            },
+            "expected_count": {
+              "default": 1,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Expected Count",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "center",
+            "normal",
+            "center_tolerance",
+            "extent_min",
+            "extent_max"
+          ],
+          "title": "RegionRule",
+          "type": "object"
+        },
         "Requirement": {
           "additionalProperties": false,
           "properties": {
@@ -798,6 +1289,151 @@
             "source"
           ],
           "title": "Requirement",
+          "type": "object"
+        },
+        "ResourceEstimate": {
+          "additionalProperties": false,
+          "properties": {
+            "cpu_cores": {
+              "default": 1,
+              "exclusiveMinimum": 0,
+              "maximum": 64,
+              "title": "Cpu Cores",
+              "type": "number"
+            },
+            "memory_mb": {
+              "default": 512,
+              "minimum": 1,
+              "title": "Memory Mb",
+              "type": "integer"
+            },
+            "disk_mb": {
+              "default": 128,
+              "minimum": 1,
+              "title": "Disk Mb",
+              "type": "integer"
+            },
+            "wall_seconds": {
+              "default": 30,
+              "exclusiveMinimum": 0,
+              "title": "Wall Seconds",
+              "type": "number"
+            },
+            "basis": {
+              "default": "Conservative starting estimate; refine from measured execution",
+              "title": "Basis",
+              "type": "string"
+            },
+            "uncertainty": {
+              "default": "Unknown geometry-dependent peak; estimate is not proof of adequacy",
+              "title": "Uncertainty",
+              "type": "string"
+            }
+          },
+          "title": "ResourceEstimate",
+          "type": "object"
+        },
+        "SimulationSpec": {
+          "additionalProperties": false,
+          "properties": {
+            "version": {
+              "const": 1,
+              "default": 1,
+              "title": "Version",
+              "type": "integer"
+            },
+            "adapter": {
+              "default": "authored-screen",
+              "enum": [
+                "authored-screen",
+                "sensor-screen",
+                "gripper-screen",
+                "vtol-screen"
+              ],
+              "title": "Adapter",
+              "type": "string"
+            },
+            "phenomena": {
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "title": "Phenomena",
+              "type": "array"
+            },
+            "material_model": {
+              "minLength": 1,
+              "title": "Material Model",
+              "type": "string"
+            },
+            "geometry_assumptions": {
+              "minLength": 1,
+              "title": "Geometry Assumptions",
+              "type": "string"
+            },
+            "fidelity": {
+              "minLength": 1,
+              "title": "Fidelity",
+              "type": "string"
+            },
+            "stage": {
+              "default": "final",
+              "enum": [
+                "preliminary",
+                "final"
+              ],
+              "title": "Stage",
+              "type": "string"
+            },
+            "cad_unit": {
+              "default": "mm",
+              "title": "Cad Unit",
+              "type": "string"
+            },
+            "solver_length_unit": {
+              "default": "mm",
+              "title": "Solver Length Unit",
+              "type": "string"
+            },
+            "required_software": {
+              "additionalProperties": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "title": "Required Software",
+              "type": "object"
+            },
+            "estimate": {
+              "$ref": "#/$defs/ResourceEstimate"
+            },
+            "required_evidence": {
+              "items": {
+                "enum": [
+                  "mesh",
+                  "solver_deck",
+                  "fields",
+                  "convergence",
+                  "uncertainty"
+                ],
+                "type": "string"
+              },
+              "title": "Required Evidence",
+              "type": "array"
+            }
+          },
+          "required": [
+            "phenomena",
+            "material_model",
+            "geometry_assumptions",
+            "fidelity"
+          ],
+          "title": "SimulationSpec",
           "type": "object"
         },
         "Test": {
@@ -880,6 +1516,17 @@
               "minLength": 1,
               "title": "Mesh Rule",
               "type": "string"
+            },
+            "simulation": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/SimulationSpec"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
             }
           },
           "required": [
@@ -1174,7 +1821,11 @@
             "unavailable_runtime",
             "unsupported_physics",
             "interrupted",
-            "verification_failed"
+            "verification_failed",
+            "invalid_units",
+            "unsupported_material",
+            "missing_solver",
+            "artifact_quota"
           ],
           "title": "Reason",
           "type": "string"
@@ -1220,6 +1871,109 @@
     },
     "EvaluationResult": {
       "$defs": {
+        "ArtifactEntry": {
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "title": "Name",
+              "type": "string"
+            },
+            "artifact_id": {
+              "title": "Artifact Id",
+              "type": "string"
+            },
+            "sha256": {
+              "pattern": "^[a-f0-9]{64}$",
+              "title": "Sha256",
+              "type": "string"
+            },
+            "size": {
+              "minimum": 0,
+              "title": "Size",
+              "type": "integer"
+            },
+            "media_type": {
+              "title": "Media Type",
+              "type": "string"
+            },
+            "kind": {
+              "enum": [
+                "cad",
+                "mesh",
+                "bindings",
+                "solver_deck",
+                "log",
+                "resources",
+                "fields",
+                "convergence",
+                "uncertainty",
+                "result",
+                "other"
+              ],
+              "title": "Kind",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "artifact_id",
+            "sha256",
+            "size",
+            "media_type",
+            "kind"
+          ],
+          "title": "ArtifactEntry",
+          "type": "object"
+        },
+        "ArtifactManifest": {
+          "additionalProperties": false,
+          "properties": {
+            "version": {
+              "const": 1,
+              "default": 1,
+              "title": "Version",
+              "type": "integer"
+            },
+            "provenance": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "title": "Provenance",
+              "type": "object"
+            },
+            "entries": {
+              "items": {
+                "$ref": "#/$defs/ArtifactEntry"
+              },
+              "title": "Entries",
+              "type": "array"
+            },
+            "total_bytes": {
+              "minimum": 0,
+              "title": "Total Bytes",
+              "type": "integer"
+            },
+            "complete": {
+              "default": true,
+              "title": "Complete",
+              "type": "boolean"
+            },
+            "omissions": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Omissions",
+              "type": "array"
+            }
+          },
+          "required": [
+            "provenance",
+            "entries",
+            "total_bytes"
+          ],
+          "title": "ArtifactManifest",
+          "type": "object"
+        },
         "Measurement": {
           "additionalProperties": false,
           "properties": {
@@ -1358,7 +2112,11 @@
                 "unavailable_runtime",
                 "unsupported_physics",
                 "interrupted",
-                "verification_failed"
+                "verification_failed",
+                "invalid_units",
+                "unsupported_material",
+                "missing_solver",
+                "artifact_quota"
               ],
               "title": "Reason",
               "type": "string"
@@ -1468,6 +2226,17 @@
           },
           "title": "Artifacts",
           "type": "object"
+        },
+        "manifest": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactManifest"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         },
         "duration_seconds": {
           "minimum": 0,
@@ -1744,6 +2513,17 @@
               "minimum": 0,
               "title": "Tolerance",
               "type": "number"
+            },
+            "region": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/RegionRule"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
             }
           },
           "required": [
@@ -1956,6 +2736,126 @@
           "title": "Quantity",
           "type": "object"
         },
+        "RegionRule": {
+          "additionalProperties": false,
+          "description": "Plan-owned planar face selector, expressed in interface units, never CAD indices.",
+          "properties": {
+            "kind": {
+              "const": "planar_face",
+              "default": "planar_face",
+              "title": "Kind",
+              "type": "string"
+            },
+            "center": {
+              "maxItems": 3,
+              "minItems": 3,
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "title": "Center",
+              "type": "array"
+            },
+            "normal": {
+              "maxItems": 3,
+              "minItems": 3,
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "title": "Normal",
+              "type": "array"
+            },
+            "center_tolerance": {
+              "maxItems": 3,
+              "minItems": 3,
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "title": "Center Tolerance",
+              "type": "array"
+            },
+            "normal_tolerance_degrees": {
+              "default": 1,
+              "maximum": 45,
+              "minimum": 0,
+              "title": "Normal Tolerance Degrees",
+              "type": "number"
+            },
+            "extent_min": {
+              "maxItems": 3,
+              "minItems": 3,
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "title": "Extent Min",
+              "type": "array"
+            },
+            "extent_max": {
+              "maxItems": 3,
+              "minItems": 3,
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "title": "Extent Max",
+              "type": "array"
+            },
+            "expected_count": {
+              "default": 1,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Expected Count",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "center",
+            "normal",
+            "center_tolerance",
+            "extent_min",
+            "extent_max"
+          ],
+          "title": "RegionRule",
+          "type": "object"
+        },
         "Requirement": {
           "additionalProperties": false,
           "properties": {
@@ -2004,6 +2904,48 @@
           "title": "Requirement",
           "type": "object"
         },
+        "ResourceEstimate": {
+          "additionalProperties": false,
+          "properties": {
+            "cpu_cores": {
+              "default": 1,
+              "exclusiveMinimum": 0,
+              "maximum": 64,
+              "title": "Cpu Cores",
+              "type": "number"
+            },
+            "memory_mb": {
+              "default": 512,
+              "minimum": 1,
+              "title": "Memory Mb",
+              "type": "integer"
+            },
+            "disk_mb": {
+              "default": 128,
+              "minimum": 1,
+              "title": "Disk Mb",
+              "type": "integer"
+            },
+            "wall_seconds": {
+              "default": 30,
+              "exclusiveMinimum": 0,
+              "title": "Wall Seconds",
+              "type": "number"
+            },
+            "basis": {
+              "default": "Conservative starting estimate; refine from measured execution",
+              "title": "Basis",
+              "type": "string"
+            },
+            "uncertainty": {
+              "default": "Unknown geometry-dependent peak; estimate is not proof of adequacy",
+              "title": "Uncertainty",
+              "type": "string"
+            }
+          },
+          "title": "ResourceEstimate",
+          "type": "object"
+        },
         "Runtime": {
           "additionalProperties": false,
           "properties": {
@@ -2046,6 +2988,66 @@
               "minimum": 1,
               "title": "Memory Gb",
               "type": "integer"
+            },
+            "backend": {
+              "default": "docker",
+              "enum": [
+                "docker",
+                "remote"
+              ],
+              "title": "Backend",
+              "type": "string"
+            },
+            "accelerator": {
+              "default": "none",
+              "enum": [
+                "none",
+                "gpu"
+              ],
+              "title": "Accelerator",
+              "type": "string"
+            },
+            "cpu_cores": {
+              "default": 2,
+              "maximum": 8,
+              "minimum": 0.25,
+              "title": "Cpu Cores",
+              "type": "number"
+            },
+            "job_seconds": {
+              "default": 1800,
+              "maximum": 3600,
+              "minimum": 1,
+              "title": "Job Seconds",
+              "type": "integer"
+            },
+            "compute_seconds": {
+              "default": 3600,
+              "maximum": 28800,
+              "minimum": 1,
+              "title": "Compute Seconds",
+              "type": "number"
+            },
+            "artifact_bytes": {
+              "default": 64000000,
+              "maximum": 256000000,
+              "minimum": 1024,
+              "title": "Artifact Bytes",
+              "type": "integer"
+            },
+            "file_bytes": {
+              "default": 32000000,
+              "maximum": 128000000,
+              "minimum": 1024,
+              "title": "File Bytes",
+              "type": "integer"
+            },
+            "log_bytes": {
+              "default": 8000000,
+              "maximum": 16000000,
+              "minimum": 1024,
+              "title": "Log Bytes",
+              "type": "integer"
             }
           },
           "required": [
@@ -2054,6 +3056,109 @@
             "provenance"
           ],
           "title": "Runtime",
+          "type": "object"
+        },
+        "SimulationSpec": {
+          "additionalProperties": false,
+          "properties": {
+            "version": {
+              "const": 1,
+              "default": 1,
+              "title": "Version",
+              "type": "integer"
+            },
+            "adapter": {
+              "default": "authored-screen",
+              "enum": [
+                "authored-screen",
+                "sensor-screen",
+                "gripper-screen",
+                "vtol-screen"
+              ],
+              "title": "Adapter",
+              "type": "string"
+            },
+            "phenomena": {
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "title": "Phenomena",
+              "type": "array"
+            },
+            "material_model": {
+              "minLength": 1,
+              "title": "Material Model",
+              "type": "string"
+            },
+            "geometry_assumptions": {
+              "minLength": 1,
+              "title": "Geometry Assumptions",
+              "type": "string"
+            },
+            "fidelity": {
+              "minLength": 1,
+              "title": "Fidelity",
+              "type": "string"
+            },
+            "stage": {
+              "default": "final",
+              "enum": [
+                "preliminary",
+                "final"
+              ],
+              "title": "Stage",
+              "type": "string"
+            },
+            "cad_unit": {
+              "default": "mm",
+              "title": "Cad Unit",
+              "type": "string"
+            },
+            "solver_length_unit": {
+              "default": "mm",
+              "title": "Solver Length Unit",
+              "type": "string"
+            },
+            "required_software": {
+              "additionalProperties": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "title": "Required Software",
+              "type": "object"
+            },
+            "estimate": {
+              "$ref": "#/$defs/ResourceEstimate"
+            },
+            "required_evidence": {
+              "items": {
+                "enum": [
+                  "mesh",
+                  "solver_deck",
+                  "fields",
+                  "convergence",
+                  "uncertainty"
+                ],
+                "type": "string"
+              },
+              "title": "Required Evidence",
+              "type": "array"
+            }
+          },
+          "required": [
+            "phenomena",
+            "material_model",
+            "geometry_assumptions",
+            "fidelity"
+          ],
+          "title": "SimulationSpec",
           "type": "object"
         },
         "Test": {
@@ -2136,6 +3241,17 @@
               "minLength": 1,
               "title": "Mesh Rule",
               "type": "string"
+            },
+            "simulation": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/SimulationSpec"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
             }
           },
           "required": [

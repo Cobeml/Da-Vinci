@@ -11,6 +11,7 @@ from jsonschema import Draft202012Validator
 from pydantic import Field, model_validator
 
 from davinci.product.config import ObjectConfig, Objective, Strict
+from davinci.product.simulation_contracts import ArtifactManifest, RegionRule, SimulationSpec
 
 Status = Literal[
     "pass", "physical_failure", "invalid_setup", "numerical_failure", "not_run", "unsupported_capability"
@@ -31,6 +32,10 @@ Reason = Literal[
     "unsupported_physics",
     "interrupted",
     "verification_failed",
+    "invalid_units",
+    "unsupported_material",
+    "missing_solver",
+    "artifact_quota",
 ]
 
 
@@ -73,6 +78,7 @@ class Interface(Strict):
     binding_rule: str = Field(min_length=1)
     unit: str = Field(min_length=1)
     tolerance: float = Field(ge=0)
+    region: RegionRule | None = None
 
 
 class LoadCase(Strict):
@@ -107,6 +113,7 @@ class Test(Contract):
     criteria: list[Criterion] = Field(default_factory=list)
     accuracy: dict[str, Accuracy]
     mesh_rule: str = Field(min_length=1)
+    simulation: SimulationSpec | None = None
 
     @model_validator(mode="after")
     def consistent(self):
@@ -209,6 +216,14 @@ class Runtime(Contract):
     provenance: str = Field(min_length=1)
     timeout_seconds: int = Field(default=180, ge=1, le=600)
     memory_gb: int = Field(default=4, ge=1, le=12)
+    backend: Literal["docker", "remote"] = "docker"
+    accelerator: Literal["none", "gpu"] = "none"
+    cpu_cores: float = Field(default=2, ge=0.25, le=8)
+    job_seconds: int = Field(default=1800, ge=1, le=3600)
+    compute_seconds: float = Field(default=3600, ge=1, le=28800)
+    artifact_bytes: int = Field(default=64_000_000, ge=1024, le=256_000_000)
+    file_bytes: int = Field(default=32_000_000, ge=1024, le=128_000_000)
+    log_bytes: int = Field(default=8_000_000, ge=1024, le=16_000_000)
 
 
 class CapabilityReport(Contract):
@@ -217,6 +232,7 @@ class CapabilityReport(Contract):
     status: Literal["verified", "unavailable", "unverified"]
     reason: str
     verification_ids: list[str] = Field(default_factory=list)
+    simulation: dict[str, Any] = Field(default_factory=dict)
 
 
 class Coverage(Contract):
@@ -260,10 +276,23 @@ class TestResult(Contract):
                 "invalid_binding",
                 "invalid_result",
                 "verification_failed",
+                "invalid_units",
             },
             "numerical_failure": {"solver_error", "missing_evidence"},
-            "not_run": {"timeout", "cancelled", "resource_exhaustion", "missing_evidence", "interrupted"},
-            "unsupported_capability": {"unavailable_runtime", "unsupported_physics"},
+            "not_run": {
+                "timeout",
+                "cancelled",
+                "resource_exhaustion",
+                "artifact_quota",
+                "missing_evidence",
+                "interrupted",
+            },
+            "unsupported_capability": {
+                "unavailable_runtime",
+                "unsupported_physics",
+                "unsupported_material",
+                "missing_solver",
+            },
         }
         if self.reason not in reasons[self.status]:
             raise ValueError("Reason code does not match result status")
@@ -293,6 +322,7 @@ class EvaluationResult(Contract):
     candidate_version: str
     tests: list[TestResult]
     artifacts: dict[str, str]
+    manifest: ArtifactManifest | None = None
     duration_seconds: float = Field(ge=0)
     at: str
     actor: Literal["harness"] = "harness"
