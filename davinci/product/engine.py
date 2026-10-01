@@ -155,7 +155,7 @@ class Engine:
             raise InterruptedError("Run paused or stopped")
 
     def stop(self, run_id):
-        if self.store.get("runs", run_id).get("lifecycle_version") == 2:
+        if (self.store.get("runs", run_id) or {}).get("lifecycle_version") == 2:
             raise ValueError("Use the v2 lifecycle cancel operation")
         with self.lock:
             run = self.store.update(

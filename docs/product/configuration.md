@@ -58,10 +58,13 @@ input_usd_per_million: 20
 output_usd_per_million: 75
 daily_budget_usd: 50
 output_tokens: 6000
+embeddings: false              # opt in explicitly for managed Atlas vector memory
 ```
 
-Model rates are configurable conservative accounting estimates, not a current vendor price quote. Verify them for your model and account. Changing `model` requires matching `pricing_model` and appropriate rates. Generation uses the Responses API; embeddings, when Atlas is enabled, use `text-embedding-3-small` with a separately recorded $0.02/million-token estimate. Cache discounts are not assumed.
+Model rates are configurable conservative accounting estimates, not a current vendor price quote. Verify them for your model and account. Changing `model` requires matching `pricing_model` and appropriate rates. Generation uses the Responses API; embeddings require `embeddings: true`, Atlas storage, a managed live run, and a model key. They use `text-embedding-3-small` with a separately recorded $0.02/million-token estimate. Cache discounts are not assumed.
 
 API tokens and MongoDB URIs belong in environment variables (`OPENAI_API_KEY`, `MONGODB_URI`) or `.env`, never in YAML. Settings and exports do not expose these secrets. The app does not need the developer's repository `.env` when installed elsewhere.
 
 Storage is explicit: the presence of `MONGODB_URI` alone does not enable Atlas. Local SQLite records, CAD artifacts, request checkpoints, and source Git snapshots live in `.davinci/`.
+
+Version-2 experiments use the separate [lifecycle JSON/Python contracts](lifecycle.md). This YAML format remains version 1; historical runs are not implicitly upgraded.

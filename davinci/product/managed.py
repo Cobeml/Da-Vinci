@@ -84,7 +84,7 @@ class ManagedDriver:
             current = self.lifecycle.get(eid)
             if current.get("job", {}).get("status") == "running":
                 self.lifecycle._finish(eid, job["id"], {"phase": "interrupted", "resume_phase": row["phase"]})
-            elif current["phase"] not in ("cancelled", "completed"):
+            elif current["phase"] == row["phase"] and current.get("job", {}).get("id") == job["id"]:
                 self.engine.store.update(
                     "runs",
                     eid,

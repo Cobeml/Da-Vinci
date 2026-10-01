@@ -671,3 +671,39 @@ def test_legacy_suite_identity_excludes_builder(engine):
     first = identities(task, config, IMAGE)
     changed = {**task, "source": task["source"] + "\n# edited builder\n", "version": "changed"}
     assert identities(changed, config, IMAGE) == first
+
+
+def test_design_schema_cannot_resolve_external_resources():
+    p = plan().model_dump()
+    p["design_schema"]["properties"]["thickness"] = {"$ref": "https://untrusted.invalid/schema"}
+    with pytest.raises(ValueError, match="local JSON pointers"):
+        Plan.model_validate(p)
+
+
+def test_finalization_checks_reference_evidence_integrity(engine):
+    row = evaluated(engine, frozen(engine))
+    row = engine.lifecycle.reflect(row["_id"], cmd(row, "reflect"), lesson="Measured reference comparison")
+    artifact = engine.store.get("artifacts", row["suite_artifact"])
+    (engine.artifacts.root / artifact["sha256"]).write_bytes(b"corrupt suite")
+    with pytest.raises(ValueError, match="checksum"):
+        engine.lifecycle.finalize(row["_id"], cmd(row, "finalize"))
+    assert engine.lifecycle.get(row["_id"])["phase"] != "completed"
+
+
+def test_recovery_preserves_cancellation(engine):
+    row = frozen(engine)
+    row = engine.lifecycle.submit_candidate(row["_id"], cmd(row, "candidate"), candidate())
+    engine.store.update(
+        "runs", row["_id"], {"phase": "cancelled", "job": {"id": "interrupted-cancel", "status": "running"}}
+    )
+    engine.recover()
+    row = engine.lifecycle.get(row["_id"])
+    assert row["phase"] == "cancelled" and row["job"]["reason"] == "cancelled"
+
+
+@pytest.mark.parametrize("value", [float("nan"), float("inf"), True, "1.0"])
+def test_measurements_reject_nonfinite_or_coerced_values(value):
+    from davinci.product.contracts import Measurement
+
+    with pytest.raises(ValueError):
+        Measurement(value=value, unit="g", numerical_error=0, uncertainty=0)

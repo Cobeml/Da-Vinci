@@ -40,7 +40,7 @@ class Contract(Strict):
 
 
 class Quantity(Strict):
-    value: float
+    value: float = Field(strict=True)
     unit: str = Field(min_length=1)
     dimension: str = Field(min_length=1)
 
@@ -133,6 +133,23 @@ class Plan(Contract):
     @model_validator(mode="after")
     def consistent(self):
         Draft202012Validator.check_schema(self.design_schema)
+
+        def local_schema(value):
+            if isinstance(value, dict):
+                for key, child in value.items():
+                    if key == "$id" or (
+                        key in ("$ref", "$dynamicRef", "$recursiveRef")
+                        and (not isinstance(child, str) or not child.startswith("#/"))
+                    ):
+                        raise ValueError(
+                            "Design schemas may only reference local JSON pointers; no external resources"
+                        )
+                    local_schema(child)
+            elif isinstance(value, list):
+                for child in value:
+                    local_schema(child)
+
+        local_schema(self.design_schema)
         if (
             self.design_schema.get("type") != "object"
             or self.design_schema.get("additionalProperties") is not False
@@ -140,6 +157,8 @@ class Plan(Contract):
             raise ValueError("Design schema must be a closed object")
         if set(self.design_schema.get("properties", {})) != set(self.design_units):
             raise ValueError("Every editable variable needs a unit (use '1' for dimensionless)")
+        if any(not unit.strip() for unit in self.design_units.values()):
+            raise ValueError("Editable variable units cannot be blank")
         for rows in (self.requirements, self.interfaces, self.tests):
             if len({r.id for r in rows}) != len(rows):
                 raise ValueError("Duplicate contract identifier")
@@ -214,10 +233,10 @@ class Candidate(Contract):
 
 
 class Measurement(Strict):
-    value: float
+    value: float = Field(strict=True)
     unit: str
-    numerical_error: float = Field(ge=0)
-    uncertainty: float = Field(ge=0)
+    numerical_error: float = Field(ge=0, strict=True)
+    uncertainty: float = Field(ge=0, strict=True)
 
 
 class TestResult(Contract):
@@ -232,10 +251,22 @@ class TestResult(Contract):
 
     @model_validator(mode="after")
     def reason_matches_status(self):
-        if self.status == "pass" and self.reason != "ok":
-            raise ValueError("Passing results require reason=ok")
-        if self.status != "pass" and self.reason == "ok":
-            raise ValueError("Nonpassing results require a reason code")
+        reasons = {
+            "pass": {"ok"},
+            "physical_failure": {"acceptance_limit"},
+            "invalid_setup": {
+                "build_failed",
+                "invalid_geometry",
+                "invalid_binding",
+                "invalid_result",
+                "verification_failed",
+            },
+            "numerical_failure": {"solver_error", "missing_evidence"},
+            "not_run": {"timeout", "cancelled", "resource_exhaustion", "missing_evidence", "interrupted"},
+            "unsupported_capability": {"unavailable_runtime", "unsupported_physics"},
+        }
+        if self.reason not in reasons[self.status]:
+            raise ValueError("Reason code does not match result status")
         return self
 
 

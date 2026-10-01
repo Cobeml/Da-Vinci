@@ -7,7 +7,7 @@ storage: atlas
 database: da_vinci_product
 ```
 
-Supply `MONGODB_URI` and `OPENAI_API_KEY` through the environment or workspace `.env`. Configure Atlas network access for the host's actual outbound IP, not its Tailscale address unless your routing intentionally exits through that address.
+Supply `MONGODB_URI` through the environment or workspace `.env`. `OPENAI_API_KEY` is needed only for managed live reasoning or explicitly enabled embeddings; external lifecycle operations and lexical retrieval need no model key. Configure Atlas network access for the host's actual outbound IP, not its Tailscale address unless your routing intentionally exits through that address.
 
 Use a dedicated product database. Do not point the product at the historical `da_vinci` study database. The MVP supports one server per workspace/database; sharing one database between simultaneously running workspace servers is not supported.
 
@@ -27,6 +27,6 @@ Create a Vector Search index named `product_memory` on the `memories` collection
 }
 ```
 
-Only matching object/task versions are retrieved. The engine uses `text-embedding-3-small`; if embedding or vector queries fail, recent structured and lexical evidence remains available. The run records a vector-query fallback event. Missing Atlas connectivity itself does not switch persistence to SQLite.
+For managed v1 vector memory, set `embeddings: true` in `workspace.yaml` and configure a model key. Embeddings default to off; missing keys never create a hidden dependency for external drivers. Only matching object/task versions are retrieved. The engine uses `text-embedding-3-small`; if embedding or vector queries fail, recent structured and lexical evidence remains available. The run records a vector-query fallback event. Missing Atlas connectivity itself does not switch persistence to SQLite.
 
 There is no local-to-Atlas migration tool in the MVP. Choose storage when starting a workspace. Historical demos use recorded fixtures rather than importing or modifying the live database.

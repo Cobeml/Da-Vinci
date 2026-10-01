@@ -7,6 +7,7 @@ Da Vinci is a Python package with a localhost interface for iterative CAD optimi
 - [Using the workspace](workspace.md)
 - [Custom engineering tasks](custom-tasks.md)
 - [How improvement works](architecture.md)
+- [Experiment lifecycle and external agents](lifecycle.md)
 - [MongoDB Atlas for Scalable Model Improvement](atlas.md)
 - [Development and release](development.md)
 

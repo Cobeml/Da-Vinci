@@ -1,6 +1,6 @@
 # How improvement works
 
-The product separates the design agent from the evaluator:
+The product separates the design agent from the evaluator. The existing YAML/gallery workflow below uses the v1 compatibility driver. The [version-2 experiment lifecycle](lifecycle.md) adds draft task authoring, verified frozen suites, external drivers, and typed evidence without requiring a baseline at opening.
 
 ```mermaid
 sequenceDiagram

@@ -38,3 +38,7 @@ The existing `product.yml` workflow tests and builds downloadable artifacts; it 
 6. Verify `pip install da-vinci-harness==<version>` from PyPI and the `davinci` command, then update the installation docs and README with the published version.
 
 The publishing workflow and account setup above are future release steps; they are not enabled by the current CI workflow.
+
+## Lifecycle foundation
+
+See [the public lifecycle contracts](lifecycle.md) and [the implementation record](implementation-lifecycle.md) before changing lifecycle or compatibility behavior. The new v2 integration is included in `tests/product/test_cad.py`; the default non-integration suite includes deterministic external and managed driver fixtures. Do not run paid models or private databases merely because credentials exist.

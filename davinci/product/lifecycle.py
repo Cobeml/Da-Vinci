@@ -644,6 +644,11 @@ class Lifecycle:
             return row
         self._context(row)
         # Recompute final checks, never trust a previously serialized acceptance flag.
+        references = [row["suite_artifact"], row["execution_artifact"], *row["plan_revisions"]]
+        references.extend(f["artifact"] for f in row["fixtures"])
+        references.extend(artifact for v in row["verifications"] for artifact in v["evidence"].values())
+        for artifact in references:
+            self.artifacts.read(artifact)
         for candidate in row["candidates"]:
             self.artifacts.read(candidate["source_artifact"])
         for result in row["results"]:
@@ -714,14 +719,19 @@ class Lifecycle:
         # Called only at exclusive server startup, as with the v1 worker.
         for row in self.store.list("runs", {"lifecycle_version": 2}, limit=10000):
             if row.get("job") and row["job"]["status"] == "running":
+                cancelled = row["phase"] == "cancelled"
                 self.store.update(
                     "runs",
                     row["_id"],
                     {
-                        "phase": "interrupted",
-                        "status": "paused",
+                        "phase": "cancelled" if cancelled else "interrupted",
+                        "status": "cancelled" if cancelled else "paused",
                         "revision": row["revision"] + 1,
-                        "job": {**row["job"], "status": "interrupted", "reason": "interrupted"},
+                        "job": {
+                            **row["job"],
+                            "status": "cancelled" if cancelled else "interrupted",
+                            "reason": "cancelled" if cancelled else "interrupted",
+                        },
                     },
                     {"revision": row["revision"]},
                 )
