@@ -38,6 +38,8 @@ Run snapshots preserve parameters, source, task hash, runtime image digest, eval
 
 One managed worker executes one run at a time. The browser receives events and polls for state reconciliation. The server is localhost-only and rejects unexpected hosts and cross-origin mutation requests. Docker containers have no network, no credentials, limited resources, and no write access to the evaluator source.
 
+The [managed request route](managed-requests.md) adds resumable task/test authoring before this loop. It uses the same lifecycle and job worker, with trusted reference verification before candidate generation. Its automatic verification currently supports the rectangular-beam screening recipe.
+
 ## Limits
 
 Sensor evaluation uses a conservative wall-strip screen. The gripper uses a linear frame model and sampled travel checks. VTOL uses the established coupled aerodynamic/energy screening model; the live template does not automatically repeat the historical campaign's finalist convergence study. The UI labels estimates and never claims flight, fatigue, manufacturing, or certification validation.

@@ -78,3 +78,7 @@ For a no-API-cost trial, set `run.mode: replay`. This uses deterministic proposa
 - **Atlas unavailable:** configured Atlas failures do not silently switch databases. Restore connectivity or create a separate local workspace.
 
 The product server binds only to loopback. Remote multi-user hosting and Tailscale access to this server are outside the MVP. The existing website demo remains available through its separate Tailscale listener.
+
+## Start from a description
+
+For supported automatically verified requests without a pre-authored task directory, use [managed requests](managed-requests.md): `davinci managed request --help`. The existing YAML and gallery workflow remains available.
