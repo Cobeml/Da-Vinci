@@ -11,9 +11,12 @@ from davinci.budget import Budget, BudgetExceeded
 from davinci.config import Settings
 from davinci.errors import safe_error
 from davinci.models import digest, document, now
+from davinci.product.compatibility import LegacyAdapter, identities
 from davinci.product.config import RunConfig, parse_yaml, workspace_settings
+from davinci.product.lifecycle import Lifecycle
+from davinci.product.managed import ManagedDriver
 from davinci.product.provider import Provider, UncertainRequest
-from davinci.product.tasks import RESOURCES, check_parameters, evaluate, score_evaluation, snapshot
+from davinci.product.tasks import RESOURCES, check_parameters, evaluate, snapshot
 from davinci.runner import Runner, SandboxError
 from davinci.store import Store
 
@@ -41,6 +44,9 @@ class Engine:
         self.shutdown = threading.Event()
         self.busy = False
         self.store.insert("pointers", {"_id": "product-active-run", "run_id": None})
+        self.lifecycle = Lifecycle(self)
+        self.legacy = LegacyAdapter(self)
+        self.managed = ManagedDriver(self)
 
     def validate(self, content):
         config = parse_yaml(content)
@@ -91,6 +97,10 @@ class Engine:
         run = document(
             "run",
             object_id=config.object.slug,
+            lifecycle_version=1,
+            driver="managed",
+            mode=config.run.mode,
+            acceptance_identity=identities(task, config, image),
             config=config.model_dump(),
             original_yaml=content,
             task_version=task["version"],
@@ -140,10 +150,13 @@ class Engine:
         self.store.update("pointers", "product-active-run", {"run_id": None}, {"run_id": run_id})
 
     def ensure_running(self, run_id):
-        if self.shutdown.is_set() or self.store.get("runs", run_id)["status"] != "running":
+        row = self.store.get("runs", run_id)
+        if self.shutdown.is_set() or row["status"] != "running":
             raise InterruptedError("Run paused or stopped")
 
     def stop(self, run_id):
+        if self.store.get("runs", run_id).get("lifecycle_version") == 2:
+            raise ValueError("Use the v2 lifecycle cancel operation")
         with self.lock:
             run = self.store.update(
                 "runs", run_id, {"status": "stopped", "phase": "stopped"}, {"status": "running"}
@@ -158,6 +171,8 @@ class Engine:
     def resume(self, run_id):
         with self.lock:
             run = self.store.get("runs", run_id)
+            if run and run.get("lifecycle_version") == 2:
+                raise ValueError("Use the v2 lifecycle resume operation")
             if not run or run["status"] not in ("paused", "stopped"):
                 raise ValueError("Only paused or stopped runs can resume")
             uncertain = self.store.list(
@@ -176,7 +191,10 @@ class Engine:
             return self.store.get("runs", run_id)
 
     def recover(self):
+        self.lifecycle.recover()
         for run in self.store.list("runs", {"status": "running"}, limit=10000):
+            if run.get("lifecycle_version") == 2:
+                continue
             self.store.update("runs", run["_id"], {"status": "paused", "phase": "interrupted"})
         self.store.update("pointers", "product-active-run", {"run_id": None})
         # Requests interrupted before settlement retain their conservative reservation as spend.
@@ -193,6 +211,9 @@ class Engine:
                 if not pointer["run_id"]:
                     continue
                 run_id = pointer["run_id"]
+                active = self.store.get("runs", run_id)
+                if active and active.get("lifecycle_version") == 2:
+                    continue  # synchronous lifecycle execution owns the shared slot
                 self.busy = True
             try:
                 self.execute(run_id)
@@ -262,6 +283,8 @@ class Engine:
 
     def execute(self, run_id):
         run = self.store.get("runs", run_id)
+        if run.get("lifecycle_version") == 2:
+            raise ValueError("Use validated lifecycle operations for v2 experiments")
         config, task = RunConfig.model_validate(run["config"]), run["task"]
         provider = self.provider_type(self, run)
         self.runner.cancelled = lambda: (
@@ -320,77 +343,10 @@ class Engine:
                 )
                 if not isinstance(candidate["source"], str) or len(candidate["source"]) > 40000:
                     raise ValueError("Invalid candidate source")
-                self.store.insert("candidates", candidate)
-                commit = self.repository.commit(
-                    cid,
-                    {
-                        "build.py": candidate["source"],
-                        "parameters.json": json.dumps(candidate["parameters"]),
-                        "run.yaml": run["original_yaml"],
-                    },
-                )
-                self.store.update("candidates", cid, {"source_commit": commit})
-                self.store.event(run_id, "candidate_created", "CAD proposal archived", candidate_id=cid)
+                self.legacy.submit(run, candidate)
             evaluation = self.store.get("evaluations", "evaluation-" + cid)
             if not evaluation:
-                self.ensure_running(run_id)
-                self.store.update("runs", run_id, {"phase": "evaluating"})
-                try:
-                    result, artifacts = evaluate(
-                        self.runner,
-                        task,
-                        candidate["parameters"],
-                        candidate["source"],
-                        run["runtime_image_digest"],
-                    )
-                    result = score_evaluation(task, config, result)
-                except Exception as exc:
-                    self.ensure_running(run_id)
-                    if isinstance(exc, (SandboxError, ValueError, KeyError)) or type(
-                        exc
-                    ).__module__.startswith("jsonschema"):
-                        result = {
-                            "outcome": "failed",
-                            "metrics": {},
-                            "violations": [{"code": "BUILD_OR_EVALUATION", "message": safe_error(exc)}],
-                            "fidelity": "not_evaluated",
-                        }
-                        artifacts = {}
-                    else:
-                        raise
-                refs = {
-                    name: self.artifacts.put(
-                        data, name, "model/gltf-binary" if name.endswith(".glb") else "application/step"
-                    )
-                    for name, data in artifacts.items()
-                    if name.endswith((".step", ".glb"))
-                }
-                self.store.update("candidates", cid, {"artifacts": refs})
-                evaluation = document(
-                    "evaluation", _id="evaluation-" + cid, run_id=run_id, candidate_id=cid, **result
-                )
-                # Preserve speed and payload relative to this run's baseline for VTOL.
-                if config.task.template == "vtol" and index:
-                    base = self.store.get("evaluations", "evaluation-" + f"{run_id}-000")
-                    for key in ("max_speed_m_s", "payload_capacity_kg"):
-                        bv = base["metrics"].get(key, {}).get("value")
-                        v = evaluation["metrics"].get(key, {}).get("value")
-                        if bv is None or v is None or v < 0.95 * bv:
-                            evaluation["violations"].append(
-                                {
-                                    "code": "CAPABILITY_RETENTION",
-                                    "message": f"{key} below 95% of baseline or unavailable",
-                                }
-                            )
-                            evaluation["outcome"] = "failed"
-                self.store.insert("evaluations", evaluation)
-                self.store.event(
-                    run_id,
-                    "evaluation_completed",
-                    "Evaluation archived",
-                    candidate_id=cid,
-                    outcome=evaluation["outcome"],
-                )
+                evaluation = self.legacy.evaluate(run, config, task, candidate, evaluate)
             self.ensure_running(run_id)
             if not self.store.get("policies", "policy-" + cid):
                 reflection = provider.request(
@@ -413,7 +369,7 @@ class Engine:
                     lesson=str(reflection["lesson"])[:4000],
                     next_focus=str(reflection["next_focus"])[:4000],
                 )
-                self.store.insert("policies", policy)
+                self.legacy.reflect(policy)
             policy = self.store.get("policies", "policy-" + cid)
             summary = json.dumps(
                 {
@@ -574,7 +530,9 @@ class Engine:
         obj = self.store.get("objects", object_id)
         if not obj:
             raise KeyError(object_id)
-        runs = self.store.list("runs", {"object_id": object_id}, limit=10000, reverse=True)
+        runs = self.store.list(
+            "runs", {"object_id": object_id, "lifecycle_version": {"$ne": 2}}, limit=10000, reverse=True
+        )
         designs = []
         for c in self.store.list("candidates", {"object_id": object_id}, limit=10000):
             designs.append(

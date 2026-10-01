@@ -90,6 +90,7 @@ class WorkspaceSettings(BaseSettings):
     pricing_model: str = "gpt-6-astra"
     daily_budget_usd: float = Field(default=50, gt=0)
     output_tokens: int = Field(default=6000, ge=1000, le=32000)
+    embeddings: bool = False
 
 
 def workspace_settings(root: Path):

@@ -11,6 +11,8 @@ from fastapi.responses import FileResponse, JSONResponse, Response, StreamingRes
 from pydantic import BaseModel, Field, ValidationError
 
 from davinci.product.engine import Engine
+from davinci.product.lifecycle import Conflict
+from davinci.product.lifecycle_api import router
 from davinci.product.tasks import builtin, template_config
 
 
@@ -35,6 +37,11 @@ def create_app(workspace: Path, *, engine=None, run_worker=True):
 
     app = FastAPI(title="Da Vinci workspace", version="0.2.0", lifespan=lifespan)
     app.state.engine = engine
+    app.include_router(router(engine))
+
+    @app.exception_handler(Conflict)
+    async def lifecycle_conflict(request, exc):
+        return JSONResponse({"detail": str(exc)}, status_code=409)
 
     @app.middleware("http")
     async def local_boundary(request, call_next):

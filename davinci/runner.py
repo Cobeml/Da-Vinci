@@ -9,7 +9,9 @@ from davinci.models import identity
 
 
 class SandboxError(RuntimeError):
-    pass
+    def __init__(self, message, *, reason="solver_error"):
+        super().__init__(message)
+        self.reason = reason
 
 
 _slots = threading.BoundedSemaphore(2)
@@ -55,7 +57,7 @@ class Runner:
 
     def _execute(self, entrypoint, files, timeout=120, image=None, executable="python", memory_gb=4):
         if self.cancelled():
-            raise SandboxError("Run stopped")
+            raise SandboxError("Run stopped", reason="cancelled")
         name = identity("davinci")
         with tempfile.TemporaryDirectory(dir=self.root) as folder:
             base = Path(folder)
@@ -110,9 +112,13 @@ class Runner:
                 try:
                     while process.poll() is None:
                         if self.cancelled() or time.monotonic() - started > timeout:
-                            raise SandboxError("Run stopped" if self.cancelled() else "Sandbox timed out")
+                            stopped = self.cancelled()
+                            raise SandboxError(
+                                "Run stopped" if stopped else "Sandbox timed out",
+                                reason="cancelled" if stopped else "timeout",
+                            )
                         if log.tell() > 8_000_000:
-                            raise SandboxError("Sandbox log limit exceeded")
+                            raise SandboxError("Sandbox log limit exceeded", reason="resource_exhaustion")
                         if (
                             sum(
                                 p.stat().st_size
@@ -121,18 +127,25 @@ class Runner:
                             )
                             > 64_000_000
                         ):
-                            raise SandboxError("Sandbox output quota exceeded")
+                            raise SandboxError("Sandbox output quota exceeded", reason="resource_exhaustion")
                         time.sleep(0.15)
                     log.seek(0)
                     logs = log.read(32000).decode(errors="replace")
                     if process.returncode:
-                        raise SandboxError(f"Sandbox exited with code {process.returncode}: " + logs[-4000:])
+                        reason = (
+                            "resource_exhaustion"
+                            if process.returncode == 137
+                            else ("unavailable_runtime" if process.returncode == 125 else "solver_error")
+                        )
+                        raise SandboxError(
+                            f"Sandbox exited with code {process.returncode}: " + logs[-4000:], reason=reason
+                        )
                     result = {}
                     for path in outgoing.iterdir():
                         if path.is_symlink() or not path.is_file():
                             raise SandboxError("Unsupported output artifact")
                         if path.stat().st_size > 32_000_000:
-                            raise SandboxError("Artifact exceeds 32 MB")
+                            raise SandboxError("Artifact exceeds 32 MB", reason="resource_exhaustion")
                         result[path.name] = path.read_bytes()
                     return result, logs, time.monotonic() - started
                 finally:

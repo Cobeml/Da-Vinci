@@ -42,7 +42,7 @@ class Provider:
             raise UncertainRequest(
                 "A prior API request has uncertain or invalid output. Start a linked run; this request will not be repeated."
             )
-        if self.run["config"]["run"]["mode"] == "replay":
+        if self.run.get("mode", self.run.get("config", {}).get("run", {}).get("mode")) == "replay":
             return self.replay(stage, context)
         s = self.settings
         if s.model != s.pricing_model:
@@ -124,7 +124,13 @@ class Provider:
 
     def embed(self, key, summary):
         """Embeddings are optional, budgeted, and checkpointed like generation."""
-        if self.run["config"]["run"]["mode"] != "live" or self.store.db is None:
+        if (
+            not self.settings.embeddings
+            or not self.engine.credentials.openai_api_key
+            or self.run.get("driver", "managed") != "managed"
+            or self.run.get("mode", self.run.get("config", {}).get("run", {}).get("mode")) != "live"
+            or self.store.db is None
+        ):
             return None
         request_id = f"{self.run['_id']}:embed:{key}"
         old = self.store.get("requests", request_id)
@@ -157,6 +163,8 @@ class Provider:
             return None
 
     def replay(self, stage, context):
+        if stage.startswith("lifecycle-"):
+            raise ValueError("V2 managed replay requires an injected deterministic provider fixture")
         if stage.startswith("tool"):
             return {
                 "source": REPLAY_TOOL,
