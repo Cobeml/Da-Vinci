@@ -7,7 +7,8 @@ uv sync --extra studies
 npm ci
 npm run build:ui
 uv run pytest -m 'not integration' -q
-DAVINCI_INTEGRATION=1 uv run pytest tests/product/test_cad.py -q
+uv run davinci setup --template vtol
+uv run python scripts/required_native.py
 npm run build
 uv build --no-build-isolation
 ```
@@ -16,9 +17,9 @@ The static Next.js export is copied into package resources before wheel/sdist ge
 
 Pytest explicitly adds the checkout root to its import path so archived study tests can import `scripts.*` with either `pytest` or `python -m pytest`. These scripts are not part of the installed product. The separate fresh-environment wheel check runs outside the checkout to verify installed imports.
 
-The API is under `/api/v1`: tasks, validation, object list/detail, run creation/detail/stop/resume/YAML/events, candidate detail, and artifact access. POST bodies use JSON; run creation and validation receive `{"yaml": "..."}`. CLI and UI submit through this same path.
+The legacy YAML API is under `/api/v1`: tasks, validation, object list/detail, run creation/detail/stop/resume/YAML/events, candidate detail, and artifact access. Its run creation and validation receive `{"yaml": "..."}`. Shared experiments, managed requests, ownership transfer, memory and workspace projections use `/api/v2`; CLI and UI call the same services. Installed public schemas are discoverable with `davinci external schemas`.
 
-Run the product browser checks with `npm run test:product`. They start a temporary replay workspace and exercise real local geometry. Existing website tests remain under `tests/browser` and expect the website on port 3215.
+Run the product browser checks with `npm run test:product`. They start a temporary workspace with explicit deterministic reasoning and exercise real local geometry through both drivers and legacy YAML. Existing website tests remain under `tests/browser` and expect the website on port 3215. The required native gate fails when expected images are absent or core tests skip. See the [installed-workflow implementation record](implementation-product-parity.md) for fixture/native evidence, fresh-wheel commands and parity tolerance.
 
 Before release, install the wheel in a fresh environment outside the checkout, run all baseline adapters, run replay and continuation tests, inspect the package contents, and verify notices. CI builds wheel and sdist as downloadable artifacts; it does not publish to PyPI or deploy a public website.
 

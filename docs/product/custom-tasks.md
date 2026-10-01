@@ -63,3 +63,10 @@ Include load cases, materials, dimensions, manufacturing constraints, expected s
 
 
 For new test-first custom tasks, declare a scoped simulation adapter and fixed semantic regions before freezing the plan. See [simulation adapters and evidence](simulation-adapters.md). Legacy custom evaluators remain supported with task-declared physics and unverified coverage; the plugin boundary does not establish general solver capability.
+
+
+## Installed UI and driver adoption
+
+Use **Advanced YAML / custom task** for the existing directory-based workflow, or create an **External agent** draft for v2 authoring. External and managed v2 runs share the gallery, coverage/limit display, measured iterations, artifacts and final report. Only explicitly frozen/verified tests can accept a design; a completed custom run is not automatically validated.
+
+An external agent can hand a frozen suite with an inspectable reference/candidate builder to the built-in agent for proposal/reflection. This does not upgrade the evaluator's physics fidelity or allow changing thresholds. Arbitrary new custom evaluator verification remains the author's responsibility through the isolated reference path. See [ownership and continuation](workspace.md).

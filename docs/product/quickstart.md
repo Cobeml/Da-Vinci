@@ -57,7 +57,7 @@ davinci validate run.yaml
 davinci serve
 ```
 
-Open the printed localhost URL (default `http://127.0.0.1:8741`). Choose **New object** and load `run.yaml`, or submit it from another terminal in the same workspace:
+Open the printed localhost URL (default `http://127.0.0.1:8741`). Choose **New object → Advanced YAML / custom task** and load `run.yaml`, or submit it from another terminal in the same workspace:
 
 ```bash
 davinci run run.yaml
@@ -82,3 +82,8 @@ The product server binds only to loopback. Remote multi-user hosting and Tailsca
 ## Start from a description
 
 For supported automatically verified requests without a pre-authored task directory, use [managed requests](managed-requests.md): `davinci managed request --help`. The existing YAML and gallery workflow remains available.
+
+
+## Two complete v2 journeys
+
+See [both user journeys and handoff commands](product-journeys.md) for exact installed-package commands. In the browser, **Built-in agent** begins with a description and **External agent** displays copyable connection instructions. Both appear in the same gallery; native physics and provider-fixture checks are reported separately.

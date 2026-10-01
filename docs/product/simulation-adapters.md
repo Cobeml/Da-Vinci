@@ -113,3 +113,12 @@ python external/walkthrough.py
 ```
 
 The walkthrough creates positive/negative reference fixtures, freezes the scoped beam screen, measures a failed thin beam and passing revision, downloads artifacts and exports a report. It uses only supported HTTP operations through the workspace service. It does not need model keys, embeddings, host CAD libraries, or Atlas. See [external agents](external-agents.md) for individual CLI operations, job polling, cancellation/resume and linked corrections.
+
+
+## Product setup and preview
+
+`davinci setup --template sensor` builds `da-vinci-cad:local`; `--template vtol` also builds `da-vinci-vtol:local`. The managed request form resolves an installed image to its digest, and the capabilities view reports unavailable software/physics/resources. No cloud resources are provisioned. A GPU does not establish adequacy.
+
+V2 evaluation now derives an optional GLB preview from exported STEP in a separate trusted container, under the existing job time/resource/artifact bounds. Candidate glTF files cannot replace it. Preview logs and errors are retained separately from builder/solver evidence. Updated execution identities require linked revisions for old frozen suites; archives are not rewritten.
+
+CI runs `uv run python scripts/required_native.py`. It checks the required image tags before executing integration tests, and fails if core physics/parity tests are absent or skipped. Fast tests remain a separate job. The only allowed intentionally skipped native selection is the separately opt-in paid model smoke.

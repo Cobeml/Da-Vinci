@@ -31,7 +31,7 @@ davinci --workspace ./beam-workspace managed results EXPERIMENT_ID
 davinci --workspace ./beam-workspace managed report EXPERIMENT_ID
 ```
 
-`managed.status`, `managed.stage`, `pending_input`, `next_actions`, job records, and retained artifacts explain progress. The request workflow is currently exposed through CLI/HTTP; the existing browser gallery remains the v1 YAML workflow. It does not yet render these managed authoring stages.
+`managed.status`, `managed.stage`, `pending_input`, `next_actions`, job records, and retained artifacts explain progress. The installed browser exposes this request workflow through **New object → Built-in agent**. Its object view shows pending questions, assumptions, tests, capabilities, iterations and the report. **Advanced YAML / custom task** preserves the v1 workflow.
 
 If required engineering inputs are missing, the model returns focused questions. Their IDs, text, answers and subsequent requirements revision remain in the ledger. Put a question-ID-to-answer mapping in `answers.json` and submit it:
 

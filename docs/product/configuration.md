@@ -70,3 +70,10 @@ API tokens and MongoDB URIs belong in environment variables (`OPENAI_API_KEY`, `
 Storage is explicit: the presence of `MONGODB_URI` alone does not enable Atlas. Local SQLite records, CAD artifacts, request checkpoints, and source Git snapshots live in `.davinci/`.
 
 Version-2 experiments use the separate [lifecycle JSON/Python contracts](lifecycle.md). This YAML format remains version 1; historical runs are not implicitly upgraded.
+
+
+## V2 browser and driver operations
+
+The installed UI supports `ManagedRequest` and `OpenExperiment` alongside advanced YAML. Driver (`managed`/`external`) is independent of provider mode (`live`/`replay`). Model settings and credentials remain server-side; the browser receives only availability, model name and accounting. There is no API-key form. Embeddings are configured independently and remain optional.
+
+`Handoff` uses the current actor/revision/operation ID, a new driver/actor and recorded reason. `ContinueExperiment` also selects a source candidate and new budget/search policy. Both preserve the frozen suite; continuation stores no inherited candidate scores. They are discoverable in the packaged JSON schema catalog and are exposed by `davinci experiment`. See [journeys](product-journeys.md).
