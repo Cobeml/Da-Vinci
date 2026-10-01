@@ -1,6 +1,5 @@
 import ast
 import json
-import re
 import subprocess
 import threading
 from importlib.resources import files
@@ -13,6 +12,7 @@ from davinci.errors import safe_error
 from davinci.models import digest, document, now
 from davinci.product.compatibility import LegacyAdapter, identities
 from davinci.product.config import RunConfig, parse_yaml, workspace_settings
+from davinci.product.experience import ExperienceMemory
 from davinci.product.lifecycle import Lifecycle
 from davinci.product.managed import ManagedDriver
 from davinci.product.provider import Provider, UncertainRequest
@@ -44,6 +44,7 @@ class Engine:
         self.shutdown = threading.Event()
         self.busy = False
         self.store.insert("pointers", {"_id": "product-active-run", "run_id": None})
+        self.experience = ExperienceMemory(self)
         self.lifecycle = Lifecycle(self)
         self.legacy = LegacyAdapter(self)
         self.managed = ManagedDriver(self)
@@ -98,6 +99,7 @@ class Engine:
             "run",
             object_id=config.object.slug,
             lifecycle_version=1,
+            **self.experience.scope,
             driver="managed",
             mode=config.run.mode,
             acceptance_identity=identities(task, config, image),
@@ -256,40 +258,13 @@ class Engine:
                     self.release(run_id)
                 self.runner.cancelled = lambda: False
 
-    def memory(self, run, provider):
-        filters = {"object_id": run["object_id"], "task_version": run["task_version"]}
-        rows = self.store.list("memories", filters, limit=30, reverse=True)
-        if self.store.db is not None:
-            vector = provider.embed("query", run["config"]["task"]["description"])
-            if vector:
-                try:
-                    hits = list(
-                        self.store.db.memories.aggregate(
-                            [
-                                {
-                                    "$vectorSearch": {
-                                        "index": "product_memory",
-                                        "path": "embedding",
-                                        "queryVector": vector,
-                                        "numCandidates": 100,
-                                        "limit": 6,
-                                        "filter": filters,
-                                    }
-                                },
-                                {"$project": {"embedding": 0}},
-                            ]
-                        )
-                    )
-                    rows = list({r["_id"]: r for r in hits + rows[:4]}.values())
-                except Exception:
-                    self.store.event(
-                        run["_id"],
-                        "memory_fallback",
-                        "Vector index unavailable; using scoped local retrieval",
-                    )
-        tokens = set(re.findall(r"\w+", run["config"]["task"]["description"].lower()))
-        rows.sort(key=lambda r: len(tokens & set(re.findall(r"\w+", r["summary"].lower()))), reverse=True)
-        return [{k: v for k, v in r.items() if k != "embedding"} for r in rows[:8]]
+    def memory(self, run, provider=None):
+        """Cross-object lessons, never exact-score reuse; generation provider is not consulted."""
+        if any(run.get(k) != v for k, v in self.experience.scope.items()):
+            return []  # Unscoped historical memory requires explicit provenance-aware import.
+        return self.experience.search(
+            {"query": run["config"]["task"]["description"], "experiment_id": run["_id"], "limit": 8}
+        )["items"]
 
     def execute(self, run_id):
         run = self.store.get("runs", run_id)
@@ -312,6 +287,7 @@ class Engine:
                     "seed_parameters": run["seed_parameters"],
                     "seed_source": run["seed_source"],
                     "history": self.memory(run, provider),
+                    "memory_policy": "Cross-object records require applicability review. Imported claims and authored lessons are unverified; never transfer a passing score or silently relax this task's tests.",
                     "recent": self.store.list("candidates", {"run_id": run_id}, limit=6, reverse=True),
                     "tool_results": self.store.list("tool_uses", {"run_id": run_id}, limit=6, reverse=True),
                     "tools": self.store.list(
@@ -402,9 +378,7 @@ class Engine:
                         summary=summary,
                     ),
                 )
-                vector = provider.embed(mid, summary)
-                if vector:
-                    self.store.update("memories", mid, {"embedding": vector})
+            self.experience.legacy_observe(run, self.store.get("candidates", cid), evaluation, policy)
             if index == 0 and task.get("tool_contract"):
                 self.make_tool(run, provider)
             self.use_tools(run, cid, evaluation)

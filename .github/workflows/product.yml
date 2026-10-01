@@ -30,6 +30,7 @@ jobs:
           /tmp/wheel-check/bin/davinci external schemas
           /tmp/wheel-check/bin/davinci init installed-example --template custom
           /tmp/wheel-check/bin/davinci --workspace installed-example validate installed-example/run.yaml
+          /tmp/wheel-check/bin/python "$GITHUB_WORKSPACE/scripts/check_external_install.py" /tmp/wheel-check/lib/python3.11/site-packages
       - uses: actions/upload-artifact@v4
         with:
           name: da-vinci-package

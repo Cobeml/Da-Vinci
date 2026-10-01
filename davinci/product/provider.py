@@ -123,44 +123,11 @@ class Provider:
             ) from None
 
     def embed(self, key, summary):
-        """Embeddings are optional, budgeted, and checkpointed like generation."""
-        if (
-            not self.settings.embeddings
-            or not self.engine.credentials.openai_api_key
-            or self.run.get("driver", "managed") != "managed"
-            or self.run.get("mode", self.run.get("config", {}).get("run", {}).get("mode")) != "live"
-            or self.store.db is None
-        ):
-            return None
-        request_id = f"{self.run['_id']}:embed:{key}"
-        old = self.store.get("requests", request_id)
-        if old:
-            return old.get("embedding")
-        amount = (len(summary.encode()) + 100) * 0.02 / 1e6
-        reservation = self.budget.reserve(self.run["_id"], amount)
-        self.store.insert(
-            "requests",
-            {
-                "_id": request_id,
-                "created_at": now(),
-                "status": "pending",
-                "run_id": self.run["_id"],
-                "reservation": reservation,
-                "reserved_usd": amount,
-            },
-        )
-        try:
-            result = OpenAI(
-                api_key=self.engine.credentials.openai_api_key, timeout=30, max_retries=0
-            ).embeddings.create(model="text-embedding-3-small", input=summary)
-            vector = result.data[0].embedding
-            self.budget.settle(reservation, result.usage.total_tokens * 0.02 / 1e6)
-            self.store.update("requests", request_id, {"status": "completed", "embedding": vector})
-            return vector
-        except Exception:
-            self.budget.settle(reservation, amount)
-            self.store.update("requests", request_id, {"status": "uncertain"})
-            return None
+        """Deprecated compatibility method. Embeddings belong to the independent memory adapter.
+
+        A legacy embeddings=True flag or generation credential never authorizes embedding calls.
+        """
+        return None
 
     def replay(self, stage, context):
         if stage.startswith("lifecycle-"):

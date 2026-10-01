@@ -61,6 +61,34 @@ def main():
             assert opened["driver"] == "external" and opened["mode"] == "live"
             assert cli("external", "status", opened["_id"])["next_actions"]
             assert (root / "AGENTS.md").exists()
+            note_file = root / "note.json"
+            note_file.write_text(
+                json.dumps(
+                    {
+                        "actor": "installed-agent",
+                        "operation_id": "memory-note",
+                        "experiment_id": opened["_id"],
+                        "claim": "Verify cantilever deflection before reducing section depth",
+                    }
+                )
+            )
+            remembered = cli("memory", "note", "--file", str(note_file))
+            assert cli("memory", "search", "cantilever")["items"][0]["id"] == remembered["id"]
+            assert cli("memory", "inspect", remembered["id"])["support"] == "hypothesis"
+            export = root / "memory.json"
+            cli("memory", "export", "--ids", remembered["id"], "--output", str(export))
+            imported = cli(
+                "memory",
+                "import",
+                "--file",
+                str(export),
+                "--actor",
+                "installed-agent",
+                "--operation-id",
+                "import",
+            )
+            assert imported["items"][0]["local_evidence_status"] == "imported_unverified"
+            assert cli("memory", "reindex")["embedding"]["adapter"] == "disabled"
             print(
                 json.dumps(
                     {
@@ -69,6 +97,7 @@ def main():
                         "instructions": True,
                         "service_start_and_reconnect": True,
                         "keyless_external_open": True,
+                        "memory_search_export_import": True,
                     }
                 )
             )

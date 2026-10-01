@@ -5,7 +5,6 @@ an interrupted write, but cannot become accepted evidence without its CAS commit
 """
 
 import json
-import re
 import time
 from copy import deepcopy
 
@@ -54,7 +53,20 @@ class Lifecycle:
 
     def open(self, request):
         request = OpenExperiment.model_validate(request)
-        key = "experiment-" + digest({"actor": request.actor, "operation": request.operation_id})[:24]
+        key = (
+            "experiment-"
+            + digest(
+                {**self.engine.experience.scope, "actor": request.actor, "operation": request.operation_id}
+            )[:24]
+        )
+        historical_key = (
+            "experiment-" + digest({"actor": request.actor, "operation": request.operation_id})[:24]
+        )
+        historical = self.store.get("runs", historical_key)
+        if historical and not historical.get("workspace_id"):
+            raise Conflict(
+                "Historical unscoped opening operation exists; inspect its experiment ID and use a new operation ID for a scoped experiment"
+            )
         prior = self.store.get("runs", key)
         payload = request.model_dump()
         if prior:
@@ -67,6 +79,7 @@ class Lifecycle:
             "_id": key,
             "created_at": now(),
             "lifecycle_version": 2,
+            **self.engine.experience.scope,
             "driver": request.driver,
             "mode": request.mode,
             "actor": request.actor,
@@ -294,7 +307,19 @@ class Lifecycle:
                 ],
             }
 
-        return self.store.mutate("runs", eid, finish)
+        updated = self.store.mutate("runs", eid, finish)
+        if "results" in fields:
+            try:
+                self.engine.experience.observe(updated, updated["results"][-1])
+            except Exception as exc:
+                # The run remains the evidence source of truth. Explicit memory capture can retry indexing.
+                self.store.event(
+                    eid,
+                    "memory_projection_pending",
+                    "Evidence committed; experience indexing needs retry",
+                    error_type=type(exc).__name__,
+                )
+        return updated
 
     def _cancel_check(self, eid):
         row = self.get(eid)
@@ -723,42 +748,32 @@ class Lifecycle:
             lesson=lesson,
             support="linked_observation" if result_id and row["driver"] == "managed" else "hypothesis",
         ).model_dump()
-        return self._commit(
+        updated = self._commit(
             row, cmd, sig, "reflect", {"phase": "reflected", "experiences": [*row["experiences"], experience]}
         )
-
-    def retrieve(self, query, *, experiment_id=None, limit=8):
-        # No provider or embeddings needed, including when storage is Atlas.
-        tokens = set(re.findall(r"\w+", query.lower()))
-        hits = []
-        for row in self.store.list("runs", {"lifecycle_version": 2}, limit=10000):
-            for experience in row["experiences"]:
-                hits.append(
-                    {
-                        **experience,
-                        "suite_id": row["suite_id"],
-                        "cross_task": row["_id"] != experiment_id,
-                        "relevance": len(tokens & set(re.findall(r"\w+", experience["lesson"].lower()))),
-                    }
-                )
-        for policy in self.store.list("policies", limit=10000):
-            if not all(policy.get(k) for k in ("run_id", "candidate_id", "lesson")):
-                continue
-            experience = ExperienceReference(
-                experiment_id=policy["run_id"],
-                candidate_id=policy["candidate_id"],
-                lesson=policy["lesson"][:4000],
-            ).model_dump()
-            hits.append(
+        try:
+            self.engine.experience.note(
                 {
-                    **experience,
-                    "suite_id": None,
-                    "cross_task": True,
-                    "guarantees": "legacy-unverified-coverage",
-                    "relevance": len(tokens & set(re.findall(r"\w+", experience["lesson"].lower()))),
+                    "actor": cmd.actor,
+                    "operation_id": "reflection-" + digest({"eid": eid, "operation": cmd.operation_id}),
+                    "experiment_id": eid,
+                    "claim": lesson,
+                    "source": {"run_id": eid, "candidate_id": candidate["id"], "result_id": result_id},
                 }
             )
-        return sorted(hits, key=lambda r: r["relevance"], reverse=True)[: max(1, min(limit, 30))]
+        except Exception as exc:
+            self.store.event(
+                eid,
+                "memory_projection_pending",
+                "Reflection preserved; experience note needs indexing",
+                error_type=type(exc).__name__,
+            )
+        return updated
+
+    def retrieve(self, query, *, experiment_id=None, limit=8):
+        return self.engine.experience.search(
+            {"query": query, "experiment_id": experiment_id, "limit": max(1, min(limit, 30))}
+        )["items"]
 
     def finalize(self, eid, command):
         row, cmd, sig, done = self._begin(eid, command, "finalize", None, {"reflected"})

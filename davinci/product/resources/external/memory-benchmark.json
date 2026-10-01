@@ -1,0 +1,193 @@
+{
+  "version": 1,
+  "purpose": "Small authored held-out retrieval fixture; relevance labels are not proof of engineering improvement",
+  "corpus": [
+    {
+      "id": "beam-depth",
+      "claim": "For a rectangular cantilever, increasing section depth reduces bending deflection. Recheck mass and stress with fixed loads.",
+      "domain": "mechanical",
+      "material": "aluminium",
+      "phenomena": [
+        "linear_static"
+      ],
+      "regime": "static",
+      "intentionally_misleading": false
+    },
+    {
+      "id": "beam-reference",
+      "claim": "Verify cantilever deflection against an analytic beam reference before using a lightweight bracket evaluator.",
+      "domain": "mechanical",
+      "material": "aluminium",
+      "phenomena": [
+        "linear_static"
+      ],
+      "regime": "static",
+      "intentionally_misleading": false
+    },
+    {
+      "id": "beam-wrong",
+      "claim": "Reduce cantilever depth to reduce bending deflection and raise stiffness.",
+      "domain": "mechanical",
+      "material": "aluminium",
+      "phenomena": [
+        "linear_static"
+      ],
+      "regime": "static",
+      "superseded_by": "beam-depth",
+      "intentionally_misleading": true
+    },
+    {
+      "id": "jaw-clearance",
+      "claim": "Measure gripper jaw clearance across travel positions; endpoint gaps alone can miss intermediate collisions.",
+      "domain": "mechanical",
+      "material": "aluminium",
+      "phenomena": [
+        "geometry"
+      ],
+      "regime": "static",
+      "intentionally_misleading": false
+    },
+    {
+      "id": "jaw-dynamic",
+      "claim": "A static jaw clearance result proves safe gripper operation during high acceleration and impact.",
+      "domain": "mechanical",
+      "material": "aluminium",
+      "phenomena": [
+        "geometry"
+      ],
+      "regime": "impact",
+      "intentionally_misleading": true
+    },
+    {
+      "id": "energy-budget",
+      "claim": "Compute aircraft cruise range with reserve energy and transition allowances rather than the full nominal battery capacity.",
+      "domain": "aerodynamics",
+      "material": "composite",
+      "phenomena": [
+        "mission_energy"
+      ],
+      "regime": "cruise",
+      "intentionally_misleading": false
+    },
+    {
+      "id": "drag-scope",
+      "claim": "Cruise drag estimates must stay inside the airfoil polar support; range beyond that domain is not verified.",
+      "domain": "aerodynamics",
+      "material": "composite",
+      "phenomena": [
+        "attached_flow"
+      ],
+      "regime": "cruise",
+      "intentionally_misleading": false
+    },
+    {
+      "id": "range-wrong",
+      "claim": "A cantilever stiffness result establishes aircraft cruise range without an energy calculation.",
+      "domain": "mechanical",
+      "material": "aluminium",
+      "phenomena": [
+        "linear_static"
+      ],
+      "regime": "static",
+      "intentionally_misleading": true
+    },
+    {
+      "id": "polymer-creep",
+      "claim": "A polymer cantilever under sustained loading needs creep data; an elastic deflection screen does not establish lifetime displacement.",
+      "domain": "mechanical",
+      "material": "PA12",
+      "phenomena": [
+        "creep"
+      ],
+      "regime": "sustained",
+      "intentionally_misleading": false
+    },
+    {
+      "id": "polymer-static",
+      "claim": "A short static polymer deflection test proves cantilever performance throughout sustained loading.",
+      "domain": "mechanical",
+      "material": "PA12",
+      "phenomena": [
+        "linear_static"
+      ],
+      "regime": "static",
+      "intentionally_misleading": true
+    },
+    {
+      "id": "thread-fit",
+      "claim": "Check fastener thread fit and engagement length against the mating hardware specification.",
+      "domain": "mechanical",
+      "material": "steel",
+      "phenomena": [
+        "geometry"
+      ],
+      "regime": "static",
+      "intentionally_misleading": false
+    }
+  ],
+  "held_out_queries": [
+    {
+      "query": "lighter bracket with excessive cantilever deflection",
+      "domain": "mechanical",
+      "material": "aluminium",
+      "phenomena": [
+        "linear_static"
+      ],
+      "regime": "static",
+      "relevant": [
+        "beam-depth",
+        "beam-reference"
+      ],
+      "misleading": [
+        "beam-wrong"
+      ]
+    },
+    {
+      "query": "gripper jaw travel clearance collision check",
+      "domain": "mechanical",
+      "material": "aluminium",
+      "phenomena": [
+        "geometry"
+      ],
+      "regime": "static",
+      "relevant": [
+        "jaw-clearance"
+      ],
+      "misleading": [
+        "jaw-dynamic"
+      ]
+    },
+    {
+      "query": "aircraft cruise range reserve energy drag",
+      "domain": "aerodynamics",
+      "material": "composite",
+      "phenomena": [
+        "mission_energy",
+        "attached_flow"
+      ],
+      "regime": "cruise",
+      "relevant": [
+        "energy-budget",
+        "drag-scope"
+      ],
+      "misleading": [
+        "range-wrong"
+      ]
+    },
+    {
+      "query": "polymer cantilever sustained loading deflection",
+      "domain": "mechanical",
+      "material": "PA12",
+      "phenomena": [
+        "creep"
+      ],
+      "regime": "sustained",
+      "relevant": [
+        "polymer-creep"
+      ],
+      "misleading": [
+        "polymer-static"
+      ]
+    }
+  ]
+}

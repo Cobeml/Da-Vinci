@@ -78,6 +78,13 @@ def parse_yaml(content: str) -> RunConfig:
         raise ValueError("Invalid YAML") from exc
 
 
+class EmbeddingSettings(Strict):
+    adapter: Literal["disabled", "local-hash"] = "disabled"
+    model: Literal["token-hash"] = "token-hash"
+    model_version: Literal["1"] = "1"
+    dimensions: int = Field(default=256, ge=64, le=2048)
+
+
 class WorkspaceSettings(BaseSettings):
     model_config = SettingsConfigDict(extra="forbid", env_prefix="DAVINCI_PRODUCT_")
     storage: Literal["local", "atlas"] = "local"
@@ -90,7 +97,9 @@ class WorkspaceSettings(BaseSettings):
     pricing_model: str = "gpt-6-astra"
     daily_budget_usd: float = Field(default=50, gt=0)
     output_tokens: int = Field(default=6000, ge=1000, le=32000)
-    embeddings: bool = False
+    embeddings: bool = False  # Deprecated: never enables network/model calls.
+    embedding: EmbeddingSettings = Field(default_factory=EmbeddingSettings)
+    project_id: str = Field(default="default", pattern=r"^[a-zA-Z0-9_-]{1,80}$")
     default_driver: Literal["external", "managed"] = "managed"
 
 

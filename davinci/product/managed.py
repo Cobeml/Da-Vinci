@@ -39,6 +39,7 @@ class ManagedDriver:
                 "description": row["description"],
                 "plan": row["plan"],
                 "experience": self.lifecycle.retrieve(row["description"], experiment_id=eid),
+                "memory_policy": "Cross-task suggestions are hypotheses unless explicitly supported observations. Check applicability and source evidence; imported claims are not locally reproduced. No passing score transfers. Define and verify this task's own tests.",
                 "candidates": row["candidates"][-3:],
                 "results": row["results"][-3:],
             }

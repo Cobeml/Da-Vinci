@@ -132,6 +132,124 @@ class Store:
                 return result
         raise RuntimeError("Concurrent modification did not settle")
 
+    def ensure_experience_indexes(self):
+        """Add rebuildable indexes for new experience documents; no historical rewrites."""
+        if self.db is not None:
+            collection = self.db.experiences_v1
+            collection.create_index([("workspace_id", 1), ("project_id", 1), ("_id", 1)])
+            collection.create_index([("workspace_id", 1), ("project_id", 1), ("exact_hash", 1)])
+            collection.create_index(
+                [("workspace_id", 1), ("project_id", 1), ("search_text", "text")], name="experience_text_v1"
+            )
+            return
+        with self.lock:
+            self.sql.execute("""CREATE INDEX IF NOT EXISTS experience_scope_v1 ON documents
+                (json_extract(body,'$.workspace_id'), json_extract(body,'$.project_id'), id)
+                WHERE collection='experiences_v1'""")
+            self.sql.execute("""CREATE INDEX IF NOT EXISTS experience_exact_v1 ON documents
+                (json_extract(body,'$.workspace_id'), json_extract(body,'$.project_id'), json_extract(body,'$.exact_hash'))
+                WHERE collection='experiences_v1'""")
+            self.sql.execute(
+                "CREATE VIRTUAL TABLE IF NOT EXISTS experience_text_v1 USING fts5(id UNINDEXED, search_text, tokenize='unicode61')"
+            )
+            self.sql.commit()
+
+    def insert_experience(self, doc):
+        if self.db is not None:
+            return self.insert("experiences_v1", doc)
+        with self.lock:
+            self.sql.execute("BEGIN IMMEDIATE")
+            try:
+                inserted = self.sql.execute(
+                    "INSERT OR IGNORE INTO documents VALUES ('experiences_v1',?,?)",
+                    (doc["_id"], json.dumps(doc, allow_nan=False)),
+                ).rowcount
+                if inserted:
+                    self.sql.execute(
+                        "INSERT INTO experience_text_v1(id, search_text) VALUES (?,?)",
+                        (doc["_id"], doc["search_text"]),
+                    )
+                self.sql.commit()
+                return bool(inserted)
+            except Exception:
+                self.sql.rollback()
+                raise
+
+    def experience_page(
+        self,
+        scope,
+        *,
+        terms=None,
+        limit=200,
+        after_id="",
+        exact_hash=None,
+        include_superseded=True,
+        before=None,
+    ):
+        """Scope/filter/limit in the database, before decoding JSON. Keyset browse/export."""
+        limit = max(1, min(limit, 201))
+        if self.db is not None:
+            query = {**scope, "_id": {"$gt": after_id}}
+            if exact_hash is not None:
+                query["exact_hash"] = exact_hash
+            if not include_superseded:
+                query["superseded_by"] = None
+            if before:
+                query["created_at"] = {"$lte": before}
+            if terms:
+                query["$text"] = {"$search": " ".join(terms)}
+                return list(
+                    self.db.experiences_v1.find(query, {"lexical_score": {"$meta": "textScore"}})
+                    .sort([("lexical_score", {"$meta": "textScore"}), ("_id", 1)])
+                    .limit(limit)
+                )
+            return list(self.db.experiences_v1.find(query).sort("_id", 1).limit(limit))
+        sql = "SELECT d.body"
+        args = [scope["workspace_id"], scope["project_id"], after_id]
+        if terms:
+            sql += ", -bm25(experience_text_v1)"
+        sql += " FROM documents d"
+        if terms:
+            sql += " JOIN experience_text_v1 f ON f.id=d.id"
+        sql += " WHERE d.collection='experiences_v1' AND json_extract(d.body,'$.workspace_id')=? AND json_extract(d.body,'$.project_id')=? AND d.id>?"
+        if terms:
+            sql += " AND experience_text_v1 MATCH ?"
+            args.append(" OR ".join('"' + t.replace('"', "") + '"' for t in terms))
+        if exact_hash is not None:
+            sql += " AND json_extract(d.body,'$.exact_hash')=?"
+            args.append(exact_hash)
+        if not include_superseded:
+            sql += " AND json_extract(d.body,'$.superseded_by') IS NULL"
+        if before:
+            sql += " AND json_extract(d.body,'$.created_at')<=?"
+            args.append(before)
+        sql += (" ORDER BY bm25(experience_text_v1), d.id" if terms else " ORDER BY d.id") + " LIMIT ?"
+        args.append(limit)
+        with self.lock:
+            rows = self.sql.execute(sql, args).fetchall()
+        return [{**json.loads(r[0]), **({"lexical_score": r[1]} if terms else {})} for r in rows]
+
+    def experience_vectors(self, scope, vector, embedding_id, limit=100):
+        if self.db is None:
+            return []
+        return list(
+            self.db.experiences_v1.aggregate(
+                [
+                    {
+                        "$vectorSearch": {
+                            "index": "experience_vector_v1",
+                            "path": "embedding",
+                            "queryVector": vector,
+                            "numCandidates": min(1000, limit * 10),
+                            "limit": limit,
+                            "filter": {**scope, "embedding_id": embedding_id},
+                        }
+                    },
+                    {"$addFields": {"semantic_score": {"$meta": "vectorSearchScore"}}},
+                ]
+            )
+        )
+
     def event(self, run_id, kind, message, **data):
         event = document("event", run_id=run_id, kind=kind, message=message, data=data)
         self.insert("events", event)

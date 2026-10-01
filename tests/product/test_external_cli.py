@@ -129,4 +129,68 @@ def test_real_cad_walkthrough_via_service_and_cli(service):
     report_path = root / "export.json"
     code, exported = cli(root, "external", "report", eid, "--output", str(report_path))
     assert code == 0 and json.loads(report_path.read_text())["report"]["accepted_candidate_ids"]
+    code, remembered = cli(root, "memory", "search", "beam", "--experiment", eid)
+    assert code == 0
+    observation = next(x for x in remembered["data"]["items"] if x["kind"] == "observation")
+    assert observation["support"] == "simulation_supported" and not observation["transfers_acceptance"]
+    exact_file = root / "exact.json"
+    exact_file.write_text(json.dumps(observation["exact_inputs"]))
+    code, exact = cli(root, "memory", "exact", "--file", str(exact_file))
+    assert code == 0 and exact["data"]["items"] and not exact["data"]["cache_enabled"]
+    memory_file = root / "memory-physical.json"
+    code, _ = cli(
+        root,
+        "memory",
+        "export",
+        "--ids",
+        observation["id"],
+        "--include-artifacts",
+        "--output",
+        str(memory_file),
+    )
+    assert code == 0
+    code, imported = cli(
+        root,
+        "memory",
+        "import",
+        "--file",
+        str(memory_file),
+        "--actor",
+        "fixture",
+        "--operation-id",
+        "import-physical",
+    )
+    assert code == 0 and imported["data"]["items"][0]["local_evidence_status"] == "imported_unverified"
+    assert not engine.store.list("requests")
+
+
+def test_shared_memory_cli(service):
+    root, engine = service
+    code, opened = cli(root, "external", "open", "--file", str(root / "experiment.json"))
+    assert code == 0
+    eid = opened["data"]["_id"]
+    note = root / "note.json"
+    note.write_text(
+        json.dumps(
+            {
+                "actor": "coding-agent",
+                "operation_id": "remember",
+                "experiment_id": eid,
+                "claim": "Review cantilever deflection before cutting the load path",
+            }
+        )
+    )
+    code, created = cli(root, "memory", "note", "--file", str(note))
+    assert code == 0, created
+    identity = created["data"]["id"]
+    assert cli(root, "memory", "inspect", identity)[0] == 0
+    code, search = cli(root, "memory", "search", "cantilever", "--experiment", eid)
+    assert code == 0 and search["data"]["items"][0]["id"] == identity
+    export = root / "memory.json"
+    assert cli(root, "memory", "export", "--ids", identity, "--output", str(export))[0] == 0
+    code, imported = cli(
+        root, "memory", "import", "--file", str(export), "--actor", "coding-agent", "--operation-id", "import"
+    )
+    assert code == 0 and not imported["data"]["locally_reproduced"]
+    assert cli(root, "memory", "reindex")[0] == 0
     assert not engine.store.list("requests")

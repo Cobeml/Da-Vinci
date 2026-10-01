@@ -38,6 +38,9 @@ def create_app(workspace: Path, *, engine=None, run_worker=True):
 
     app = FastAPI(title="Da Vinci workspace", version="0.2.0", lifespan=lifespan)
     app.state.engine = engine
+    from davinci.product.memory_api import router as memory_router
+
+    app.include_router(memory_router(engine))
     app.include_router(router(engine))
 
     @app.exception_handler(Conflict)

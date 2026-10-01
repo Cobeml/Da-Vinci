@@ -1,6 +1,2257 @@
 {
   "version": 2,
   "schemas": {
+    "Experience": {
+      "$defs": {
+        "Applicability": {
+          "additionalProperties": false,
+          "properties": {
+            "domain": {
+              "default": "",
+              "title": "Domain",
+              "type": "string"
+            },
+            "phenomena": {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 30,
+              "title": "Phenomena",
+              "type": "array"
+            },
+            "materials": {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 30,
+              "title": "Materials",
+              "type": "array"
+            },
+            "quantities": {
+              "additionalProperties": {
+                "$ref": "#/$defs/ApplicabilityRange"
+              },
+              "title": "Quantities",
+              "type": "object"
+            },
+            "material_models": {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 30,
+              "title": "Material Models",
+              "type": "array"
+            },
+            "processes": {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 30,
+              "title": "Processes",
+              "type": "array"
+            },
+            "load_regimes": {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 30,
+              "title": "Load Regimes",
+              "type": "array"
+            },
+            "assumptions": {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 30,
+              "title": "Assumptions",
+              "type": "array"
+            }
+          },
+          "title": "Applicability",
+          "type": "object"
+        },
+        "ApplicabilityRange": {
+          "additionalProperties": false,
+          "properties": {
+            "minimum": {
+              "title": "Minimum",
+              "type": "number"
+            },
+            "maximum": {
+              "title": "Maximum",
+              "type": "number"
+            },
+            "unit": {
+              "title": "Unit",
+              "type": "string"
+            },
+            "dimension": {
+              "title": "Dimension",
+              "type": "string"
+            }
+          },
+          "required": [
+            "minimum",
+            "maximum",
+            "unit",
+            "dimension"
+          ],
+          "title": "ApplicabilityRange",
+          "type": "object"
+        },
+        "EvidenceArtifact": {
+          "additionalProperties": false,
+          "properties": {
+            "artifact_id": {
+              "pattern": "^artifact-[a-f0-9]{64}$",
+              "title": "Artifact Id",
+              "type": "string"
+            },
+            "sha256": {
+              "pattern": "^[a-f0-9]{64}$",
+              "title": "Sha256",
+              "type": "string"
+            },
+            "size": {
+              "minimum": 0,
+              "title": "Size",
+              "type": "integer"
+            },
+            "name": {
+              "title": "Name",
+              "type": "string"
+            },
+            "media_type": {
+              "title": "Media Type",
+              "type": "string"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "sha256",
+            "size",
+            "name",
+            "media_type"
+          ],
+          "title": "EvidenceArtifact",
+          "type": "object"
+        },
+        "ExactInputs": {
+          "additionalProperties": false,
+          "properties": {
+            "geometry_sha256": {
+              "pattern": "^[a-f0-9]{64}$",
+              "title": "Geometry Sha256",
+              "type": "string"
+            },
+            "source_sha256": {
+              "pattern": "^[a-f0-9]{64}$",
+              "title": "Source Sha256",
+              "type": "string"
+            },
+            "suite_id": {
+              "minLength": 1,
+              "title": "Suite Id",
+              "type": "string"
+            },
+            "evaluator_id": {
+              "minLength": 1,
+              "title": "Evaluator Id",
+              "type": "string"
+            },
+            "runtime_id": {
+              "minLength": 1,
+              "title": "Runtime Id",
+              "type": "string"
+            },
+            "execution_id": {
+              "minLength": 1,
+              "title": "Execution Id",
+              "type": "string"
+            },
+            "physical_inputs_hash": {
+              "minLength": 1,
+              "title": "Physical Inputs Hash",
+              "type": "string"
+            },
+            "numerical_settings_hash": {
+              "minLength": 1,
+              "title": "Numerical Settings Hash",
+              "type": "string"
+            },
+            "parameters_hash": {
+              "minLength": 1,
+              "title": "Parameters Hash",
+              "type": "string"
+            },
+            "solver_observation_hash": {
+              "minLength": 1,
+              "title": "Solver Observation Hash",
+              "type": "string"
+            }
+          },
+          "required": [
+            "geometry_sha256",
+            "source_sha256",
+            "suite_id",
+            "evaluator_id",
+            "runtime_id",
+            "execution_id",
+            "physical_inputs_hash",
+            "numerical_settings_hash",
+            "parameters_hash",
+            "solver_observation_hash"
+          ],
+          "title": "ExactInputs",
+          "type": "object"
+        },
+        "SourceReference": {
+          "additionalProperties": false,
+          "properties": {
+            "run_id": {
+              "title": "Run Id",
+              "type": "string"
+            },
+            "candidate_id": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Candidate Id"
+            },
+            "result_id": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Result Id"
+            },
+            "test_ids": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Test Ids",
+              "type": "array"
+            },
+            "tool_ids": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Tool Ids",
+              "type": "array"
+            }
+          },
+          "required": [
+            "run_id"
+          ],
+          "title": "SourceReference",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "const": 1,
+          "default": 1,
+          "title": "Version",
+          "type": "integer"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "created_at": {
+          "title": "Created At",
+          "type": "string"
+        },
+        "workspace_id": {
+          "title": "Workspace Id",
+          "type": "string"
+        },
+        "project_id": {
+          "title": "Project Id",
+          "type": "string"
+        },
+        "access_scope": {
+          "default": "project",
+          "enum": [
+            "project",
+            "workspace"
+          ],
+          "title": "Access Scope",
+          "type": "string"
+        },
+        "object_id": {
+          "title": "Object Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "lesson",
+            "observation",
+            "test_recipe",
+            "procedure",
+            "tool_reference"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "source": {
+          "$ref": "#/$defs/SourceReference"
+        },
+        "request": {
+          "title": "Request",
+          "type": "string"
+        },
+        "requirements": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Requirements",
+          "type": "array"
+        },
+        "applicability": {
+          "$ref": "#/$defs/Applicability"
+        },
+        "material_inputs": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Material Inputs",
+          "type": "array"
+        },
+        "load_inputs": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Load Inputs",
+          "type": "array"
+        },
+        "test_recipes": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Test Recipes",
+          "type": "array"
+        },
+        "tested_tools": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Tested Tools",
+          "type": "array"
+        },
+        "failure_modes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Failure Modes",
+          "type": "array"
+        },
+        "attempted_change": {
+          "default": "",
+          "title": "Attempted Change",
+          "type": "string"
+        },
+        "measured_outcomes": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Measured Outcomes",
+          "type": "array"
+        },
+        "claim": {
+          "maxLength": 12000,
+          "minLength": 1,
+          "title": "Claim",
+          "type": "string"
+        },
+        "support": {
+          "default": "hypothesis",
+          "enum": [
+            "hypothesis",
+            "simulation_supported",
+            "measurement_supported"
+          ],
+          "title": "Support",
+          "type": "string"
+        },
+        "confidence_basis": {
+          "title": "Confidence Basis",
+          "type": "string"
+        },
+        "local_evidence_status": {
+          "default": "unverified",
+          "enum": [
+            "unverified",
+            "harness_observed",
+            "imported_unverified"
+          ],
+          "title": "Local Evidence Status",
+          "type": "string"
+        },
+        "artifacts": {
+          "items": {
+            "$ref": "#/$defs/EvidenceArtifact"
+          },
+          "maxItems": 300,
+          "title": "Artifacts",
+          "type": "array"
+        },
+        "origin": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Origin",
+          "type": "object"
+        },
+        "provenance": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Provenance",
+          "type": "object"
+        },
+        "import_history": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Import History",
+          "type": "array"
+        },
+        "evidence_issues": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Issues",
+          "type": "array"
+        },
+        "superseded_by": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Superseded By"
+        },
+        "supersession_reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Supersession Reason"
+        },
+        "revision": {
+          "default": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "exact_inputs": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ExactInputs"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "transfers_acceptance": {
+          "const": false,
+          "default": false,
+          "title": "Transfers Acceptance",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "created_at",
+        "workspace_id",
+        "project_id",
+        "object_id",
+        "kind",
+        "source",
+        "request",
+        "applicability",
+        "claim",
+        "confidence_basis",
+        "origin"
+      ],
+      "title": "Experience",
+      "type": "object"
+    },
+    "MemorySearch": {
+      "$defs": {
+        "Applicability": {
+          "additionalProperties": false,
+          "properties": {
+            "domain": {
+              "default": "",
+              "title": "Domain",
+              "type": "string"
+            },
+            "phenomena": {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 30,
+              "title": "Phenomena",
+              "type": "array"
+            },
+            "materials": {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 30,
+              "title": "Materials",
+              "type": "array"
+            },
+            "quantities": {
+              "additionalProperties": {
+                "$ref": "#/$defs/ApplicabilityRange"
+              },
+              "title": "Quantities",
+              "type": "object"
+            },
+            "material_models": {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 30,
+              "title": "Material Models",
+              "type": "array"
+            },
+            "processes": {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 30,
+              "title": "Processes",
+              "type": "array"
+            },
+            "load_regimes": {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 30,
+              "title": "Load Regimes",
+              "type": "array"
+            },
+            "assumptions": {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 30,
+              "title": "Assumptions",
+              "type": "array"
+            }
+          },
+          "title": "Applicability",
+          "type": "object"
+        },
+        "ApplicabilityRange": {
+          "additionalProperties": false,
+          "properties": {
+            "minimum": {
+              "title": "Minimum",
+              "type": "number"
+            },
+            "maximum": {
+              "title": "Maximum",
+              "type": "number"
+            },
+            "unit": {
+              "title": "Unit",
+              "type": "string"
+            },
+            "dimension": {
+              "title": "Dimension",
+              "type": "string"
+            }
+          },
+          "required": [
+            "minimum",
+            "maximum",
+            "unit",
+            "dimension"
+          ],
+          "title": "ApplicabilityRange",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "query": {
+          "default": "",
+          "maxLength": 12000,
+          "title": "Query",
+          "type": "string"
+        },
+        "experiment_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Experiment Id"
+        },
+        "applicability": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Applicability"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "limit": {
+          "default": 8,
+          "maximum": 50,
+          "minimum": 1,
+          "title": "Limit",
+          "type": "integer"
+        },
+        "cursor": {
+          "anyOf": [
+            {
+              "maxLength": 1000,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cursor"
+        },
+        "include_incompatible": {
+          "default": true,
+          "title": "Include Incompatible",
+          "type": "boolean"
+        },
+        "include_superseded": {
+          "default": false,
+          "title": "Include Superseded",
+          "type": "boolean"
+        }
+      },
+      "title": "MemorySearch",
+      "type": "object"
+    },
+    "MemoryNote": {
+      "$defs": {
+        "Applicability": {
+          "additionalProperties": false,
+          "properties": {
+            "domain": {
+              "default": "",
+              "title": "Domain",
+              "type": "string"
+            },
+            "phenomena": {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 30,
+              "title": "Phenomena",
+              "type": "array"
+            },
+            "materials": {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 30,
+              "title": "Materials",
+              "type": "array"
+            },
+            "quantities": {
+              "additionalProperties": {
+                "$ref": "#/$defs/ApplicabilityRange"
+              },
+              "title": "Quantities",
+              "type": "object"
+            },
+            "material_models": {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 30,
+              "title": "Material Models",
+              "type": "array"
+            },
+            "processes": {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 30,
+              "title": "Processes",
+              "type": "array"
+            },
+            "load_regimes": {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 30,
+              "title": "Load Regimes",
+              "type": "array"
+            },
+            "assumptions": {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 30,
+              "title": "Assumptions",
+              "type": "array"
+            }
+          },
+          "title": "Applicability",
+          "type": "object"
+        },
+        "ApplicabilityRange": {
+          "additionalProperties": false,
+          "properties": {
+            "minimum": {
+              "title": "Minimum",
+              "type": "number"
+            },
+            "maximum": {
+              "title": "Maximum",
+              "type": "number"
+            },
+            "unit": {
+              "title": "Unit",
+              "type": "string"
+            },
+            "dimension": {
+              "title": "Dimension",
+              "type": "string"
+            }
+          },
+          "required": [
+            "minimum",
+            "maximum",
+            "unit",
+            "dimension"
+          ],
+          "title": "ApplicabilityRange",
+          "type": "object"
+        },
+        "SourceReference": {
+          "additionalProperties": false,
+          "properties": {
+            "run_id": {
+              "title": "Run Id",
+              "type": "string"
+            },
+            "candidate_id": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Candidate Id"
+            },
+            "result_id": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Result Id"
+            },
+            "test_ids": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Test Ids",
+              "type": "array"
+            },
+            "tool_ids": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Tool Ids",
+              "type": "array"
+            }
+          },
+          "required": [
+            "run_id"
+          ],
+          "title": "SourceReference",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "operation_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Operation Id",
+          "type": "string"
+        },
+        "actor": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Actor",
+          "type": "string"
+        },
+        "experiment_id": {
+          "title": "Experiment Id",
+          "type": "string"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SourceReference"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "kind": {
+          "default": "lesson",
+          "enum": [
+            "lesson",
+            "test_recipe",
+            "procedure",
+            "tool_reference"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "claim": {
+          "maxLength": 12000,
+          "minLength": 1,
+          "title": "Claim",
+          "type": "string"
+        },
+        "applicability": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Applicability"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "operation_id",
+        "actor",
+        "experiment_id",
+        "claim"
+      ],
+      "title": "MemoryNote",
+      "type": "object"
+    },
+    "ExactInputs": {
+      "additionalProperties": false,
+      "properties": {
+        "geometry_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Geometry Sha256",
+          "type": "string"
+        },
+        "source_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Source Sha256",
+          "type": "string"
+        },
+        "suite_id": {
+          "minLength": 1,
+          "title": "Suite Id",
+          "type": "string"
+        },
+        "evaluator_id": {
+          "minLength": 1,
+          "title": "Evaluator Id",
+          "type": "string"
+        },
+        "runtime_id": {
+          "minLength": 1,
+          "title": "Runtime Id",
+          "type": "string"
+        },
+        "execution_id": {
+          "minLength": 1,
+          "title": "Execution Id",
+          "type": "string"
+        },
+        "physical_inputs_hash": {
+          "minLength": 1,
+          "title": "Physical Inputs Hash",
+          "type": "string"
+        },
+        "numerical_settings_hash": {
+          "minLength": 1,
+          "title": "Numerical Settings Hash",
+          "type": "string"
+        },
+        "parameters_hash": {
+          "minLength": 1,
+          "title": "Parameters Hash",
+          "type": "string"
+        },
+        "solver_observation_hash": {
+          "minLength": 1,
+          "title": "Solver Observation Hash",
+          "type": "string"
+        }
+      },
+      "required": [
+        "geometry_sha256",
+        "source_sha256",
+        "suite_id",
+        "evaluator_id",
+        "runtime_id",
+        "execution_id",
+        "physical_inputs_hash",
+        "numerical_settings_hash",
+        "parameters_hash",
+        "solver_observation_hash"
+      ],
+      "title": "ExactInputs",
+      "type": "object"
+    },
+    "Supersession": {
+      "additionalProperties": false,
+      "properties": {
+        "actor": {
+          "title": "Actor",
+          "type": "string"
+        },
+        "operation_id": {
+          "title": "Operation Id",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "replacement_id": {
+          "title": "Replacement Id",
+          "type": "string"
+        },
+        "reason": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "actor",
+        "operation_id",
+        "revision",
+        "replacement_id",
+        "reason"
+      ],
+      "title": "Supersession",
+      "type": "object"
+    },
+    "MemoryBundle": {
+      "$defs": {
+        "Applicability": {
+          "additionalProperties": false,
+          "properties": {
+            "domain": {
+              "default": "",
+              "title": "Domain",
+              "type": "string"
+            },
+            "phenomena": {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 30,
+              "title": "Phenomena",
+              "type": "array"
+            },
+            "materials": {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 30,
+              "title": "Materials",
+              "type": "array"
+            },
+            "quantities": {
+              "additionalProperties": {
+                "$ref": "#/$defs/ApplicabilityRange"
+              },
+              "title": "Quantities",
+              "type": "object"
+            },
+            "material_models": {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 30,
+              "title": "Material Models",
+              "type": "array"
+            },
+            "processes": {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 30,
+              "title": "Processes",
+              "type": "array"
+            },
+            "load_regimes": {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 30,
+              "title": "Load Regimes",
+              "type": "array"
+            },
+            "assumptions": {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 30,
+              "title": "Assumptions",
+              "type": "array"
+            }
+          },
+          "title": "Applicability",
+          "type": "object"
+        },
+        "ApplicabilityRange": {
+          "additionalProperties": false,
+          "properties": {
+            "minimum": {
+              "title": "Minimum",
+              "type": "number"
+            },
+            "maximum": {
+              "title": "Maximum",
+              "type": "number"
+            },
+            "unit": {
+              "title": "Unit",
+              "type": "string"
+            },
+            "dimension": {
+              "title": "Dimension",
+              "type": "string"
+            }
+          },
+          "required": [
+            "minimum",
+            "maximum",
+            "unit",
+            "dimension"
+          ],
+          "title": "ApplicabilityRange",
+          "type": "object"
+        },
+        "EvidenceArtifact": {
+          "additionalProperties": false,
+          "properties": {
+            "artifact_id": {
+              "pattern": "^artifact-[a-f0-9]{64}$",
+              "title": "Artifact Id",
+              "type": "string"
+            },
+            "sha256": {
+              "pattern": "^[a-f0-9]{64}$",
+              "title": "Sha256",
+              "type": "string"
+            },
+            "size": {
+              "minimum": 0,
+              "title": "Size",
+              "type": "integer"
+            },
+            "name": {
+              "title": "Name",
+              "type": "string"
+            },
+            "media_type": {
+              "title": "Media Type",
+              "type": "string"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "sha256",
+            "size",
+            "name",
+            "media_type"
+          ],
+          "title": "EvidenceArtifact",
+          "type": "object"
+        },
+        "ExactInputs": {
+          "additionalProperties": false,
+          "properties": {
+            "geometry_sha256": {
+              "pattern": "^[a-f0-9]{64}$",
+              "title": "Geometry Sha256",
+              "type": "string"
+            },
+            "source_sha256": {
+              "pattern": "^[a-f0-9]{64}$",
+              "title": "Source Sha256",
+              "type": "string"
+            },
+            "suite_id": {
+              "minLength": 1,
+              "title": "Suite Id",
+              "type": "string"
+            },
+            "evaluator_id": {
+              "minLength": 1,
+              "title": "Evaluator Id",
+              "type": "string"
+            },
+            "runtime_id": {
+              "minLength": 1,
+              "title": "Runtime Id",
+              "type": "string"
+            },
+            "execution_id": {
+              "minLength": 1,
+              "title": "Execution Id",
+              "type": "string"
+            },
+            "physical_inputs_hash": {
+              "minLength": 1,
+              "title": "Physical Inputs Hash",
+              "type": "string"
+            },
+            "numerical_settings_hash": {
+              "minLength": 1,
+              "title": "Numerical Settings Hash",
+              "type": "string"
+            },
+            "parameters_hash": {
+              "minLength": 1,
+              "title": "Parameters Hash",
+              "type": "string"
+            },
+            "solver_observation_hash": {
+              "minLength": 1,
+              "title": "Solver Observation Hash",
+              "type": "string"
+            }
+          },
+          "required": [
+            "geometry_sha256",
+            "source_sha256",
+            "suite_id",
+            "evaluator_id",
+            "runtime_id",
+            "execution_id",
+            "physical_inputs_hash",
+            "numerical_settings_hash",
+            "parameters_hash",
+            "solver_observation_hash"
+          ],
+          "title": "ExactInputs",
+          "type": "object"
+        },
+        "Experience": {
+          "additionalProperties": false,
+          "properties": {
+            "version": {
+              "const": 1,
+              "default": 1,
+              "title": "Version",
+              "type": "integer"
+            },
+            "id": {
+              "title": "Id",
+              "type": "string"
+            },
+            "created_at": {
+              "title": "Created At",
+              "type": "string"
+            },
+            "workspace_id": {
+              "title": "Workspace Id",
+              "type": "string"
+            },
+            "project_id": {
+              "title": "Project Id",
+              "type": "string"
+            },
+            "access_scope": {
+              "default": "project",
+              "enum": [
+                "project",
+                "workspace"
+              ],
+              "title": "Access Scope",
+              "type": "string"
+            },
+            "object_id": {
+              "title": "Object Id",
+              "type": "string"
+            },
+            "kind": {
+              "enum": [
+                "lesson",
+                "observation",
+                "test_recipe",
+                "procedure",
+                "tool_reference"
+              ],
+              "title": "Kind",
+              "type": "string"
+            },
+            "source": {
+              "$ref": "#/$defs/SourceReference"
+            },
+            "request": {
+              "title": "Request",
+              "type": "string"
+            },
+            "requirements": {
+              "items": {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              "title": "Requirements",
+              "type": "array"
+            },
+            "applicability": {
+              "$ref": "#/$defs/Applicability"
+            },
+            "material_inputs": {
+              "items": {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              "title": "Material Inputs",
+              "type": "array"
+            },
+            "load_inputs": {
+              "items": {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              "title": "Load Inputs",
+              "type": "array"
+            },
+            "test_recipes": {
+              "items": {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              "title": "Test Recipes",
+              "type": "array"
+            },
+            "tested_tools": {
+              "items": {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              "title": "Tested Tools",
+              "type": "array"
+            },
+            "failure_modes": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Failure Modes",
+              "type": "array"
+            },
+            "attempted_change": {
+              "default": "",
+              "title": "Attempted Change",
+              "type": "string"
+            },
+            "measured_outcomes": {
+              "items": {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              "title": "Measured Outcomes",
+              "type": "array"
+            },
+            "claim": {
+              "maxLength": 12000,
+              "minLength": 1,
+              "title": "Claim",
+              "type": "string"
+            },
+            "support": {
+              "default": "hypothesis",
+              "enum": [
+                "hypothesis",
+                "simulation_supported",
+                "measurement_supported"
+              ],
+              "title": "Support",
+              "type": "string"
+            },
+            "confidence_basis": {
+              "title": "Confidence Basis",
+              "type": "string"
+            },
+            "local_evidence_status": {
+              "default": "unverified",
+              "enum": [
+                "unverified",
+                "harness_observed",
+                "imported_unverified"
+              ],
+              "title": "Local Evidence Status",
+              "type": "string"
+            },
+            "artifacts": {
+              "items": {
+                "$ref": "#/$defs/EvidenceArtifact"
+              },
+              "maxItems": 300,
+              "title": "Artifacts",
+              "type": "array"
+            },
+            "origin": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "title": "Origin",
+              "type": "object"
+            },
+            "provenance": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "title": "Provenance",
+              "type": "object"
+            },
+            "import_history": {
+              "items": {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              "title": "Import History",
+              "type": "array"
+            },
+            "evidence_issues": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Evidence Issues",
+              "type": "array"
+            },
+            "superseded_by": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Superseded By"
+            },
+            "supersession_reason": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Supersession Reason"
+            },
+            "revision": {
+              "default": 0,
+              "title": "Revision",
+              "type": "integer"
+            },
+            "exact_inputs": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/ExactInputs"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "transfers_acceptance": {
+              "const": false,
+              "default": false,
+              "title": "Transfers Acceptance",
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "id",
+            "created_at",
+            "workspace_id",
+            "project_id",
+            "object_id",
+            "kind",
+            "source",
+            "request",
+            "applicability",
+            "claim",
+            "confidence_basis",
+            "origin"
+          ],
+          "title": "Experience",
+          "type": "object"
+        },
+        "PortableArtifact": {
+          "additionalProperties": false,
+          "properties": {
+            "artifact_id": {
+              "pattern": "^artifact-[a-f0-9]{64}$",
+              "title": "Artifact Id",
+              "type": "string"
+            },
+            "sha256": {
+              "pattern": "^[a-f0-9]{64}$",
+              "title": "Sha256",
+              "type": "string"
+            },
+            "size": {
+              "minimum": 0,
+              "title": "Size",
+              "type": "integer"
+            },
+            "name": {
+              "title": "Name",
+              "type": "string"
+            },
+            "media_type": {
+              "title": "Media Type",
+              "type": "string"
+            },
+            "data_base64": {
+              "maxLength": 24000000,
+              "title": "Data Base64",
+              "type": "string"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "sha256",
+            "size",
+            "name",
+            "media_type",
+            "data_base64"
+          ],
+          "title": "PortableArtifact",
+          "type": "object"
+        },
+        "SourceReference": {
+          "additionalProperties": false,
+          "properties": {
+            "run_id": {
+              "title": "Run Id",
+              "type": "string"
+            },
+            "candidate_id": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Candidate Id"
+            },
+            "result_id": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Result Id"
+            },
+            "test_ids": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Test Ids",
+              "type": "array"
+            },
+            "tool_ids": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Tool Ids",
+              "type": "array"
+            }
+          },
+          "required": [
+            "run_id"
+          ],
+          "title": "SourceReference",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "const": 1,
+          "default": 1,
+          "title": "Version",
+          "type": "integer"
+        },
+        "origin": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Origin",
+          "type": "object"
+        },
+        "records": {
+          "items": {
+            "$ref": "#/$defs/Experience"
+          },
+          "maxItems": 100,
+          "title": "Records",
+          "type": "array"
+        },
+        "artifacts": {
+          "items": {
+            "$ref": "#/$defs/PortableArtifact"
+          },
+          "maxItems": 300,
+          "title": "Artifacts",
+          "type": "array"
+        }
+      },
+      "required": [
+        "origin",
+        "records"
+      ],
+      "title": "MemoryBundle",
+      "type": "object"
+    },
+    "MemoryImport": {
+      "$defs": {
+        "Applicability": {
+          "additionalProperties": false,
+          "properties": {
+            "domain": {
+              "default": "",
+              "title": "Domain",
+              "type": "string"
+            },
+            "phenomena": {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 30,
+              "title": "Phenomena",
+              "type": "array"
+            },
+            "materials": {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 30,
+              "title": "Materials",
+              "type": "array"
+            },
+            "quantities": {
+              "additionalProperties": {
+                "$ref": "#/$defs/ApplicabilityRange"
+              },
+              "title": "Quantities",
+              "type": "object"
+            },
+            "material_models": {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 30,
+              "title": "Material Models",
+              "type": "array"
+            },
+            "processes": {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 30,
+              "title": "Processes",
+              "type": "array"
+            },
+            "load_regimes": {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 30,
+              "title": "Load Regimes",
+              "type": "array"
+            },
+            "assumptions": {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 30,
+              "title": "Assumptions",
+              "type": "array"
+            }
+          },
+          "title": "Applicability",
+          "type": "object"
+        },
+        "ApplicabilityRange": {
+          "additionalProperties": false,
+          "properties": {
+            "minimum": {
+              "title": "Minimum",
+              "type": "number"
+            },
+            "maximum": {
+              "title": "Maximum",
+              "type": "number"
+            },
+            "unit": {
+              "title": "Unit",
+              "type": "string"
+            },
+            "dimension": {
+              "title": "Dimension",
+              "type": "string"
+            }
+          },
+          "required": [
+            "minimum",
+            "maximum",
+            "unit",
+            "dimension"
+          ],
+          "title": "ApplicabilityRange",
+          "type": "object"
+        },
+        "EvidenceArtifact": {
+          "additionalProperties": false,
+          "properties": {
+            "artifact_id": {
+              "pattern": "^artifact-[a-f0-9]{64}$",
+              "title": "Artifact Id",
+              "type": "string"
+            },
+            "sha256": {
+              "pattern": "^[a-f0-9]{64}$",
+              "title": "Sha256",
+              "type": "string"
+            },
+            "size": {
+              "minimum": 0,
+              "title": "Size",
+              "type": "integer"
+            },
+            "name": {
+              "title": "Name",
+              "type": "string"
+            },
+            "media_type": {
+              "title": "Media Type",
+              "type": "string"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "sha256",
+            "size",
+            "name",
+            "media_type"
+          ],
+          "title": "EvidenceArtifact",
+          "type": "object"
+        },
+        "ExactInputs": {
+          "additionalProperties": false,
+          "properties": {
+            "geometry_sha256": {
+              "pattern": "^[a-f0-9]{64}$",
+              "title": "Geometry Sha256",
+              "type": "string"
+            },
+            "source_sha256": {
+              "pattern": "^[a-f0-9]{64}$",
+              "title": "Source Sha256",
+              "type": "string"
+            },
+            "suite_id": {
+              "minLength": 1,
+              "title": "Suite Id",
+              "type": "string"
+            },
+            "evaluator_id": {
+              "minLength": 1,
+              "title": "Evaluator Id",
+              "type": "string"
+            },
+            "runtime_id": {
+              "minLength": 1,
+              "title": "Runtime Id",
+              "type": "string"
+            },
+            "execution_id": {
+              "minLength": 1,
+              "title": "Execution Id",
+              "type": "string"
+            },
+            "physical_inputs_hash": {
+              "minLength": 1,
+              "title": "Physical Inputs Hash",
+              "type": "string"
+            },
+            "numerical_settings_hash": {
+              "minLength": 1,
+              "title": "Numerical Settings Hash",
+              "type": "string"
+            },
+            "parameters_hash": {
+              "minLength": 1,
+              "title": "Parameters Hash",
+              "type": "string"
+            },
+            "solver_observation_hash": {
+              "minLength": 1,
+              "title": "Solver Observation Hash",
+              "type": "string"
+            }
+          },
+          "required": [
+            "geometry_sha256",
+            "source_sha256",
+            "suite_id",
+            "evaluator_id",
+            "runtime_id",
+            "execution_id",
+            "physical_inputs_hash",
+            "numerical_settings_hash",
+            "parameters_hash",
+            "solver_observation_hash"
+          ],
+          "title": "ExactInputs",
+          "type": "object"
+        },
+        "Experience": {
+          "additionalProperties": false,
+          "properties": {
+            "version": {
+              "const": 1,
+              "default": 1,
+              "title": "Version",
+              "type": "integer"
+            },
+            "id": {
+              "title": "Id",
+              "type": "string"
+            },
+            "created_at": {
+              "title": "Created At",
+              "type": "string"
+            },
+            "workspace_id": {
+              "title": "Workspace Id",
+              "type": "string"
+            },
+            "project_id": {
+              "title": "Project Id",
+              "type": "string"
+            },
+            "access_scope": {
+              "default": "project",
+              "enum": [
+                "project",
+                "workspace"
+              ],
+              "title": "Access Scope",
+              "type": "string"
+            },
+            "object_id": {
+              "title": "Object Id",
+              "type": "string"
+            },
+            "kind": {
+              "enum": [
+                "lesson",
+                "observation",
+                "test_recipe",
+                "procedure",
+                "tool_reference"
+              ],
+              "title": "Kind",
+              "type": "string"
+            },
+            "source": {
+              "$ref": "#/$defs/SourceReference"
+            },
+            "request": {
+              "title": "Request",
+              "type": "string"
+            },
+            "requirements": {
+              "items": {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              "title": "Requirements",
+              "type": "array"
+            },
+            "applicability": {
+              "$ref": "#/$defs/Applicability"
+            },
+            "material_inputs": {
+              "items": {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              "title": "Material Inputs",
+              "type": "array"
+            },
+            "load_inputs": {
+              "items": {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              "title": "Load Inputs",
+              "type": "array"
+            },
+            "test_recipes": {
+              "items": {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              "title": "Test Recipes",
+              "type": "array"
+            },
+            "tested_tools": {
+              "items": {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              "title": "Tested Tools",
+              "type": "array"
+            },
+            "failure_modes": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Failure Modes",
+              "type": "array"
+            },
+            "attempted_change": {
+              "default": "",
+              "title": "Attempted Change",
+              "type": "string"
+            },
+            "measured_outcomes": {
+              "items": {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              "title": "Measured Outcomes",
+              "type": "array"
+            },
+            "claim": {
+              "maxLength": 12000,
+              "minLength": 1,
+              "title": "Claim",
+              "type": "string"
+            },
+            "support": {
+              "default": "hypothesis",
+              "enum": [
+                "hypothesis",
+                "simulation_supported",
+                "measurement_supported"
+              ],
+              "title": "Support",
+              "type": "string"
+            },
+            "confidence_basis": {
+              "title": "Confidence Basis",
+              "type": "string"
+            },
+            "local_evidence_status": {
+              "default": "unverified",
+              "enum": [
+                "unverified",
+                "harness_observed",
+                "imported_unverified"
+              ],
+              "title": "Local Evidence Status",
+              "type": "string"
+            },
+            "artifacts": {
+              "items": {
+                "$ref": "#/$defs/EvidenceArtifact"
+              },
+              "maxItems": 300,
+              "title": "Artifacts",
+              "type": "array"
+            },
+            "origin": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "title": "Origin",
+              "type": "object"
+            },
+            "provenance": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "title": "Provenance",
+              "type": "object"
+            },
+            "import_history": {
+              "items": {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              "title": "Import History",
+              "type": "array"
+            },
+            "evidence_issues": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Evidence Issues",
+              "type": "array"
+            },
+            "superseded_by": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Superseded By"
+            },
+            "supersession_reason": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Supersession Reason"
+            },
+            "revision": {
+              "default": 0,
+              "title": "Revision",
+              "type": "integer"
+            },
+            "exact_inputs": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/ExactInputs"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "transfers_acceptance": {
+              "const": false,
+              "default": false,
+              "title": "Transfers Acceptance",
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "id",
+            "created_at",
+            "workspace_id",
+            "project_id",
+            "object_id",
+            "kind",
+            "source",
+            "request",
+            "applicability",
+            "claim",
+            "confidence_basis",
+            "origin"
+          ],
+          "title": "Experience",
+          "type": "object"
+        },
+        "MemoryBundle": {
+          "additionalProperties": false,
+          "properties": {
+            "version": {
+              "const": 1,
+              "default": 1,
+              "title": "Version",
+              "type": "integer"
+            },
+            "origin": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "title": "Origin",
+              "type": "object"
+            },
+            "records": {
+              "items": {
+                "$ref": "#/$defs/Experience"
+              },
+              "maxItems": 100,
+              "title": "Records",
+              "type": "array"
+            },
+            "artifacts": {
+              "items": {
+                "$ref": "#/$defs/PortableArtifact"
+              },
+              "maxItems": 300,
+              "title": "Artifacts",
+              "type": "array"
+            }
+          },
+          "required": [
+            "origin",
+            "records"
+          ],
+          "title": "MemoryBundle",
+          "type": "object"
+        },
+        "PortableArtifact": {
+          "additionalProperties": false,
+          "properties": {
+            "artifact_id": {
+              "pattern": "^artifact-[a-f0-9]{64}$",
+              "title": "Artifact Id",
+              "type": "string"
+            },
+            "sha256": {
+              "pattern": "^[a-f0-9]{64}$",
+              "title": "Sha256",
+              "type": "string"
+            },
+            "size": {
+              "minimum": 0,
+              "title": "Size",
+              "type": "integer"
+            },
+            "name": {
+              "title": "Name",
+              "type": "string"
+            },
+            "media_type": {
+              "title": "Media Type",
+              "type": "string"
+            },
+            "data_base64": {
+              "maxLength": 24000000,
+              "title": "Data Base64",
+              "type": "string"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "sha256",
+            "size",
+            "name",
+            "media_type",
+            "data_base64"
+          ],
+          "title": "PortableArtifact",
+          "type": "object"
+        },
+        "SourceReference": {
+          "additionalProperties": false,
+          "properties": {
+            "run_id": {
+              "title": "Run Id",
+              "type": "string"
+            },
+            "candidate_id": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Candidate Id"
+            },
+            "result_id": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Result Id"
+            },
+            "test_ids": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Test Ids",
+              "type": "array"
+            },
+            "tool_ids": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Tool Ids",
+              "type": "array"
+            }
+          },
+          "required": [
+            "run_id"
+          ],
+          "title": "SourceReference",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "operation_id": {
+          "title": "Operation Id",
+          "type": "string"
+        },
+        "actor": {
+          "title": "Actor",
+          "type": "string"
+        },
+        "bundle": {
+          "$ref": "#/$defs/MemoryBundle"
+        }
+      },
+      "required": [
+        "operation_id",
+        "actor",
+        "bundle"
+      ],
+      "title": "MemoryImport",
+      "type": "object"
+    },
+    "MemoryExport": {
+      "additionalProperties": false,
+      "properties": {
+        "ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 100,
+          "minItems": 1,
+          "title": "Ids",
+          "type": "array"
+        },
+        "include_artifacts": {
+          "default": false,
+          "title": "Include Artifacts",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "ids"
+      ],
+      "title": "MemoryExport",
+      "type": "object"
+    },
+    "Capture": {
+      "additionalProperties": false,
+      "properties": {
+        "experiment_id": {
+          "title": "Experiment Id",
+          "type": "string"
+        },
+        "result_id": {
+          "title": "Result Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "experiment_id",
+        "result_id"
+      ],
+      "title": "Capture",
+      "type": "object"
+    },
+    "Reindex": {
+      "additionalProperties": false,
+      "properties": {
+        "after_id": {
+          "default": "",
+          "maxLength": 200,
+          "title": "After Id",
+          "type": "string"
+        }
+      },
+      "title": "Reindex",
+      "type": "object"
+    },
     "AdapterDescriptor": {
       "additionalProperties": false,
       "properties": {

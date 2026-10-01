@@ -76,7 +76,7 @@ def test_budget_rejects_before_provider_call(tmp_path, monkeypatch):
     assert not e.store.list("requests")
 
 
-def test_local_memory_isolates_objects_and_task_versions(tmp_path):
+def test_unscoped_legacy_memory_is_not_implicitly_adopted(tmp_path):
     p, e = provider(tmp_path)
     for index, object_id, version in [
         (0, p.run["object_id"], p.run["task_version"]),
@@ -92,7 +92,15 @@ def test_local_memory_isolates_objects_and_task_versions(tmp_path):
                 "summary": json.dumps({"lesson": "test"}),
             },
         )
-    assert [m["_id"] for m in e.memory(p.run, p)] == ["0"]
+    # Historical rows lack workspace/project/evidence provenance. They remain archived,
+    # but do not enter the new cross-task collection or become exact reusable evidence.
+    assert e.memory(p.run, p) == []
+    assert [
+        m["_id"]
+        for m in e.store.list(
+            "memories", {"object_id": p.run["object_id"], "task_version": p.run["task_version"]}
+        )
+    ] == ["0"]
 
 
 def test_json_mode_instruction_is_in_input(tmp_path, monkeypatch):

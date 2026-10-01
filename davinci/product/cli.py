@@ -130,13 +130,18 @@ def main():
     from davinci.product.external_cli import add_commands
 
     add_commands(sub)
+    from davinci.product.memory_cli import add_commands as memory_commands
+
+    memory_commands(sub)
     args = parser.parse_args()
     root = args.workspace.resolve()
     try:
-        if args.command in ("external", "service"):
+        if args.command in ("external", "service", "memory"):
             from davinci.product.client import ClientError
             from davinci.product.external_cli import output, run
 
+            if args.command == "memory":
+                from davinci.product.memory_cli import run
             try:
                 data, code = run(args, root)
                 output(data, ok=code == 0)
@@ -165,6 +170,8 @@ def main():
             results = {
                 "driver": driver,
                 "model_key_required": driver == "managed",
+                "embedding": options.embedding.model_dump(),
+                "project_id": options.project_id,
                 "next_actions": ["davinci service ensure"] if driver == "external" else ["davinci serve"],
                 "python": sys.version.split()[0],
                 "git": bool(shutil.which("git")),
