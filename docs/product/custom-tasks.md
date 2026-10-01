@@ -60,3 +60,6 @@ This MVP intentionally supports a narrow tested utility contract. Arbitrary dyna
 > Read Da Vinci's custom-task interface and adapt the starter task for [engineering task]. Define the geometry parameters, fixed interfaces, objective, constraints, units, and baseline. Implement the CadQuery builder and an independent evaluator using [physical model or solver]. Add validation cases for known feasible and infeasible designs, document assumptions and unsupported conditions, and produce a runnable YAML configuration. Keep the evaluator outside the design agent's editable files. Run the adapter checks and a local baseline evaluation before requesting a paid optimization run. Preserve archived results; changes to the task or evaluator must create a new version.
 
 Include load cases, materials, dimensions, manufacturing constraints, expected solver fidelity, and acceptance thresholds in the prompt. Ask the coding agent to identify unsupported physics explicitly rather than fabricating validation.
+
+
+For new test-first custom tasks, declare a scoped simulation adapter and fixed semantic regions before freezing the plan. See [simulation adapters and evidence](simulation-adapters.md). Legacy custom evaluators remain supported with task-declared physics and unverified coverage; the plugin boundary does not establish general solver capability.

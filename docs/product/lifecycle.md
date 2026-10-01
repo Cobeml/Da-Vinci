@@ -181,3 +181,7 @@ Managed v2 replay in automated tests uses an injected deterministic provider fix
 Version-1 YAML, existing `/api/v1` routes, and gallery data shapes remain supported. The managed loop delegates candidate archival, physical evaluation, and reflection persistence to `LegacyAdapter`; its original screening and VTOL retention rules remain intact. New v1 runs explicitly record `driver: managed`, mode, and separate informational acceptance identities.
 
 Existing v1 records are interpreted through a read-only adapter with `guarantees: legacy-unverified-coverage` and `test_first_verified: false`. They are not backfilled or certified against v2 coverage. Legacy lessons are retrieved as hypotheses. A historical passing score can never supply v2 reference verification or design acceptance. There is no schema migration, new storage backend, scheduler, hosted service, or required second model provider.
+
+## Simulation adapter extension
+
+[Simulation adapters and evidence](simulation-adapters.md) adds explicit test scope/fidelity, dimensional conversions, independent planar-region selection, resource admission checks, job budgets and typed manifests beneath the same lifecycle. Frozen execution identities include this implementation. Existing records remain unchanged; linked revisions are required to rerun an old frozen experiment with new execution code. A preliminary screen cannot cover a required final test. Finalization verifies retained final evidence separately from targets and search termination.

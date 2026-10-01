@@ -183,3 +183,7 @@ Retrieval uses GET `/api/v2/experience?q=...`; artifact bytes use GET `/api/v1/a
 ## Compatibility
 
 The v1 YAML/UI/custom-task route is retained. Prior v2 synchronous Python service methods remain available to in-process adapters, but external clients should use the service APIs. The v2 HTTP `/verify` and `/evaluate` responses now return queued job records (202) instead of completed run records; clients written for Prompt 1 must poll and then fetch results/status. Existing records are not rewritten. The conservative harness implementation identity changes, so previously frozen v2 suites need linked revision/reverification before new evidence can be produced by the changed implementation. Historical records and reports remain readable.
+
+## Simulation adapter phase
+
+The installed beam plan now declares a scoped analytic adapter and an independently checked planar root interface. `davinci external adapters` discovers supported scopes without a running service or optional solver imports. Each experiment's `capabilities` operation checks its particular physics, material, runtime and resource needs; `results` includes typed artifact manifests and retained failure evidence. The existing walkthrough and CLI operations are unchanged. See [simulation adapters and evidence](simulation-adapters.md) for public fields, units, final-suite coverage, resource limits and compatibility behavior.
