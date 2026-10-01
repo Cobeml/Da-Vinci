@@ -106,10 +106,13 @@ def add_commands(sub):
             parser.add_argument("--revision", type=int, help="CAS revision; defaults to a fresh server read")
 
 
-def read_json(path):
+def read_json(path, *, object_only=True):
     if path.stat().st_size > 2_500_000:
         raise ClientError("JSON input exceeds 2.5 MB", 2)
-    return json.loads(path.read_text())
+    value = json.loads(path.read_text())
+    if object_only and not isinstance(value, dict):
+        raise ClientError("Expected a JSON object: " + str(path), 2)
+    return value
 
 
 def service(root, action):
@@ -147,7 +150,7 @@ def service(root, action):
             )
         for _ in range(100):
             try:
-                return client.connect()
+                return {**client.connect(), "started_pid": child.pid}
             except ClientError as exc:
                 if exc.code != 3:
                     raise
@@ -168,7 +171,13 @@ def task_bundle(folder, client, image=None):
         "image"
     ]
     resources = {"evaluate.py": (folder / "evaluate.py").read_text()}
-    manifest = read_json(folder / "resources.json") if (folder / "resources.json").exists() else []
+    manifest = (
+        read_json(folder / "resources.json", object_only=False)
+        if (folder / "resources.json").exists()
+        else []
+    )
+    if not isinstance(manifest, list) or not all(isinstance(name, str) for name in manifest):
+        raise ClientError("resources.json must be an array of explicit filenames", 2)
     for name in manifest:
         path = (folder / name).resolve()
         if not path.is_relative_to(folder) or path.suffix not in (".py", ".json", ".txt"):

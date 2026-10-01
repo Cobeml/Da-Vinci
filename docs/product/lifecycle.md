@@ -2,7 +2,7 @@
 
 The Python service `Engine.lifecycle` and localhost `/api/v2` endpoints support test-first engineering experiments. An experiment can open with just an object, description, driver, actor, and operation ID. It needs no builder, baseline, finalized parameters, model key, or cloud database.
 
-This is the lifecycle foundation phase. The existing gallery and YAML worker still use the explicit v1 compatibility adapter. V2 experiments are available through Python and HTTP; the current gallery does not display them. Archived studies are unchanged.
+The [external-agent CLI and asynchronous HTTP route](external-agents.md) now build on this lifecycle foundation. The existing gallery and YAML worker still use the explicit v1 compatibility adapter. V2 experiments are available through Python and HTTP; the current gallery does not display them. Archived studies are unchanged.
 
 ## Driver and ownership boundary
 
@@ -122,7 +122,7 @@ Changing builder source or design parameters leaves the suite identity unchanged
 
 Reason codes retain distinctions such as `build_failed`, `timeout`, `cancelled`, `resource_exhaustion`, `invalid_binding`, `missing_evidence`, and `unsupported_physics`. Interrupted jobs retain an `interrupted` reason without inventing a completed result. Required tests must all have complete pass/failure evidence for `evidence_complete`, and all must pass for `design_accepted`. `execution_completed`, `evidence_complete`, `design_accepted`, and `objective_target_attained` are separate fields. Finishing a report does not imply an accepted design.
 
-Lessons without result links are hypotheses. A linked observation identifies its evidence; it is not proof of every claim in the prose. Retrieval can return cross-task lessons and v1 hypotheses, but never transfers a passing score. Retrieval is local lexical ranking by default and also works against Atlas documents without embeddings. Managed v1 vector retrieval now requires explicit `embeddings: true` and a configured key. No embedding request is made simply because a database or credentials exist.
+External reflections remain hypotheses even with result links. For managed reflections, a linked observation identifies its evidence; it is not proof of every claim in the prose. Retrieval can return cross-task lessons and v1 hypotheses, but never transfers a passing score. Retrieval is local lexical ranking by default and also works against Atlas documents without embeddings. Managed v1 vector retrieval now requires explicit `embeddings: true` and a configured key. No embedding request is made simply because a database or credentials exist.
 
 ## Python and HTTP use
 
@@ -172,7 +172,7 @@ Start `davinci serve` to use the same service over HTTP. `POST /api/v2/experimen
 | `/finalize`, `/cancel`, `/resume` | None |
 | `/managed/author`, `/managed/propose`, `/managed/reflect` | None; requires a managed experiment |
 
-`POST /revisions` accepts a new `OpenExperiment` whose `parent_experiment_id` is the old ID. GET routes provide experiment list/detail, `/capabilities`, and `/api/v2/experience?q=...`. Artifacts use the existing `/api/v1/artifacts/{id}` route. Execution endpoints are synchronous; clients should use a timeout covering the declared test durations and query state after a disconnected request instead of blindly retrying with a new ID. OpenAPI schemas are available through `/openapi.json`.
+`POST /revisions` accepts a new `OpenExperiment` whose `parent_experiment_id` is the old ID. GET routes provide experiment list/detail, `/capabilities`, and `/api/v2/experience?q=...`. Artifacts use the existing `/api/v1/artifacts/{id}` route. HTTP verification and evaluation now return 202 queued jobs; poll `/jobs/{job_id}` and retrieve `/results`. The Python service methods remain synchronous for in-process adapters. External agents should use the service-backed CLI or HTTP route and reuse their operation ID after a disconnected request. OpenAPI schemas are available through `/openapi.json`.
 
 Managed v2 replay in automated tests uses an injected deterministic provider fixture. The built-in replay proposals remain specific to v1 templates; v2 does not invent a generic deterministic engineering author. There were no paid-provider or private-Atlas calls in this phase's validation.
 

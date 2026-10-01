@@ -66,6 +66,10 @@ class Client:
     def mutate(self, eid, action, payload, operation_id, *, actor=None, revision=None):
         from urllib.parse import quote
 
+        if not isinstance(payload, dict) or {"actor", "revision", "operation_id"} & payload.keys():
+            raise ClientError(
+                "Payload must be an object without command identity fields; use the CLI flags", 2
+            )
         row = self.status(eid)
         if row["driver"] != "external":
             raise ClientError("External CLI operations require an external experiment", 4)

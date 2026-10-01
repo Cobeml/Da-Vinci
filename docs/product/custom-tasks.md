@@ -7,7 +7,13 @@ cd bracket-study
 
 The starter is a simple cantilever plate with a separate analytic evaluator. Customize `task/` with your own coding agent or editor, then run `davinci validate run.yaml` and a baseline check before a paid campaign.
 
-## Contract
+## External coding-agent route
+
+Use `davinci init bracket-study --driver external --template custom` for keyless agent-driven work. This extends the custom-task workflow with a v2 plan/evaluator bundle, reference verification, immutable suite freeze, source/parameter submission and queued execution. The existing v1 files in `task/` remain available; the v2 example is in `external/`. See the [complete external-agent walkthrough](external-agents.md).
+
+External agents use CLI/HTTP operations through the workspace service, never direct database writes. Their reflections remain unverified claims, and they cannot upload trusted scores. V2 uses the same `build(parameters, interfaces)` Assembly contract, with semantic interface definitions supplied as a list. Its independent evaluator is `evaluate(step_path, request)`, with frozen test inputs and no editable parameter claims. Existing v1 evaluators below are not silently upgraded; adapting one requires explicit v2 coverage and reference verification.
+
+## Managed v1 contract
 
 `task.json` declares:
 

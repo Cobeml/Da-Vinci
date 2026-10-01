@@ -80,6 +80,15 @@ def test_cli_public_contract_and_service_connection(service):
     assert code == 2 and not frozen["ok"]
     code, missing = cli(root, "external", "status", "missing")
     assert code == 5 and not missing["ok"]
+    malformed = root / "bad.json"
+    malformed.write_text("[]")
+    code, invalid = cli(root, "external", "open", "--file", str(malformed))
+    assert code == 2 and not invalid["ok"]
+    malformed.write_text('{"lesson":"claim", "operation_id":"override"}')
+    code, invalid = cli(
+        root, "external", "reflect", eid, "--file", str(malformed), "--operation-id", "real-key"
+    )
+    assert code == 2 and "identity" in invalid["data"]["error"]
     assert not engine.store.list("requests")
 
 

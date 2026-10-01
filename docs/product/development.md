@@ -42,3 +42,7 @@ The publishing workflow and account setup above are future release steps; they a
 ## Lifecycle foundation
 
 See [the public lifecycle contracts](lifecycle.md) and [the implementation record](implementation-lifecycle.md) before changing lifecycle or compatibility behavior. The new v2 integration is included in `tests/product/test_cad.py`; the default non-integration suite includes deterministic external and managed driver fixtures. Do not run paid models or private databases merely because credentials exist.
+
+The [external route](external-agents.md) is tested with a provider double that raises on construction, including when a dummy key is present. Run its real service/CLI CAD example with `DAVINCI_INTEGRATION=1 uv run pytest tests/product/test_external_cli.py -m integration -q`. The installed schema catalog must match `davinci.product.protocol.build_catalog()`; regenerate `resources/external/schemas.json` when public models change.
+
+The [external-route implementation record](implementation-external.md) lists the executed checks and installed-wheel smoke command.

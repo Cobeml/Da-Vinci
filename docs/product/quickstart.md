@@ -32,6 +32,10 @@ python -m pip install dist/da_vinci_harness-0.2.0-py3-none-any.whl
 
 The installed wheel includes the localhost web interface. CAD generation runs in Docker; no separate host CadQuery installation is required to use the package.
 
+## External coding agents
+
+For a keyless workflow driven by your coding agent, use `davinci init my-project --driver external --template custom`, then `davinci --workspace my-project service ensure`. See [the external-agent walkthrough](external-agents.md) for task authoring, reference verification, queued CAD evaluation and report export. The managed workflow below remains available.
+
 ## Create a workspace
 
 Create the workspace alongside the repository so its run data stays separate from the source checkout:
