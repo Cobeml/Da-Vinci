@@ -1,0 +1,62 @@
+{
+  "fixture_sha256": "efbe3cecb805c4137fbab639e4cad6545e1bbac18c7dcc212776344a7d2af6d4",
+  "corpus_size": 11,
+  "held_out_queries": 4,
+  "precision_at_3": 0.49999999999999994,
+  "recall_at_3": 1.0,
+  "queries_with_relevant_hit": 4,
+  "misleading_suggestions": 1,
+  "returned_suggestions": 7,
+  "results": [
+    {
+      "query": "lighter bracket with excessive cantilever deflection",
+      "returned": [
+        "beam-depth",
+        "beam-reference",
+        "range-wrong"
+      ],
+      "relevant": 2,
+      "misleading": 1,
+      "precision_at_3": 0.6666666666666666,
+      "recall_at_3": 1.0,
+      "all_require_new_validation": true
+    },
+    {
+      "query": "gripper jaw travel clearance collision check",
+      "returned": [
+        "jaw-clearance"
+      ],
+      "relevant": 1,
+      "misleading": 0,
+      "precision_at_3": 0.3333333333333333,
+      "recall_at_3": 1.0,
+      "all_require_new_validation": true
+    },
+    {
+      "query": "aircraft cruise range reserve energy drag",
+      "returned": [
+        "energy-budget",
+        "drag-scope"
+      ],
+      "relevant": 2,
+      "misleading": 0,
+      "precision_at_3": 0.6666666666666666,
+      "recall_at_3": 1.0,
+      "all_require_new_validation": true
+    },
+    {
+      "query": "polymer cantilever sustained loading deflection",
+      "returned": [
+        "polymer-creep"
+      ],
+      "relevant": 1,
+      "misleading": 0,
+      "precision_at_3": 0.3333333333333333,
+      "recall_at_3": 1.0,
+      "all_require_new_validation": true
+    }
+  ],
+  "claim": "Retrieval on a small authored fixture only; no proven design improvement or generalization claim",
+  "embedding": "disabled",
+  "cross_object": true
+}

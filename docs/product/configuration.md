@@ -58,10 +58,12 @@ input_usd_per_million: 20
 output_usd_per_million: 75
 daily_budget_usd: 50
 output_tokens: 6000
-embeddings: false              # opt in explicitly for managed Atlas vector memory
+project_id: default
+embedding:
+  adapter: disabled            # or explicit local-hash; no network/model key
 ```
 
-Model rates are configurable conservative accounting estimates, not a current vendor price quote. Verify them for your model and account. Changing `model` requires matching `pricing_model` and appropriate rates. Generation uses the Responses API; embeddings require `embeddings: true`, Atlas storage, a managed live run, and a model key. They use `text-embedding-3-small` with a separately recorded $0.02/million-token estimate. Cache discounts are not assumed.
+Model rates are configurable conservative accounting estimates, not a current vendor price quote. Verify them for your model and account. Changing `model` requires matching `pricing_model` and appropriate rates. Generation uses the Responses API. Embeddings use a separate explicit adapter; the shipped `local-hash` adapter has its own model/version/dimensions, costs $0 in API usage and downloads nothing. The deprecated `embeddings` boolean does not enable provider calls. See [engineering memory](memory.md). Cache discounts are not assumed.
 
 API tokens and MongoDB URIs belong in environment variables (`OPENAI_API_KEY`, `MONGODB_URI`) or `.env`, never in YAML. Settings and exports do not expose these secrets. The app does not need the developer's repository `.env` when installed elsewhere.
 
