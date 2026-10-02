@@ -86,6 +86,7 @@ jobs:
           uv pip install --python /tmp/native-wheel-check/bin/python dist/*.whl
           cd /tmp
           /tmp/native-wheel-check/bin/python "$GITHUB_WORKSPACE/scripts/check_installed_routes.py"
+          /tmp/native-wheel-check/bin/python "$GITHUB_WORKSPACE/scripts/check_installed_tools.py"
       - uses: actions/upload-artifact@v4
         if: always()
         with:

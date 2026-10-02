@@ -48,6 +48,9 @@ class Engine:
         self.lifecycle = Lifecycle(self)
         self.legacy = LegacyAdapter(self)
         self.managed = ManagedDriver(self)
+        from davinci.product.tool_learning import ToolLearning
+
+        self.tool_learning = ToolLearning(self)
 
     def validate(self, content):
         config = parse_yaml(content)
@@ -194,6 +197,7 @@ class Engine:
 
     def recover(self):
         self.lifecycle.recover()
+        self.tool_learning.recover()
         for run in self.store.list("runs", {"status": "running"}, limit=10000):
             if run.get("lifecycle_version") == 2:
                 continue
@@ -218,6 +222,13 @@ class Engine:
             if queued_id:
                 self.lifecycle.execute_scheduled(queued_id)
                 continue
+            if not self.store.get("pointers", "product-active-run")["run_id"]:
+                tool_jobs = self.store.list(
+                    "tool_developments_v1", {**self.experience.scope, "phase": "queued"}, limit=1
+                )
+                if tool_jobs:
+                    self.tool_learning.execute_scheduled(tool_jobs[0]["_id"])
+                    continue
             if not self.store.get("pointers", "product-active-run")["run_id"]:
                 automatic = self.store.list(
                     "runs",
@@ -266,6 +277,8 @@ class Engine:
                     continue
                 run_id = pointer["run_id"]
                 active = self.store.get("runs", run_id)
+                if self.store.get("tool_developments_v1", run_id):
+                    continue
                 if active and active.get("lifecycle_version") == 2:
                     continue  # lifecycle work owns the shared slot; never enter the model loop
                 self.busy = True

@@ -1,6 +1,653 @@
 {
   "version": 2,
   "schemas": {
+    "ToolNeed": {
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "const": 1,
+          "default": 1,
+          "title": "Version",
+          "type": "integer"
+        },
+        "operation_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Operation Id",
+          "type": "string"
+        },
+        "actor": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Actor",
+          "type": "string"
+        },
+        "experiment_id": {
+          "title": "Experiment Id",
+          "type": "string"
+        },
+        "name": {
+          "pattern": "^[a-z][a-z0-9-]{0,63}$",
+          "title": "Name",
+          "type": "string"
+        },
+        "need": {
+          "maxLength": 4000,
+          "minLength": 10,
+          "title": "Need",
+          "type": "string"
+        },
+        "observations": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 20,
+          "minItems": 1,
+          "title": "Observations",
+          "type": "array"
+        }
+      },
+      "required": [
+        "operation_id",
+        "actor",
+        "experiment_id",
+        "name",
+        "need",
+        "observations"
+      ],
+      "title": "ToolNeed",
+      "type": "object"
+    },
+    "ToolDefinition": {
+      "$defs": {
+        "Runtime": {
+          "additionalProperties": false,
+          "properties": {
+            "version": {
+              "const": 2,
+              "default": 2,
+              "title": "Version",
+              "type": "integer"
+            },
+            "metadata": {
+              "additionalProperties": true,
+              "title": "Metadata",
+              "type": "object"
+            },
+            "image": {
+              "pattern": "^sha256:[a-f0-9]{64}$",
+              "title": "Image",
+              "type": "string"
+            },
+            "solver": {
+              "minLength": 1,
+              "title": "Solver",
+              "type": "string"
+            },
+            "provenance": {
+              "minLength": 1,
+              "title": "Provenance",
+              "type": "string"
+            },
+            "timeout_seconds": {
+              "default": 180,
+              "maximum": 600,
+              "minimum": 1,
+              "title": "Timeout Seconds",
+              "type": "integer"
+            },
+            "memory_gb": {
+              "default": 4,
+              "maximum": 12,
+              "minimum": 1,
+              "title": "Memory Gb",
+              "type": "integer"
+            },
+            "backend": {
+              "default": "docker",
+              "enum": [
+                "docker",
+                "remote"
+              ],
+              "title": "Backend",
+              "type": "string"
+            },
+            "accelerator": {
+              "default": "none",
+              "enum": [
+                "none",
+                "gpu"
+              ],
+              "title": "Accelerator",
+              "type": "string"
+            },
+            "cpu_cores": {
+              "default": 2,
+              "maximum": 8,
+              "minimum": 0.25,
+              "title": "Cpu Cores",
+              "type": "number"
+            },
+            "job_seconds": {
+              "default": 1800,
+              "maximum": 3600,
+              "minimum": 1,
+              "title": "Job Seconds",
+              "type": "integer"
+            },
+            "compute_seconds": {
+              "default": 3600,
+              "maximum": 28800,
+              "minimum": 1,
+              "title": "Compute Seconds",
+              "type": "number"
+            },
+            "artifact_bytes": {
+              "default": 64000000,
+              "maximum": 256000000,
+              "minimum": 1024,
+              "title": "Artifact Bytes",
+              "type": "integer"
+            },
+            "file_bytes": {
+              "default": 32000000,
+              "maximum": 128000000,
+              "minimum": 1024,
+              "title": "File Bytes",
+              "type": "integer"
+            },
+            "log_bytes": {
+              "default": 8000000,
+              "maximum": 16000000,
+              "minimum": 1024,
+              "title": "Log Bytes",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "image",
+            "solver",
+            "provenance"
+          ],
+          "title": "Runtime",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "actor": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Actor",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "operation_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Operation Id",
+          "type": "string"
+        },
+        "tool_class": {
+          "const": "perforated_plate_v1",
+          "default": "perforated_plate_v1",
+          "title": "Tool Class",
+          "type": "string"
+        },
+        "runtime": {
+          "$ref": "#/$defs/Runtime"
+        },
+        "applicability": {
+          "maxLength": 2000,
+          "minLength": 20,
+          "title": "Applicability",
+          "type": "string"
+        },
+        "promotion_policy": {
+          "const": "explicit_after_independent_checks",
+          "default": "explicit_after_independent_checks",
+          "title": "Promotion Policy",
+          "type": "string"
+        }
+      },
+      "required": [
+        "actor",
+        "revision",
+        "operation_id",
+        "runtime",
+        "applicability"
+      ],
+      "title": "ToolDefinition",
+      "type": "object"
+    },
+    "ToolProposal": {
+      "additionalProperties": false,
+      "properties": {
+        "actor": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Actor",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "operation_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Operation Id",
+          "type": "string"
+        },
+        "source": {
+          "maxLength": 16000,
+          "minLength": 1,
+          "title": "Source",
+          "type": "string"
+        },
+        "summary": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "title": "Summary",
+          "type": "string"
+        },
+        "parent_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parent Version"
+        }
+      },
+      "required": [
+        "actor",
+        "revision",
+        "operation_id",
+        "source",
+        "summary"
+      ],
+      "title": "ToolProposal",
+      "type": "object"
+    },
+    "ToolVersionCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "actor": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Actor",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "operation_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Operation Id",
+          "type": "string"
+        },
+        "version_id": {
+          "title": "Version Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "actor",
+        "revision",
+        "operation_id",
+        "version_id"
+      ],
+      "title": "ToolVersionCommand",
+      "type": "object"
+    },
+    "ToolPromotion": {
+      "additionalProperties": false,
+      "properties": {
+        "actor": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Actor",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "operation_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Operation Id",
+          "type": "string"
+        },
+        "version_id": {
+          "title": "Version Id",
+          "type": "string"
+        },
+        "reason": {
+          "maxLength": 2000,
+          "minLength": 10,
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "actor",
+        "revision",
+        "operation_id",
+        "version_id",
+        "reason"
+      ],
+      "title": "ToolPromotion",
+      "type": "object"
+    },
+    "ToolPin": {
+      "additionalProperties": false,
+      "properties": {
+        "actor": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Actor",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "operation_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Operation Id",
+          "type": "string"
+        },
+        "development_id": {
+          "title": "Development Id",
+          "type": "string"
+        },
+        "version_id": {
+          "title": "Version Id",
+          "type": "string"
+        },
+        "contract_id": {
+          "title": "Contract Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "actor",
+        "revision",
+        "operation_id",
+        "development_id",
+        "version_id",
+        "contract_id"
+      ],
+      "title": "ToolPin",
+      "type": "object"
+    },
+    "ToolInvocation": {
+      "$defs": {
+        "PlateArguments": {
+          "additionalProperties": false,
+          "properties": {
+            "unit": {
+              "const": "mm",
+              "default": "mm",
+              "title": "Unit",
+              "type": "string"
+            },
+            "length": {
+              "maximum": 500,
+              "minimum": 5,
+              "title": "Length",
+              "type": "number"
+            },
+            "width": {
+              "maximum": 500,
+              "minimum": 5,
+              "title": "Width",
+              "type": "number"
+            },
+            "thickness": {
+              "maximum": 50,
+              "minimum": 0.5,
+              "title": "Thickness",
+              "type": "number"
+            },
+            "radius": {
+              "maximum": 20,
+              "minimum": 0.25,
+              "title": "Radius",
+              "type": "number"
+            },
+            "holes": {
+              "items": {
+                "maxItems": 2,
+                "minItems": 2,
+                "prefixItems": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ],
+                "type": "array"
+              },
+              "maxItems": 12,
+              "minItems": 1,
+              "title": "Holes",
+              "type": "array"
+            },
+            "translation": {
+              "default": [
+                0,
+                0,
+                0
+              ],
+              "maxItems": 3,
+              "minItems": 3,
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "title": "Translation",
+              "type": "array"
+            }
+          },
+          "required": [
+            "length",
+            "width",
+            "thickness",
+            "radius",
+            "holes"
+          ],
+          "title": "PlateArguments",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "actor": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Actor",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "operation_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Operation Id",
+          "type": "string"
+        },
+        "experiment_id": {
+          "title": "Experiment Id",
+          "type": "string"
+        },
+        "arguments": {
+          "$ref": "#/$defs/PlateArguments"
+        }
+      },
+      "required": [
+        "actor",
+        "revision",
+        "operation_id",
+        "experiment_id",
+        "arguments"
+      ],
+      "title": "ToolInvocation",
+      "type": "object"
+    },
+    "ManagedToolProposal": {
+      "additionalProperties": false,
+      "properties": {
+        "actor": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Actor",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "operation_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Operation Id",
+          "type": "string"
+        },
+        "development_id": {
+          "title": "Development Id",
+          "type": "string"
+        },
+        "tool_revision": {
+          "minimum": 0,
+          "title": "Tool Revision",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "actor",
+        "revision",
+        "operation_id",
+        "development_id",
+        "tool_revision"
+      ],
+      "title": "ManagedToolProposal",
+      "type": "object"
+    },
+    "PlateArguments": {
+      "additionalProperties": false,
+      "properties": {
+        "unit": {
+          "const": "mm",
+          "default": "mm",
+          "title": "Unit",
+          "type": "string"
+        },
+        "length": {
+          "maximum": 500,
+          "minimum": 5,
+          "title": "Length",
+          "type": "number"
+        },
+        "width": {
+          "maximum": 500,
+          "minimum": 5,
+          "title": "Width",
+          "type": "number"
+        },
+        "thickness": {
+          "maximum": 50,
+          "minimum": 0.5,
+          "title": "Thickness",
+          "type": "number"
+        },
+        "radius": {
+          "maximum": 20,
+          "minimum": 0.25,
+          "title": "Radius",
+          "type": "number"
+        },
+        "holes": {
+          "items": {
+            "maxItems": 2,
+            "minItems": 2,
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "type": "array"
+          },
+          "maxItems": 12,
+          "minItems": 1,
+          "title": "Holes",
+          "type": "array"
+        },
+        "translation": {
+          "default": [
+            0,
+            0,
+            0
+          ],
+          "maxItems": 3,
+          "minItems": 3,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "Translation",
+          "type": "array"
+        }
+      },
+      "required": [
+        "length",
+        "width",
+        "thickness",
+        "radius",
+        "holes"
+      ],
+      "title": "PlateArguments",
+      "type": "object"
+    },
     "StructuralSettings": {
       "$defs": {
         "Refinement": {

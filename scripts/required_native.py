@@ -13,11 +13,13 @@ TESTS = [
     "tests/product/test_simulation.py",
     "tests/product/test_managed.py",
     "tests/product/test_route_parity.py",
+    "tests/product/test_tool_learning.py",
 ]
 REQUIRED = {
     "test_native_route_parity",
     "test_native_request_without_pre_authored_directory",
     "test_v2_reference_verification_and_independent_beam_solver",
+    "test_native_tool_defect_revision_and_reuse",
 }
 
 

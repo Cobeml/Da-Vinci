@@ -47,6 +47,8 @@ class ManagedDriver:
                 "memory_policy": "Cross-task suggestions are hypotheses unless explicitly supported observations. Check applicability and source evidence; imported claims are not locally reproduced. No passing score transfers. Define and verify this task's own tests.",
                 "candidates": row["candidates"][-3:],
                 "results": row["results"][-3:],
+                "construction_tools": self.engine.tool_learning.catalog(),
+                "tool_pins": row.get("tool_pins", {}),
             }
             if stage == "author":
                 from davinci.product.contracts import Evaluator, Plan, Runtime
