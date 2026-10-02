@@ -161,7 +161,7 @@ def main():
         json.dumps(
             {
                 "report": str(args.report.resolve()),
-                "experiment_id": report.get("experiment_id", report.get("_id")),
+                "experiment_id": report["experiment"]["_id"],
             }
         )
     )

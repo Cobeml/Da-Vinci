@@ -66,6 +66,7 @@ def main():
             )
             assert result.returncode == 0, result.stdout + result.stderr
             report = json.loads((root / "report.json").read_text())
+            assert json.loads(result.stdout)["experiment_id"] == report["experiment"]["_id"]
             assert report["report"]["accepted_candidate_ids"]
             print(
                 json.dumps(

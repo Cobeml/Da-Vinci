@@ -3,6 +3,7 @@
 Da Vinci is a Python package with a localhost interface for iterative CAD optimization. Start with a request for the built-in agent, connect an external coding agent, or use advanced YAML/custom tasks. Inspect frozen tests, generated models and measured evidence; continue from an earlier design.
 
 - [Complete external and managed journeys](product-journeys.md)
+- [Optional Gmsh / CalculiX structural simulation](structural-simulation.md)
 - [Install and run](quickstart.md)
 - [YAML and workspace settings](configuration.md)
 - [Using the workspace](workspace.md)
