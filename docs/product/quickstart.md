@@ -32,40 +32,57 @@ python -m pip install dist/da_vinci_harness-0.2.0-py3-none-any.whl
 
 The installed wheel includes the localhost web interface. CAD generation runs in Docker; no separate host CadQuery installation is required to use the package.
 
-## External coding agents
+## External agent: no model key
 
-For a keyless workflow driven by your coding agent, use `davinci init my-project --driver external --template custom`, then `davinci --workspace my-project service ensure`. See [the external-agent walkthrough](external-agents.md) for task authoring, reference verification, queued CAD evaluation and report export. The managed workflow below remains available.
-
-## Create a workspace
-
-Create the workspace alongside the repository so its run data stays separate from the source checkout:
+Create the workspace alongside the repository. Your coding agent supplies reasoning; Da Vinci executes the frozen tests locally.
 
 ```bash
 cd ..
-davinci init my-project --template sensor
+davinci init my-project --driver external --template custom
 cd my-project
+davinci setup --template custom
+davinci doctor --driver external
+davinci service ensure
+davinci external instructions
+```
+
+Open the printed localhost URL (default `http://127.0.0.1:8741`). **New object → External agent** displays connection commands. Give these and the instructions to your coding agent. The [complete external journey](product-journeys.md#external-coding-agent-no-model-key-or-database) includes a packaged failed-then-revised real CAD example. No embedding service is required.
+
+## Built-in agent: description to report
+
+In a separate workspace:
+
+```bash
+davinci init my-managed-project --driver managed
+cd my-managed-project
 davinci setup --template sensor
-davinci doctor
 ```
 
-`setup` builds the isolated CAD image. It requires internet access on the first build; later CAD execution has no network access. The VTOL image also installs its aerodynamic solvers and takes longer to build.
-
-Set `OPENAI_API_KEY` in your shell or workspace `.env`. No MongoDB connection is required. Avoid committing `.env`; initialization creates a `.gitignore`.
+Configure `OPENAI_API_KEY` in the service environment or workspace `.env`, and select model/pricing and spending limits in `workspace.yaml`. Never enter keys into browser forms, task descriptions or candidate source. Initialization creates a `.gitignore`; do not commit `.env`.
 
 ```bash
-davinci validate run.yaml
-davinci serve
+davinci doctor --driver managed
+davinci service ensure
 ```
 
-Open the printed localhost URL (default `http://127.0.0.1:8741`). Choose **New object → Advanced YAML / custom task** and load `run.yaml`, or submit it from another terminal in the same workspace:
+Choose **New object → Built-in agent**, enter an engineering description and budget, then answer any genuine clarification questions. Requirements and verified tests precede new design generation. See the [complete managed example](product-journeys.md#built-in-agent-description-to-report).
+
+Automatic test authoring currently supports the rectangular cantilever analytic-screen recipe. Gmsh/CalculiX and MuJoCo examples demonstrate authored suites through both drivers, using scripted/deterministic reasoning. They do not establish arbitrary natural-language structural or mechanism authoring.
+
+## Advanced YAML and optional solvers
+
+**New object → Advanced YAML / custom task** retains the existing `run.yaml` route. See [configuration](configuration.md) and [custom tasks](custom-tasks.md). Setting a legacy run's `mode: replay` uses deterministic proposals with real CAD execution; replay is distinct from the external driver.
+
+`setup` builds the selected Docker image and needs internet on first installation. Execution runs without network access. Install optional physics explicitly:
 
 ```bash
-davinci run run.yaml
+davinci setup --template structural
+davinci setup --template mujoco
 ```
 
-The terminal running `serve` must stay open. Closing the browser does not stop a run. If the server exits, saved evidence remains under `.davinci`; restart it and explicitly resume the interrupted run.
+Read the [structural scope](structural-simulation.md) or [mechanism scope](mechanism-simulation.md) before using those adapters. No optional solver is installed merely by opening the website. Local SQLite/artifacts are the default; [Atlas](atlas.md) is configured separately.
 
-For a no-API-cost trial, set `run.mode: replay`. This uses deterministic proposals and reflections, while still building real geometry and running the evaluator in Docker. It is labeled replay throughout the interface.
+Closing the browser does not stop a run. Saved evidence remains under `.davinci`; after a service interruption, restart it and explicitly resume the experiment. [Workspace instructions](workspace.md) cover cancellation, continuation and exclusive driver handoff.
 
 ## Troubleshooting
 

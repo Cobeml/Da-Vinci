@@ -2,7 +2,7 @@
 
 The Python service `Engine.lifecycle` and localhost `/api/v2` endpoints support test-first engineering experiments. An experiment can open with just an object, description, driver, actor, and operation ID. It needs no builder, baseline, finalized parameters, model key, or cloud database.
 
-The [external-agent CLI and asynchronous HTTP route](external-agents.md) now build on this lifecycle foundation. The existing gallery and YAML worker still use the explicit v1 compatibility adapter. V2 experiments are available through Python and HTTP; the current gallery does not display them. Archived studies are unchanged.
+The [external-agent CLI and asynchronous HTTP route](external-agents.md) now build on this lifecycle foundation. The existing gallery and YAML worker still use the explicit v1 compatibility adapter. V2 experiments are available through the public CLI/HTTP operations and the installed gallery. The object view displays assumptions, coverage, capabilities, iterations, final evidence and driver ownership. Archived studies are unchanged.
 
 ## Driver and ownership boundary
 

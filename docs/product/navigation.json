@@ -1,0 +1,152 @@
+[
+  {
+    "title": "Start here",
+    "items": [
+      {
+        "slug": "quickstart",
+        "title": "Install and run"
+      },
+      {
+        "slug": "external-agents",
+        "title": "External coding agent \u00b7 keyless"
+      },
+      {
+        "slug": "managed-requests",
+        "title": "Built-in agent \u00b7 start with a description"
+      },
+      {
+        "slug": "custom-tasks",
+        "title": "Advanced YAML and custom tasks"
+      }
+    ]
+  },
+  {
+    "title": "Workflow",
+    "items": [
+      {
+        "slug": "architecture",
+        "title": "How improvement works"
+      },
+      {
+        "slug": "lifecycle",
+        "title": "Requirements, verification and frozen tests"
+      },
+      {
+        "slug": "workspace",
+        "title": "Workspace, continuation and recovery"
+      },
+      {
+        "slug": "product-journeys",
+        "title": "Complete journeys and driver handoff"
+      }
+    ]
+  },
+  {
+    "title": "Simulation",
+    "items": [
+      {
+        "slug": "simulation-adapters",
+        "title": "Capabilities, resources and evidence"
+      },
+      {
+        "slug": "structural-simulation",
+        "title": "Gmsh / CalculiX solid structures"
+      },
+      {
+        "slug": "mechanism-simulation",
+        "title": "MuJoCo rigid slider"
+      }
+    ]
+  },
+  {
+    "title": "Learning and evidence",
+    "items": [
+      {
+        "slug": "memory",
+        "title": "Scoped experience and retrieval"
+      },
+      {
+        "slug": "tool-learning",
+        "title": "Tested, versioned CAD helpers"
+      },
+      {
+        "slug": "measurements",
+        "title": "Attributed measurements and calibration"
+      },
+      {
+        "slug": "methodology",
+        "title": "Benchmarks and limitations"
+      },
+      {
+        "slug": "capability-matrix",
+        "title": "Capability and evidence matrix"
+      }
+    ]
+  },
+  {
+    "title": "Operations",
+    "items": [
+      {
+        "slug": "configuration",
+        "title": "Workspace and run settings"
+      },
+      {
+        "slug": "atlas",
+        "title": "MongoDB Atlas for Scalable Model Improvement"
+      },
+      {
+        "slug": "development",
+        "title": "Development and release"
+      }
+    ]
+  },
+  {
+    "title": "Technical records",
+    "items": [
+      {
+        "slug": "validation",
+        "title": "Historical MVP validation"
+      },
+      {
+        "slug": "implementation-lifecycle",
+        "title": "Lifecycle implementation record"
+      },
+      {
+        "slug": "implementation-external",
+        "title": "External route implementation record"
+      },
+      {
+        "slug": "implementation-simulation",
+        "title": "Simulation implementation record"
+      },
+      {
+        "slug": "implementation-memory",
+        "title": "Memory implementation record"
+      },
+      {
+        "slug": "implementation-managed",
+        "title": "Managed route implementation record"
+      },
+      {
+        "slug": "implementation-product-parity",
+        "title": "Product parity implementation record"
+      },
+      {
+        "slug": "implementation-structural",
+        "title": "Structural implementation record"
+      },
+      {
+        "slug": "implementation-tool-learning",
+        "title": "Tool learning implementation record"
+      },
+      {
+        "slug": "implementation-methodology",
+        "title": "Methodology implementation record"
+      },
+      {
+        "slug": "implementation-mechanism",
+        "title": "Mechanism implementation record"
+      }
+    ]
+  }
+]

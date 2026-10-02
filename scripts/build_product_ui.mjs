@@ -52,3 +52,8 @@ for (const doc of await documents()) {
     `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Da Vinci documentation</title><style>${docStyle}</style></head><body><main><nav><a href="/">← Workspace</a><a href="/docs/">Documentation</a></nav>${doc.html}</main></body></html>`,
   );
 }
+
+await mkdir("davinci/product/static/docs/evidence", { recursive: true });
+for (const name of (await readdir("docs/product")).filter(n => /^(?:[a-z-]+-results|memory-benchmark)\.json$/.test(n))) {
+  await cp(`docs/product/${name}`, `davinci/product/static/docs/evidence/${name}`);
+}

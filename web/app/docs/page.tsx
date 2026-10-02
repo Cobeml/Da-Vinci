@@ -1,74 +1,15 @@
 import s from "../../../ui/components/workspace.module.css";
-const base = "/docs/";
+import sections from "../../../docs/product/navigation.json";
 export default function Docs() {
-  return (
-    <main className={s.page}>
-      <nav className={s.nav}>
-        <a className={s.brand} href="/demo">
-          Da Vinci<span>CAD workspace</span>
-        </a>
-        <a href="/demo">Object gallery demo →</a>
-      </nav>
-      <header className={s.header}>
-        <div>
-          <span className={s.eyebrow}>
-            PYTHON PACKAGE · LOCALHOST INTERFACE
-          </span>
-          <h1>Run your own workspace.</h1>
-          <p>
-            Define a task in YAML. Inspect generated models and measured
-            results. Continue from an earlier design.
-          </p>
-        </div>
-      </header>
-      <section className={s.overview}>
-        <div>
-          <h2>Get started</h2>
-          <p>
-            The MVP runs on Python 3.11, Linux or WSL2, Git, and Docker. PyPI
-            publication is pending. Clone the repository to install from source;
-            building the interface also requires Node.js 22 and uv.
-          </p>
-          <pre>{"git clone https://github.com/Cobeml/Da-Vinci.git\ncd Da-Vinci"}</pre>
-          <p>
-            <a href="https://github.com/Cobeml/Da-Vinci">GitHub repository ↗</a>
-            {" · "}
-            <a href={base + "quickstart/"}>Installation guide ↗</a>
-          </p>
-          <p>Follow the installation guide, then create and start a workspace:</p>
-          <pre>
-            {
-              "davinci init my-project --template sensor\ncd my-project\ndavinci setup --template sensor\ndavinci doctor\ndavinci serve"
-            }
-          </pre>
-          <p>
-            Set OPENAI_API_KEY in your environment or workspace .env. Local
-            storage works without MongoDB Atlas.
-          </p>
-        </div>
-        <div>
-          <h2>Guides</h2>
-          {[
-            ["configuration.md", "YAML and workspace settings"],
-            ["workspace.md", "Live runs and continuation"],
-            ["custom-tasks.md", "Custom Python tasks and coding-agent prompt"],
-            [
-              "architecture.md",
-              "Reflection, memory, tools, and independent evaluation",
-            ],
-            ["atlas.md", "MongoDB Atlas for Scalable Model Improvement"],
-            ["development.md", "Development and release"],
-          ].map(([file, title]) => (
-            <p key={file}>
-              <a href={base + file.replace(".md", "/")}>{title} ↗</a>
-            </p>
-          ))}
-        </div>
-      </section>
-      <p className={s.muted}>
-        CadQuery geometry and physics estimates are evaluated against the
-        selected task contract. Results depend on its assumptions and fidelity.
-      </p>
-    </main>
-  );
+  return <main className={s.page}>
+    <nav className={s.nav}><a className={s.brand} href="/">Da Vinci<span>Recursive improvement CAD harness</span></a><a href="/demo">Object gallery demo →</a></nav>
+    <header className={s.header}><div><span className={s.eyebrow}>PYTHON PACKAGE · LOCALHOST INTERFACE</span><h1>Run your own workspace.</h1><p>Define and verify tests, iterate on CAD, and inspect the evidence. Use your coding agent or the built-in agent.</p></div></header>
+    <section className={s.overview}>
+      <div><h2>Install from source</h2><p>Python 3.11, Linux or WSL2, Git and Docker. Building the interface requires Node.js 22 and uv. PyPI publication is pending.</p><pre>{"git clone https://github.com/Cobeml/Da-Vinci.git\ncd Da-Vinci"}</pre><p><a href="/docs/quickstart/">Installation guide ↗</a> · <a href="https://github.com/Cobeml/Da-Vinci">GitHub ↗</a></p></div>
+      <div><h2>Choose your agent</h2><p><a href="/docs/external-agents/"><strong>External coding agent →</strong></a><br/>Your agent supplies reasoning and CAD through the public CLI/API. Da Vinci runs locally without a model key or cloud database.</p><p><a href="/docs/managed-requests/"><strong>Built-in agent →</strong></a><br/>Start with a description and server-side model credentials. Automatic test authoring currently supports rectangular cantilever screening.</p><p><a href="/docs/custom-tasks/">Advanced YAML / custom tasks →</a></p></div>
+    </section>
+    <div className="docs-navigation">{sections.filter(section => section.title !== "Technical records").map(section => <section key={section.title}><h2>{section.title}</h2><ul>{section.items.map(item => <li key={item.slug}><a href={`/docs/${item.slug}/`}>{item.title} ↗</a></li>)}</ul></section>)}</div>
+    <details className="docs-records"><summary>Technical records and historical validation</summary><ul>{sections.at(-1)!.items.map(item => <li key={item.slug}><a href={`/docs/${item.slug}/`}>{item.title} ↗</a></li>)}</ul></details>
+    <p className={s.muted}>Acceptance is limited to the frozen tests and adapter scope. Native simulation, scripted reasoning and synthetic measurement fixtures are identified separately in the evidence.</p>
+  </main>;
 }

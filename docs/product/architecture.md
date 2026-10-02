@@ -1,49 +1,41 @@
 # How improvement works
 
-The product separates the design agent from the evaluator. The existing YAML/gallery workflow below uses the v1 compatibility driver. The [version-2 experiment lifecycle](lifecycle.md) adds draft task authoring, verified frozen suites, external drivers, and typed evidence without requiring a baseline at opening.
+Two drivers use one experiment lifecycle. An external coding agent supplies reasoning through public CLI/HTTP operations. The built-in agent supplies reasoning through budgeted provider calls. Da Vinci owns validated transitions, isolated execution, storage and independent evaluation.
 
-```mermaid
-sequenceDiagram
-    participant User
-    participant App as Local web / CLI
-    participant Worker
-    participant Model
-    participant CAD as Isolated CAD containers
-    participant Store as SQLite or Atlas
-    User->>App: YAML task or continuation
-    App->>Store: Frozen configuration, task, seed, image digest
-    Worker->>CAD: Build and independently evaluate baseline
-    CAD->>Store: STEP, GLB, metrics, violations
-    loop New iterations within budget
-        Worker->>Store: Retrieve compatible successes, failures, lessons and tools
-        Worker->>Model: Task, constraints, evidence and tested outputs
-        Model->>Store: Checkpoint proposal response
-        Worker->>CAD: Build, then independently evaluate exported STEP
-        CAD->>Store: Geometry, measurements and failures
-        Worker->>Model: Reflect on results
-        Model->>Store: Versioned lesson and next focus
-        Worker->>CAD: Test or invoke reusable numeric utility
-        Worker->>Store: Record tool evidence and progress event
-        Store-->>App: Live progress
-    end
-```
+<div class="lifecycle-flow" role="group" aria-label="Shared experiment lifecycle">
+<p><strong>1. Define</strong><br>Request, requirements, assumptions and retrieved experience</p>
+<p>↓</p><p><strong>2. Verify</strong><br>Test recipes, independent reference fixtures and capability checks</p>
+<p>↓</p><p><strong>3. Freeze</strong><br>Acceptance suite, fixed inputs, interfaces and numerical requirements</p>
+<p>↓</p><p><strong>4. Iterate</strong><br>CAD → independent simulation → diagnosis → revision</p>
+<p>↓</p><p><strong>5. Finalize</strong><br>Required final tests, evidence completeness, report and supported lessons</p>
+</div>
 
-Reflection changes the next proposal's context. Retrieval keeps relevant prior failures visible. Tested tools persist and can be reused across compatible runs. These mechanisms improve the search process; they do not retrain model weights or guarantee that each proposal improves performance.
+## Tests precede designs
 
-The MVP's generated utility reports objective changes from measured results. It is independently tested and invoked, but never supplies the trusted physical score. Custom task evaluators can incorporate specialized solvers; the installed app and evaluator are not rewritten by the model.
+An experiment can begin without a builder or baseline. Inspection and reference fixtures are allowed while drafting. Critical missing inputs produce a clarification state. Before new candidates, the harness checks coverage, capabilities and independent verification, then freezes the suite. Geometry-dependent bindings follow predeclared rules and are checked against actual exported CAD.
 
-Local mode uses SQLite documents, local content-addressed artifacts, and recent/lexical memory. Atlas mode uses the same records with GridFS and optional vector retrieval. Missing vector indexes trigger an explicit fallback event. Database Triggers are not needed for the product worker.
+Candidate code cannot rewrite acceptance limits or trusted results. Evaluator corrections require linked versions and renewed evidence. Missing capabilities, invalid setup, numerical failure and physical failure remain distinct. Execution completion, evidence completeness, acceptance and optional objective attainment are separate states. See [lifecycle contracts](lifecycle.md).
 
-Run snapshots preserve parameters, source, task hash, runtime image digest, evaluation, reflection, tool versions, and API response usage. Git archives source snapshots. Checkpoints prevent completed model requests from being submitted again after a restart.
+## Reflection, memory and tested tools
 
-One managed worker executes one run at a time. The browser receives events and polls for state reconciliation. The server is localhost-only and rejects unexpected hosts and cross-origin mutation requests. Docker containers have no network, no credentials, limited resources, and no write access to the evaluator source.
+Reflection changes the next proposal's context, not model weights. [Memory](memory.md) retrieves scoped experience across compatible objects while keeping exact evidence reuse strictly tied to reproducibility inputs. An agent-written lesson is a hypothesis until linked evidence supports it; retrieval never transfers a passing score. The held-out fixture benchmark has not demonstrated a design benefit from memory and reports misleading suggestions as well as useful ones.
 
-The [managed request route](managed-requests.md) adds resumable task/test authoring before this loop. It uses the same lifecycle and job worker, with trusted reference verification before candidate generation. Its automatic verification currently supports the rectangular-beam screening recipe.
+[Tool learning](tool-learning.md) supports isolated numeric utilities and narrowly scoped CAD helpers. Independent references and regressions precede registration; versions carry provenance, applicability, promotion and rollback records. Active runs pin their dependencies. The model does not rewrite the installed application or trusted solver in place.
 
-## Limits
+[Measurements and calibration](measurements.md) link attributed observations to specimens, CAD, materials, process, setup and uncertainty. Calibration and held-out validation are separate. Current examples are synthetic software fixtures, not laboratory evidence.
 
-Sensor evaluation uses a conservative wall-strip screen. The gripper uses a linear frame model and sampled travel checks. VTOL uses the established coupled aerodynamic/energy screening model; the live template does not automatically repeat the historical campaign's finalist convergence study. The UI labels estimates and never claims flight, fatigue, manufacturing, or certification validation.
+## Execution and storage
 
-The beta CST/spline experiment remains separate, unlisted, and unavailable as a product template. Archived campaigns remain unchanged.
+One localhost service owns the workspace and executes queued work. Idempotency, revision checks and driver fencing prevent concurrent advancement. Checkpoints avoid resubmitting completed provider calls; uncertain paid calls require explicit resolution. Cancellation, bounded model/compute/artifact budgets and explicit restart apply to both drivers. Containers have no network, credentials or writable frozen evaluator.
 
-Model generation follows the [Responses API](https://developers.openai.com/api/docs/guides/text) and validates the returned JSON before use. The current adapter uses JSON object output with local validation; see [OpenAI structured output documentation](https://developers.openai.com/api/docs/guides/structured-outputs) for the distinction from strict JSON Schema outputs.
+SQLite and local checksummed artifacts are the default. [MongoDB Atlas](atlas.md) provides document persistence, GridFS and explicitly configured vector retrieval. Embeddings are independent of the generation provider and disabled by default; lexical retrieval remains usable without them. The product worker does not require Database Triggers. Triggers belong to the historical hackathon workbench.
+
+Snapshots preserve candidate source and geometry, suite/evaluator identity, runtime/solver versions, bindings, logs, fields, numerical checks and results. Imported evidence retains origin and does not become locally reproduced evidence automatically.
+
+## Supported physics and compatibility
+
+The built-in [request route](managed-requests.md) automatically authors verified rectangular-beam screening tasks. More specialized authored suites can use optional [linear solid FEA](structural-simulation.md) or the [rigid slider adapter](mechanism-simulation.md), within their documented scope. Deterministic managed fixtures demonstrate orchestration, not autonomous engineering quality.
+
+Legacy YAML/gallery runs use the v1 compatibility driver. Sensor wall strips, gripper frame/travel checks and VTOL aerodynamic/energy estimates remain screening models. The archived campaigns retain their original limits and results; the beta CST/spline experiment remains unlisted. No general fatigue, fluid, thermal, manufacturing or certification claim follows from the adapter interface.
+
+See [capabilities and evidence](capability-matrix.md) and the [complete user journeys](product-journeys.md) for verified cases and reproduction commands.

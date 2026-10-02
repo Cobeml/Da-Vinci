@@ -1,7 +1,7 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { notFound } from "next/navigation";
-import { marked } from "marked";
+import { renderDocument } from "../../../../scripts/render_product_docs.mjs";
 import s from "../../../../ui/components/workspace.module.css";
 const folder = join(process.cwd(), "..", "docs", "product");
 // Next CLI uses web/ as its process directory for server rendering.
@@ -26,9 +26,9 @@ export default async function Doc({
 }) {
   const { slug } = await params;
   if (!generateStaticParams().some((p) => p.slug === slug)) notFound();
-  const html = marked.parse(
+  const html = renderDocument(
     readFileSync(join(root(), slug + ".md"), "utf8"),
-  ) as string;
+  );
   return (
     <main className={s.page}>
       <nav className={s.nav}>
@@ -38,7 +38,7 @@ export default async function Doc({
       <article
         className="product-guide"
         dangerouslySetInnerHTML={{
-          __html: html.replace(/href="([a-z-]+)\.md"/g, 'href="/docs/$1/"'),
+          __html: html,
         }}
       />
     </main>

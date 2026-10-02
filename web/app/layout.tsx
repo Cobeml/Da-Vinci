@@ -3,7 +3,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Da Vinci: recursive improvement CAD harness",
   description:
-    "Interactive VTOL aircraft iterations with estimated range, speed, payload and independent physics evaluation.",
+    "A local CAD harness for external and built-in agents: verified tests, iterative design, independent simulation and preserved evidence.",
 };
 export default function RootLayout({
   children,
