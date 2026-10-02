@@ -158,10 +158,13 @@ def main():
     from davinci.product.tool_cli import add_commands as tool_commands
 
     tool_commands(sub)
+    from davinci.product.evidence_cli import add_commands as evidence_commands
+
+    evidence_commands(sub)
     args = parser.parse_args()
     root = args.workspace.resolve()
     try:
-        if args.command in ("external", "service", "memory", "managed", "experiment", "tools"):
+        if args.command in ("external", "service", "memory", "managed", "experiment", "tools", "evidence"):
             from davinci.product.client import ClientError
             from davinci.product.external_cli import output, run
 
@@ -173,6 +176,8 @@ def main():
                 from davinci.product.memory_cli import run
             if args.command == "tools":
                 from davinci.product.tool_cli import run
+            if args.command == "evidence":
+                from davinci.product.evidence_cli import run
             try:
                 data, code = run(args, root)
                 output(data, ok=code == 0)

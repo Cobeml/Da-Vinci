@@ -45,6 +45,8 @@ class Lifecycle:
         row = self.store.get("runs", experiment_id)
         if not row:
             raise KeyError(experiment_id)
+        if row.get("workspace_id") and any(row.get(k) != v for k, v in self.engine.experience.scope.items()):
+            raise KeyError("Experiment not in active workspace/project")
         if row.get("lifecycle_version") != 2:
             from davinci.product.compatibility import legacy_view
 
@@ -793,8 +795,19 @@ class Lifecycle:
         return updated
 
     def retrieve(self, query, *, experiment_id=None, limit=8):
+        allowed = None
+        if experiment_id:
+            row = self.get(experiment_id)
+            if row.get("opening", {}).get("metadata", {}).get("memory_retrieval") == "disabled":
+                return []
+            allowed = row.get("opening", {}).get("metadata", {}).get("memory_record_ids")
         return self.engine.experience.search(
-            {"query": query, "experiment_id": experiment_id, "limit": max(1, min(limit, 30))}
+            {
+                "query": query,
+                "experiment_id": experiment_id,
+                "limit": max(1, min(limit, 30)),
+                "record_ids": allowed,
+            }
         )["items"]
 
     def finalize(self, eid, command):

@@ -117,6 +117,7 @@ class MemorySearch(Strict):
     cursor: str | None = Field(default=None, max_length=1000)
     include_incompatible: bool = True
     include_superseded: bool = False
+    record_ids: list[str] | None = Field(default=None, max_length=100)
 
 
 class Supersession(Strict):

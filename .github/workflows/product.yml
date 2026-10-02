@@ -19,6 +19,15 @@ jobs:
       - run: uv run davinci setup --template structural
       - name: Required optional structural physics and public-driver parity
         run: uv run python scripts/required_native.py --structural
+      - name: Required methodology benchmark (native CAD and structural; no paid calls)
+        run: uv run python scripts/run_methodology_benchmark.py --workspace runtime/methodology-ci --output runtime/methodology-results
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: methodology-native-evidence
+          path: |
+            runtime/methodology-results/
+            runtime/methodology-ci/
       - name: Optional structural journey from the installed wheel
         run: |
           npm ci
@@ -28,6 +37,7 @@ jobs:
           uv pip install --python /tmp/structural-wheel/bin/python dist/*.whl
           cd /tmp
           /tmp/structural-wheel/bin/python "$GITHUB_WORKSPACE/scripts/check_installed_structural.py"
+          /tmp/structural-wheel/bin/python "$GITHUB_WORKSPACE/scripts/check_installed_methodology.py" --workspace /tmp/methodology-installed --output "$GITHUB_WORKSPACE/runtime/installed-methodology-results" --skip-structural
   test-and-build:
     runs-on: ubuntu-latest
     steps:

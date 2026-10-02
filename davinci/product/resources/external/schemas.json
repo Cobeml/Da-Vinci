@@ -1,6 +1,969 @@
 {
   "version": 2,
   "schemas": {
+    "RecordMeasurement": {
+      "$defs": {
+        "CADRevision": {
+          "additionalProperties": false,
+          "properties": {
+            "experiment_id": {
+              "title": "Experiment Id",
+              "type": "string"
+            },
+            "candidate_id": {
+              "title": "Candidate Id",
+              "type": "string"
+            },
+            "result_id": {
+              "title": "Result Id",
+              "type": "string"
+            },
+            "geometry_sha256": {
+              "pattern": "^[a-f0-9]{64}$",
+              "title": "Geometry Sha256",
+              "type": "string"
+            },
+            "source_sha256": {
+              "pattern": "^[a-f0-9]{64}$",
+              "title": "Source Sha256",
+              "type": "string"
+            }
+          },
+          "required": [
+            "experiment_id",
+            "candidate_id",
+            "result_id",
+            "geometry_sha256",
+            "source_sha256"
+          ],
+          "title": "CADRevision",
+          "type": "object"
+        },
+        "MeasurementInput": {
+          "additionalProperties": false,
+          "properties": {
+            "version": {
+              "const": 1,
+              "default": 1,
+              "title": "Version",
+              "type": "integer"
+            },
+            "specimen": {
+              "$ref": "#/$defs/Specimen"
+            },
+            "partition": {
+              "enum": [
+                "calibration",
+                "held_out_validation"
+              ],
+              "title": "Partition",
+              "type": "string"
+            },
+            "evidence_kind": {
+              "enum": [
+                "physical_measurement",
+                "synthetic_fixture"
+              ],
+              "title": "Evidence Kind",
+              "type": "string"
+            },
+            "quantity_name": {
+              "maxLength": 100,
+              "minLength": 1,
+              "title": "Quantity Name",
+              "type": "string"
+            },
+            "quantity": {
+              "$ref": "#/$defs/ObservedQuantity"
+            },
+            "setup": {
+              "$ref": "#/$defs/MeasurementSetup"
+            },
+            "measured_at": {
+              "format": "date-time",
+              "title": "Measured At",
+              "type": "string"
+            },
+            "attribution": {
+              "maxLength": 2000,
+              "minLength": 1,
+              "title": "Attribution",
+              "type": "string"
+            },
+            "source": {
+              "maxLength": 2000,
+              "minLength": 1,
+              "title": "Source",
+              "type": "string"
+            },
+            "prediction": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/PredictionLink"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "raw_artifact_ids": {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 20,
+              "title": "Raw Artifact Ids",
+              "type": "array"
+            },
+            "supersedes": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Supersedes"
+            }
+          },
+          "required": [
+            "specimen",
+            "partition",
+            "evidence_kind",
+            "quantity_name",
+            "quantity",
+            "setup",
+            "measured_at",
+            "attribution",
+            "source"
+          ],
+          "title": "MeasurementInput",
+          "type": "object"
+        },
+        "MeasurementSetup": {
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "maxLength": 200,
+              "minLength": 1,
+              "title": "Id",
+              "type": "string"
+            },
+            "revision": {
+              "maxLength": 100,
+              "minLength": 1,
+              "title": "Revision",
+              "type": "string"
+            },
+            "description": {
+              "maxLength": 4000,
+              "minLength": 10,
+              "title": "Description",
+              "type": "string"
+            },
+            "instruments": {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 20,
+              "minItems": 1,
+              "title": "Instruments",
+              "type": "array"
+            },
+            "conditions": {
+              "additionalProperties": {
+                "$ref": "#/$defs/ObservedQuantity"
+              },
+              "maxProperties": 30,
+              "title": "Conditions",
+              "type": "object"
+            },
+            "source": {
+              "maxLength": 2000,
+              "minLength": 1,
+              "title": "Source",
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "revision",
+            "description",
+            "instruments",
+            "source"
+          ],
+          "title": "MeasurementSetup",
+          "type": "object"
+        },
+        "ObservedQuantity": {
+          "additionalProperties": false,
+          "properties": {
+            "value": {
+              "title": "Value",
+              "type": "number"
+            },
+            "unit": {
+              "title": "Unit",
+              "type": "string"
+            },
+            "dimension": {
+              "title": "Dimension",
+              "type": "string"
+            },
+            "uncertainty": {
+              "minimum": 0,
+              "title": "Uncertainty",
+              "type": "number"
+            },
+            "uncertainty_basis": {
+              "maxLength": 2000,
+              "minLength": 10,
+              "title": "Uncertainty Basis",
+              "type": "string"
+            },
+            "uncertainty_kind": {
+              "enum": [
+                "standard",
+                "expanded",
+                "interval_half_width"
+              ],
+              "title": "Uncertainty Kind",
+              "type": "string"
+            },
+            "coverage_factor": {
+              "anyOf": [
+                {
+                  "minimum": 1,
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Coverage Factor"
+            }
+          },
+          "required": [
+            "value",
+            "unit",
+            "dimension",
+            "uncertainty",
+            "uncertainty_basis",
+            "uncertainty_kind"
+          ],
+          "title": "ObservedQuantity",
+          "type": "object"
+        },
+        "PortableArtifact": {
+          "additionalProperties": false,
+          "properties": {
+            "artifact_id": {
+              "pattern": "^artifact-[a-f0-9]{64}$",
+              "title": "Artifact Id",
+              "type": "string"
+            },
+            "sha256": {
+              "pattern": "^[a-f0-9]{64}$",
+              "title": "Sha256",
+              "type": "string"
+            },
+            "size": {
+              "minimum": 0,
+              "title": "Size",
+              "type": "integer"
+            },
+            "name": {
+              "title": "Name",
+              "type": "string"
+            },
+            "media_type": {
+              "title": "Media Type",
+              "type": "string"
+            },
+            "data_base64": {
+              "maxLength": 24000000,
+              "title": "Data Base64",
+              "type": "string"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "sha256",
+            "size",
+            "name",
+            "media_type",
+            "data_base64"
+          ],
+          "title": "PortableArtifact",
+          "type": "object"
+        },
+        "PredictionLink": {
+          "additionalProperties": false,
+          "properties": {
+            "test_id": {
+              "title": "Test Id",
+              "type": "string"
+            },
+            "metric": {
+              "title": "Metric",
+              "type": "string"
+            },
+            "comparability_basis": {
+              "maxLength": 2000,
+              "minLength": 20,
+              "title": "Comparability Basis",
+              "type": "string"
+            }
+          },
+          "required": [
+            "test_id",
+            "metric",
+            "comparability_basis"
+          ],
+          "title": "PredictionLink",
+          "type": "object"
+        },
+        "Specimen": {
+          "additionalProperties": false,
+          "properties": {
+            "specimen_id": {
+              "maxLength": 200,
+              "minLength": 1,
+              "title": "Specimen Id",
+              "type": "string"
+            },
+            "cad": {
+              "$ref": "#/$defs/CADRevision"
+            },
+            "material": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "maxProperties": 30,
+              "minProperties": 1,
+              "title": "Material",
+              "type": "object"
+            },
+            "process": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "maxProperties": 30,
+              "minProperties": 1,
+              "title": "Process",
+              "type": "object"
+            }
+          },
+          "required": [
+            "specimen_id",
+            "cad",
+            "material",
+            "process"
+          ],
+          "title": "Specimen",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "actor": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Actor",
+          "type": "string"
+        },
+        "operation_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Operation Id",
+          "type": "string"
+        },
+        "measurement": {
+          "$ref": "#/$defs/MeasurementInput"
+        },
+        "artifacts": {
+          "items": {
+            "$ref": "#/$defs/PortableArtifact"
+          },
+          "maxItems": 20,
+          "title": "Artifacts",
+          "type": "array"
+        }
+      },
+      "required": [
+        "actor",
+        "operation_id",
+        "measurement"
+      ],
+      "title": "RecordMeasurement",
+      "type": "object"
+    },
+    "MeasurementInput": {
+      "$defs": {
+        "CADRevision": {
+          "additionalProperties": false,
+          "properties": {
+            "experiment_id": {
+              "title": "Experiment Id",
+              "type": "string"
+            },
+            "candidate_id": {
+              "title": "Candidate Id",
+              "type": "string"
+            },
+            "result_id": {
+              "title": "Result Id",
+              "type": "string"
+            },
+            "geometry_sha256": {
+              "pattern": "^[a-f0-9]{64}$",
+              "title": "Geometry Sha256",
+              "type": "string"
+            },
+            "source_sha256": {
+              "pattern": "^[a-f0-9]{64}$",
+              "title": "Source Sha256",
+              "type": "string"
+            }
+          },
+          "required": [
+            "experiment_id",
+            "candidate_id",
+            "result_id",
+            "geometry_sha256",
+            "source_sha256"
+          ],
+          "title": "CADRevision",
+          "type": "object"
+        },
+        "MeasurementSetup": {
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "maxLength": 200,
+              "minLength": 1,
+              "title": "Id",
+              "type": "string"
+            },
+            "revision": {
+              "maxLength": 100,
+              "minLength": 1,
+              "title": "Revision",
+              "type": "string"
+            },
+            "description": {
+              "maxLength": 4000,
+              "minLength": 10,
+              "title": "Description",
+              "type": "string"
+            },
+            "instruments": {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 20,
+              "minItems": 1,
+              "title": "Instruments",
+              "type": "array"
+            },
+            "conditions": {
+              "additionalProperties": {
+                "$ref": "#/$defs/ObservedQuantity"
+              },
+              "maxProperties": 30,
+              "title": "Conditions",
+              "type": "object"
+            },
+            "source": {
+              "maxLength": 2000,
+              "minLength": 1,
+              "title": "Source",
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "revision",
+            "description",
+            "instruments",
+            "source"
+          ],
+          "title": "MeasurementSetup",
+          "type": "object"
+        },
+        "ObservedQuantity": {
+          "additionalProperties": false,
+          "properties": {
+            "value": {
+              "title": "Value",
+              "type": "number"
+            },
+            "unit": {
+              "title": "Unit",
+              "type": "string"
+            },
+            "dimension": {
+              "title": "Dimension",
+              "type": "string"
+            },
+            "uncertainty": {
+              "minimum": 0,
+              "title": "Uncertainty",
+              "type": "number"
+            },
+            "uncertainty_basis": {
+              "maxLength": 2000,
+              "minLength": 10,
+              "title": "Uncertainty Basis",
+              "type": "string"
+            },
+            "uncertainty_kind": {
+              "enum": [
+                "standard",
+                "expanded",
+                "interval_half_width"
+              ],
+              "title": "Uncertainty Kind",
+              "type": "string"
+            },
+            "coverage_factor": {
+              "anyOf": [
+                {
+                  "minimum": 1,
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Coverage Factor"
+            }
+          },
+          "required": [
+            "value",
+            "unit",
+            "dimension",
+            "uncertainty",
+            "uncertainty_basis",
+            "uncertainty_kind"
+          ],
+          "title": "ObservedQuantity",
+          "type": "object"
+        },
+        "PredictionLink": {
+          "additionalProperties": false,
+          "properties": {
+            "test_id": {
+              "title": "Test Id",
+              "type": "string"
+            },
+            "metric": {
+              "title": "Metric",
+              "type": "string"
+            },
+            "comparability_basis": {
+              "maxLength": 2000,
+              "minLength": 20,
+              "title": "Comparability Basis",
+              "type": "string"
+            }
+          },
+          "required": [
+            "test_id",
+            "metric",
+            "comparability_basis"
+          ],
+          "title": "PredictionLink",
+          "type": "object"
+        },
+        "Specimen": {
+          "additionalProperties": false,
+          "properties": {
+            "specimen_id": {
+              "maxLength": 200,
+              "minLength": 1,
+              "title": "Specimen Id",
+              "type": "string"
+            },
+            "cad": {
+              "$ref": "#/$defs/CADRevision"
+            },
+            "material": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "maxProperties": 30,
+              "minProperties": 1,
+              "title": "Material",
+              "type": "object"
+            },
+            "process": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "maxProperties": 30,
+              "minProperties": 1,
+              "title": "Process",
+              "type": "object"
+            }
+          },
+          "required": [
+            "specimen_id",
+            "cad",
+            "material",
+            "process"
+          ],
+          "title": "Specimen",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "const": 1,
+          "default": 1,
+          "title": "Version",
+          "type": "integer"
+        },
+        "specimen": {
+          "$ref": "#/$defs/Specimen"
+        },
+        "partition": {
+          "enum": [
+            "calibration",
+            "held_out_validation"
+          ],
+          "title": "Partition",
+          "type": "string"
+        },
+        "evidence_kind": {
+          "enum": [
+            "physical_measurement",
+            "synthetic_fixture"
+          ],
+          "title": "Evidence Kind",
+          "type": "string"
+        },
+        "quantity_name": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Quantity Name",
+          "type": "string"
+        },
+        "quantity": {
+          "$ref": "#/$defs/ObservedQuantity"
+        },
+        "setup": {
+          "$ref": "#/$defs/MeasurementSetup"
+        },
+        "measured_at": {
+          "format": "date-time",
+          "title": "Measured At",
+          "type": "string"
+        },
+        "attribution": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "title": "Attribution",
+          "type": "string"
+        },
+        "source": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "title": "Source",
+          "type": "string"
+        },
+        "prediction": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PredictionLink"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "raw_artifact_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 20,
+          "title": "Raw Artifact Ids",
+          "type": "array"
+        },
+        "supersedes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Supersedes"
+        }
+      },
+      "required": [
+        "specimen",
+        "partition",
+        "evidence_kind",
+        "quantity_name",
+        "quantity",
+        "setup",
+        "measured_at",
+        "attribution",
+        "source"
+      ],
+      "title": "MeasurementInput",
+      "type": "object"
+    },
+    "CalibrationFit": {
+      "additionalProperties": false,
+      "properties": {
+        "actor": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Actor",
+          "type": "string"
+        },
+        "operation_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Operation Id",
+          "type": "string"
+        },
+        "name": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "measurement_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 100,
+          "minItems": 3,
+          "title": "Measurement Ids",
+          "type": "array"
+        },
+        "method": {
+          "const": "additive_offset_v1",
+          "default": "additive_offset_v1",
+          "title": "Method",
+          "type": "string"
+        },
+        "applicability": {
+          "maxLength": 4000,
+          "minLength": 20,
+          "title": "Applicability",
+          "type": "string"
+        },
+        "predecessor_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Predecessor Id"
+        }
+      },
+      "required": [
+        "actor",
+        "operation_id",
+        "name",
+        "measurement_ids",
+        "applicability"
+      ],
+      "title": "CalibrationFit",
+      "type": "object"
+    },
+    "CalibrationValidation": {
+      "additionalProperties": false,
+      "properties": {
+        "actor": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Actor",
+          "type": "string"
+        },
+        "operation_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Operation Id",
+          "type": "string"
+        },
+        "calibration_id": {
+          "title": "Calibration Id",
+          "type": "string"
+        },
+        "measurement_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 100,
+          "minItems": 1,
+          "title": "Measurement Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "actor",
+        "operation_id",
+        "calibration_id",
+        "measurement_ids"
+      ],
+      "title": "CalibrationValidation",
+      "type": "object"
+    },
+    "EvidenceExport": {
+      "additionalProperties": false,
+      "properties": {
+        "ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 100,
+          "minItems": 1,
+          "title": "Ids",
+          "type": "array"
+        },
+        "include_artifacts": {
+          "default": false,
+          "title": "Include Artifacts",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "ids"
+      ],
+      "title": "EvidenceExport",
+      "type": "object"
+    },
+    "EvidenceRestore": {
+      "$defs": {
+        "EvidenceBundle": {
+          "additionalProperties": false,
+          "properties": {
+            "version": {
+              "const": 1,
+              "default": 1,
+              "title": "Version",
+              "type": "integer"
+            },
+            "origin": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "title": "Origin",
+              "type": "object"
+            },
+            "records": {
+              "items": {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              "maxItems": 100,
+              "minItems": 1,
+              "title": "Records",
+              "type": "array"
+            },
+            "artifacts": {
+              "items": {
+                "$ref": "#/$defs/PortableArtifact"
+              },
+              "maxItems": 100,
+              "title": "Artifacts",
+              "type": "array"
+            }
+          },
+          "required": [
+            "origin",
+            "records"
+          ],
+          "title": "EvidenceBundle",
+          "type": "object"
+        },
+        "PortableArtifact": {
+          "additionalProperties": false,
+          "properties": {
+            "artifact_id": {
+              "pattern": "^artifact-[a-f0-9]{64}$",
+              "title": "Artifact Id",
+              "type": "string"
+            },
+            "sha256": {
+              "pattern": "^[a-f0-9]{64}$",
+              "title": "Sha256",
+              "type": "string"
+            },
+            "size": {
+              "minimum": 0,
+              "title": "Size",
+              "type": "integer"
+            },
+            "name": {
+              "title": "Name",
+              "type": "string"
+            },
+            "media_type": {
+              "title": "Media Type",
+              "type": "string"
+            },
+            "data_base64": {
+              "maxLength": 24000000,
+              "title": "Data Base64",
+              "type": "string"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "sha256",
+            "size",
+            "name",
+            "media_type",
+            "data_base64"
+          ],
+          "title": "PortableArtifact",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "actor": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Actor",
+          "type": "string"
+        },
+        "operation_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Operation Id",
+          "type": "string"
+        },
+        "bundle": {
+          "$ref": "#/$defs/EvidenceBundle"
+        }
+      },
+      "required": [
+        "actor",
+        "operation_id",
+        "bundle"
+      ],
+      "title": "EvidenceRestore",
+      "type": "object"
+    },
     "ToolNeed": {
       "additionalProperties": false,
       "properties": {
@@ -3488,6 +4451,22 @@
           "default": false,
           "title": "Include Superseded",
           "type": "boolean"
+        },
+        "record_ids": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 100,
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Record Ids"
         }
       },
       "title": "MemorySearch",

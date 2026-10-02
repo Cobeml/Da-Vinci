@@ -9,6 +9,7 @@ def build_catalog():
     from davinci.product import contracts as c
     from davinci.product import lifecycle_api as api
     from davinci.product import managed_contracts as managed
+    from davinci.product import measurement_contracts as measurements
     from davinci.product import memory_contracts as memory
     from davinci.product import tool_contracts as tools
     from davinci.product.memory_api import Capture, Reindex
@@ -17,6 +18,12 @@ def build_catalog():
     from davinci.product.transfers import ContinueExperiment, Handoff
 
     models = [
+        measurements.RecordMeasurement,
+        measurements.MeasurementInput,
+        measurements.CalibrationFit,
+        measurements.CalibrationValidation,
+        measurements.EvidenceExport,
+        measurements.EvidenceRestore,
         tools.ToolNeed,
         tools.ToolDefinition,
         tools.ToolProposal,

@@ -51,6 +51,9 @@ class Engine:
         from davinci.product.tool_learning import ToolLearning
 
         self.tool_learning = ToolLearning(self)
+        from davinci.product.measurements import Measurements
+
+        self.measurements = Measurements(self)
 
     def validate(self, content):
         config = parse_yaml(content)

@@ -44,6 +44,9 @@ def create_app(workspace: Path, *, engine=None, run_worker=True):
     from davinci.product.tool_api import router as tool_router
 
     app.include_router(tool_router(engine))
+    from davinci.product.measurement_api import router as measurement_router
+
+    app.include_router(measurement_router(engine))
     app.include_router(router(engine))
 
     @app.exception_handler(Conflict)

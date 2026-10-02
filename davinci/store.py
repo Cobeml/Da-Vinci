@@ -119,6 +119,20 @@ class Store:
                 self.sql.rollback()
                 raise
 
+    def scoped_page(self, collection, scope, *, after_id="", limit=100):
+        """Filter and paginate new scoped records in storage, before decoding JSON."""
+        limit = max(1, min(limit, 101))
+        if self.db is not None:
+            return list(
+                self.db[collection].find({**scope, "_id": {"$gt": after_id}}).sort("_id", 1).limit(limit)
+            )
+        with self.lock:
+            rows = self.sql.execute(
+                "SELECT body FROM documents WHERE collection=? AND json_extract(body,'$.workspace_id')=? AND json_extract(body,'$.project_id')=? AND id>? ORDER BY id LIMIT ?",
+                (collection, scope["workspace_id"], scope["project_id"], after_id, limit),
+            ).fetchall()
+        return [json.loads(r[0]) for r in rows]
+
     def mutate(self, collection: str, id: str, fn: Callable):
         for _ in range(50):
             old = self.get(collection, id)
@@ -185,11 +199,14 @@ class Store:
         exact_hash=None,
         include_superseded=True,
         before=None,
+        record_ids=None,
     ):
         """Scope/filter/limit in the database, before decoding JSON. Keyset browse/export."""
         limit = max(1, min(limit, 201))
         if self.db is not None:
             query = {**scope, "_id": {"$gt": after_id}}
+            if record_ids is not None:
+                query["_id"]["$in"] = record_ids
             if exact_hash is not None:
                 query["exact_hash"] = exact_hash
             if not include_superseded:
@@ -215,6 +232,11 @@ class Store:
         if terms:
             sql += " AND experience_text_v1 MATCH ?"
             args.append(" OR ".join('"' + t.replace('"', "") + '"' for t in terms))
+        if record_ids is not None:
+            if not record_ids:
+                return []
+            sql += " AND d.id IN (" + ",".join("?" for _ in record_ids) + ")"
+            args.extend(record_ids)
         if exact_hash is not None:
             sql += " AND json_extract(d.body,'$.exact_hash')=?"
             args.append(exact_hash)

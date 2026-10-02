@@ -351,6 +351,31 @@ class ExperienceMemory:
 
     def search(self, request):
         request = MemorySearch.model_validate(request)
+        if request.experiment_id:
+            metadata = self._run(request.experiment_id).get("opening", {}).get("metadata", {})
+            if metadata.get("memory_retrieval") == "disabled":
+                return {
+                    "version": 1,
+                    "items": [],
+                    "next_cursor": None,
+                    "candidate_count": 0,
+                    "candidate_limit": 400,
+                    "ranking_scope": "disabled by experiment policy",
+                    "vector_status": "disabled",
+                    "scope": self.scope,
+                    "transfers_acceptance": False,
+                }
+            allowed = metadata.get("memory_record_ids")
+            if allowed is not None:
+                # Validate persisted policy and intersect caller narrowing; callers cannot widen it.
+                allowed = MemorySearch(query=request.query, record_ids=allowed).record_ids
+                request = request.model_copy(
+                    update={
+                        "record_ids": sorted(set(allowed) & set(request.record_ids))
+                        if request.record_ids is not None
+                        else allowed
+                    }
+                )
         target = request.applicability or (
             self.context(self._run(request.experiment_id)) if request.experiment_id else Applicability()
         )
@@ -368,7 +393,11 @@ class ExperienceMemory:
                 raise ValueError("Invalid memory cursor") from exc
         terms = list(dict.fromkeys(tokens(request.query)))[:30]
         rows = self.store.experience_page(
-            self.scope, terms=terms, include_superseded=request.include_superseded, before=before
+            self.scope,
+            terms=terms,
+            include_superseded=request.include_superseded,
+            before=before,
+            record_ids=request.record_ids,
         )
         vector = self.embeddings.encode(request.query)
         vector_status = "disabled" if vector is None else "local_hash"
@@ -388,6 +417,8 @@ class ExperienceMemory:
                 vector_status = "vector_index_unavailable_lexical_fallback"
         ranked = []
         for row in rows:
+            if request.record_ids is not None and row["_id"] not in request.record_ids:
+                continue
             if row.get("superseded_by") and not request.include_superseded:
                 continue
             match = self.applicability(row, target)

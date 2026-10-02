@@ -13,3 +13,6 @@ recursive-include tests/product *.py *.ts
 include playwright.product.config.ts
 global-exclude *.pyc
 global-exclude __pycache__
+
+include scripts/run_methodology_benchmark.py scripts/check_installed_methodology.py
+recursive-include docs/product *-results.json
