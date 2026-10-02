@@ -72,3 +72,42 @@ def test_live_independent_contract_rejects_relaxed_limits():
     changed = copy.deepcopy(row)
     changed["plan"]["tests"][0]["criteria"][0]["limit"] *= 100
     assert "tests" in independent_check(changed)["contract_mismatches"]
+
+
+def test_live_independent_oracle_checks_complete_final_fixture():
+    """Synthetic protocol-check inputs, not native physics evidence."""
+    r = requirements("heldout-a")
+    values = recipes.metrics(r.inputs, 4.5)
+    row = {
+        "plan": recipes.make_plan(r).model_dump(mode="json"),
+        "managed": {"final_result_id": "final"},
+        "results": [
+            {
+                "id": "final",
+                "evidence_complete": True,
+                "design_accepted": True,
+                "tests": [{"metrics": {k: {"value": v} for k, v in values.items()}}],
+            }
+        ],
+    }
+    assert independent_check(row)["protocol_accepted"]
+    row["results"][0]["tests"][0]["metrics"]["deflection_mm"]["value"] = 0
+    assert not independent_check(row)["protocol_accepted"]
+
+
+def test_worker_does_not_advance_a_foreign_project_queue(tmp_path):
+    e = engine(tmp_path)
+    row = open_run(e)
+    e.store.update("runs", row["_id"], {"phase": "queued", "project_id": "another-project"})
+
+    class OneTick:
+        count = 0
+
+        def wait(self, duration):
+            self.count += 1
+            return self.count > 1
+
+    e.shutdown = OneTick()
+    e.lifecycle.execute_scheduled = lambda *a: pytest.fail("Foreign project queue consumed")
+    e.work()
+    assert e.store.get("runs", row["_id"])["phase"] == "queued"

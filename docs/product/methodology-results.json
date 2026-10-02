@@ -1,0 +1,2323 @@
+{
+  "version": 1,
+  "runs": [
+    {
+      "synthetic_observations": {
+        "evidence_kind": "synthetic_fixture",
+        "claim": "These values were constructed from predictions for software tests. They are not laboratory measurements or evidence of physical calibration benefit.",
+        "calibration_id": "attributed-133ba9ef7e5ec606d48074f27466cb8f9ebfba3ce9313c11c44abd21888ba61a",
+        "offset": 0.20000000000000048,
+        "unit": "g",
+        "validations": [
+          {
+            "_id": "attributed-ba2f94f2195155124724d6dd4e010a861f9ef2057786bc713b75d058f56e0642",
+            "mae_before": 0.1999999999999993,
+            "mae_after": 1.1934897514720433e-15,
+            "evidence_kind": "synthetic_fixture",
+            "unit": "g"
+          },
+          {
+            "_id": "attributed-4441a2860c71958e31fd461c683cd1ea39c907d9a8b8d4d172a8b57b415559a7",
+            "mae_before": 0.1999999999999993,
+            "mae_after": 0.3999999999999998,
+            "evidence_kind": "synthetic_fixture",
+            "unit": "g"
+          }
+        ],
+        "imported_locally_reproduced": false
+      },
+      "version": 1,
+      "benchmark": "methodology-v1",
+      "driver": "external",
+      "images": {
+        "cad": "sha256:7c793165d040ff00df45ffb952e5e590725027565bd9fa55011054f257cc1111",
+        "structural": "sha256:c217125841f2f6af494feb4e9415c25c06c3775e5776480dd4c762eb1da5f458"
+      },
+      "request_fixture_hash": "2afcbebe90cfe5072efce73f03e859d7ea420aae1983cafd6b8ef6aae4c957fc",
+      "cases": [
+        {
+          "experiment_id": "experiment-b90821b514171a0ca08d0052",
+          "driver": "external",
+          "phase": "completed",
+          "suite_id": "4b193fa78268b332def37e1b3983721d859afd6cbb238c024b8e20ceeac88016",
+          "runtime": {
+            "version": 2,
+            "metadata": {},
+            "image": "sha256:c217125841f2f6af494feb4e9415c25c06c3775e5776480dd4c762eb1da5f458",
+            "solver": "Gmsh 4.15.2 / CalculiX 2.23 CPU SPOOLES",
+            "provenance": "Pinned optional structural runtime",
+            "timeout_seconds": 300,
+            "memory_gb": 4,
+            "backend": "docker",
+            "accelerator": "none",
+            "cpu_cores": 1.0,
+            "job_seconds": 1800,
+            "compute_seconds": 3600,
+            "artifact_bytes": 200000000,
+            "file_bytes": 64000000,
+            "log_bytes": 8000000
+          },
+          "test_before_candidate": true,
+          "coverage_complete": true,
+          "requirement_count": 1,
+          "covered_requirements": 1,
+          "candidate_count": 3,
+          "search_iterations": 2,
+          "final_evidence_complete": true,
+          "final_accepted": true,
+          "final_metrics": {
+            "mass_g": {
+              "value": 22.97016639473285,
+              "unit": "g",
+              "numerical_error": 2.297016639473285e-06,
+              "uncertainty": 1.1485083197366426
+            },
+            "load_displacement_mm": {
+              "value": 0.012949140560654155,
+              "unit": "mm",
+              "numerical_error": 6.211605370369175e-05,
+              "uncertainty": 0.0006474570280327078
+            },
+            "gauge_von_mises_mpa": {
+              "value": 1.0518417358961332,
+              "unit": "MPa",
+              "numerical_error": 0.021228275705462707,
+              "uncertainty": 0.05259208679480666
+            }
+          },
+          "outcomes": [
+            {
+              "accepted": false,
+              "complete": true,
+              "tests": [
+                {
+                  "test_id": "static",
+                  "status": "physical_failure",
+                  "reason": "acceptance_limit"
+                }
+              ]
+            },
+            {
+              "accepted": true,
+              "complete": true,
+              "tests": [
+                {
+                  "test_id": "static",
+                  "status": "pass",
+                  "reason": "ok"
+                }
+              ]
+            },
+            {
+              "accepted": true,
+              "complete": true,
+              "tests": [
+                {
+                  "test_id": "static",
+                  "status": "pass",
+                  "reason": "ok"
+                }
+              ]
+            }
+          ],
+          "elapsed_solver_seconds": 37.61133963568136,
+          "allocated_cpu_seconds_upper_bound": 37.61133963568136,
+          "compute_cost_usd": null,
+          "compute_cost_note": "Local compute price not configured; CPU allocation*time is an upper bound, not measured CPU usage",
+          "model_cost_usd": 0,
+          "fixture_reasoning_calls": 0,
+          "model_tokens": null,
+          "reproduction": {
+            "same_source_parameters_suite_runtime": true,
+            "max_absolute_metric_difference": 0.0,
+            "within_tolerance": true
+          },
+          "autonomous_reasoning_evaluated": false,
+          "retrieved_ids": [],
+          "retrieval_applicability": {},
+          "report_file": "experiment-b90821b514171a0ca08d0052.json",
+          "acceptance_contract_id": "08941305dc13f07875bfb870e7589e2e45782510e23e0e55afaac24688d23fc2",
+          "report_sha256": "2ff8822203f0c74b2f88620184d631945bbdea8331a3b7a4500e99f9973bcf80"
+        },
+        {
+          "experiment_id": "experiment-cf506ef4b1400c13d449e615",
+          "driver": "external",
+          "phase": "completed",
+          "suite_id": "25d9143cd0e95bc6f50b8ead4a7d55262d41323964eb6010184bdde6a74404cd",
+          "runtime": {
+            "version": 2,
+            "metadata": {},
+            "image": "sha256:7c793165d040ff00df45ffb952e5e590725027565bd9fa55011054f257cc1111",
+            "solver": "CadQuery / NumPy beam screen",
+            "provenance": "Pinned benchmark runtime",
+            "timeout_seconds": 180,
+            "memory_gb": 2,
+            "backend": "docker",
+            "accelerator": "none",
+            "cpu_cores": 1.0,
+            "job_seconds": 1800,
+            "compute_seconds": 3600,
+            "artifact_bytes": 64000000,
+            "file_bytes": 32000000,
+            "log_bytes": 8000000
+          },
+          "test_before_candidate": true,
+          "coverage_complete": true,
+          "requirement_count": 1,
+          "covered_requirements": 1,
+          "candidate_count": 4,
+          "search_iterations": 3,
+          "final_evidence_complete": true,
+          "final_accepted": true,
+          "final_metrics": {
+            "mass_g": {
+              "value": 9.72,
+              "unit": "g",
+              "numerical_error": 1e-05,
+              "uncertainty": 0.0
+            },
+            "stress_mpa": {
+              "value": 59.25925925925926,
+              "unit": "MPa",
+              "numerical_error": 1e-05,
+              "uncertainty": 0.0
+            },
+            "deflection_mm": {
+              "value": 0.2006662747403489,
+              "unit": "mm",
+              "numerical_error": 1e-05,
+              "uncertainty": 0.0
+            }
+          },
+          "outcomes": [
+            {
+              "accepted": true,
+              "complete": true,
+              "tests": [
+                {
+                  "test_id": "beam",
+                  "status": "pass",
+                  "reason": "ok"
+                }
+              ]
+            },
+            {
+              "accepted": false,
+              "complete": false,
+              "tests": [
+                {
+                  "test_id": "beam",
+                  "status": "invalid_setup",
+                  "reason": "invalid_geometry"
+                }
+              ]
+            },
+            {
+              "accepted": true,
+              "complete": true,
+              "tests": [
+                {
+                  "test_id": "beam",
+                  "status": "pass",
+                  "reason": "ok"
+                }
+              ]
+            },
+            {
+              "accepted": true,
+              "complete": true,
+              "tests": [
+                {
+                  "test_id": "beam",
+                  "status": "pass",
+                  "reason": "ok"
+                }
+              ]
+            }
+          ],
+          "elapsed_solver_seconds": 27.706444680225104,
+          "allocated_cpu_seconds_upper_bound": 27.706444680225104,
+          "compute_cost_usd": null,
+          "compute_cost_note": "Local compute price not configured; CPU allocation*time is an upper bound, not measured CPU usage",
+          "model_cost_usd": 0,
+          "fixture_reasoning_calls": 0,
+          "model_tokens": null,
+          "reproduction": {
+            "same_source_parameters_suite_runtime": true,
+            "max_absolute_metric_difference": 0.0,
+            "within_tolerance": true
+          },
+          "autonomous_reasoning_evaluated": false,
+          "retrieved_ids": [
+            "experience-1430033ef1474e659a2cdf09abc3d9982306a942387f18d93945e4379f7fc325",
+            "experience-b88ae1dba5dd3f4eb7eed1ca2b76bfcf060f20993f9d949520c531d3dea8e778",
+            "experience-d69723fafb0f7d3a146ab2274c986dc08ab22b05aad5ee7a588b229cea48ffcb",
+            "experience-0bc694aa1ede0f37e15cf020f725c89c780cfcfed5f96982b16012983c441947",
+            "experience-4347d447ea7ab72e88716a784a36bd65e75e902ce004d99e567f988798b5780b",
+            "experience-61f9c7938c0a78099633a032de56abe9fcaaa640d2ef2464d82ba18b8d14f88f"
+          ],
+          "retrieval_applicability": {
+            "experience-1430033ef1474e659a2cdf09abc3d9982306a942387f18d93945e4379f7fc325": {
+              "status": "incompatible",
+              "conflicts": [
+                "materials"
+              ],
+              "unknown": [
+                "processes",
+                "material:nominal-aluminium:young_modulus",
+                "material:nominal-aluminium:poisson_ratio",
+                "material:nominal-aluminium:density",
+                "load:shelf:force_x",
+                "load:shelf:force_y",
+                "load:shelf:force_z"
+              ],
+              "requires_new_validation": true
+            },
+            "experience-b88ae1dba5dd3f4eb7eed1ca2b76bfcf060f20993f9d949520c531d3dea8e778": {
+              "status": "incompatible",
+              "conflicts": [
+                "materials"
+              ],
+              "unknown": [
+                "processes",
+                "material:nominal-aluminium:young_modulus",
+                "material:nominal-aluminium:poisson_ratio",
+                "material:nominal-aluminium:density",
+                "load:shelf:force_x",
+                "load:shelf:force_y",
+                "load:shelf:force_z"
+              ],
+              "requires_new_validation": true
+            },
+            "experience-d69723fafb0f7d3a146ab2274c986dc08ab22b05aad5ee7a588b229cea48ffcb": {
+              "status": "incompatible",
+              "conflicts": [
+                "materials"
+              ],
+              "unknown": [
+                "processes",
+                "material:nominal-aluminium:young_modulus",
+                "material:nominal-aluminium:poisson_ratio",
+                "material:nominal-aluminium:density",
+                "load:shelf:force_x",
+                "load:shelf:force_y",
+                "load:shelf:force_z"
+              ],
+              "requires_new_validation": true
+            },
+            "experience-0bc694aa1ede0f37e15cf020f725c89c780cfcfed5f96982b16012983c441947": {
+              "status": "incompatible",
+              "conflicts": [
+                "materials"
+              ],
+              "unknown": [
+                "processes",
+                "material:nominal-aluminium:young_modulus",
+                "material:nominal-aluminium:poisson_ratio",
+                "material:nominal-aluminium:density",
+                "load:shelf:force_x",
+                "load:shelf:force_y",
+                "load:shelf:force_z"
+              ],
+              "requires_new_validation": true
+            },
+            "experience-4347d447ea7ab72e88716a784a36bd65e75e902ce004d99e567f988798b5780b": {
+              "status": "incompatible",
+              "conflicts": [
+                "materials"
+              ],
+              "unknown": [
+                "processes",
+                "material:nominal-aluminium:young_modulus",
+                "material:nominal-aluminium:poisson_ratio",
+                "material:nominal-aluminium:density",
+                "load:shelf:force_x",
+                "load:shelf:force_y",
+                "load:shelf:force_z"
+              ],
+              "requires_new_validation": true
+            },
+            "experience-61f9c7938c0a78099633a032de56abe9fcaaa640d2ef2464d82ba18b8d14f88f": {
+              "status": "incompatible",
+              "conflicts": [
+                "materials"
+              ],
+              "unknown": [
+                "processes",
+                "material:nominal-aluminium:young_modulus",
+                "material:nominal-aluminium:poisson_ratio",
+                "material:nominal-aluminium:density",
+                "load:shelf:force_x",
+                "load:shelf:force_y",
+                "load:shelf:force_z"
+              ],
+              "requires_new_validation": true
+            }
+          },
+          "report_file": "experiment-cf506ef4b1400c13d449e615.json",
+          "acceptance_contract_id": "97ef614b2df73d93cddd2c2c2b3ef9387fc5d94ef40beb2925fb0f8197684f48",
+          "report_sha256": "59b98d02620400c4f3c4aca69acca8434fb9d54a48c7ffdf3a559ee76af41853"
+        },
+        {
+          "experiment_id": "experiment-0e11dde55a232180e1c5f66e",
+          "driver": "external",
+          "phase": "completed",
+          "suite_id": "0dd3b60251f3c80cf4493d2d62a9ac8ae1d618ae1c08af0c8389a8cbda2f4c8a",
+          "runtime": {
+            "version": 2,
+            "metadata": {},
+            "image": "sha256:7c793165d040ff00df45ffb952e5e590725027565bd9fa55011054f257cc1111",
+            "solver": "CadQuery / NumPy beam screen",
+            "provenance": "Pinned benchmark runtime",
+            "timeout_seconds": 180,
+            "memory_gb": 2,
+            "backend": "docker",
+            "accelerator": "none",
+            "cpu_cores": 1.0,
+            "job_seconds": 1800,
+            "compute_seconds": 3600,
+            "artifact_bytes": 64000000,
+            "file_bytes": 32000000,
+            "log_bytes": 8000000
+          },
+          "test_before_candidate": true,
+          "coverage_complete": true,
+          "requirement_count": 1,
+          "covered_requirements": 1,
+          "candidate_count": 3,
+          "search_iterations": 2,
+          "final_evidence_complete": true,
+          "final_accepted": true,
+          "final_metrics": {
+            "mass_g": {
+              "value": 12.15,
+              "unit": "g",
+              "numerical_error": 1e-05,
+              "uncertainty": 0.0
+            },
+            "stress_mpa": {
+              "value": 66.66666666666667,
+              "unit": "MPa",
+              "numerical_error": 1e-05,
+              "uncertainty": 0.0
+            },
+            "deflection_mm": {
+              "value": 0.35273368606701977,
+              "unit": "mm",
+              "numerical_error": 1e-05,
+              "uncertainty": 0.0
+            }
+          },
+          "outcomes": [
+            {
+              "accepted": false,
+              "complete": true,
+              "tests": [
+                {
+                  "test_id": "beam",
+                  "status": "physical_failure",
+                  "reason": "acceptance_limit"
+                }
+              ]
+            },
+            {
+              "accepted": true,
+              "complete": true,
+              "tests": [
+                {
+                  "test_id": "beam",
+                  "status": "pass",
+                  "reason": "ok"
+                }
+              ]
+            },
+            {
+              "accepted": true,
+              "complete": true,
+              "tests": [
+                {
+                  "test_id": "beam",
+                  "status": "pass",
+                  "reason": "ok"
+                }
+              ]
+            }
+          ],
+          "elapsed_solver_seconds": 24.086496444419026,
+          "allocated_cpu_seconds_upper_bound": 24.086496444419026,
+          "compute_cost_usd": null,
+          "compute_cost_note": "Local compute price not configured; CPU allocation*time is an upper bound, not measured CPU usage",
+          "model_cost_usd": 0,
+          "fixture_reasoning_calls": 0,
+          "model_tokens": null,
+          "reproduction": {
+            "same_source_parameters_suite_runtime": true,
+            "max_absolute_metric_difference": 0.0,
+            "within_tolerance": true
+          },
+          "autonomous_reasoning_evaluated": false,
+          "retrieved_ids": [],
+          "retrieval_applicability": {},
+          "report_file": "experiment-0e11dde55a232180e1c5f66e.json",
+          "acceptance_contract_id": "c67f0537c74d97024ab28288283d3ba24ef37cf682938d78166bcb36bf612038",
+          "report_sha256": "540b7262043233e8ae909917e238289a9165d8bb47954f44f6d58d55d0381800"
+        },
+        {
+          "experiment_id": "experiment-1eeb8418f983622a1834d998",
+          "driver": "external",
+          "phase": "completed",
+          "suite_id": "18a33f7c1eedddcd2b779c9777f3e58c4cba5962045750a07cc46e6b009829fe",
+          "runtime": {
+            "version": 2,
+            "metadata": {},
+            "image": "sha256:7c793165d040ff00df45ffb952e5e590725027565bd9fa55011054f257cc1111",
+            "solver": "CadQuery / NumPy beam screen",
+            "provenance": "Pinned benchmark runtime",
+            "timeout_seconds": 180,
+            "memory_gb": 2,
+            "backend": "docker",
+            "accelerator": "none",
+            "cpu_cores": 1.0,
+            "job_seconds": 1800,
+            "compute_seconds": 3600,
+            "artifact_bytes": 64000000,
+            "file_bytes": 32000000,
+            "log_bytes": 8000000
+          },
+          "test_before_candidate": true,
+          "coverage_complete": true,
+          "requirement_count": 1,
+          "covered_requirements": 1,
+          "candidate_count": 3,
+          "search_iterations": 2,
+          "final_evidence_complete": true,
+          "final_accepted": true,
+          "final_metrics": {
+            "mass_g": {
+              "value": 12.15,
+              "unit": "g",
+              "numerical_error": 1e-05,
+              "uncertainty": 0.0
+            },
+            "stress_mpa": {
+              "value": 66.66666666666667,
+              "unit": "MPa",
+              "numerical_error": 1e-05,
+              "uncertainty": 0.0
+            },
+            "deflection_mm": {
+              "value": 0.35273368606701977,
+              "unit": "mm",
+              "numerical_error": 1e-05,
+              "uncertainty": 0.0
+            }
+          },
+          "outcomes": [
+            {
+              "accepted": false,
+              "complete": true,
+              "tests": [
+                {
+                  "test_id": "beam",
+                  "status": "physical_failure",
+                  "reason": "acceptance_limit"
+                }
+              ]
+            },
+            {
+              "accepted": true,
+              "complete": true,
+              "tests": [
+                {
+                  "test_id": "beam",
+                  "status": "pass",
+                  "reason": "ok"
+                }
+              ]
+            },
+            {
+              "accepted": true,
+              "complete": true,
+              "tests": [
+                {
+                  "test_id": "beam",
+                  "status": "pass",
+                  "reason": "ok"
+                }
+              ]
+            }
+          ],
+          "elapsed_solver_seconds": 24.086855234811082,
+          "allocated_cpu_seconds_upper_bound": 24.086855234811082,
+          "compute_cost_usd": null,
+          "compute_cost_note": "Local compute price not configured; CPU allocation*time is an upper bound, not measured CPU usage",
+          "model_cost_usd": 0,
+          "fixture_reasoning_calls": 0,
+          "model_tokens": null,
+          "reproduction": {
+            "same_source_parameters_suite_runtime": true,
+            "max_absolute_metric_difference": 0.0,
+            "within_tolerance": true
+          },
+          "autonomous_reasoning_evaluated": false,
+          "retrieved_ids": [
+            "experience-449f53cbdff08a46f6d970d2ddc48b154a395ac0a52e7d0df1a952fdb45b153b",
+            "experience-ea0c84d25e2c2a6c716c076e250a71d7403bae65e1e59ae7a11f8b50c936f743",
+            "experience-748a9a80d0bcba76c5fa43ea2dba5aa199ee7599c916070c21eead5f571d218b"
+          ],
+          "retrieval_applicability": {
+            "experience-449f53cbdff08a46f6d970d2ddc48b154a395ac0a52e7d0df1a952fdb45b153b": {
+              "status": "needs_review",
+              "conflicts": [],
+              "unknown": [
+                "material_models",
+                "processes",
+                "quantitative_applicability"
+              ],
+              "requires_new_validation": true
+            },
+            "experience-ea0c84d25e2c2a6c716c076e250a71d7403bae65e1e59ae7a11f8b50c936f743": {
+              "status": "needs_review",
+              "conflicts": [],
+              "unknown": [
+                "material_models",
+                "processes",
+                "quantitative_applicability"
+              ],
+              "requires_new_validation": true
+            },
+            "experience-748a9a80d0bcba76c5fa43ea2dba5aa199ee7599c916070c21eead5f571d218b": {
+              "status": "incompatible",
+              "conflicts": [
+                "phenomena",
+                "load_regimes"
+              ],
+              "unknown": [
+                "material_models",
+                "processes",
+                "quantitative_applicability"
+              ],
+              "requires_new_validation": true
+            }
+          },
+          "report_file": "experiment-1eeb8418f983622a1834d998.json",
+          "acceptance_contract_id": "c67f0537c74d97024ab28288283d3ba24ef37cf682938d78166bcb36bf612038",
+          "report_sha256": "b2d3c527d88865fe00f2413b841417992aec28bee3817bc0de32bb2b0690caf1"
+        },
+        {
+          "experiment_id": "experiment-37c984ea8342c4d0657acb88",
+          "driver": "external",
+          "phase": "completed",
+          "suite_id": "089844f2b586605f2d9621f4979fc8a8e9f37dff98cc74400c5d95194393dcfe",
+          "runtime": {
+            "version": 2,
+            "metadata": {},
+            "image": "sha256:7c793165d040ff00df45ffb952e5e590725027565bd9fa55011054f257cc1111",
+            "solver": "CadQuery / NumPy beam screen",
+            "provenance": "Pinned benchmark runtime",
+            "timeout_seconds": 180,
+            "memory_gb": 2,
+            "backend": "docker",
+            "accelerator": "none",
+            "cpu_cores": 1.0,
+            "job_seconds": 1800,
+            "compute_seconds": 3600,
+            "artifact_bytes": 64000000,
+            "file_bytes": 32000000,
+            "log_bytes": 8000000
+          },
+          "test_before_candidate": true,
+          "coverage_complete": true,
+          "requirement_count": 1,
+          "covered_requirements": 1,
+          "candidate_count": 3,
+          "search_iterations": 2,
+          "final_evidence_complete": true,
+          "final_accepted": false,
+          "final_metrics": {
+            "mass_g": {
+              "value": 17.496000000000002,
+              "unit": "g",
+              "numerical_error": 1e-05,
+              "uncertainty": 0.0
+            },
+            "stress_mpa": {
+              "value": 74.07407407407408,
+              "unit": "MPa",
+              "numerical_error": 1e-05,
+              "uncertainty": 0.0
+            },
+            "deflection_mm": {
+              "value": 0.564373897707231,
+              "unit": "mm",
+              "numerical_error": 1e-05,
+              "uncertainty": 0.0
+            }
+          },
+          "outcomes": [
+            {
+              "accepted": false,
+              "complete": true,
+              "tests": [
+                {
+                  "test_id": "beam",
+                  "status": "physical_failure",
+                  "reason": "acceptance_limit"
+                }
+              ]
+            },
+            {
+              "accepted": false,
+              "complete": true,
+              "tests": [
+                {
+                  "test_id": "beam",
+                  "status": "physical_failure",
+                  "reason": "acceptance_limit"
+                }
+              ]
+            },
+            {
+              "accepted": false,
+              "complete": true,
+              "tests": [
+                {
+                  "test_id": "beam",
+                  "status": "physical_failure",
+                  "reason": "acceptance_limit"
+                }
+              ]
+            }
+          ],
+          "elapsed_solver_seconds": 24.091771360719576,
+          "allocated_cpu_seconds_upper_bound": 24.091771360719576,
+          "compute_cost_usd": null,
+          "compute_cost_note": "Local compute price not configured; CPU allocation*time is an upper bound, not measured CPU usage",
+          "model_cost_usd": 0,
+          "fixture_reasoning_calls": 0,
+          "model_tokens": null,
+          "reproduction": {
+            "same_source_parameters_suite_runtime": true,
+            "max_absolute_metric_difference": 0.0,
+            "within_tolerance": true
+          },
+          "autonomous_reasoning_evaluated": false,
+          "retrieved_ids": [],
+          "retrieval_applicability": {},
+          "report_file": "experiment-37c984ea8342c4d0657acb88.json",
+          "acceptance_contract_id": "8a7f796c54e211fe0a52cf22121ac7615f193508e96740566cf1b084759c6d55",
+          "report_sha256": "8abfe6d6080e980595ade1165316f3cb6191fa73d31b700b09686bc52e616791"
+        },
+        {
+          "experiment_id": "experiment-8b6886400c672a693727de72",
+          "driver": "external",
+          "phase": "completed",
+          "suite_id": "27f4e2d9b2d50d80235ffef31869cc4675852703e941cb2956f098340671354f",
+          "runtime": {
+            "version": 2,
+            "metadata": {},
+            "image": "sha256:7c793165d040ff00df45ffb952e5e590725027565bd9fa55011054f257cc1111",
+            "solver": "CadQuery / NumPy beam screen",
+            "provenance": "Pinned benchmark runtime",
+            "timeout_seconds": 180,
+            "memory_gb": 2,
+            "backend": "docker",
+            "accelerator": "none",
+            "cpu_cores": 1.0,
+            "job_seconds": 1800,
+            "compute_seconds": 3600,
+            "artifact_bytes": 64000000,
+            "file_bytes": 32000000,
+            "log_bytes": 8000000
+          },
+          "test_before_candidate": true,
+          "coverage_complete": true,
+          "requirement_count": 1,
+          "covered_requirements": 1,
+          "candidate_count": 3,
+          "search_iterations": 2,
+          "final_evidence_complete": true,
+          "final_accepted": false,
+          "final_metrics": {
+            "mass_g": {
+              "value": 17.496000000000002,
+              "unit": "g",
+              "numerical_error": 1e-05,
+              "uncertainty": 0.0
+            },
+            "stress_mpa": {
+              "value": 74.07407407407408,
+              "unit": "MPa",
+              "numerical_error": 1e-05,
+              "uncertainty": 0.0
+            },
+            "deflection_mm": {
+              "value": 0.564373897707231,
+              "unit": "mm",
+              "numerical_error": 1e-05,
+              "uncertainty": 0.0
+            }
+          },
+          "outcomes": [
+            {
+              "accepted": false,
+              "complete": true,
+              "tests": [
+                {
+                  "test_id": "beam",
+                  "status": "physical_failure",
+                  "reason": "acceptance_limit"
+                }
+              ]
+            },
+            {
+              "accepted": false,
+              "complete": true,
+              "tests": [
+                {
+                  "test_id": "beam",
+                  "status": "physical_failure",
+                  "reason": "acceptance_limit"
+                }
+              ]
+            },
+            {
+              "accepted": false,
+              "complete": true,
+              "tests": [
+                {
+                  "test_id": "beam",
+                  "status": "physical_failure",
+                  "reason": "acceptance_limit"
+                }
+              ]
+            }
+          ],
+          "elapsed_solver_seconds": 24.08903422858566,
+          "allocated_cpu_seconds_upper_bound": 24.08903422858566,
+          "compute_cost_usd": null,
+          "compute_cost_note": "Local compute price not configured; CPU allocation*time is an upper bound, not measured CPU usage",
+          "model_cost_usd": 0,
+          "fixture_reasoning_calls": 0,
+          "model_tokens": null,
+          "reproduction": {
+            "same_source_parameters_suite_runtime": true,
+            "max_absolute_metric_difference": 0.0,
+            "within_tolerance": true
+          },
+          "autonomous_reasoning_evaluated": false,
+          "retrieved_ids": [
+            "experience-449f53cbdff08a46f6d970d2ddc48b154a395ac0a52e7d0df1a952fdb45b153b",
+            "experience-ea0c84d25e2c2a6c716c076e250a71d7403bae65e1e59ae7a11f8b50c936f743",
+            "experience-748a9a80d0bcba76c5fa43ea2dba5aa199ee7599c916070c21eead5f571d218b"
+          ],
+          "retrieval_applicability": {
+            "experience-449f53cbdff08a46f6d970d2ddc48b154a395ac0a52e7d0df1a952fdb45b153b": {
+              "status": "needs_review",
+              "conflicts": [],
+              "unknown": [
+                "material_models",
+                "processes",
+                "quantitative_applicability"
+              ],
+              "requires_new_validation": true
+            },
+            "experience-ea0c84d25e2c2a6c716c076e250a71d7403bae65e1e59ae7a11f8b50c936f743": {
+              "status": "needs_review",
+              "conflicts": [],
+              "unknown": [
+                "material_models",
+                "processes",
+                "quantitative_applicability"
+              ],
+              "requires_new_validation": true
+            },
+            "experience-748a9a80d0bcba76c5fa43ea2dba5aa199ee7599c916070c21eead5f571d218b": {
+              "status": "incompatible",
+              "conflicts": [
+                "phenomena",
+                "load_regimes"
+              ],
+              "unknown": [
+                "material_models",
+                "processes",
+                "quantitative_applicability"
+              ],
+              "requires_new_validation": true
+            }
+          },
+          "report_file": "experiment-8b6886400c672a693727de72.json",
+          "acceptance_contract_id": "8a7f796c54e211fe0a52cf22121ac7615f193508e96740566cf1b084759c6d55",
+          "report_sha256": "014b86074cebb99d104925c6029f5f2943a9ede9c91e30b11a0850913494fe17"
+        }
+      ],
+      "unavailable": [
+        {
+          "case": "unavailable",
+          "experiment_id": "experiment-ee98e516bf346999807438ac",
+          "candidates": 0,
+          "capabilities": [
+            {
+              "version": 2,
+              "metadata": {},
+              "runtime_id": "7511446e722980d3a9065e3b10648f98f1145f5fbe5ba0c992c7b2843ad91b34",
+              "test_id": "beam",
+              "status": "unavailable",
+              "reason": "An independently verified adapter for the requested phenomena/fidelity",
+              "verification_ids": [],
+              "simulation": {
+                "adapter": {
+                  "id": "authored-screen",
+                  "version": 1,
+                  "phenomena": [
+                    "mass",
+                    "linear_static",
+                    "geometry"
+                  ],
+                  "material_models": [
+                    "linear_isotropic"
+                  ],
+                  "geometry_assumptions": "Task-authored evaluator must independently reject unsupported geometry; positive and negative fixtures required",
+                  "fidelities": [
+                    "analytic_screen"
+                  ],
+                  "limitations": [
+                    "Task-authored analytic screening, not a general structural solver",
+                    "No nonlinear materials, contact, fatigue, dynamics or certified uncertainty"
+                  ],
+                  "required_software": {
+                    "cadquery": null,
+                    "numpy": null
+                  },
+                  "reference_checks": [
+                    "Task-specific positive and negative reference fixtures; no transferable passing score"
+                  ],
+                  "lifecycle": [
+                    "validate_setup",
+                    "estimate",
+                    "prepare",
+                    "execute",
+                    "extract",
+                    "reference_check"
+                  ],
+                  "routes": [
+                    "v2",
+                    "legacy-custom"
+                  ]
+                },
+                "requirements": [
+                  "strength"
+                ],
+                "test_id": "beam",
+                "issues": [
+                  {
+                    "reason": "unsupported_physics",
+                    "needed": "An independently verified adapter for the requested phenomena/fidelity"
+                  }
+                ],
+                "available": false,
+                "probe": {
+                  "cpu_cores": 16.0,
+                  "memory_bytes": 54992924672,
+                  "disk_bytes": 1200691593216,
+                  "accelerators": [],
+                  "accelerator_probe": "not requested; all shipped adapters use CPU",
+                  "backend": "docker",
+                  "remote_provisioning": false,
+                  "available": true,
+                  "software": {
+                    "python": "3.11.16",
+                    "cadquery": "2.8.0",
+                    "numpy": "2.4.6",
+                    "scipy": "1.17.1",
+                    "aerosandbox": null,
+                    "gmsh": null,
+                    "xfoil": null,
+                    "calculix": null
+                  },
+                  "image": "sha256:7c793165d040ff00df45ffb952e5e590725027565bd9fa55011054f257cc1111"
+                },
+                "estimate": {
+                  "cpu_cores": 1.0,
+                  "memory_mb": 512,
+                  "disk_mb": 128,
+                  "wall_seconds": 30.0,
+                  "basis": "Conservative starting estimate; refine from measured execution",
+                  "uncertainty": "Unknown geometry-dependent peak; estimate is not proof of adequacy"
+                },
+                "approximation_available": [
+                  "analytic_screen"
+                ],
+                "substitution_performed": false,
+                "adequacy": "Reference checks, per-geometry setup and actual execution still required"
+              }
+            }
+          ],
+          "blocked": true
+        },
+        {
+          "case": "capacity",
+          "experiment_id": "experiment-90a0651618c73b849a63d895",
+          "candidates": 0,
+          "capabilities": [
+            {
+              "version": 2,
+              "metadata": {},
+              "runtime_id": "7511446e722980d3a9065e3b10648f98f1145f5fbe5ba0c992c7b2843ad91b34",
+              "test_id": "beam",
+              "status": "unavailable",
+              "reason": "Estimated memory_mb=1000000 exceeds available 2048",
+              "verification_ids": [],
+              "simulation": {
+                "adapter": {
+                  "id": "authored-screen",
+                  "version": 1,
+                  "phenomena": [
+                    "mass",
+                    "linear_static",
+                    "geometry"
+                  ],
+                  "material_models": [
+                    "linear_isotropic"
+                  ],
+                  "geometry_assumptions": "Task-authored evaluator must independently reject unsupported geometry; positive and negative fixtures required",
+                  "fidelities": [
+                    "analytic_screen"
+                  ],
+                  "limitations": [
+                    "Task-authored analytic screening, not a general structural solver",
+                    "No nonlinear materials, contact, fatigue, dynamics or certified uncertainty"
+                  ],
+                  "required_software": {
+                    "cadquery": null,
+                    "numpy": null
+                  },
+                  "reference_checks": [
+                    "Task-specific positive and negative reference fixtures; no transferable passing score"
+                  ],
+                  "lifecycle": [
+                    "validate_setup",
+                    "estimate",
+                    "prepare",
+                    "execute",
+                    "extract",
+                    "reference_check"
+                  ],
+                  "routes": [
+                    "v2",
+                    "legacy-custom"
+                  ]
+                },
+                "requirements": [
+                  "strength"
+                ],
+                "test_id": "beam",
+                "issues": [
+                  {
+                    "reason": "resource_exhaustion",
+                    "needed": "Estimated memory_mb=1000000 exceeds available 2048"
+                  }
+                ],
+                "available": false,
+                "probe": {
+                  "cpu_cores": 16.0,
+                  "memory_bytes": 54985297920,
+                  "disk_bytes": 1200691585024,
+                  "accelerators": [],
+                  "accelerator_probe": "not requested; all shipped adapters use CPU",
+                  "backend": "docker",
+                  "remote_provisioning": false,
+                  "available": true,
+                  "software": {
+                    "python": "3.11.16",
+                    "cadquery": "2.8.0",
+                    "numpy": "2.4.6",
+                    "scipy": "1.17.1",
+                    "aerosandbox": null,
+                    "gmsh": null,
+                    "xfoil": null,
+                    "calculix": null
+                  },
+                  "image": "sha256:7c793165d040ff00df45ffb952e5e590725027565bd9fa55011054f257cc1111"
+                },
+                "estimate": {
+                  "cpu_cores": 1.0,
+                  "memory_mb": 1000000,
+                  "disk_mb": 128,
+                  "wall_seconds": 30.0,
+                  "basis": "Conservative starting estimate; refine from measured execution",
+                  "uncertainty": "Unknown geometry-dependent peak; estimate is not proof of adequacy"
+                },
+                "approximation_available": [
+                  "analytic_screen"
+                ],
+                "substitution_performed": false,
+                "adequacy": "Reference checks, per-geometry setup and actual execution still required"
+              }
+            }
+          ],
+          "blocked": true
+        }
+      ],
+      "bad_evaluator": {
+        "experiment_id": "experiment-ae55e03f2c68e720b761c82f",
+        "freeze_rejected": true,
+        "unmatched_checks": 2,
+        "correction_id": "experiment-cf506ef4b1400c13d449e615",
+        "new_evaluator": true
+      },
+      "held_out_comparison": [
+        {
+          "task": "heldout-a",
+          "enabled": "experiment-1eeb8418f983622a1834d998",
+          "disabled": "experiment-0e11dde55a232180e1c5f66e",
+          "useful_retrieved": true,
+          "misleading_retrieved": true,
+          "incompatible_retrieved": true,
+          "incompatible_flagged": true,
+          "precision_at_3": 0.3333333333333333,
+          "misleading_suggestions": 2,
+          "iteration_delta": 0,
+          "mass_delta_g": 0.0,
+          "acceptance_lost": false,
+          "policy": "Both scripted routes deliberately use the same proposals; this isolates orchestration/retrieval, not reasoning quality"
+        },
+        {
+          "task": "heldout-b",
+          "enabled": "experiment-8b6886400c672a693727de72",
+          "disabled": "experiment-37c984ea8342c4d0657acb88",
+          "useful_retrieved": true,
+          "misleading_retrieved": true,
+          "incompatible_retrieved": true,
+          "incompatible_flagged": true,
+          "precision_at_3": 0.3333333333333333,
+          "misleading_suggestions": 2,
+          "iteration_delta": 0,
+          "mass_delta_g": 0.0,
+          "acceptance_lost": false,
+          "policy": "Both scripted routes deliberately use the same proposals; this isolates orchestration/retrieval, not reasoning quality"
+        }
+      ],
+      "reusable_corpus_ids": {
+        "useful": "experience-449f53cbdff08a46f6d970d2ddc48b154a395ac0a52e7d0df1a952fdb45b153b",
+        "misleading": "experience-ea0c84d25e2c2a6c716c076e250a71d7403bae65e1e59ae7a11f8b50c936f743",
+        "incompatible": "experience-748a9a80d0bcba76c5fa43ea2dba5aa199ee7599c916070c21eead5f571d218b"
+      },
+      "claims": "Deterministic/scripted methodology evidence only. No proven memory-driven engineering improvement; report misleading retrieval and negative comparisons without suppression."
+    },
+    {
+      "synthetic_observations": {
+        "evidence_kind": "synthetic_fixture",
+        "claim": "These values were constructed from predictions for software tests. They are not laboratory measurements or evidence of physical calibration benefit.",
+        "calibration_id": "attributed-7e1d3b07cabc220abedce5bca74e2c19ad7cae73b68d1c9f1f6bfee83b06335d",
+        "offset": 0.20000000000000048,
+        "unit": "g",
+        "validations": [
+          {
+            "_id": "attributed-9d458280fce82833823244edcfab13a08e96ee8ac899403f8106fa528e08db43",
+            "mae_before": 0.1999999999999993,
+            "mae_after": 1.1934897514720433e-15,
+            "evidence_kind": "synthetic_fixture",
+            "unit": "g"
+          },
+          {
+            "_id": "attributed-927d32d7bc55f3ee1494067a7b1beddea28b4729af6d43ba6808967fbe021c33",
+            "mae_before": 0.1999999999999993,
+            "mae_after": 0.3999999999999998,
+            "evidence_kind": "synthetic_fixture",
+            "unit": "g"
+          }
+        ],
+        "imported_locally_reproduced": false
+      },
+      "version": 1,
+      "benchmark": "methodology-v1",
+      "driver": "managed",
+      "images": {
+        "cad": "sha256:7c793165d040ff00df45ffb952e5e590725027565bd9fa55011054f257cc1111",
+        "structural": "sha256:c217125841f2f6af494feb4e9415c25c06c3775e5776480dd4c762eb1da5f458"
+      },
+      "request_fixture_hash": "2afcbebe90cfe5072efce73f03e859d7ea420aae1983cafd6b8ef6aae4c957fc",
+      "cases": [
+        {
+          "experiment_id": "experiment-ff636dd28efd4985c5a0f55a",
+          "driver": "managed",
+          "phase": "completed",
+          "suite_id": "e74e234b0070bbfde38b7fd3a7c6bdfb76c4725b998498a5d9fbe70a9bb6f51c",
+          "runtime": {
+            "version": 2,
+            "metadata": {},
+            "image": "sha256:c217125841f2f6af494feb4e9415c25c06c3775e5776480dd4c762eb1da5f458",
+            "solver": "Gmsh 4.15.2 / CalculiX 2.23 CPU SPOOLES",
+            "provenance": "Pinned optional structural runtime",
+            "timeout_seconds": 300,
+            "memory_gb": 4,
+            "backend": "docker",
+            "accelerator": "none",
+            "cpu_cores": 1.0,
+            "job_seconds": 1800,
+            "compute_seconds": 3600,
+            "artifact_bytes": 200000000,
+            "file_bytes": 64000000,
+            "log_bytes": 8000000
+          },
+          "test_before_candidate": true,
+          "coverage_complete": true,
+          "requirement_count": 1,
+          "covered_requirements": 1,
+          "candidate_count": 3,
+          "search_iterations": 2,
+          "final_evidence_complete": true,
+          "final_accepted": true,
+          "final_metrics": {
+            "mass_g": {
+              "value": 22.97016639473285,
+              "unit": "g",
+              "numerical_error": 2.297016639473285e-06,
+              "uncertainty": 1.1485083197366426
+            },
+            "load_displacement_mm": {
+              "value": 0.012949140560654155,
+              "unit": "mm",
+              "numerical_error": 6.211605370369175e-05,
+              "uncertainty": 0.0006474570280327078
+            },
+            "gauge_von_mises_mpa": {
+              "value": 1.0518417358961332,
+              "unit": "MPa",
+              "numerical_error": 0.021228275705462707,
+              "uncertainty": 0.05259208679480666
+            }
+          },
+          "outcomes": [
+            {
+              "accepted": false,
+              "complete": true,
+              "tests": [
+                {
+                  "test_id": "static",
+                  "status": "physical_failure",
+                  "reason": "acceptance_limit"
+                }
+              ]
+            },
+            {
+              "accepted": true,
+              "complete": true,
+              "tests": [
+                {
+                  "test_id": "static",
+                  "status": "pass",
+                  "reason": "ok"
+                }
+              ]
+            },
+            {
+              "accepted": true,
+              "complete": true,
+              "tests": [
+                {
+                  "test_id": "static",
+                  "status": "pass",
+                  "reason": "ok"
+                }
+              ]
+            }
+          ],
+          "elapsed_solver_seconds": 37.776446702191606,
+          "allocated_cpu_seconds_upper_bound": 37.776446702191606,
+          "compute_cost_usd": null,
+          "compute_cost_note": "Local compute price not configured; CPU allocation*time is an upper bound, not measured CPU usage",
+          "model_cost_usd": 0,
+          "fixture_reasoning_calls": 7,
+          "model_tokens": null,
+          "reproduction": {
+            "same_source_parameters_suite_runtime": true,
+            "max_absolute_metric_difference": 0.0,
+            "within_tolerance": true
+          },
+          "autonomous_reasoning_evaluated": false,
+          "retrieved_ids": [
+            "experience-1430033ef1474e659a2cdf09abc3d9982306a942387f18d93945e4379f7fc325",
+            "experience-b88ae1dba5dd3f4eb7eed1ca2b76bfcf060f20993f9d949520c531d3dea8e778",
+            "experience-d69723fafb0f7d3a146ab2274c986dc08ab22b05aad5ee7a588b229cea48ffcb",
+            "experience-0bc694aa1ede0f37e15cf020f725c89c780cfcfed5f96982b16012983c441947",
+            "experience-4347d447ea7ab72e88716a784a36bd65e75e902ce004d99e567f988798b5780b",
+            "experience-61f9c7938c0a78099633a032de56abe9fcaaa640d2ef2464d82ba18b8d14f88f",
+            "experience-07bddb59dd3d98e1a2bf340ae5c4c2b9114613e5f44a717369fae19bdeb9776b",
+            "experience-07ed01fcab829c4ddafa8d3f5817faf34b53c80700abfcbc91e3b6e9d1637aae"
+          ],
+          "retrieval_applicability": {
+            "experience-1430033ef1474e659a2cdf09abc3d9982306a942387f18d93945e4379f7fc325": {
+              "status": "needs_review",
+              "conflicts": [],
+              "unknown": [
+                "processes"
+              ],
+              "requires_new_validation": true
+            },
+            "experience-b88ae1dba5dd3f4eb7eed1ca2b76bfcf060f20993f9d949520c531d3dea8e778": {
+              "status": "needs_review",
+              "conflicts": [],
+              "unknown": [
+                "processes"
+              ],
+              "requires_new_validation": true
+            },
+            "experience-d69723fafb0f7d3a146ab2274c986dc08ab22b05aad5ee7a588b229cea48ffcb": {
+              "status": "needs_review",
+              "conflicts": [],
+              "unknown": [
+                "processes"
+              ],
+              "requires_new_validation": true
+            },
+            "experience-0bc694aa1ede0f37e15cf020f725c89c780cfcfed5f96982b16012983c441947": {
+              "status": "needs_review",
+              "conflicts": [],
+              "unknown": [
+                "processes"
+              ],
+              "requires_new_validation": true
+            },
+            "experience-4347d447ea7ab72e88716a784a36bd65e75e902ce004d99e567f988798b5780b": {
+              "status": "needs_review",
+              "conflicts": [],
+              "unknown": [
+                "processes"
+              ],
+              "requires_new_validation": true
+            },
+            "experience-61f9c7938c0a78099633a032de56abe9fcaaa640d2ef2464d82ba18b8d14f88f": {
+              "status": "needs_review",
+              "conflicts": [],
+              "unknown": [
+                "processes"
+              ],
+              "requires_new_validation": true
+            },
+            "experience-07bddb59dd3d98e1a2bf340ae5c4c2b9114613e5f44a717369fae19bdeb9776b": {
+              "status": "incompatible",
+              "conflicts": [
+                "materials"
+              ],
+              "unknown": [
+                "processes",
+                "material:Nominal aluminium:youngs",
+                "material:Nominal aluminium:density",
+                "load:tip:force"
+              ],
+              "requires_new_validation": true
+            },
+            "experience-07ed01fcab829c4ddafa8d3f5817faf34b53c80700abfcbc91e3b6e9d1637aae": {
+              "status": "incompatible",
+              "conflicts": [
+                "materials"
+              ],
+              "unknown": [
+                "processes",
+                "material:Nominal aluminium:youngs",
+                "material:Nominal aluminium:density",
+                "load:tip:force"
+              ],
+              "requires_new_validation": true
+            }
+          },
+          "report_file": "experiment-ff636dd28efd4985c5a0f55a.json",
+          "acceptance_contract_id": "08941305dc13f07875bfb870e7589e2e45782510e23e0e55afaac24688d23fc2",
+          "report_sha256": "c219f1014b0c5b703d39f29fd6cf56567d8448958f4964c444426509d3b59b34"
+        },
+        {
+          "experiment_id": "experiment-c9dc2838f8ddd40cf6f48f62",
+          "driver": "managed",
+          "phase": "completed",
+          "suite_id": "994a29ecc348fd1b2849e7019969e81e16e460f9aea829d2fdc945d001c6c1d1",
+          "runtime": {
+            "version": 2,
+            "metadata": {},
+            "image": "sha256:7c793165d040ff00df45ffb952e5e590725027565bd9fa55011054f257cc1111",
+            "solver": "CadQuery / NumPy beam screen",
+            "provenance": "Pinned benchmark runtime",
+            "timeout_seconds": 180,
+            "memory_gb": 2,
+            "backend": "docker",
+            "accelerator": "none",
+            "cpu_cores": 1.0,
+            "job_seconds": 1800,
+            "compute_seconds": 3600,
+            "artifact_bytes": 64000000,
+            "file_bytes": 32000000,
+            "log_bytes": 8000000
+          },
+          "test_before_candidate": true,
+          "coverage_complete": true,
+          "requirement_count": 1,
+          "covered_requirements": 1,
+          "candidate_count": 4,
+          "search_iterations": 3,
+          "final_evidence_complete": true,
+          "final_accepted": true,
+          "final_metrics": {
+            "mass_g": {
+              "value": 9.72,
+              "unit": "g",
+              "numerical_error": 1e-05,
+              "uncertainty": 0.0
+            },
+            "stress_mpa": {
+              "value": 59.25925925925926,
+              "unit": "MPa",
+              "numerical_error": 1e-05,
+              "uncertainty": 0.0
+            },
+            "deflection_mm": {
+              "value": 0.2006662747403489,
+              "unit": "mm",
+              "numerical_error": 1e-05,
+              "uncertainty": 0.0
+            }
+          },
+          "outcomes": [
+            {
+              "accepted": true,
+              "complete": true,
+              "tests": [
+                {
+                  "test_id": "beam",
+                  "status": "pass",
+                  "reason": "ok"
+                }
+              ]
+            },
+            {
+              "accepted": false,
+              "complete": false,
+              "tests": [
+                {
+                  "test_id": "beam",
+                  "status": "invalid_setup",
+                  "reason": "invalid_geometry"
+                }
+              ]
+            },
+            {
+              "accepted": true,
+              "complete": true,
+              "tests": [
+                {
+                  "test_id": "beam",
+                  "status": "pass",
+                  "reason": "ok"
+                }
+              ]
+            },
+            {
+              "accepted": true,
+              "complete": true,
+              "tests": [
+                {
+                  "test_id": "beam",
+                  "status": "pass",
+                  "reason": "ok"
+                }
+              ]
+            }
+          ],
+          "elapsed_solver_seconds": 27.709145549451932,
+          "allocated_cpu_seconds_upper_bound": 27.709145549451932,
+          "compute_cost_usd": null,
+          "compute_cost_note": "Local compute price not configured; CPU allocation*time is an upper bound, not measured CPU usage",
+          "model_cost_usd": 0,
+          "fixture_reasoning_calls": 9,
+          "model_tokens": null,
+          "reproduction": {
+            "same_source_parameters_suite_runtime": true,
+            "max_absolute_metric_difference": 0.0,
+            "within_tolerance": true
+          },
+          "autonomous_reasoning_evaluated": false,
+          "retrieved_ids": [
+            "experience-07bddb59dd3d98e1a2bf340ae5c4c2b9114613e5f44a717369fae19bdeb9776b",
+            "experience-5d27f783615b73ede5add5900aeeb94bd3309a7df412fcc5fae5933bcb1e5da3",
+            "experience-99d386a95ceee63f452baade73338bc84db76dd045a9f75ad169f31b1930ae52",
+            "experience-bd46dcf3bec1d14417647d7cf983faadba168e1ecf12ecfa2b40f64ab3d112e7",
+            "experience-d7e52d45b622ddb7b3d16c4560d7ab2be43a4e702fedae960a16804975229e96",
+            "experience-f38da89abd5c03dd90e0c2881f6046794c4b855d2b208abd44bbde273f14e86d",
+            "experience-449f53cbdff08a46f6d970d2ddc48b154a395ac0a52e7d0df1a952fdb45b153b",
+            "experience-490eb935d7f4266a3145f64cbc0cda749d8fda5dc9da37e6e6f1c2af0a15a0dd"
+          ],
+          "retrieval_applicability": {
+            "experience-07bddb59dd3d98e1a2bf340ae5c4c2b9114613e5f44a717369fae19bdeb9776b": {
+              "status": "needs_review",
+              "conflicts": [],
+              "unknown": [
+                "processes"
+              ],
+              "requires_new_validation": true
+            },
+            "experience-5d27f783615b73ede5add5900aeeb94bd3309a7df412fcc5fae5933bcb1e5da3": {
+              "status": "needs_review",
+              "conflicts": [],
+              "unknown": [
+                "processes"
+              ],
+              "requires_new_validation": true
+            },
+            "experience-99d386a95ceee63f452baade73338bc84db76dd045a9f75ad169f31b1930ae52": {
+              "status": "needs_review",
+              "conflicts": [],
+              "unknown": [
+                "processes"
+              ],
+              "requires_new_validation": true
+            },
+            "experience-bd46dcf3bec1d14417647d7cf983faadba168e1ecf12ecfa2b40f64ab3d112e7": {
+              "status": "needs_review",
+              "conflicts": [],
+              "unknown": [
+                "processes"
+              ],
+              "requires_new_validation": true
+            },
+            "experience-d7e52d45b622ddb7b3d16c4560d7ab2be43a4e702fedae960a16804975229e96": {
+              "status": "needs_review",
+              "conflicts": [],
+              "unknown": [
+                "processes"
+              ],
+              "requires_new_validation": true
+            },
+            "experience-f38da89abd5c03dd90e0c2881f6046794c4b855d2b208abd44bbde273f14e86d": {
+              "status": "needs_review",
+              "conflicts": [],
+              "unknown": [
+                "processes"
+              ],
+              "requires_new_validation": true
+            },
+            "experience-449f53cbdff08a46f6d970d2ddc48b154a395ac0a52e7d0df1a952fdb45b153b": {
+              "status": "needs_review",
+              "conflicts": [],
+              "unknown": [
+                "material_models",
+                "processes",
+                "quantitative_applicability"
+              ],
+              "requires_new_validation": true
+            },
+            "experience-490eb935d7f4266a3145f64cbc0cda749d8fda5dc9da37e6e6f1c2af0a15a0dd": {
+              "status": "needs_review",
+              "conflicts": [],
+              "unknown": [
+                "processes"
+              ],
+              "requires_new_validation": true
+            }
+          },
+          "report_file": "experiment-c9dc2838f8ddd40cf6f48f62.json",
+          "acceptance_contract_id": "97ef614b2df73d93cddd2c2c2b3ef9387fc5d94ef40beb2925fb0f8197684f48",
+          "report_sha256": "76cbd324497da5b6501751fa404ae2fc43c1854a5f44a8b3f295b7786641bee9"
+        },
+        {
+          "experiment_id": "experiment-9ea7fa4ccb7a49b48f244005",
+          "driver": "managed",
+          "phase": "completed",
+          "suite_id": "8ed64a8864a77a96053466f4c87bfbc6eddbed8320fc9d0c00c581d34eb79c05",
+          "runtime": {
+            "version": 2,
+            "metadata": {},
+            "image": "sha256:7c793165d040ff00df45ffb952e5e590725027565bd9fa55011054f257cc1111",
+            "solver": "CadQuery / NumPy beam screen",
+            "provenance": "Pinned benchmark runtime",
+            "timeout_seconds": 180,
+            "memory_gb": 2,
+            "backend": "docker",
+            "accelerator": "none",
+            "cpu_cores": 1.0,
+            "job_seconds": 1800,
+            "compute_seconds": 3600,
+            "artifact_bytes": 64000000,
+            "file_bytes": 32000000,
+            "log_bytes": 8000000
+          },
+          "test_before_candidate": true,
+          "coverage_complete": true,
+          "requirement_count": 1,
+          "covered_requirements": 1,
+          "candidate_count": 3,
+          "search_iterations": 2,
+          "final_evidence_complete": true,
+          "final_accepted": true,
+          "final_metrics": {
+            "mass_g": {
+              "value": 12.15,
+              "unit": "g",
+              "numerical_error": 1e-05,
+              "uncertainty": 0.0
+            },
+            "stress_mpa": {
+              "value": 66.66666666666667,
+              "unit": "MPa",
+              "numerical_error": 1e-05,
+              "uncertainty": 0.0
+            },
+            "deflection_mm": {
+              "value": 0.35273368606701977,
+              "unit": "mm",
+              "numerical_error": 1e-05,
+              "uncertainty": 0.0
+            }
+          },
+          "outcomes": [
+            {
+              "accepted": false,
+              "complete": true,
+              "tests": [
+                {
+                  "test_id": "beam",
+                  "status": "physical_failure",
+                  "reason": "acceptance_limit"
+                }
+              ]
+            },
+            {
+              "accepted": true,
+              "complete": true,
+              "tests": [
+                {
+                  "test_id": "beam",
+                  "status": "pass",
+                  "reason": "ok"
+                }
+              ]
+            },
+            {
+              "accepted": true,
+              "complete": true,
+              "tests": [
+                {
+                  "test_id": "beam",
+                  "status": "pass",
+                  "reason": "ok"
+                }
+              ]
+            }
+          ],
+          "elapsed_solver_seconds": 24.08970316918567,
+          "allocated_cpu_seconds_upper_bound": 24.08970316918567,
+          "compute_cost_usd": null,
+          "compute_cost_note": "Local compute price not configured; CPU allocation*time is an upper bound, not measured CPU usage",
+          "model_cost_usd": 0,
+          "fixture_reasoning_calls": 7,
+          "model_tokens": null,
+          "reproduction": {
+            "same_source_parameters_suite_runtime": true,
+            "max_absolute_metric_difference": 0.0,
+            "within_tolerance": true
+          },
+          "autonomous_reasoning_evaluated": false,
+          "retrieved_ids": [],
+          "retrieval_applicability": {},
+          "report_file": "experiment-9ea7fa4ccb7a49b48f244005.json",
+          "acceptance_contract_id": "c67f0537c74d97024ab28288283d3ba24ef37cf682938d78166bcb36bf612038",
+          "report_sha256": "ada2cc4d89818e8fb383a46b47d1682fc60a0a8fef3d02c11aaf4e74fcd18bdf"
+        },
+        {
+          "experiment_id": "experiment-17a86c1dc744ff1fa6894519",
+          "driver": "managed",
+          "phase": "completed",
+          "suite_id": "42e121a0276350c32c280a62b5a9a70899de26857b60cbb1616291465ddfcc41",
+          "runtime": {
+            "version": 2,
+            "metadata": {},
+            "image": "sha256:7c793165d040ff00df45ffb952e5e590725027565bd9fa55011054f257cc1111",
+            "solver": "CadQuery / NumPy beam screen",
+            "provenance": "Pinned benchmark runtime",
+            "timeout_seconds": 180,
+            "memory_gb": 2,
+            "backend": "docker",
+            "accelerator": "none",
+            "cpu_cores": 1.0,
+            "job_seconds": 1800,
+            "compute_seconds": 3600,
+            "artifact_bytes": 64000000,
+            "file_bytes": 32000000,
+            "log_bytes": 8000000
+          },
+          "test_before_candidate": true,
+          "coverage_complete": true,
+          "requirement_count": 1,
+          "covered_requirements": 1,
+          "candidate_count": 3,
+          "search_iterations": 2,
+          "final_evidence_complete": true,
+          "final_accepted": true,
+          "final_metrics": {
+            "mass_g": {
+              "value": 12.15,
+              "unit": "g",
+              "numerical_error": 1e-05,
+              "uncertainty": 0.0
+            },
+            "stress_mpa": {
+              "value": 66.66666666666667,
+              "unit": "MPa",
+              "numerical_error": 1e-05,
+              "uncertainty": 0.0
+            },
+            "deflection_mm": {
+              "value": 0.35273368606701977,
+              "unit": "mm",
+              "numerical_error": 1e-05,
+              "uncertainty": 0.0
+            }
+          },
+          "outcomes": [
+            {
+              "accepted": false,
+              "complete": true,
+              "tests": [
+                {
+                  "test_id": "beam",
+                  "status": "physical_failure",
+                  "reason": "acceptance_limit"
+                }
+              ]
+            },
+            {
+              "accepted": true,
+              "complete": true,
+              "tests": [
+                {
+                  "test_id": "beam",
+                  "status": "pass",
+                  "reason": "ok"
+                }
+              ]
+            },
+            {
+              "accepted": true,
+              "complete": true,
+              "tests": [
+                {
+                  "test_id": "beam",
+                  "status": "pass",
+                  "reason": "ok"
+                }
+              ]
+            }
+          ],
+          "elapsed_solver_seconds": 24.090817927848548,
+          "allocated_cpu_seconds_upper_bound": 24.090817927848548,
+          "compute_cost_usd": null,
+          "compute_cost_note": "Local compute price not configured; CPU allocation*time is an upper bound, not measured CPU usage",
+          "model_cost_usd": 0,
+          "fixture_reasoning_calls": 7,
+          "model_tokens": null,
+          "reproduction": {
+            "same_source_parameters_suite_runtime": true,
+            "max_absolute_metric_difference": 0.0,
+            "within_tolerance": true
+          },
+          "autonomous_reasoning_evaluated": false,
+          "retrieved_ids": [
+            "experience-0dbe99b3d74e63a67bbdefd73b25a1053f8c5a9d7e0ad9b43ecfd2896d92784e",
+            "experience-beaca1203d9d0375aa04bad3486a7ad87cc3474bf6f7d6cea6afcbf5cd268b46",
+            "experience-ba8eaeee2a62c885a06d7b31699b4ae871575fe23a2c430163bd76cf79d28e3b"
+          ],
+          "retrieval_applicability": {
+            "experience-0dbe99b3d74e63a67bbdefd73b25a1053f8c5a9d7e0ad9b43ecfd2896d92784e": {
+              "status": "needs_review",
+              "conflicts": [],
+              "unknown": [
+                "material_models",
+                "processes",
+                "quantitative_applicability"
+              ],
+              "requires_new_validation": true
+            },
+            "experience-beaca1203d9d0375aa04bad3486a7ad87cc3474bf6f7d6cea6afcbf5cd268b46": {
+              "status": "needs_review",
+              "conflicts": [],
+              "unknown": [
+                "material_models",
+                "processes",
+                "quantitative_applicability"
+              ],
+              "requires_new_validation": true
+            },
+            "experience-ba8eaeee2a62c885a06d7b31699b4ae871575fe23a2c430163bd76cf79d28e3b": {
+              "status": "incompatible",
+              "conflicts": [
+                "phenomena",
+                "load_regimes"
+              ],
+              "unknown": [
+                "material_models",
+                "processes",
+                "quantitative_applicability"
+              ],
+              "requires_new_validation": true
+            }
+          },
+          "report_file": "experiment-17a86c1dc744ff1fa6894519.json",
+          "acceptance_contract_id": "c67f0537c74d97024ab28288283d3ba24ef37cf682938d78166bcb36bf612038",
+          "report_sha256": "31e1afe613c6744ef96424bec4ca3b37774e98536f1cd76ef00e0ac1290a4b39"
+        },
+        {
+          "experiment_id": "experiment-dbc4d3ab0ccd04bbc048d7e6",
+          "driver": "managed",
+          "phase": "completed",
+          "suite_id": "844bc0277b4002b28b6abd1e63ed6d2c72631774b573dea9d63296d8b5d06bd3",
+          "runtime": {
+            "version": 2,
+            "metadata": {},
+            "image": "sha256:7c793165d040ff00df45ffb952e5e590725027565bd9fa55011054f257cc1111",
+            "solver": "CadQuery / NumPy beam screen",
+            "provenance": "Pinned benchmark runtime",
+            "timeout_seconds": 180,
+            "memory_gb": 2,
+            "backend": "docker",
+            "accelerator": "none",
+            "cpu_cores": 1.0,
+            "job_seconds": 1800,
+            "compute_seconds": 3600,
+            "artifact_bytes": 64000000,
+            "file_bytes": 32000000,
+            "log_bytes": 8000000
+          },
+          "test_before_candidate": true,
+          "coverage_complete": true,
+          "requirement_count": 1,
+          "covered_requirements": 1,
+          "candidate_count": 3,
+          "search_iterations": 2,
+          "final_evidence_complete": true,
+          "final_accepted": false,
+          "final_metrics": {
+            "mass_g": {
+              "value": 17.496000000000002,
+              "unit": "g",
+              "numerical_error": 1e-05,
+              "uncertainty": 0.0
+            },
+            "stress_mpa": {
+              "value": 74.07407407407408,
+              "unit": "MPa",
+              "numerical_error": 1e-05,
+              "uncertainty": 0.0
+            },
+            "deflection_mm": {
+              "value": 0.564373897707231,
+              "unit": "mm",
+              "numerical_error": 1e-05,
+              "uncertainty": 0.0
+            }
+          },
+          "outcomes": [
+            {
+              "accepted": false,
+              "complete": true,
+              "tests": [
+                {
+                  "test_id": "beam",
+                  "status": "physical_failure",
+                  "reason": "acceptance_limit"
+                }
+              ]
+            },
+            {
+              "accepted": false,
+              "complete": true,
+              "tests": [
+                {
+                  "test_id": "beam",
+                  "status": "physical_failure",
+                  "reason": "acceptance_limit"
+                }
+              ]
+            },
+            {
+              "accepted": false,
+              "complete": true,
+              "tests": [
+                {
+                  "test_id": "beam",
+                  "status": "physical_failure",
+                  "reason": "acceptance_limit"
+                }
+              ]
+            }
+          ],
+          "elapsed_solver_seconds": 24.08961288514547,
+          "allocated_cpu_seconds_upper_bound": 24.08961288514547,
+          "compute_cost_usd": null,
+          "compute_cost_note": "Local compute price not configured; CPU allocation*time is an upper bound, not measured CPU usage",
+          "model_cost_usd": 0,
+          "fixture_reasoning_calls": 7,
+          "model_tokens": null,
+          "reproduction": {
+            "same_source_parameters_suite_runtime": true,
+            "max_absolute_metric_difference": 0.0,
+            "within_tolerance": true
+          },
+          "autonomous_reasoning_evaluated": false,
+          "retrieved_ids": [],
+          "retrieval_applicability": {},
+          "report_file": "experiment-dbc4d3ab0ccd04bbc048d7e6.json",
+          "acceptance_contract_id": "8a7f796c54e211fe0a52cf22121ac7615f193508e96740566cf1b084759c6d55",
+          "report_sha256": "f0c5b5f923b3385998bdcdf373e9d42354fd96bb6ae58d46ad6396b604fb3a5d"
+        },
+        {
+          "experiment_id": "experiment-07451fd6bd5cc0bd8cb2872a",
+          "driver": "managed",
+          "phase": "completed",
+          "suite_id": "da801e5ae4a11297be8b857b27a3c6d3cb0d17fe9f71217a417f696f76114896",
+          "runtime": {
+            "version": 2,
+            "metadata": {},
+            "image": "sha256:7c793165d040ff00df45ffb952e5e590725027565bd9fa55011054f257cc1111",
+            "solver": "CadQuery / NumPy beam screen",
+            "provenance": "Pinned benchmark runtime",
+            "timeout_seconds": 180,
+            "memory_gb": 2,
+            "backend": "docker",
+            "accelerator": "none",
+            "cpu_cores": 1.0,
+            "job_seconds": 1800,
+            "compute_seconds": 3600,
+            "artifact_bytes": 64000000,
+            "file_bytes": 32000000,
+            "log_bytes": 8000000
+          },
+          "test_before_candidate": true,
+          "coverage_complete": true,
+          "requirement_count": 1,
+          "covered_requirements": 1,
+          "candidate_count": 3,
+          "search_iterations": 2,
+          "final_evidence_complete": true,
+          "final_accepted": false,
+          "final_metrics": {
+            "mass_g": {
+              "value": 17.496000000000002,
+              "unit": "g",
+              "numerical_error": 1e-05,
+              "uncertainty": 0.0
+            },
+            "stress_mpa": {
+              "value": 74.07407407407408,
+              "unit": "MPa",
+              "numerical_error": 1e-05,
+              "uncertainty": 0.0
+            },
+            "deflection_mm": {
+              "value": 0.564373897707231,
+              "unit": "mm",
+              "numerical_error": 1e-05,
+              "uncertainty": 0.0
+            }
+          },
+          "outcomes": [
+            {
+              "accepted": false,
+              "complete": true,
+              "tests": [
+                {
+                  "test_id": "beam",
+                  "status": "physical_failure",
+                  "reason": "acceptance_limit"
+                }
+              ]
+            },
+            {
+              "accepted": false,
+              "complete": true,
+              "tests": [
+                {
+                  "test_id": "beam",
+                  "status": "physical_failure",
+                  "reason": "acceptance_limit"
+                }
+              ]
+            },
+            {
+              "accepted": false,
+              "complete": true,
+              "tests": [
+                {
+                  "test_id": "beam",
+                  "status": "physical_failure",
+                  "reason": "acceptance_limit"
+                }
+              ]
+            }
+          ],
+          "elapsed_solver_seconds": 24.09385145525448,
+          "allocated_cpu_seconds_upper_bound": 24.09385145525448,
+          "compute_cost_usd": null,
+          "compute_cost_note": "Local compute price not configured; CPU allocation*time is an upper bound, not measured CPU usage",
+          "model_cost_usd": 0,
+          "fixture_reasoning_calls": 7,
+          "model_tokens": null,
+          "reproduction": {
+            "same_source_parameters_suite_runtime": true,
+            "max_absolute_metric_difference": 0.0,
+            "within_tolerance": true
+          },
+          "autonomous_reasoning_evaluated": false,
+          "retrieved_ids": [
+            "experience-0dbe99b3d74e63a67bbdefd73b25a1053f8c5a9d7e0ad9b43ecfd2896d92784e",
+            "experience-beaca1203d9d0375aa04bad3486a7ad87cc3474bf6f7d6cea6afcbf5cd268b46",
+            "experience-ba8eaeee2a62c885a06d7b31699b4ae871575fe23a2c430163bd76cf79d28e3b"
+          ],
+          "retrieval_applicability": {
+            "experience-0dbe99b3d74e63a67bbdefd73b25a1053f8c5a9d7e0ad9b43ecfd2896d92784e": {
+              "status": "needs_review",
+              "conflicts": [],
+              "unknown": [
+                "material_models",
+                "processes",
+                "quantitative_applicability"
+              ],
+              "requires_new_validation": true
+            },
+            "experience-beaca1203d9d0375aa04bad3486a7ad87cc3474bf6f7d6cea6afcbf5cd268b46": {
+              "status": "needs_review",
+              "conflicts": [],
+              "unknown": [
+                "material_models",
+                "processes",
+                "quantitative_applicability"
+              ],
+              "requires_new_validation": true
+            },
+            "experience-ba8eaeee2a62c885a06d7b31699b4ae871575fe23a2c430163bd76cf79d28e3b": {
+              "status": "incompatible",
+              "conflicts": [
+                "phenomena",
+                "load_regimes"
+              ],
+              "unknown": [
+                "material_models",
+                "processes",
+                "quantitative_applicability"
+              ],
+              "requires_new_validation": true
+            }
+          },
+          "report_file": "experiment-07451fd6bd5cc0bd8cb2872a.json",
+          "acceptance_contract_id": "8a7f796c54e211fe0a52cf22121ac7615f193508e96740566cf1b084759c6d55",
+          "report_sha256": "7421843d2c8d0c0be99b9a8b9d874420045f96a520ea55a5414974a618d1723f"
+        }
+      ],
+      "unavailable": [
+        {
+          "case": "unavailable",
+          "experiment_id": "experiment-911bb1a120bfae259c375c1f",
+          "candidates": 0,
+          "capabilities": [
+            {
+              "version": 2,
+              "metadata": {},
+              "runtime_id": "7511446e722980d3a9065e3b10648f98f1145f5fbe5ba0c992c7b2843ad91b34",
+              "test_id": "beam",
+              "status": "unavailable",
+              "reason": "An independently verified adapter for the requested phenomena/fidelity",
+              "verification_ids": [],
+              "simulation": {
+                "adapter": {
+                  "id": "authored-screen",
+                  "version": 1,
+                  "phenomena": [
+                    "mass",
+                    "linear_static",
+                    "geometry"
+                  ],
+                  "material_models": [
+                    "linear_isotropic"
+                  ],
+                  "geometry_assumptions": "Task-authored evaluator must independently reject unsupported geometry; positive and negative fixtures required",
+                  "fidelities": [
+                    "analytic_screen"
+                  ],
+                  "limitations": [
+                    "Task-authored analytic screening, not a general structural solver",
+                    "No nonlinear materials, contact, fatigue, dynamics or certified uncertainty"
+                  ],
+                  "required_software": {
+                    "cadquery": null,
+                    "numpy": null
+                  },
+                  "reference_checks": [
+                    "Task-specific positive and negative reference fixtures; no transferable passing score"
+                  ],
+                  "lifecycle": [
+                    "validate_setup",
+                    "estimate",
+                    "prepare",
+                    "execute",
+                    "extract",
+                    "reference_check"
+                  ],
+                  "routes": [
+                    "v2",
+                    "legacy-custom"
+                  ]
+                },
+                "requirements": [
+                  "strength"
+                ],
+                "test_id": "beam",
+                "issues": [
+                  {
+                    "reason": "unsupported_physics",
+                    "needed": "An independently verified adapter for the requested phenomena/fidelity"
+                  }
+                ],
+                "available": false,
+                "probe": {
+                  "cpu_cores": 16.0,
+                  "memory_bytes": 55013707776,
+                  "disk_bytes": 1200738271232,
+                  "accelerators": [],
+                  "accelerator_probe": "not requested; all shipped adapters use CPU",
+                  "backend": "docker",
+                  "remote_provisioning": false,
+                  "available": true,
+                  "software": {
+                    "python": "3.11.16",
+                    "cadquery": "2.8.0",
+                    "numpy": "2.4.6",
+                    "scipy": "1.17.1",
+                    "aerosandbox": null,
+                    "gmsh": null,
+                    "xfoil": null,
+                    "calculix": null
+                  },
+                  "image": "sha256:7c793165d040ff00df45ffb952e5e590725027565bd9fa55011054f257cc1111"
+                },
+                "estimate": {
+                  "cpu_cores": 1.0,
+                  "memory_mb": 512,
+                  "disk_mb": 128,
+                  "wall_seconds": 30.0,
+                  "basis": "Conservative starting estimate; refine from measured execution",
+                  "uncertainty": "Unknown geometry-dependent peak; estimate is not proof of adequacy"
+                },
+                "approximation_available": [
+                  "analytic_screen"
+                ],
+                "substitution_performed": false,
+                "adequacy": "Reference checks, per-geometry setup and actual execution still required"
+              }
+            }
+          ],
+          "blocked": true
+        },
+        {
+          "case": "capacity",
+          "experiment_id": "experiment-943320ece201b089b9982e65",
+          "candidates": 0,
+          "capabilities": [
+            {
+              "version": 2,
+              "metadata": {},
+              "runtime_id": "7511446e722980d3a9065e3b10648f98f1145f5fbe5ba0c992c7b2843ad91b34",
+              "test_id": "beam",
+              "status": "unavailable",
+              "reason": "Estimated memory_mb=1000000 exceeds available 2048",
+              "verification_ids": [],
+              "simulation": {
+                "adapter": {
+                  "id": "authored-screen",
+                  "version": 1,
+                  "phenomena": [
+                    "mass",
+                    "linear_static",
+                    "geometry"
+                  ],
+                  "material_models": [
+                    "linear_isotropic"
+                  ],
+                  "geometry_assumptions": "Task-authored evaluator must independently reject unsupported geometry; positive and negative fixtures required",
+                  "fidelities": [
+                    "analytic_screen"
+                  ],
+                  "limitations": [
+                    "Task-authored analytic screening, not a general structural solver",
+                    "No nonlinear materials, contact, fatigue, dynamics or certified uncertainty"
+                  ],
+                  "required_software": {
+                    "cadquery": null,
+                    "numpy": null
+                  },
+                  "reference_checks": [
+                    "Task-specific positive and negative reference fixtures; no transferable passing score"
+                  ],
+                  "lifecycle": [
+                    "validate_setup",
+                    "estimate",
+                    "prepare",
+                    "execute",
+                    "extract",
+                    "reference_check"
+                  ],
+                  "routes": [
+                    "v2",
+                    "legacy-custom"
+                  ]
+                },
+                "requirements": [
+                  "strength"
+                ],
+                "test_id": "beam",
+                "issues": [
+                  {
+                    "reason": "resource_exhaustion",
+                    "needed": "Estimated memory_mb=1000000 exceeds available 2048"
+                  }
+                ],
+                "available": false,
+                "probe": {
+                  "cpu_cores": 16.0,
+                  "memory_bytes": 54990405632,
+                  "disk_bytes": 1200738271232,
+                  "accelerators": [],
+                  "accelerator_probe": "not requested; all shipped adapters use CPU",
+                  "backend": "docker",
+                  "remote_provisioning": false,
+                  "available": true,
+                  "software": {
+                    "python": "3.11.16",
+                    "cadquery": "2.8.0",
+                    "numpy": "2.4.6",
+                    "scipy": "1.17.1",
+                    "aerosandbox": null,
+                    "gmsh": null,
+                    "xfoil": null,
+                    "calculix": null
+                  },
+                  "image": "sha256:7c793165d040ff00df45ffb952e5e590725027565bd9fa55011054f257cc1111"
+                },
+                "estimate": {
+                  "cpu_cores": 1.0,
+                  "memory_mb": 1000000,
+                  "disk_mb": 128,
+                  "wall_seconds": 30.0,
+                  "basis": "Conservative starting estimate; refine from measured execution",
+                  "uncertainty": "Unknown geometry-dependent peak; estimate is not proof of adequacy"
+                },
+                "approximation_available": [
+                  "analytic_screen"
+                ],
+                "substitution_performed": false,
+                "adequacy": "Reference checks, per-geometry setup and actual execution still required"
+              }
+            }
+          ],
+          "blocked": true
+        }
+      ],
+      "bad_evaluator": {
+        "experiment_id": "experiment-fa97dcd0edd8d3c8e888c792",
+        "freeze_rejected": true,
+        "unmatched_checks": 2,
+        "correction_id": "experiment-c9dc2838f8ddd40cf6f48f62",
+        "new_evaluator": true
+      },
+      "held_out_comparison": [
+        {
+          "task": "heldout-a",
+          "enabled": "experiment-17a86c1dc744ff1fa6894519",
+          "disabled": "experiment-9ea7fa4ccb7a49b48f244005",
+          "useful_retrieved": true,
+          "misleading_retrieved": true,
+          "incompatible_retrieved": true,
+          "incompatible_flagged": true,
+          "precision_at_3": 0.3333333333333333,
+          "misleading_suggestions": 2,
+          "iteration_delta": 0,
+          "mass_delta_g": 0.0,
+          "acceptance_lost": false,
+          "policy": "Both scripted routes deliberately use the same proposals; this isolates orchestration/retrieval, not reasoning quality"
+        },
+        {
+          "task": "heldout-b",
+          "enabled": "experiment-07451fd6bd5cc0bd8cb2872a",
+          "disabled": "experiment-dbc4d3ab0ccd04bbc048d7e6",
+          "useful_retrieved": true,
+          "misleading_retrieved": true,
+          "incompatible_retrieved": true,
+          "incompatible_flagged": true,
+          "precision_at_3": 0.3333333333333333,
+          "misleading_suggestions": 2,
+          "iteration_delta": 0,
+          "mass_delta_g": 0.0,
+          "acceptance_lost": false,
+          "policy": "Both scripted routes deliberately use the same proposals; this isolates orchestration/retrieval, not reasoning quality"
+        }
+      ],
+      "reusable_corpus_ids": {
+        "useful": "experience-0dbe99b3d74e63a67bbdefd73b25a1053f8c5a9d7e0ad9b43ecfd2896d92784e",
+        "misleading": "experience-beaca1203d9d0375aa04bad3486a7ad87cc3474bf6f7d6cea6afcbf5cd268b46",
+        "incompatible": "experience-ba8eaeee2a62c885a06d7b31699b4ae871575fe23a2c430163bd76cf79d28e3b"
+      },
+      "claims": "Deterministic/scripted methodology evidence only. No proven memory-driven engineering improvement; report misleading retrieval and negative comparisons without suppression."
+    }
+  ],
+  "paid_calls": 0,
+  "synthetic_reasoning": true,
+  "parity": [
+    {
+      "external": "experiment-b90821b514171a0ca08d0052",
+      "managed": "experiment-ff636dd28efd4985c5a0f55a",
+      "same_physical_contract_and_runtime": true,
+      "metrics_match": true,
+      "absolute_tolerance": 1e-06,
+      "relative_tolerance": 1e-08
+    },
+    {
+      "external": "experiment-cf506ef4b1400c13d449e615",
+      "managed": "experiment-c9dc2838f8ddd40cf6f48f62",
+      "same_physical_contract_and_runtime": true,
+      "metrics_match": true,
+      "absolute_tolerance": 1e-06,
+      "relative_tolerance": 1e-08
+    },
+    {
+      "external": "experiment-0e11dde55a232180e1c5f66e",
+      "managed": "experiment-9ea7fa4ccb7a49b48f244005",
+      "same_physical_contract_and_runtime": true,
+      "metrics_match": true,
+      "absolute_tolerance": 1e-06,
+      "relative_tolerance": 1e-08
+    },
+    {
+      "external": "experiment-1eeb8418f983622a1834d998",
+      "managed": "experiment-17a86c1dc744ff1fa6894519",
+      "same_physical_contract_and_runtime": true,
+      "metrics_match": true,
+      "absolute_tolerance": 1e-06,
+      "relative_tolerance": 1e-08
+    },
+    {
+      "external": "experiment-37c984ea8342c4d0657acb88",
+      "managed": "experiment-dbc4d3ab0ccd04bbc048d7e6",
+      "same_physical_contract_and_runtime": true,
+      "metrics_match": true,
+      "absolute_tolerance": 1e-06,
+      "relative_tolerance": 1e-08
+    },
+    {
+      "external": "experiment-8b6886400c672a693727de72",
+      "managed": "experiment-07451fd6bd5cc0bd8cb2872a",
+      "same_physical_contract_and_runtime": true,
+      "metrics_match": true,
+      "absolute_tolerance": 1e-06,
+      "relative_tolerance": 1e-08
+    }
+  ],
+  "recorded_date": "2026-10-02",
+  "raw_evidence": "runtime/methodology-validation-results; regenerate using documented commands; raw artifacts in workspace"
+}

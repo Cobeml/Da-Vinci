@@ -25,6 +25,7 @@ jobs:
         if: always()
         with:
           name: methodology-native-evidence
+          include-hidden-files: true
           path: |
             runtime/methodology-results/
             runtime/methodology-ci/
@@ -38,6 +39,11 @@ jobs:
           cd /tmp
           /tmp/structural-wheel/bin/python "$GITHUB_WORKSPACE/scripts/check_installed_structural.py"
           /tmp/structural-wheel/bin/python "$GITHUB_WORKSPACE/scripts/check_installed_methodology.py" --workspace /tmp/methodology-installed --output "$GITHUB_WORKSPACE/runtime/installed-methodology-results" --skip-structural
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: methodology-installed-evidence
+          path: runtime/installed-methodology-results/
   test-and-build:
     runs-on: ubuntu-latest
     steps:

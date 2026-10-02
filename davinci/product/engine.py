@@ -218,7 +218,9 @@ class Engine:
             with self.lock:
                 pointer = self.store.get("pointers", "product-active-run")
                 if not pointer["run_id"]:
-                    queued = self.store.list("runs", {"lifecycle_version": 2, "phase": "queued"}, limit=1)
+                    queued = self.store.list(
+                        "runs", {"lifecycle_version": 2, "phase": "queued", **self.experience.scope}, limit=1
+                    )
                     queued_id = queued[0]["_id"] if queued else None
                 else:
                     queued_id = None
