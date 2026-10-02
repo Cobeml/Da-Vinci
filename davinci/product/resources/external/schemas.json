@@ -1,6 +1,231 @@
 {
   "version": 2,
   "schemas": {
+    "StructuralSettings": {
+      "$defs": {
+        "Refinement": {
+          "additionalProperties": false,
+          "properties": {
+            "initial_size_mm": {
+              "exclusiveMinimum": 0,
+              "title": "Initial Size Mm",
+              "type": "number"
+            },
+            "factor": {
+              "default": 0.7,
+              "maximum": 0.8,
+              "minimum": 0.4,
+              "title": "Factor",
+              "type": "number"
+            },
+            "max_levels": {
+              "default": 4,
+              "maximum": 5,
+              "minimum": 3,
+              "title": "Max Levels",
+              "type": "integer"
+            },
+            "relative_tolerance": {
+              "default": 0.025,
+              "exclusiveMinimum": 0,
+              "maximum": 0.05,
+              "title": "Relative Tolerance",
+              "type": "number"
+            },
+            "displacement_floor_mm": {
+              "default": 1e-07,
+              "exclusiveMinimum": 0,
+              "maximum": 1e-05,
+              "title": "Displacement Floor Mm",
+              "type": "number"
+            },
+            "stress_floor_mpa": {
+              "default": 1e-05,
+              "exclusiveMinimum": 0,
+              "maximum": 0.001,
+              "title": "Stress Floor Mpa",
+              "type": "number"
+            },
+            "max_nodes": {
+              "default": 45000,
+              "maximum": 100000,
+              "minimum": 10,
+              "title": "Max Nodes",
+              "type": "integer"
+            },
+            "max_elements": {
+              "default": 30000,
+              "maximum": 80000,
+              "minimum": 1,
+              "title": "Max Elements",
+              "type": "integer"
+            },
+            "min_quality": {
+              "default": 0.01,
+              "maximum": 0.5,
+              "minimum": 0.001,
+              "title": "Min Quality",
+              "type": "number"
+            },
+            "max_volume_error": {
+              "default": 0.01,
+              "exclusiveMinimum": 0,
+              "maximum": 0.02,
+              "title": "Max Volume Error",
+              "type": "number"
+            }
+          },
+          "required": [
+            "initial_size_mm"
+          ],
+          "title": "Refinement",
+          "type": "object"
+        },
+        "StressRegion": {
+          "additionalProperties": false,
+          "properties": {
+            "lower_mm": {
+              "maxItems": 3,
+              "minItems": 3,
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "title": "Lower Mm",
+              "type": "array"
+            },
+            "upper_mm": {
+              "maxItems": 3,
+              "minItems": 3,
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "title": "Upper Mm",
+              "type": "array"
+            },
+            "exclusion_distance_mm": {
+              "exclusiveMinimum": 0,
+              "title": "Exclusion Distance Mm",
+              "type": "number"
+            },
+            "justification": {
+              "minLength": 20,
+              "title": "Justification",
+              "type": "string"
+            }
+          },
+          "required": [
+            "lower_mm",
+            "upper_mm",
+            "exclusion_distance_mm",
+            "justification"
+          ],
+          "title": "StressRegion",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "const": 1,
+          "default": 1,
+          "title": "Version",
+          "type": "integer"
+        },
+        "element": {
+          "const": "C3D10",
+          "default": "C3D10",
+          "title": "Element",
+          "type": "string"
+        },
+        "material": {
+          "title": "Material",
+          "type": "string"
+        },
+        "clamped_interfaces": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 10,
+          "minItems": 1,
+          "title": "Clamped Interfaces",
+          "type": "array"
+        },
+        "load_interface": {
+          "title": "Load Interface",
+          "type": "string"
+        },
+        "load_case": {
+          "title": "Load Case",
+          "type": "string"
+        },
+        "stress_region": {
+          "$ref": "#/$defs/StressRegion"
+        },
+        "mesh": {
+          "$ref": "#/$defs/Refinement"
+        },
+        "equilibrium_tolerance": {
+          "default": 0.001,
+          "exclusiveMinimum": 0,
+          "maximum": 0.005,
+          "title": "Equilibrium Tolerance",
+          "type": "number"
+        },
+        "max_displacement_span_ratio": {
+          "default": 0.02,
+          "exclusiveMinimum": 0,
+          "maximum": 0.02,
+          "title": "Max Displacement Span Ratio",
+          "type": "number"
+        },
+        "max_strain": {
+          "default": 0.01,
+          "exclusiveMinimum": 0,
+          "maximum": 0.01,
+          "title": "Max Strain",
+          "type": "number"
+        },
+        "relative_uncertainty": {
+          "default": 0.05,
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Relative Uncertainty",
+          "type": "number"
+        },
+        "uncertainty_basis": {
+          "minLength": 20,
+          "title": "Uncertainty Basis",
+          "type": "string"
+        }
+      },
+      "required": [
+        "material",
+        "clamped_interfaces",
+        "load_interface",
+        "load_case",
+        "stress_region",
+        "mesh",
+        "uncertainty_basis"
+      ],
+      "title": "StructuralSettings",
+      "type": "object"
+    },
     "ContinueExperiment": {
       "$defs": {
         "SearchPolicy": {
@@ -1513,7 +1738,8 @@
                 "authored-screen",
                 "sensor-screen",
                 "gripper-screen",
-                "vtol-screen"
+                "vtol-screen",
+                "calculix-static"
               ],
               "title": "Adapter",
               "type": "string"
@@ -4468,7 +4694,8 @@
             "authored-screen",
             "sensor-screen",
             "gripper-screen",
-            "vtol-screen"
+            "vtol-screen",
+            "calculix-static"
           ],
           "title": "Adapter",
           "type": "string"
@@ -5548,7 +5775,8 @@
                 "authored-screen",
                 "sensor-screen",
                 "gripper-screen",
-                "vtol-screen"
+                "vtol-screen",
+                "calculix-static"
               ],
               "title": "Adapter",
               "type": "string"
@@ -7274,7 +7502,8 @@
                 "authored-screen",
                 "sensor-screen",
                 "gripper-screen",
-                "vtol-screen"
+                "vtol-screen",
+                "calculix-static"
               ],
               "title": "Adapter",
               "type": "string"

@@ -73,6 +73,7 @@ def setup(root, template):
     names = [
         "Dockerfile",
         "Dockerfile.vtol",
+        "Dockerfile.structural",
         "requirements.lock",
         "build.py",
         "evaluate.py",
@@ -100,6 +101,19 @@ def setup(root, template):
             ],
             check=True,
         )
+    if template == "structural":
+        subprocess.run(
+            [
+                "docker",
+                "build",
+                "-f",
+                str(destination / "Dockerfile.structural"),
+                "-t",
+                "da-vinci-structural:local",
+                str(destination),
+            ],
+            check=True,
+        )
 
 
 class ProtocolParser(argparse.ArgumentParser):
@@ -122,7 +136,9 @@ def main():
         command = sub.add_parser(name)
         command.add_argument("yaml", type=Path)
     prep = sub.add_parser("setup")
-    prep.add_argument("--template", choices=["sensor", "gripper", "vtol", "custom"], default="sensor")
+    prep.add_argument(
+        "--template", choices=["sensor", "gripper", "vtol", "custom", "structural"], default="sensor"
+    )
     doctor = sub.add_parser("doctor")
     doctor.add_argument("--driver", choices=["external", "managed"])
     serve = sub.add_parser("serve")

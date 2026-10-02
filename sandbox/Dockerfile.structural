@@ -1,0 +1,20 @@
+# Optional Linux amd64 runtime. Setup builds the pinned CAD base first; experiments pin final image ID.
+ARG CAD_IMAGE=da-vinci-cad:local
+FROM ${CAD_IMAGE} AS ccx_builder
+USER root
+RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates bzip2 make gcc gfortran perl libarpack2-dev && rm -rf /var/lib/apt/lists/*
+# Build official 2.23 source: upstream binary needs obsolete libgfortran.so.4.
+RUN curl -fsSL https://www.dhondt.de/ccx_2.23.src.tar.bz2 -o /tmp/ccx.tar.bz2 && echo '9c88385c10fb04f5dc6c4e98027a51bebdd8aee3920e05190d6c1dd08357d6e7  /tmp/ccx.tar.bz2' | sha256sum -c - && tar -xjf /tmp/ccx.tar.bz2 -C /tmp
+RUN mkdir /tmp/SPOOLES.2.2 && curl -fsSL https://www.netlib.org/linalg/spooles/spooles.2.2.tgz -o /tmp/spooles.tgz && echo 'a84559a0e987a1e423055ef4fdf3035d55b65bbe4bf915efaa1a35bef7f8c5dd  /tmp/spooles.tgz' | sha256sum -c - && tar -xzf /tmp/spooles.tgz -C /tmp/SPOOLES.2.2
+# Upstream INSTALL documents the Tree makefile filename correction.
+RUN sed -i 's/drawTree.c/draw.c/' /tmp/SPOOLES.2.2/Tree/src/makeGlobalLib && make -C /tmp/SPOOLES.2.2 lib CC=gcc CFLAGS='-O2 -std=gnu89'
+WORKDIR /tmp/CalculiX/ccx_2.23/src
+RUN make -j2 CFLAGS='-O2 -Wno-error=return-mismatch -DARCH=Linux -I/tmp/SPOOLES.2.2 -DSPOOLES -DARPACK -DMATRIXSTORAGE -DNETWORKOUT' FFLAGS='-O2 -cpp -fallow-argument-mismatch' LIBS='/tmp/SPOOLES.2.2/spooles.a -larpack -llapack -lblas -lpthread -lm -lc' ccx_2.23
+FROM ${CAD_IMAGE}
+USER root
+RUN test "$(uname -m)" = x86_64 && apt-get update && apt-get install -y --no-install-recommends libarpack2t64 libgfortran5 libgomp1 libglu1-mesa libxcursor1 libxinerama1 libxft2 libxi6 libxrandr2 && rm -rf /var/lib/apt/lists/*
+COPY --from=ccx_builder /tmp/CalculiX/ccx_2.23/src/ccx_2.23 /usr/local/bin/ccx
+RUN pip install --no-cache-dir --no-deps gmsh==4.15.2 && python -c 'import gmsh; assert gmsh.__version__ == "4.15.2"' && python -c 'import subprocess; r=subprocess.run(["ccx","-v"],capture_output=True,text=True); assert "Version 2.23" in r.stdout, r.stdout+r.stderr'
+ENV CCX_NPROC_RESULTS=1 CCX_NPROC_EQUATION_SOLVER=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1
+USER 65534:65534
+WORKDIR /output

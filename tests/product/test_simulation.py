@@ -272,6 +272,7 @@ def test_bounded_artifacts_and_stream_integrity(tmp_path):
         "sensor-screen",
         "gripper-screen",
         "vtol-screen",
+        "calculix-static",
         "authored-screen",
     }
 

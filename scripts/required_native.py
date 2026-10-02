@@ -21,8 +21,19 @@ REQUIRED = {
 }
 
 
-def main():
-    for image in ("da-vinci-cad:local", "da-vinci-vtol:local"):
+def main(structural=False):
+    images = ("da-vinci-structural:local",) if structural else ("da-vinci-cad:local", "da-vinci-vtol:local")
+    tests = ["tests/product/test_structural.py"] if structural else TESTS
+    required = (
+        {
+            "test_native_structural_uniaxial_reference",
+            "test_native_structural_bracket_revision",
+            "test_native_structural_public_driver_parity",
+        }
+        if structural
+        else REQUIRED
+    )
+    for image in images:
         try:
             subprocess.run(
                 ["docker", "image", "inspect", image],
@@ -33,7 +44,7 @@ def main():
             )
         except (OSError, subprocess.SubprocessError):
             raise SystemExit(
-                f"Required solver image unavailable: {image}. Run davinci setup --template vtol; native checks were NOT run."
+                f"Required solver image unavailable: {image}. Run davinci setup --template {'structural' if structural else 'vtol'}; native checks were NOT run."
             ) from None
     with tempfile.TemporaryDirectory(prefix="davinci-required-native-") as folder:
         report = Path(folder) / "junit.xml"
@@ -41,7 +52,7 @@ def main():
         # CI never authorizes paid model calls, even when a credential is configured.
         env.pop("DAVINCI_LIVE_SMOKE", None)
         result = subprocess.run(
-            [sys.executable, "-m", "pytest", *TESTS, "-m", "integration", "-q", f"--junitxml={report}"],
+            [sys.executable, "-m", "pytest", *tests, "-m", "integration", "-q", f"--junitxml={report}"],
             env=env,
         )
         if result.returncode:
@@ -52,7 +63,9 @@ def main():
             for c in cases
             if c.find("skipped") is None and c.find("failure") is None and c.find("error") is None
         }
-        missing = REQUIRED - passed
+        missing = required - passed
+        if structural and any(c.find("skipped") is not None for c in cases):
+            raise SystemExit("Structural native tests must execute; skipped physics is not validation")
         if missing:
             raise SystemExit("Required native tests did not execute: " + ", ".join(sorted(missing)))
         print(
@@ -61,4 +74,8 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    import argparse
+
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--structural", action="store_true", help="Require the optional Gmsh/CalculiX checks")
+    main(parser.parse_args().structural)

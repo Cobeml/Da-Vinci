@@ -41,12 +41,14 @@ class ResourceEstimate(Strict):
 
 class SimulationSpec(Strict):
     version: Literal[1] = 1
-    adapter: Literal["authored-screen", "sensor-screen", "gripper-screen", "vtol-screen"] = "authored-screen"
+    adapter: Literal[
+        "authored-screen", "sensor-screen", "gripper-screen", "vtol-screen", "calculix-static"
+    ] = "authored-screen"
     phenomena: list[str] = Field(min_length=1)
     material_model: str = Field(min_length=1)
     geometry_assumptions: str = Field(min_length=1)
     fidelity: str = Field(min_length=1)
-    # Only explicitly authored screening is currently executed by the v2 wrapper.
+    # Execution requires an installed, explicitly scoped adapter; no fidelity substitution.
     stage: Literal["preliminary", "final"] = "final"
     cad_unit: str = "mm"
     solver_length_unit: str = "mm"

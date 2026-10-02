@@ -38,6 +38,9 @@ def execution_identity():
             "evidence.py",
             "recipes.py",
             "managed_contracts.py",
+            "structural/contracts.py",
+            "structural/adapter.py",
+            "structural/solver.py",
         )
     }
     sources["inspect_regions.py"] = (
@@ -221,6 +224,8 @@ def evaluate_test(runner, step, plan, test, evaluator, runtime):
                 "cad_to_solver_scale": scale,
             }
             request["validated_bindings"] = bound
+            if spec.adapter == "calculix-static":
+                request["measured_geometry"] = json.loads(prepared["geometry.json"])
             recipe_geometry = None
             if plan.metadata.get("recipe") == "rectangular-beam-v1":
                 from davinci.product.recipes import check_geometry
@@ -247,16 +252,24 @@ def evaluate_test(runner, step, plan, test, evaluator, runtime):
                     "\n".join(logs),
                     elapsed,
                 )
-        measured = execute(
-            "/input/_evaluate.py",
-            {
-                **evaluator.resources,
-                "_evaluate.py": EVALUATE,
-                "model.step": step,
-                **({"solver.step": prepared["solver.step"]} if prepared else {}),
-                "request.json": json.dumps(request),
-            },
-        )
+        inputs = {
+            **evaluator.resources,
+            "_evaluate.py": EVALUATE,
+            "model.step": step,
+            **({"solver.step": prepared["solver.step"]} if prepared else {}),
+            "request.json": json.dumps(request),
+        }
+        if test.simulation and test.simulation.adapter == "calculix-static":
+            from davinci.product.structural.adapter import setup, source
+
+            request["structural"] = setup(plan, test)
+            request["runtime_limits"] = {"memory_gb": runtime.memory_gb}
+            # Host-owned solver/deck generation only. Authored evaluators cannot override it.
+            inputs = {"_structural.py": source(), "model.step": step, "request.json": json.dumps(request)}
+            entrypoint = "/input/_structural.py"
+        else:
+            entrypoint = "/input/_evaluate.py"
+        measured = execute(entrypoint, inputs)
         # Preserve raw output, including solver decks/fields. Raw reported scores are not trusted scores.
         outputs.update(measured)
         # Host-owned capability/binding provenance must not be overwritten by evaluator output.
@@ -303,7 +316,7 @@ def evaluate_test(runner, step, plan, test, evaluator, runtime):
                 for kind in test.simulation.required_evidence
                 if not any(name.endswith(expected[kind]) and data for name, data in measured.items())
             ]
-            if missing:
+            if missing and result.status in ("pass", "physical_failure"):
                 result = failure(
                     test.id, "not_run", "missing_evidence", "Missing required evidence: " + ", ".join(missing)
                 )

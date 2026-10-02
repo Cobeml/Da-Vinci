@@ -49,6 +49,7 @@ def main():
             "sensor-screen",
             "gripper-screen",
             "vtol-screen",
+            "calculix-static",
         }
         assert "ArtifactManifest" in cli("external", "schemas")["schemas"]
         assert "CandidateCommand" in cli("external", "schemas")["schemas"]

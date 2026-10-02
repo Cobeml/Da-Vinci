@@ -1,5 +1,7 @@
 # Da Vinci external-agent instructions
 
+Optional static-solid simulation is discoverable as `calculix-static` with the `StructuralSettings` schema. Explicitly install its runtime with `davinci setup --template structural`; never download a solver or choose an approximation implicitly. Read the installed `/docs/structural-simulation/` scope before authoring requirements. `python -m davinci.product.structural.walkthrough --workspace .` demonstrates reference verification, freeze, a failing perforated bracket and a ribbed revision through public operations, without provider credentials. Stress acceptance requires a justified spatial gauge declared before generation; peak/notch/fatigue strength is outside that adapter's scope.
+
 You supply reasoning, task/evaluator authoring, CAD proposals, and reflections. Da Vinci supplies lifecycle validation, sandbox execution, evidence storage, and retrieval. External mode is independent of replay and needs no model key, embedding service, or cloud database.
 
 1. Run `davinci doctor --driver external`, then `davinci service ensure`. Use the service for all lifecycle writes; never open an Engine/Store, edit `.davinci`, or modify database records from your client. Keep the service bound to localhost. Do not read or print credentials.

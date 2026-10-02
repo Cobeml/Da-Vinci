@@ -11,9 +11,11 @@ import subprocess
 from pathlib import Path
 
 from davinci.product.simulation_contracts import AdapterDescriptor
+from davinci.product.structural.adapter import DESCRIPTOR as STRUCTURAL
 from davinci.product.units import convert, validate_plan_units
 
 REGISTRY = {
+    "calculix-static": STRUCTURAL,
     "sensor-screen": AdapterDescriptor(
         id="sensor-screen",
         phenomena=["mass", "linear_static"],
@@ -195,16 +197,22 @@ def effective_capacity(root):
     }
 
 
-PROBE = """import importlib, importlib.metadata, json, platform, shutil
+PROBE = """import importlib, importlib.metadata, json, platform, shutil, subprocess, re
 from pathlib import Path
 software = {"python": platform.python_version()}
-for name in ("cadquery", "numpy", "scipy", "aerosandbox"):
+for name in ("cadquery", "numpy", "scipy", "aerosandbox", "gmsh"):
     try:
         importlib.import_module(name)
         software[name] = importlib.metadata.version(name)
     except Exception:
         software[name] = None
 software["xfoil"] = "present-version-unreported" if shutil.which("xfoil") else None
+software["calculix"] = None
+if shutil.which("ccx"):
+    text = subprocess.run(["ccx", "-v"], capture_output=True, text=True, timeout=5)
+    match = re.search(r"Version\\s+([0-9.]+)", text.stdout + text.stderr, re.I)
+    if match:
+        software["calculix"] = match.group(1).rstrip('.')
 Path("/output/probe.json").write_text(json.dumps({"software": software}))
 """
 
@@ -306,6 +314,13 @@ def assess(runner, plan, test, runtime):
                     "needed": "Fixed structured region rule for every physical interface",
                 }
             )
+        if spec.adapter == "calculix-static":
+            from davinci.product.structural.adapter import setup
+
+            try:
+                setup(plan, test)
+            except ValueError as exc:
+                issues.append({"reason": "invalid_binding", "needed": str(exc)})
     # Deterministic fixture runners explicitly implement this seam; no host solver is inferred.
     probe = (
         runner.probe(runtime)
@@ -333,7 +348,19 @@ def assess(runner, plan, test, runtime):
                 "needed": "An explicitly configured remote executor (not shipped)",
             }
         )
-    software = {**descriptor.required_software, **(spec.required_software if spec else {})}
+    software = {**(spec.required_software if spec else {}), **descriptor.required_software}
+    if spec:
+        for name, version in spec.required_software.items():
+            pinned = descriptor.required_software.get(name)
+            if pinned is not None and version != pinned:
+                issues.append(
+                    {
+                        "reason": "missing_solver",
+                        "needed": f"Adapter requires {name} {pinned}; a test cannot override that pin",
+                    }
+                )
+            elif pinned is None:
+                software[name] = version
     if not probe.get("fixture") and probe.get("available"):
         for name, version in software.items():
             actual = probe.get("software", {}).get(name)
