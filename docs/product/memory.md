@@ -1,5 +1,7 @@
 # Engineering experience and exact evidence
 
+[Tested construction helpers](tool-learning.md) add `tool_reference` experiences with source/contract artifacts, dependency hashes, version links, independent check outcomes and promotion/rollback decisions. Retrieval does not activate a tool: use the current scoped registry and compatible run pin. Imported claims never register executable tools or transfer passing scores.
+
 Both reasoning drivers use the same persistent memory service. The managed loop receives cross-object experience through `Engine.memory`; lifecycle reasoning uses the same search. External agents use `davinci memory` and `/api/v2/memory`. Simulation operations, memory search and indexing never instantiate the generation provider. SQLite/local artifacts work without keys, a cloud database or an embedding service.
 
 ## Two separate operations

@@ -1,5 +1,7 @@
 # Custom engineering tasks
 
+For reusable construction code, use the separate [tested CAD helper workflow](tool-learning.md). It exports a normal `build(parameters, interfaces)` candidate bundle and preserves the custom-task route. Helper checks cannot replace the task's frozen evaluator or supply accepted scores.
+
 ```bash
 davinci init bracket-study --template custom
 cd bracket-study
