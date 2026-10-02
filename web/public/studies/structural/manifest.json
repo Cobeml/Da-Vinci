@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "experiment_id": "experiment-9c7b5d0f81356828be38c062",
+  "suite_id": "207a61c817ddbaa4affa390eb87e76d50d1696e01ba33e29554ce900eab1df16",
+  "files": {
+    "/studies/structural/1-model.step": {
+      "sha256": "639328febfc1df2259c41323a769f5a07ced277fd15974ae8295c22c6accdf1c",
+      "bytes": 31099,
+      "source_artifact": "artifact-639328febfc1df2259c41323a769f5a07ced277fd15974ae8295c22c6accdf1c"
+    },
+    "/studies/structural/1-model.glb": {
+      "sha256": "17363904d49c4a8d06d59b04cea9e068500b44e43d7b55c40961b91b24032acc",
+      "bytes": 35848,
+      "source_artifact": "artifact-17363904d49c4a8d06d59b04cea9e068500b44e43d7b55c40961b91b24032acc"
+    },
+    "/studies/structural/1-static-bindings.json": {
+      "sha256": "eec0ab9c3330e6ea3da18cf6dae45998f2a4aae215cffb6f13f05c571423a18f",
+      "bytes": 953,
+      "source_artifact": "artifact-eec0ab9c3330e6ea3da18cf6dae45998f2a4aae215cffb6f13f05c571423a18f"
+    },
+    "/studies/structural/1-static-convergence.json": {
+      "sha256": "662a242210c150c3853c0de29d534046055ff2e7b09f0e776081f477e085e2be",
+      "bytes": 7355,
+      "source_artifact": "artifact-662a242210c150c3853c0de29d534046055ff2e7b09f0e776081f477e085e2be"
+    },
+    "/studies/structural/1-static-uncertainty.json": {
+      "sha256": "20ebd739c7f27259c3c57f8de786655188163b6e0e9c20e59e4cc7a005a39684",
+      "bytes": 197,
+      "source_artifact": "artifact-20ebd739c7f27259c3c57f8de786655188163b6e0e9c20e59e4cc7a005a39684"
+    },
+    "/studies/structural/2-model.step": {
+      "sha256": "02dc7b7622eea74a23178992b7ebe5564507f0f3c074d663b51c0043b7129c1d",
+      "bytes": 52402,
+      "source_artifact": "artifact-02dc7b7622eea74a23178992b7ebe5564507f0f3c074d663b51c0043b7129c1d"
+    },
+    "/studies/structural/2-model.glb": {
+      "sha256": "b2386b48d6c1e093cd788155c79aaecd8bb871aef8644f6c7faf05bd3a521eea",
+      "bytes": 39056,
+      "source_artifact": "artifact-b2386b48d6c1e093cd788155c79aaecd8bb871aef8644f6c7faf05bd3a521eea"
+    },
+    "/studies/structural/2-static-bindings.json": {
+      "sha256": "eec0ab9c3330e6ea3da18cf6dae45998f2a4aae215cffb6f13f05c571423a18f",
+      "bytes": 953,
+      "source_artifact": "artifact-eec0ab9c3330e6ea3da18cf6dae45998f2a4aae215cffb6f13f05c571423a18f"
+    },
+    "/studies/structural/2-static-convergence.json": {
+      "sha256": "b0c23bce2844b6e6e6ea2f9eb4313f4579d6d8197a25d887ae87c73d62424f36",
+      "bytes": 4649,
+      "source_artifact": "artifact-b0c23bce2844b6e6e6ea2f9eb4313f4579d6d8197a25d887ae87c73d62424f36"
+    },
+    "/studies/structural/2-static-uncertainty.json": {
+      "sha256": "20ebd739c7f27259c3c57f8de786655188163b6e0e9c20e59e4cc7a005a39684",
+      "bytes": 197,
+      "source_artifact": "artifact-20ebd739c7f27259c3c57f8de786655188163b6e0e9c20e59e4cc7a005a39684"
+    },
+    "/studies/structural/route-comparison.json": {
+      "sha256": "06059aa58bc7f8cff9ae1dba4d04abb90f85599af0e420bb50d6f6af630431d2",
+      "bytes": 8005,
+      "source_artifact": null
+    },
+    "/studies/structural/report.json": {
+      "sha256": "5fa06e842aa631b819359573a6f4dcfbe5ad321f579dc11ce3518a67b737f2a0",
+      "bytes": 11004,
+      "source_artifact": null
+    }
+  }
+}

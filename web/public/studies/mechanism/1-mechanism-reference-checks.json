@@ -1,0 +1,65 @@
+{
+  "compiled_properties": {
+    "base": {
+      "mass_kg": 0.13499999999999998,
+      "inertia_kg_m2": [
+        [
+          0.00011278125000000062,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.00011278125000000062,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.00022500000000000121
+        ]
+      ],
+      "body_position_m": [
+        -3.2152058793144545e-19,
+        0.0,
+        -0.0025
+      ]
+    },
+    "carriage": {
+      "mass_kg": 0.0648,
+      "inertia_kg_m2": [
+        [
+          7.0200000000000565e-06,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0800000000000085e-05,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.3500000000000108e-05
+        ]
+      ],
+      "body_position_m": [
+        2.731148640577885e-19,
+        -3.209284689849786e-19,
+        0.03
+      ]
+    }
+  },
+  "force_motion": {
+    "expected_m": 0.00024112654320987658,
+    "error_m": 2.4112654320991122e-06,
+    "tolerance_m": 2.459491740740741e-06
+  },
+  "free_motion": {
+    "initial_energy_j": 0.00032400000000000007,
+    "final_energy_j": 0.00032400000000000007,
+    "velocity_m_s": 0.1
+  },
+  "conservation_scope": "Only unforced gravity-free contact-free translation; dissipative contact is not energy conserving"
+}

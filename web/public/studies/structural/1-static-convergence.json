@@ -1,0 +1,203 @@
+{
+  "converged": true,
+  "rule": {
+    "initial_size_mm": 5.0,
+    "factor": 0.7,
+    "max_levels": 5,
+    "relative_tolerance": 0.035,
+    "displacement_floor_mm": 1e-07,
+    "stress_floor_mpa": 1e-05,
+    "max_nodes": 45000,
+    "max_elements": 30000,
+    "min_quality": 0.01,
+    "max_volume_error": 0.01
+  },
+  "error_estimate": "twice maximum of last two absolute differences; empirical, not rigorous",
+  "errors": {
+    "load_displacement_mm": 0.0018557575848248131,
+    "gauge_von_mises_mpa": 0.11354591338314712,
+    "gauge_volume_mm3": 10.020753428541411
+  },
+  "levels": [
+    {
+      "level": 0,
+      "size_mm": 5.0,
+      "nodes": 2456,
+      "elements": 1174,
+      "min_quality": 0.29894835668500763,
+      "mesh_volume_mm3": 6789.337166485284,
+      "cad_volume_mm3": 6779.46903508511,
+      "volume_relative_error": 0.0014555905999577032,
+      "components": 1,
+      "estimated_memory_mb": 341.42,
+      "estimated_seconds": 2.6969950928162643,
+      "estimate_uncertainty": "SPOOLES fill depends on topology; estimate may be low by several-fold; cgroup remains authoritative",
+      "solver_mass_g": 18.331210413899992,
+      "load_displacement_mm": 0.17307685625000002,
+      "gauge_von_mises_mpa": 6.261134175559731,
+      "gauge_volume_mm3": 1545.3804445630938,
+      "gauge_points": 1664,
+      "peak_von_mises_mpa_diagnostic_only": 26.319663425653538,
+      "max_principal_strain": 0.0003837711748339307,
+      "max_displacement_mm": 0.17343114717701122,
+      "reaction_n": [
+        -7.206999935449598e-06,
+        4.225000286564237e-08,
+        19.999993068600048
+      ],
+      "reaction_moment_n_mm": [
+        -1.921963008287217e-05,
+        -1200.0000674038556,
+        -5.9968191115082614e-05
+      ],
+      "reaction_relative_residual": 4.99967344993331e-07,
+      "moment_relative_residual": 7.686955887345495e-08,
+      "seconds": 0.26862413296476007,
+      "peak_solver_rss_kb": 69692
+    },
+    {
+      "level": 1,
+      "size_mm": 3.5,
+      "nodes": 4049,
+      "elements": 1970,
+      "min_quality": 0.26570405171503836,
+      "mesh_volume_mm3": 6788.693757724788,
+      "cad_volume_mm3": 6779.46903508511,
+      "volume_relative_error": 0.0013606851203152768,
+      "components": 1,
+      "estimated_memory_mb": 397.17,
+      "estimated_seconds": 3.4034498566045484,
+      "estimate_uncertainty": "SPOOLES fill depends on topology; estimate may be low by several-fold; cgroup remains authoritative",
+      "solver_mass_g": 18.329473166199964,
+      "load_displacement_mm": 0.17474922447619046,
+      "gauge_von_mises_mpa": 6.2064814383310205,
+      "gauge_volume_mm3": 1557.7743342255812,
+      "gauge_points": 2480,
+      "peak_von_mises_mpa_diagnostic_only": 26.412252389922028,
+      "max_principal_strain": 0.00038601472956256743,
+      "max_displacement_mm": 0.1750988356504004,
+      "reaction_n": [
+        -8.222018911879445e-06,
+        -3.3422199980795778e-06,
+        20.00000250810004
+      ],
+      "reaction_moment_n_mm": [
+        7.4081371434775445e-06,
+        -1200.0000164632038,
+        -1.380255898554561e-05
+      ],
+      "reaction_relative_residual": 4.61146926889056e-07,
+      "moment_relative_residual": 1.8937547113096053e-08,
+      "seconds": 0.4478259510360658,
+      "peak_solver_rss_kb": 77388
+    },
+    {
+      "level": 2,
+      "size_mm": 2.4499999999999997,
+      "nodes": 7480,
+      "elements": 3873,
+      "min_quality": 0.3091225335534416,
+      "mesh_volume_mm3": 6789.018416884757,
+      "cad_volume_mm3": 6779.46903508511,
+      "volume_relative_error": 0.0014085737024872598,
+      "components": 1,
+      "estimated_memory_mb": 519.13,
+      "estimated_seconds": 5.3141506800544605,
+      "estimate_uncertainty": "SPOOLES fill depends on topology; estimate may be low by several-fold; cgroup remains authoritative",
+      "solver_mass_g": 18.330349695700082,
+      "load_displacement_mm": 0.17586787598013398,
+      "gauge_von_mises_mpa": 5.955258351353186,
+      "gauge_volume_mm3": 1551.5159099272887,
+      "gauge_points": 4150,
+      "peak_von_mises_mpa_diagnostic_only": 27.952311094261976,
+      "max_principal_strain": 0.00040672088735331903,
+      "max_displacement_mm": 0.1762196887016465,
+      "reaction_n": [
+        -6.0850260663602995e-09,
+        2.3628400034753083e-06,
+        19.99999767179599
+      ],
+      "reaction_moment_n_mm": [
+        2.8602632244356663e-06,
+        -1199.9999983470539,
+        -1.9578620746293907e-05
+      ],
+      "reaction_relative_residual": 1.6585825157861044e-07,
+      "moment_relative_residual": 1.6546141874900394e-08,
+      "seconds": 0.8959184929262847,
+      "peak_solver_rss_kb": 86636
+    },
+    {
+      "level": 3,
+      "size_mm": 1.7149999999999996,
+      "nodes": 14522,
+      "elements": 7850,
+      "min_quality": 0.31057322626607026,
+      "mesh_volume_mm3": 6787.0408029324,
+      "cad_volume_mm3": 6779.46903508511,
+      "volume_relative_error": 0.0011168673841719405,
+      "components": 1,
+      "estimated_memory_mb": 770.16,
+      "estimated_seconds": 10.389711336789652,
+      "estimate_uncertainty": "SPOOLES fill depends on topology; estimate may be low by several-fold; cgroup remains authoritative",
+      "solver_mass_g": 18.32501019449996,
+      "load_displacement_mm": 0.17672885137819364,
+      "gauge_von_mises_mpa": 5.898485394661613,
+      "gauge_volume_mm3": 1556.5262866415594,
+      "gauge_points": 7359,
+      "peak_von_mises_mpa_diagnostic_only": 26.602022397788538,
+      "max_principal_strain": 0.0003881395284206767,
+      "max_displacement_mm": 0.1770807461626327,
+      "reaction_n": [
+        3.881426794194454e-06,
+        -1.1244590001902033e-06,
+        20.00000249712001
+      ],
+      "reaction_moment_n_mm": [
+        3.7145786677683645e-06,
+        -1199.9999844232575,
+        -6.364724834728719e-06
+      ],
+      "reaction_relative_residual": 2.3751573836110282e-07,
+      "moment_relative_residual": 1.4360021584612051e-08,
+      "seconds": 1.9840792249888182,
+      "peak_solver_rss_kb": 158144
+    },
+    {
+      "level": 4,
+      "size_mm": 1.2004999999999997,
+      "nodes": 36256,
+      "elements": 21522,
+      "min_quality": 0.30076877121793927,
+      "mesh_volume_mm3": 6783.263938955761,
+      "cad_volume_mm3": 6779.46903508511,
+      "volume_relative_error": 0.000559764171944983,
+      "components": 1,
+      "estimated_memory_mb": 1558.9,
+      "estimated_seconds": 32.202427915514235,
+      "estimate_uncertainty": "SPOOLES fill depends on topology; estimate may be low by several-fold; cgroup remains authoritative",
+      "solver_mass_g": 18.314812645300037,
+      "load_displacement_mm": 0.17765673017060604,
+      "gauge_von_mises_mpa": 5.942240153279322,
+      "gauge_volume_mm3": 1551.9077925230233,
+      "gauge_points": 20197,
+      "peak_von_mises_mpa_diagnostic_only": 29.73795005980342,
+      "max_principal_strain": 0.0004281120795232215,
+      "max_displacement_mm": 0.17801036847304796,
+      "reaction_n": [
+        2.2614031765179256e-06,
+        9.257840982952497e-07,
+        20.000002111547108
+      ],
+      "reaction_moment_n_mm": [
+        4.468288886249e-06,
+        -1200.0000013648057,
+        9.485862304346032e-06
+      ],
+      "reaction_relative_residual": 1.6147485672710252e-07,
+      "moment_relative_residual": 8.811682836736551e-09,
+      "seconds": 6.775063928915188,
+      "peak_solver_rss_kb": 519148
+    }
+  ]
+}

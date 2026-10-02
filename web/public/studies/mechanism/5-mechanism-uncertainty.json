@@ -1,0 +1,5 @@
+{
+  "scope": "Declared nominal model allowance only; no measured contact/guide uncertainty",
+  "approximations": "Ideal z guide and gravity-compensated force motor. AABB collision fills internal pockets; full rectangular bottom is independently checked. Soft frictionless contact is numerical, not calibrated material compliance.",
+  "contact": "soft numerical normal compliance; friction zero"
+}

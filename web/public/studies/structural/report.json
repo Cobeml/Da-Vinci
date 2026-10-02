@@ -1,0 +1,307 @@
+{
+  "version": 1,
+  "slug": "structural",
+  "name": "Structural bracket",
+  "experiment_id": "experiment-9c7b5d0f81356828be38c062",
+  "description": "Stiffen a perforated shelf bracket under the frozen uniform 20 N end load; no changes to materials, interfaces or limits.",
+  "reasoning": "Scripted external agent / deterministic managed fixture",
+  "suite_id": "207a61c817ddbaa4affa390eb87e76d50d1696e01ba33e29554ce900eab1df16",
+  "runtime": {
+    "image": "sha256:c217125841f2f6af494feb4e9415c25c06c3775e5776480dd4c762eb1da5f458",
+    "solver": "Gmsh 4.15.2 / CalculiX 2.23 CPU SPOOLES",
+    "backend": "docker",
+    "cpu_cores": 1.0
+  },
+  "coverage": {
+    "version": 2,
+    "metadata": {},
+    "requirement_tests": {
+      "stiffness": [
+        "static"
+      ]
+    },
+    "uncovered_critical": [],
+    "complete": true
+  },
+  "assumptions": [
+    {
+      "description": "Homogeneous nominal aluminium; static load, perfect full clamps, small deformation",
+      "source": "Benchmark assumptions",
+      "applicability": "No bolts, contact, fatigue, plasticity, buckling or dynamic qualification"
+    }
+  ],
+  "tests": [
+    {
+      "version": 2,
+      "metadata": {},
+      "id": "static",
+      "requirements": [
+        "stiffness"
+      ],
+      "required": true,
+      "capability": "Gmsh 4.15.2 / CalculiX 2.23 small-strain C3D10",
+      "applicability": "One connected solid; planar clamp and uniform loaded end; nominal linear static response",
+      "fixed_inputs": {
+        "structural": {
+          "material": "nominal-aluminium",
+          "clamped_interfaces": [
+            "root"
+          ],
+          "load_interface": "load",
+          "load_case": "shelf",
+          "stress_region": {
+            "lower_mm": [
+              20,
+              -10,
+              0
+            ],
+            "upper_mm": [
+              40,
+              10,
+              4
+            ],
+            "exclusion_distance_mm": 10,
+            "justification": "Fixed shelf gauge 20 to 40 mm from clamp, at least 20 mm from load; volume mean stress, not local notch or support strength"
+          },
+          "mesh": {
+            "initial_size_mm": 5,
+            "max_levels": 5,
+            "relative_tolerance": 0.035
+          },
+          "relative_uncertainty": 0.05,
+          "uncertainty_basis": "Declared 5 percent nominal-model allowance; no claim to bound uncertain manufacturing, joints or actual load distributions"
+        }
+      },
+      "load_cases": [
+        {
+          "id": "shelf",
+          "description": "Uniform end-face resultant 20 N downward, consistently integrated triangle traction",
+          "quantities": {
+            "force_x": {
+              "value": 0.0,
+              "unit": "N",
+              "dimension": "force"
+            },
+            "force_y": {
+              "value": 0.0,
+              "unit": "N",
+              "dimension": "force"
+            },
+            "force_z": {
+              "value": -20.0,
+              "unit": "N",
+              "dimension": "force"
+            }
+          },
+          "boundary_conditions": "All translations clamped on x=0 selected planar root; face force on x=60, no other loads"
+        }
+      ],
+      "metrics": {
+        "mass_g": "g",
+        "load_displacement_mm": "mm",
+        "gauge_von_mises_mpa": "MPa"
+      },
+      "criteria": [
+        {
+          "metric": "load_displacement_mm",
+          "operator": "<=",
+          "limit": 0.1,
+          "unit": "mm"
+        },
+        {
+          "metric": "gauge_von_mises_mpa",
+          "operator": "<=",
+          "limit": 50.0,
+          "unit": "MPa"
+        }
+      ],
+      "accuracy": {
+        "mass_g": {
+          "method": "Two successive mesh changes within 3.5 percent; reported error twice max change; nominal uncertainty allowance",
+          "max_numerical_error": 0.01,
+          "max_uncertainty": 10.0
+        },
+        "load_displacement_mm": {
+          "method": "Two successive mesh changes within 3.5 percent; reported error twice max change; nominal uncertainty allowance",
+          "max_numerical_error": 0.02,
+          "max_uncertainty": 0.1
+        },
+        "gauge_von_mises_mpa": {
+          "method": "Two successive mesh changes within 3.5 percent; reported error twice max change; nominal uncertainty allowance",
+          "max_numerical_error": 5.0,
+          "max_uncertainty": 10.0
+        }
+      },
+      "mesh_rule": "Gmsh straight-sided quadratic tetrahedra; h=5 mm refined by 0.7, maximum five levels, positive Jacobians and minSICN >=0.01; two consecutive convergence checks",
+      "simulation": {
+        "version": 1,
+        "adapter": "calculix-static",
+        "phenomena": [
+          "mass",
+          "linear_static"
+        ],
+        "material_model": "linear_isotropic",
+        "geometry_assumptions": "Single connected solid with finite holes/ribs/tapers; no baseline reconstruction",
+        "fidelity": "converged_linear_solid",
+        "stage": "final",
+        "cad_unit": "mm",
+        "solver_length_unit": "mm",
+        "required_software": {},
+        "estimate": {
+          "cpu_cores": 1.0,
+          "memory_mb": 1024,
+          "disk_mb": 180,
+          "wall_seconds": 100.0,
+          "basis": "Conservative starting estimate; refine from measured execution",
+          "uncertainty": "Unknown geometry-dependent peak; estimate is not proof of adequacy"
+        },
+        "required_evidence": [
+          "mesh",
+          "solver_deck",
+          "fields",
+          "convergence",
+          "uncertainty"
+        ]
+      }
+    }
+  ],
+  "iterations": [
+    {
+      "id": "candidate-5025d669edbc4ea0",
+      "iteration": 1,
+      "title": "bracket-base",
+      "change": "Specified geometry variant; measured from exported CAD",
+      "candidate_version": "9e49f93b1c0311f261c4e1e0fd63de9feeb28064b3b4a3ceb46c7772f0c237a7",
+      "source_artifact": "artifact-3f96a768b09ddd38bb31f96b94385c8481890b61e9b716ec4b09e52fc171b3d8",
+      "result_id": "result-0751683b8bae458c",
+      "suite_id": "207a61c817ddbaa4affa390eb87e76d50d1696e01ba33e29554ce900eab1df16",
+      "runtime_id": "ba405a997ecdc89dbd218c32acc6972779dc301cad31e7457fec70509774a8c8",
+      "execution_id": "74796f775ac8b87b48cb464460ab048a5c7d1420c1eb6fa0882e2a07a52d9c58",
+      "accepted": false,
+      "evidence_complete": true,
+      "objective_target_attained": false,
+      "duration_seconds": 14.221258638892323,
+      "tests": [
+        {
+          "test_id": "static",
+          "status": "physical_failure",
+          "reason": "acceptance_limit",
+          "message": "",
+          "metrics": {
+            "mass_g": {
+              "value": 18.304566394729797,
+              "unit": "g",
+              "numerical_error": 1.8304566394729796e-06,
+              "uncertainty": 0.9152283197364899
+            },
+            "load_displacement_mm": {
+              "value": 0.17765673017060604,
+              "unit": "mm",
+              "numerical_error": 0.0018557575848248131,
+              "uncertainty": 0.008882836508530303
+            },
+            "gauge_von_mises_mpa": {
+              "value": 5.942240153279322,
+              "unit": "MPa",
+              "numerical_error": 0.11354591338314712,
+              "uncertainty": 0.2971120076639661
+            }
+          }
+        }
+      ],
+      "assets": {
+        "model.step": "/studies/structural/1-model.step",
+        "model.glb": "/studies/structural/1-model.glb",
+        "static/bindings.json": "/studies/structural/1-static-bindings.json",
+        "static/convergence.json": "/studies/structural/1-static-convergence.json",
+        "static/uncertainty.json": "/studies/structural/1-static-uncertainty.json"
+      },
+      "trajectory": []
+    },
+    {
+      "id": "candidate-f38bc3936cb7424b",
+      "iteration": 2,
+      "title": "bracket-ribbed",
+      "change": "Specified geometry variant; measured from exported CAD",
+      "candidate_version": "3c3516853f66955202914e887144831536742b27eb31b73af4ad8b013d02bcfb",
+      "source_artifact": "artifact-3f96a768b09ddd38bb31f96b94385c8481890b61e9b716ec4b09e52fc171b3d8",
+      "result_id": "result-ae86a337925e44b5",
+      "suite_id": "207a61c817ddbaa4affa390eb87e76d50d1696e01ba33e29554ce900eab1df16",
+      "runtime_id": "ba405a997ecdc89dbd218c32acc6972779dc301cad31e7457fec70509774a8c8",
+      "execution_id": "74796f775ac8b87b48cb464460ab048a5c7d1420c1eb6fa0882e2a07a52d9c58",
+      "accepted": true,
+      "evidence_complete": true,
+      "objective_target_attained": true,
+      "duration_seconds": 6.492407065816224,
+      "tests": [
+        {
+          "test_id": "static",
+          "status": "pass",
+          "reason": "ok",
+          "message": "",
+          "metrics": {
+            "mass_g": {
+              "value": 22.97016639473285,
+              "unit": "g",
+              "numerical_error": 2.297016639473285e-06,
+              "uncertainty": 1.1485083197366426
+            },
+            "load_displacement_mm": {
+              "value": 0.012949140560654155,
+              "unit": "mm",
+              "numerical_error": 6.211605370369175e-05,
+              "uncertainty": 0.0006474570280327078
+            },
+            "gauge_von_mises_mpa": {
+              "value": 1.0518417358961332,
+              "unit": "MPa",
+              "numerical_error": 0.021228275705462707,
+              "uncertainty": 0.05259208679480666
+            }
+          }
+        }
+      ],
+      "assets": {
+        "model.step": "/studies/structural/2-model.step",
+        "model.glb": "/studies/structural/2-model.glb",
+        "static/bindings.json": "/studies/structural/2-static-bindings.json",
+        "static/convergence.json": "/studies/structural/2-static-convergence.json",
+        "static/uncertainty.json": "/studies/structural/2-static-uncertainty.json"
+      },
+      "trajectory": []
+    }
+  ],
+  "report": {
+    "version": 2,
+    "suite_id": "207a61c817ddbaa4affa390eb87e76d50d1696e01ba33e29554ce900eab1df16",
+    "completed_at": "2026-10-02T02:59:20.859656+00:00",
+    "draft_only": false,
+    "decisions": [
+      {
+        "result_id": "result-0751683b8bae458c",
+        "candidate_id": "candidate-5025d669edbc4ea0",
+        "execution_completed": true,
+        "evidence_complete": true,
+        "design_accepted": false,
+        "objective_target_attained": false
+      },
+      {
+        "result_id": "result-ae86a337925e44b5",
+        "candidate_id": "candidate-f38bc3936cb7424b",
+        "execution_completed": true,
+        "evidence_complete": true,
+        "design_accepted": true,
+        "objective_target_attained": true
+      }
+    ],
+    "accepted_candidate_ids": [
+      "candidate-f38bc3936cb7424b"
+    ],
+    "validation_gaps": [],
+    "guarantees": "test-first-v2"
+  },
+  "comparison_url": "/studies/structural/route-comparison.json",
+  "publication": "Curated recorded evidence; no autonomous reasoning or laboratory validation claim.",
+  "report_url": "/studies/structural/report.json",
+  "manifest_url": "/studies/structural/manifest.json"
+}

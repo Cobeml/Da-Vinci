@@ -1,0 +1,182 @@
+{
+  "version": 1,
+  "experiment_id": "experiment-21f2c5cf7fb3005044376ff6",
+  "suite_id": "366fcd0adbd6f69bb51d0dbae50b65a119a875f73cbd43e84b70df4c277e01d7",
+  "files": {
+    "/studies/mechanism/1-model.step": {
+      "sha256": "fc2e373f311510ebe51d63ef71ca90d2d9b83aef431ca687b8b06e2fb0aee137",
+      "bytes": 32582,
+      "source_artifact": "artifact-fc2e373f311510ebe51d63ef71ca90d2d9b83aef431ca687b8b06e2fb0aee137"
+    },
+    "/studies/mechanism/1-model.glb": {
+      "sha256": "cabec8d02b8799b292bf89ee37f86b9a65c4ec2adad13af89f61c91f3699b217",
+      "bytes": 6416,
+      "source_artifact": "artifact-cabec8d02b8799b292bf89ee37f86b9a65c4ec2adad13af89f61c91f3699b217"
+    },
+    "/studies/mechanism/1-mechanism-bindings.json": {
+      "sha256": "9857e6fcb411c9fc94c8a455fa4bb3b2ace295db2a09e6e66af89810ea86fdcd",
+      "bytes": 1010,
+      "source_artifact": "artifact-9857e6fcb411c9fc94c8a455fa4bb3b2ace295db2a09e6e66af89810ea86fdcd"
+    },
+    "/studies/mechanism/1-mechanism-assembly-bindings.json": {
+      "sha256": "2893fcb3cfcd8bd44a43ac7de100a6f5649551419d594fa6af0b26cd32f61e5b",
+      "bytes": 2437,
+      "source_artifact": "artifact-2893fcb3cfcd8bd44a43ac7de100a6f5649551419d594fa6af0b26cd32f61e5b"
+    },
+    "/studies/mechanism/1-mechanism-lift-2.csv": {
+      "sha256": "ba16aba124fbec490494328592017f4a477eab22cfb7880a4cb29a7cd64846c6",
+      "bytes": 218829,
+      "source_artifact": "artifact-ba16aba124fbec490494328592017f4a477eab22cfb7880a4cb29a7cd64846c6"
+    },
+    "/studies/mechanism/1-mechanism-material-source.json": {
+      "sha256": "f90d5ddf6277608a4a1c414239d58b609acc5bb9d9a40ff30627680c30cf6dbe",
+      "bytes": 229,
+      "source_artifact": "artifact-f90d5ddf6277608a4a1c414239d58b609acc5bb9d9a40ff30627680c30cf6dbe"
+    },
+    "/studies/mechanism/1-mechanism-reference-checks.json": {
+      "sha256": "c850970e5acd1f4ec6b16c5239a601223126d91dc9a772819347e7e42a596abf",
+      "bytes": 1334,
+      "source_artifact": "artifact-c850970e5acd1f4ec6b16c5239a601223126d91dc9a772819347e7e42a596abf"
+    },
+    "/studies/mechanism/1-mechanism-convergence.json": {
+      "sha256": "553399f59c97f5cf8e4b13434c4e93694baefbdabe968f948bab9fd6b263127b",
+      "bytes": 3875,
+      "source_artifact": "artifact-553399f59c97f5cf8e4b13434c4e93694baefbdabe968f948bab9fd6b263127b"
+    },
+    "/studies/mechanism/1-mechanism-uncertainty.json": {
+      "sha256": "6ac262184d92c020a02e3fcefc40346cfd7cef0cfc453db8a03f7cb0740a0ce3",
+      "bytes": 396,
+      "source_artifact": "artifact-6ac262184d92c020a02e3fcefc40346cfd7cef0cfc453db8a03f7cb0740a0ce3"
+    },
+    "/studies/mechanism/2-model.step": {
+      "sha256": "b5088b84039e0f9d855cd89b50927420ce91ca079ddc6591b183d17ddf92f1a3",
+      "bytes": 33134,
+      "source_artifact": "artifact-b5088b84039e0f9d855cd89b50927420ce91ca079ddc6591b183d17ddf92f1a3"
+    },
+    "/studies/mechanism/2-model.glb": {
+      "sha256": "f7503fa2f665f31de41d94583d46fcc0cd24eafd8e46a61e2341532f81351061",
+      "bytes": 9256,
+      "source_artifact": "artifact-f7503fa2f665f31de41d94583d46fcc0cd24eafd8e46a61e2341532f81351061"
+    },
+    "/studies/mechanism/2-mechanism-bindings.json": {
+      "sha256": "1f3d14d4d94e58c144ca1d2e2f0846784254e4e9a6dcbd67f9b86ab9ec16b2a8",
+      "bytes": 1183,
+      "source_artifact": "artifact-1f3d14d4d94e58c144ca1d2e2f0846784254e4e9a6dcbd67f9b86ab9ec16b2a8"
+    },
+    "/studies/mechanism/3-model.step": {
+      "sha256": "7adae5e91e83fe59ed72bc3acc59c6637ec90091e51cc5fbe1c01d88933d58a5",
+      "bytes": 32565,
+      "source_artifact": "artifact-7adae5e91e83fe59ed72bc3acc59c6637ec90091e51cc5fbe1c01d88933d58a5"
+    },
+    "/studies/mechanism/3-model.glb": {
+      "sha256": "b43298dda83759297dbdaa67682bf3d77dfd786b739cb9d747589eae0f6bfd7b",
+      "bytes": 6412,
+      "source_artifact": "artifact-b43298dda83759297dbdaa67682bf3d77dfd786b739cb9d747589eae0f6bfd7b"
+    },
+    "/studies/mechanism/3-mechanism-bindings.json": {
+      "sha256": "2fc25f3bdea5abfcd25d7f6a78180cebc1b4fb1b5bee464c86968f36df98d80a",
+      "bytes": 841,
+      "source_artifact": "artifact-2fc25f3bdea5abfcd25d7f6a78180cebc1b4fb1b5bee464c86968f36df98d80a"
+    },
+    "/studies/mechanism/4-model.step": {
+      "sha256": "a0b41b4aebab8faeef146bccbf5d023a6f24c8c3e7a348ffb39229c3c68691c5",
+      "bytes": 46386,
+      "source_artifact": "artifact-a0b41b4aebab8faeef146bccbf5d023a6f24c8c3e7a348ffb39229c3c68691c5"
+    },
+    "/studies/mechanism/4-model.glb": {
+      "sha256": "1159074ac6b9e6f297e22e66e48e62b48d51510812da149dacf778d14e1488d7",
+      "bytes": 8916,
+      "source_artifact": "artifact-1159074ac6b9e6f297e22e66e48e62b48d51510812da149dacf778d14e1488d7"
+    },
+    "/studies/mechanism/4-mechanism-bindings.json": {
+      "sha256": "9857e6fcb411c9fc94c8a455fa4bb3b2ace295db2a09e6e66af89810ea86fdcd",
+      "bytes": 1010,
+      "source_artifact": "artifact-9857e6fcb411c9fc94c8a455fa4bb3b2ace295db2a09e6e66af89810ea86fdcd"
+    },
+    "/studies/mechanism/4-mechanism-assembly-bindings.json": {
+      "sha256": "4ed93b53f589eb05783828d2bbde0198fa7e7c15c99e8651ec914d7fd41149e6",
+      "bytes": 2505,
+      "source_artifact": "artifact-4ed93b53f589eb05783828d2bbde0198fa7e7c15c99e8651ec914d7fd41149e6"
+    },
+    "/studies/mechanism/4-mechanism-lift-2.csv": {
+      "sha256": "aac8fd98ad28e644960059d6b4bf6848a0657c172116a0451722f3347e98f671",
+      "bytes": 176527,
+      "source_artifact": "artifact-aac8fd98ad28e644960059d6b4bf6848a0657c172116a0451722f3347e98f671"
+    },
+    "/studies/mechanism/4-mechanism-material-source.json": {
+      "sha256": "f90d5ddf6277608a4a1c414239d58b609acc5bb9d9a40ff30627680c30cf6dbe",
+      "bytes": 229,
+      "source_artifact": "artifact-f90d5ddf6277608a4a1c414239d58b609acc5bb9d9a40ff30627680c30cf6dbe"
+    },
+    "/studies/mechanism/4-mechanism-reference-checks.json": {
+      "sha256": "fdd870e9b241f517159c65ee351a10e7fde37892c6842ecb4244c1bc36378e0c",
+      "bytes": 1335,
+      "source_artifact": "artifact-fdd870e9b241f517159c65ee351a10e7fde37892c6842ecb4244c1bc36378e0c"
+    },
+    "/studies/mechanism/4-mechanism-convergence.json": {
+      "sha256": "073dd5463024850505af034d923860c91b8af51c1824a57f8c7ee4143661b0cb",
+      "bytes": 3927,
+      "source_artifact": "artifact-073dd5463024850505af034d923860c91b8af51c1824a57f8c7ee4143661b0cb"
+    },
+    "/studies/mechanism/4-mechanism-uncertainty.json": {
+      "sha256": "6ac262184d92c020a02e3fcefc40346cfd7cef0cfc453db8a03f7cb0740a0ce3",
+      "bytes": 396,
+      "source_artifact": "artifact-6ac262184d92c020a02e3fcefc40346cfd7cef0cfc453db8a03f7cb0740a0ce3"
+    },
+    "/studies/mechanism/5-model.step": {
+      "sha256": "bf01dab26072fda2e7e2b75d1682081a39200d917bdb46de504a7401c1c87701",
+      "bytes": 46386,
+      "source_artifact": "artifact-bf01dab26072fda2e7e2b75d1682081a39200d917bdb46de504a7401c1c87701"
+    },
+    "/studies/mechanism/5-model.glb": {
+      "sha256": "1159074ac6b9e6f297e22e66e48e62b48d51510812da149dacf778d14e1488d7",
+      "bytes": 8916,
+      "source_artifact": "artifact-1159074ac6b9e6f297e22e66e48e62b48d51510812da149dacf778d14e1488d7"
+    },
+    "/studies/mechanism/5-mechanism-bindings.json": {
+      "sha256": "9857e6fcb411c9fc94c8a455fa4bb3b2ace295db2a09e6e66af89810ea86fdcd",
+      "bytes": 1010,
+      "source_artifact": "artifact-9857e6fcb411c9fc94c8a455fa4bb3b2ace295db2a09e6e66af89810ea86fdcd"
+    },
+    "/studies/mechanism/5-mechanism-assembly-bindings.json": {
+      "sha256": "4ed93b53f589eb05783828d2bbde0198fa7e7c15c99e8651ec914d7fd41149e6",
+      "bytes": 2505,
+      "source_artifact": "artifact-4ed93b53f589eb05783828d2bbde0198fa7e7c15c99e8651ec914d7fd41149e6"
+    },
+    "/studies/mechanism/5-mechanism-lift-2.csv": {
+      "sha256": "aac8fd98ad28e644960059d6b4bf6848a0657c172116a0451722f3347e98f671",
+      "bytes": 176527,
+      "source_artifact": "artifact-aac8fd98ad28e644960059d6b4bf6848a0657c172116a0451722f3347e98f671"
+    },
+    "/studies/mechanism/5-mechanism-material-source.json": {
+      "sha256": "f90d5ddf6277608a4a1c414239d58b609acc5bb9d9a40ff30627680c30cf6dbe",
+      "bytes": 229,
+      "source_artifact": "artifact-f90d5ddf6277608a4a1c414239d58b609acc5bb9d9a40ff30627680c30cf6dbe"
+    },
+    "/studies/mechanism/5-mechanism-reference-checks.json": {
+      "sha256": "fdd870e9b241f517159c65ee351a10e7fde37892c6842ecb4244c1bc36378e0c",
+      "bytes": 1335,
+      "source_artifact": "artifact-fdd870e9b241f517159c65ee351a10e7fde37892c6842ecb4244c1bc36378e0c"
+    },
+    "/studies/mechanism/5-mechanism-convergence.json": {
+      "sha256": "073dd5463024850505af034d923860c91b8af51c1824a57f8c7ee4143661b0cb",
+      "bytes": 3927,
+      "source_artifact": "artifact-073dd5463024850505af034d923860c91b8af51c1824a57f8c7ee4143661b0cb"
+    },
+    "/studies/mechanism/5-mechanism-uncertainty.json": {
+      "sha256": "6ac262184d92c020a02e3fcefc40346cfd7cef0cfc453db8a03f7cb0740a0ce3",
+      "bytes": 396,
+      "source_artifact": "artifact-6ac262184d92c020a02e3fcefc40346cfd7cef0cfc453db8a03f7cb0740a0ce3"
+    },
+    "/studies/mechanism/route-comparison.json": {
+      "sha256": "d5988e1b4ada94554e94641a6f4bf5cfe51824a41bc8dc4694d73bf87ca78925",
+      "bytes": 22725,
+      "source_artifact": null
+    },
+    "/studies/mechanism/report.json": {
+      "sha256": "83cf9cdcef0b6bf56c07433d3ad29a5ce25d5255b7c41aaa8e1f401b872880d0",
+      "bytes": 68876,
+      "source_artifact": null
+    }
+  }
+}

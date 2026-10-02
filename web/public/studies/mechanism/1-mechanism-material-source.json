@@ -1,0 +1,13 @@
+[
+  {
+    "name": "aluminium",
+    "provenance": "Nominal 2700 kg/m3, no measured batch",
+    "properties": {
+      "density": {
+        "value": 2700.0,
+        "unit": "kg/m3",
+        "dimension": "density"
+      }
+    }
+  }
+]

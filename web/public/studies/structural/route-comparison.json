@@ -1,0 +1,229 @@
+{
+  "version": 1,
+  "evidence_kind": "native simulation with deterministic managed reasoning",
+  "runtime_image": "sha256:c217125841f2f6af494feb4e9415c25c06c3775e5776480dd4c762eb1da5f458",
+  "execution_id": "74796f775ac8b87b48cb464460ab048a5c7d1420c1eb6fa0882e2a07a52d9c58",
+  "routes": {
+    "external": [
+      {
+        "candidate_version": "9e49f93b1c0311f261c4e1e0fd63de9feeb28064b3b4a3ceb46c7772f0c237a7",
+        "suite_id": "207a61c817ddbaa4affa390eb87e76d50d1696e01ba33e29554ce900eab1df16",
+        "result_id": "result-0751683b8bae458c",
+        "accepted": false,
+        "evidence_complete": true,
+        "metrics": {
+          "mass_g": {
+            "value": 18.304566394729797,
+            "unit": "g",
+            "numerical_error": 1.8304566394729796e-06,
+            "uncertainty": 0.9152283197364899
+          },
+          "load_displacement_mm": {
+            "value": 0.17765673017060604,
+            "unit": "mm",
+            "numerical_error": 0.0018557575848248131,
+            "uncertainty": 0.008882836508530303
+          },
+          "gauge_von_mises_mpa": {
+            "value": 5.942240153279322,
+            "unit": "MPa",
+            "numerical_error": 0.11354591338314712,
+            "uncertainty": 0.2971120076639661
+          }
+        }
+      },
+      {
+        "candidate_version": "3c3516853f66955202914e887144831536742b27eb31b73af4ad8b013d02bcfb",
+        "suite_id": "207a61c817ddbaa4affa390eb87e76d50d1696e01ba33e29554ce900eab1df16",
+        "result_id": "result-ae86a337925e44b5",
+        "accepted": true,
+        "evidence_complete": true,
+        "metrics": {
+          "mass_g": {
+            "value": 22.97016639473285,
+            "unit": "g",
+            "numerical_error": 2.297016639473285e-06,
+            "uncertainty": 1.1485083197366426
+          },
+          "load_displacement_mm": {
+            "value": 0.012949140560654155,
+            "unit": "mm",
+            "numerical_error": 6.211605370369175e-05,
+            "uncertainty": 0.0006474570280327078
+          },
+          "gauge_von_mises_mpa": {
+            "value": 1.0518417358961332,
+            "unit": "MPa",
+            "numerical_error": 0.021228275705462707,
+            "uncertainty": 0.05259208679480666
+          }
+        }
+      }
+    ],
+    "managed": [
+      {
+        "candidate_version": "9e49f93b1c0311f261c4e1e0fd63de9feeb28064b3b4a3ceb46c7772f0c237a7",
+        "suite_id": "6f7b84267cffd225fde2388d0ab4e1ce320020bfb83c041331f72907c83eadc2",
+        "result_id": "result-12600f204fdf4bd0",
+        "accepted": false,
+        "evidence_complete": true,
+        "metrics": {
+          "mass_g": {
+            "value": 18.304566394729797,
+            "unit": "g",
+            "numerical_error": 1.8304566394729796e-06,
+            "uncertainty": 0.9152283197364899
+          },
+          "load_displacement_mm": {
+            "value": 0.17765673017060604,
+            "unit": "mm",
+            "numerical_error": 0.0018557575848248131,
+            "uncertainty": 0.008882836508530303
+          },
+          "gauge_von_mises_mpa": {
+            "value": 5.942240153279322,
+            "unit": "MPa",
+            "numerical_error": 0.11354591338314712,
+            "uncertainty": 0.2971120076639661
+          }
+        }
+      },
+      {
+        "candidate_version": "3c3516853f66955202914e887144831536742b27eb31b73af4ad8b013d02bcfb",
+        "suite_id": "6f7b84267cffd225fde2388d0ab4e1ce320020bfb83c041331f72907c83eadc2",
+        "result_id": "result-c166da33be604942",
+        "accepted": true,
+        "evidence_complete": true,
+        "metrics": {
+          "mass_g": {
+            "value": 22.97016639473285,
+            "unit": "g",
+            "numerical_error": 2.297016639473285e-06,
+            "uncertainty": 1.1485083197366426
+          },
+          "load_displacement_mm": {
+            "value": 0.012949140560654155,
+            "unit": "mm",
+            "numerical_error": 6.211605370369175e-05,
+            "uncertainty": 0.0006474570280327078
+          },
+          "gauge_von_mises_mpa": {
+            "value": 1.0518417358961332,
+            "unit": "MPa",
+            "numerical_error": 0.021228275705462707,
+            "uncertainty": 0.05259208679480666
+          }
+        }
+      }
+    ],
+    "managed_adoption": [
+      {
+        "candidate_version": "9e49f93b1c0311f261c4e1e0fd63de9feeb28064b3b4a3ceb46c7772f0c237a7",
+        "suite_id": "207a61c817ddbaa4affa390eb87e76d50d1696e01ba33e29554ce900eab1df16",
+        "result_id": "result-15175ef6928e49c8",
+        "accepted": false,
+        "evidence_complete": true,
+        "metrics": {
+          "mass_g": {
+            "value": 18.304566394729797,
+            "unit": "g",
+            "numerical_error": 1.8304566394729796e-06,
+            "uncertainty": 0.9152283197364899
+          },
+          "load_displacement_mm": {
+            "value": 0.17765673017060604,
+            "unit": "mm",
+            "numerical_error": 0.0018557575848248131,
+            "uncertainty": 0.008882836508530303
+          },
+          "gauge_von_mises_mpa": {
+            "value": 5.942240153279322,
+            "unit": "MPa",
+            "numerical_error": 0.11354591338314712,
+            "uncertainty": 0.2971120076639661
+          }
+        }
+      },
+      {
+        "candidate_version": "3c3516853f66955202914e887144831536742b27eb31b73af4ad8b013d02bcfb",
+        "suite_id": "207a61c817ddbaa4affa390eb87e76d50d1696e01ba33e29554ce900eab1df16",
+        "result_id": "result-bfdfc5c271154702",
+        "accepted": true,
+        "evidence_complete": true,
+        "metrics": {
+          "mass_g": {
+            "value": 22.97016639473285,
+            "unit": "g",
+            "numerical_error": 2.297016639473285e-06,
+            "uncertainty": 1.1485083197366426
+          },
+          "load_displacement_mm": {
+            "value": 0.012949140560654155,
+            "unit": "mm",
+            "numerical_error": 6.211605370369175e-05,
+            "uncertainty": 0.0006474570280327078
+          },
+          "gauge_von_mises_mpa": {
+            "value": 1.0518417358961332,
+            "unit": "MPa",
+            "numerical_error": 0.021228275705462707,
+            "uncertainty": 0.05259208679480666
+          }
+        }
+      },
+      {
+        "candidate_version": "5ef06bb8aa595d8a3484c0aa1f1db309ab6052c765421b22eddfbfd106c6fc04",
+        "suite_id": "207a61c817ddbaa4affa390eb87e76d50d1696e01ba33e29554ce900eab1df16",
+        "result_id": "result-427126c5def4463e",
+        "accepted": true,
+        "evidence_complete": true,
+        "metrics": {
+          "mass_g": {
+            "value": 22.97016639473285,
+            "unit": "g",
+            "numerical_error": 2.297016639473285e-06,
+            "uncertainty": 1.1485083197366426
+          },
+          "load_displacement_mm": {
+            "value": 0.012949140560654155,
+            "unit": "mm",
+            "numerical_error": 6.211605370369175e-05,
+            "uncertainty": 0.0006474570280327078
+          },
+          "gauge_von_mises_mpa": {
+            "value": 1.0518417358961332,
+            "unit": "MPa",
+            "numerical_error": 0.021228275705462707,
+            "uncertainty": 0.05259208679480666
+          }
+        }
+      }
+    ]
+  },
+  "experiments": [
+    {
+      "id": "experiment-8d5b0e12f8e21f903d9bd0a3",
+      "driver": "managed",
+      "suite_id": "207a61c817ddbaa4affa390eb87e76d50d1696e01ba33e29554ce900eab1df16",
+      "accepted_candidate_ids": [
+        "candidate-2f7459126a5b4c08"
+      ]
+    },
+    {
+      "id": "experiment-9c7b5d0f81356828be38c062",
+      "driver": "external",
+      "suite_id": "207a61c817ddbaa4affa390eb87e76d50d1696e01ba33e29554ce900eab1df16",
+      "accepted_candidate_ids": [
+        "candidate-f38bc3936cb7424b"
+      ]
+    },
+    {
+      "id": "experiment-9ede1117cdf05aebaf0122cb",
+      "driver": "managed",
+      "suite_id": "6f7b84267cffd225fde2388d0ab4e1ce320020bfb83c041331f72907c83eadc2",
+      "accepted_candidate_ids": [
+        "candidate-92cd8c3c9d514286"
+      ]
+    }
+  ]
+}

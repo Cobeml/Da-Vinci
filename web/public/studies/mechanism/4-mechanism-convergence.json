@@ -1,0 +1,144 @@
+{
+  "levels": [
+    {
+      "lift": {
+        "final_q_m": 0.029999999999999905,
+        "tracking_error_m": 9.367506770274758e-17,
+        "settled_penetration_m": 0.0,
+        "equilibrium_error_n": 0,
+        "peak_actuation_n": 0.326159759944824,
+        "steps": 8000,
+        "dt": 0.00025,
+        "trajectory": "lift-0.csv"
+      },
+      "settle": {
+        "final_q_m": -0.020004438802397075,
+        "tracking_error_m": 0.05000443880239708,
+        "settled_penetration_m": 4.438802397076138e-06,
+        "equilibrium_error_n": 0.0,
+        "peak_actuation_n": 0,
+        "steps": 8000,
+        "dt": 0.00025,
+        "trajectory": "settle-0.csv"
+      }
+    },
+    {
+      "lift": {
+        "final_q_m": 0.029999999999999794,
+        "tracking_error_m": 2.0469737016526324e-16,
+        "settled_penetration_m": 0.0,
+        "equilibrium_error_n": 0,
+        "peak_actuation_n": 0.32614024370788575,
+        "steps": 16000,
+        "dt": 0.000125,
+        "trajectory": "lift-1.csv"
+      },
+      "settle": {
+        "final_q_m": -0.020004438802397145,
+        "tracking_error_m": 0.05000443880239715,
+        "settled_penetration_m": 4.438802397145527e-06,
+        "equilibrium_error_n": 1.1102230246251565e-16,
+        "peak_actuation_n": 0,
+        "steps": 16000,
+        "dt": 0.000125,
+        "trajectory": "settle-1.csv"
+      }
+    },
+    {
+      "lift": {
+        "final_q_m": 0.029999999999999524,
+        "tracking_error_m": 4.753142324176451e-16,
+        "settled_penetration_m": 0.0,
+        "equilibrium_error_n": 0,
+        "peak_actuation_n": 0.3261305182202877,
+        "steps": 32000,
+        "dt": 6.25e-05,
+        "trajectory": "lift-2.csv"
+      },
+      "settle": {
+        "final_q_m": -0.02000443880239728,
+        "tracking_error_m": 0.05000443880239728,
+        "settled_penetration_m": 4.438802397280835e-06,
+        "equilibrium_error_n": 1.1102230246251565e-16,
+        "peak_actuation_n": 0,
+        "steps": 32000,
+        "dt": 6.25e-05,
+        "trajectory": "settle-2.csv"
+      }
+    }
+  ],
+  "differences": [
+    {
+      "position": 9.056273973640644e-05,
+      "force": 1.9516236938244003e-05
+    },
+    {
+      "position": 2.198551104881305e-05,
+      "force": 9.725487598033489e-06
+    }
+  ],
+  "converged": true,
+  "policy": {
+    "version": 1,
+    "bodies": [
+      {
+        "name": "base",
+        "interface": "stop",
+        "material": "aluminium",
+        "role": "fixed",
+        "frame": "CAD_world_axes_at_BRep_COM",
+        "inertia": "homogeneous_STEP_volume_integral",
+        "collision": "axis_aligned_envelope_bottom_plane_only"
+      },
+      {
+        "name": "carriage",
+        "interface": "foot",
+        "material": "aluminium",
+        "role": "moving",
+        "frame": "CAD_world_axes_at_BRep_COM",
+        "inertia": "homogeneous_STEP_volume_integral",
+        "collision": "axis_aligned_envelope_bottom_plane_only"
+      }
+    ],
+    "joint": "ideal_prismatic_world_z",
+    "joint_axis": [
+      0,
+      0,
+      1
+    ],
+    "joint_damping": 0,
+    "actuator": "gravity_compensated_force_limited_motor_PD",
+    "force_limit_n": 0.4,
+    "kp_n_m": 40.0,
+    "kd_ns_m": 2.0,
+    "gravity_m_s2": 9.81,
+    "target_m": 0.03,
+    "ramp_seconds": 0.5,
+    "duration_seconds": 2.0,
+    "timestep_seconds": 0.00025,
+    "integrator": "implicitfast",
+    "refinement_levels": 3,
+    "max_position_difference_m": 0.0001,
+    "max_force_difference_n": 0.002,
+    "contact": "frictionless_soft_normal",
+    "friction": [
+      0,
+      0,
+      0
+    ],
+    "solref": [
+      0.01,
+      1
+    ],
+    "solimp": [
+      0.95,
+      0.99,
+      0.001
+    ],
+    "scenarios": [
+      "lift",
+      "settle"
+    ],
+    "approximation": "Ideal z guide and gravity-compensated force motor. AABB collision fills internal pockets; full rectangular bottom is independently checked. Soft frictionless contact is numerical, not calibrated material compliance."
+  }
+}
