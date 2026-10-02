@@ -1,6 +1,316 @@
 {
   "version": 2,
   "schemas": {
+    "SliderSettings": {
+      "$defs": {
+        "Body": {
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "enum": [
+                "base",
+                "carriage"
+              ],
+              "title": "Name",
+              "type": "string"
+            },
+            "interface": {
+              "title": "Interface",
+              "type": "string"
+            },
+            "material": {
+              "title": "Material",
+              "type": "string"
+            },
+            "role": {
+              "enum": [
+                "fixed",
+                "moving"
+              ],
+              "title": "Role",
+              "type": "string"
+            },
+            "frame": {
+              "const": "CAD_world_axes_at_BRep_COM",
+              "default": "CAD_world_axes_at_BRep_COM",
+              "title": "Frame",
+              "type": "string"
+            },
+            "inertia": {
+              "const": "homogeneous_STEP_volume_integral",
+              "default": "homogeneous_STEP_volume_integral",
+              "title": "Inertia",
+              "type": "string"
+            },
+            "collision": {
+              "const": "axis_aligned_envelope_bottom_plane_only",
+              "default": "axis_aligned_envelope_bottom_plane_only",
+              "title": "Collision",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "interface",
+            "material",
+            "role"
+          ],
+          "title": "Body",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "const": 1,
+          "default": 1,
+          "title": "Version",
+          "type": "integer"
+        },
+        "bodies": {
+          "items": {
+            "$ref": "#/$defs/Body"
+          },
+          "maxItems": 2,
+          "minItems": 2,
+          "title": "Bodies",
+          "type": "array"
+        },
+        "joint": {
+          "const": "ideal_prismatic_world_z",
+          "default": "ideal_prismatic_world_z",
+          "title": "Joint",
+          "type": "string"
+        },
+        "joint_axis": {
+          "default": [
+            0,
+            0,
+            1
+          ],
+          "maxItems": 3,
+          "minItems": 3,
+          "prefixItems": [
+            {
+              "const": 0,
+              "type": "integer"
+            },
+            {
+              "const": 0,
+              "type": "integer"
+            },
+            {
+              "const": 1,
+              "type": "integer"
+            }
+          ],
+          "title": "Joint Axis",
+          "type": "array"
+        },
+        "joint_damping": {
+          "const": 0,
+          "default": 0,
+          "title": "Joint Damping",
+          "type": "integer"
+        },
+        "actuator": {
+          "const": "gravity_compensated_force_limited_motor_PD",
+          "default": "gravity_compensated_force_limited_motor_PD",
+          "title": "Actuator",
+          "type": "string"
+        },
+        "force_limit_n": {
+          "default": 0.4,
+          "exclusiveMinimum": 0,
+          "maximum": 100,
+          "title": "Force Limit N",
+          "type": "number"
+        },
+        "kp_n_m": {
+          "default": 40,
+          "exclusiveMinimum": 0,
+          "maximum": 1000,
+          "title": "Kp N M",
+          "type": "number"
+        },
+        "kd_ns_m": {
+          "default": 2,
+          "exclusiveMinimum": 0,
+          "maximum": 100,
+          "title": "Kd Ns M",
+          "type": "number"
+        },
+        "gravity_m_s2": {
+          "default": 9.81,
+          "exclusiveMinimum": 0,
+          "maximum": 20,
+          "title": "Gravity M S2",
+          "type": "number"
+        },
+        "target_m": {
+          "default": 0.03,
+          "exclusiveMinimum": 0,
+          "maximum": 0.1,
+          "title": "Target M",
+          "type": "number"
+        },
+        "ramp_seconds": {
+          "default": 0.5,
+          "maximum": 2,
+          "minimum": 0.1,
+          "title": "Ramp Seconds",
+          "type": "number"
+        },
+        "duration_seconds": {
+          "default": 2,
+          "maximum": 5,
+          "minimum": 1,
+          "title": "Duration Seconds",
+          "type": "number"
+        },
+        "timestep_seconds": {
+          "default": 0.00025,
+          "maximum": 0.002,
+          "minimum": 0.0001,
+          "title": "Timestep Seconds",
+          "type": "number"
+        },
+        "integrator": {
+          "const": "implicitfast",
+          "default": "implicitfast",
+          "title": "Integrator",
+          "type": "string"
+        },
+        "refinement_levels": {
+          "const": 3,
+          "default": 3,
+          "title": "Refinement Levels",
+          "type": "integer"
+        },
+        "max_position_difference_m": {
+          "default": 0.0001,
+          "exclusiveMinimum": 0,
+          "maximum": 0.001,
+          "title": "Max Position Difference M",
+          "type": "number"
+        },
+        "max_force_difference_n": {
+          "default": 0.002,
+          "exclusiveMinimum": 0,
+          "maximum": 0.01,
+          "title": "Max Force Difference N",
+          "type": "number"
+        },
+        "contact": {
+          "const": "frictionless_soft_normal",
+          "default": "frictionless_soft_normal",
+          "title": "Contact",
+          "type": "string"
+        },
+        "friction": {
+          "default": [
+            0,
+            0,
+            0
+          ],
+          "maxItems": 3,
+          "minItems": 3,
+          "prefixItems": [
+            {
+              "const": 0,
+              "type": "integer"
+            },
+            {
+              "const": 0,
+              "type": "integer"
+            },
+            {
+              "const": 0,
+              "type": "integer"
+            }
+          ],
+          "title": "Friction",
+          "type": "array"
+        },
+        "solref": {
+          "default": [
+            0.01,
+            1
+          ],
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "const": 0.01,
+              "type": "number"
+            },
+            {
+              "const": 1,
+              "type": "integer"
+            }
+          ],
+          "title": "Solref",
+          "type": "array"
+        },
+        "solimp": {
+          "default": [
+            0.95,
+            0.99,
+            0.001
+          ],
+          "maxItems": 3,
+          "minItems": 3,
+          "prefixItems": [
+            {
+              "const": 0.95,
+              "type": "number"
+            },
+            {
+              "const": 0.99,
+              "type": "number"
+            },
+            {
+              "const": 0.001,
+              "type": "number"
+            }
+          ],
+          "title": "Solimp",
+          "type": "array"
+        },
+        "scenarios": {
+          "default": [
+            "lift",
+            "settle"
+          ],
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "const": "lift",
+              "type": "string"
+            },
+            {
+              "const": "settle",
+              "type": "string"
+            }
+          ],
+          "title": "Scenarios",
+          "type": "array"
+        },
+        "approximation": {
+          "maxLength": 2000,
+          "minLength": 30,
+          "title": "Approximation",
+          "type": "string"
+        }
+      },
+      "required": [
+        "bodies",
+        "approximation"
+      ],
+      "title": "SliderSettings",
+      "type": "object"
+    },
     "RecordMeasurement": {
       "$defs": {
         "CADRevision": {
@@ -3349,7 +3659,8 @@
                 "sensor-screen",
                 "gripper-screen",
                 "vtol-screen",
-                "calculix-static"
+                "calculix-static",
+                "mujoco-slider"
               ],
               "title": "Adapter",
               "type": "string"
@@ -6321,7 +6632,8 @@
             "sensor-screen",
             "gripper-screen",
             "vtol-screen",
-            "calculix-static"
+            "calculix-static",
+            "mujoco-slider"
           ],
           "title": "Adapter",
           "type": "string"
@@ -7402,7 +7714,8 @@
                 "sensor-screen",
                 "gripper-screen",
                 "vtol-screen",
-                "calculix-static"
+                "calculix-static",
+                "mujoco-slider"
               ],
               "title": "Adapter",
               "type": "string"
@@ -9129,7 +9442,8 @@
                 "sensor-screen",
                 "gripper-screen",
                 "vtol-screen",
-                "calculix-static"
+                "calculix-static",
+                "mujoco-slider"
               ],
               "title": "Adapter",
               "type": "string"

@@ -10,11 +10,13 @@ import shutil
 import subprocess
 from pathlib import Path
 
+from davinci.product.mechanism.adapter import DESCRIPTOR as MECHANISM
 from davinci.product.simulation_contracts import AdapterDescriptor
 from davinci.product.structural.adapter import DESCRIPTOR as STRUCTURAL
 from davinci.product.units import convert, validate_plan_units
 
 REGISTRY = {
+    "mujoco-slider": MECHANISM,
     "calculix-static": STRUCTURAL,
     "sensor-screen": AdapterDescriptor(
         id="sensor-screen",
@@ -200,7 +202,7 @@ def effective_capacity(root):
 PROBE = """import importlib, importlib.metadata, json, platform, shutil, subprocess, re
 from pathlib import Path
 software = {"python": platform.python_version()}
-for name in ("cadquery", "numpy", "scipy", "aerosandbox", "gmsh"):
+for name in ("cadquery", "numpy", "scipy", "aerosandbox", "gmsh", "mujoco"):
     try:
         importlib.import_module(name)
         software[name] = importlib.metadata.version(name)
@@ -314,6 +316,23 @@ def assess(runner, plan, test, runtime):
                     "needed": "Fixed structured region rule for every physical interface",
                 }
             )
+        if spec.adapter == "mujoco-slider":
+            from davinci.product.mechanism.adapter import estimate, setup
+            from davinci.product.mechanism.contracts import SliderSettings
+
+            try:
+                prepared = setup(plan, test)
+                computed = estimate(SliderSettings.model_validate(prepared["settings"]))
+                for key in ("cpu_cores", "memory_mb", "disk_mb", "wall_seconds"):
+                    if getattr(spec.estimate, key) < computed[key]:
+                        issues.append(
+                            {
+                                "reason": "resource_exhaustion",
+                                "needed": f"Declared estimate {key} below adapter workload estimate {computed[key]}",
+                            }
+                        )
+            except ValueError as exc:
+                issues.append({"reason": "invalid_binding", "needed": str(exc)})
         if spec.adapter == "calculix-static":
             from davinci.product.structural.adapter import setup
 

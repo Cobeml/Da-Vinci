@@ -1,0 +1,8 @@
+# Optional CPU-only runtime; experiment runtime identities pin the built image digest.
+ARG CAD_IMAGE=da-vinci-cad:local
+FROM ${CAD_IMAGE}
+USER root
+RUN pip install --no-cache-dir mujoco==3.4.0 absl-py==2.5.0 etils==1.14.0 fsspec==2026.9.0 glfw==2.10.2 pyopengl==3.1.10 zipp==4.1.0 && python -c 'import mujoco; assert mujoco.__version__ == "3.4.0"'
+ENV OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1
+USER 65534:65534
+WORKDIR /output

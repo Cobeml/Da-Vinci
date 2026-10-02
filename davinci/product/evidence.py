@@ -7,6 +7,7 @@ from davinci.product.simulation_contracts import ArtifactEntry, ArtifactManifest
 from davinci.runner import SandboxError
 
 TYPES = {
+    ".xml": ("application/xml", "solver_deck"),
     ".step": ("application/step", "cad"),
     ".stp": ("application/step", "cad"),
     ".glb": ("model/gltf-binary", "cad"),
@@ -34,9 +35,9 @@ def content_type(name, data):
         raise ValueError("Invalid GLB artifact")
     if path.suffix == ".json":
         json.loads(data)
-    if name in ("bindings.json", "faces.json"):
+    if name in ("bindings.json", "faces.json", "assembly-bindings.json"):
         kind = "bindings"
-    elif name in ("resources.json", "timing.json", "capability.json"):
+    elif name in ("resources.json", "solver-resources.json", "timing.json", "capability.json"):
         kind = "resources"
     elif name in ("convergence.json", "uncertainty.json"):
         kind = name.split(".")[0]
@@ -70,9 +71,9 @@ def manifest(artifacts, refs, provenance):
         base = PurePosixPath(name).name
         # Type classification does not re-read large binary payloads.
         kind = TYPES.get(PurePosixPath(base).suffix, ("application/octet-stream", "other"))[1]
-        if base in ("bindings.json", "faces.json"):
+        if base in ("bindings.json", "faces.json", "assembly-bindings.json"):
             kind = "bindings"
-        elif base.endswith(("resources.json", "timing.json", "capability.json")):
+        elif base.endswith(("resources.json", "solver-resources.json", "timing.json", "capability.json")):
             kind = "resources"
         elif base in ("convergence.json", "uncertainty.json"):
             kind = base.split(".")[0]

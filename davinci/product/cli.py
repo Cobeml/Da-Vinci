@@ -74,6 +74,7 @@ def setup(root, template):
         "Dockerfile",
         "Dockerfile.vtol",
         "Dockerfile.structural",
+        "Dockerfile.mujoco",
         "requirements.lock",
         "build.py",
         "evaluate.py",
@@ -97,6 +98,19 @@ def setup(root, template):
                 str(destination / "Dockerfile.vtol"),
                 "-t",
                 "da-vinci-vtol:local",
+                str(destination),
+            ],
+            check=True,
+        )
+    if template == "mujoco":
+        subprocess.run(
+            [
+                "docker",
+                "build",
+                "-f",
+                str(destination / "Dockerfile.mujoco"),
+                "-t",
+                "da-vinci-mujoco:local",
                 str(destination),
             ],
             check=True,
@@ -137,7 +151,9 @@ def main():
         command.add_argument("yaml", type=Path)
     prep = sub.add_parser("setup")
     prep.add_argument(
-        "--template", choices=["sensor", "gripper", "vtol", "custom", "structural"], default="sensor"
+        "--template",
+        choices=["sensor", "gripper", "vtol", "custom", "structural", "mujoco"],
+        default="sensor",
     )
     doctor = sub.add_parser("doctor")
     doctor.add_argument("--driver", choices=["external", "managed"])

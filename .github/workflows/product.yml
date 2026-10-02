@@ -3,6 +3,39 @@ on: [push, pull_request]
 permissions:
   contents: read
 jobs:
+  mechanism-native:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync --extra studies --frozen
+      - run: uv run davinci setup --template mujoco
+      - name: Required MuJoCo references and public-route parity
+        run: uv run python scripts/required_native.py --mechanism
+      - name: Fresh-wheel native mechanism journey, no host solver dependency
+        run: |
+          npm ci
+          npm run build:ui
+          uv build --no-build-isolation
+          uv venv /tmp/mechanism-wheel
+          uv pip install --python /tmp/mechanism-wheel/bin/python dist/*.whl
+          cd /tmp
+          /tmp/mechanism-wheel/bin/python "$GITHUB_WORKSPACE/scripts/check_installed_methodology.py" --suite mechanism --workspace /tmp/mechanism-installed --output "$GITHUB_WORKSPACE/runtime/mechanism-installed-results"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mechanism-native-evidence
+          include-hidden-files: true
+          path: |
+            runtime/mechanism-installed-results/
+            /tmp/mechanism-installed/
   structural-native:
     runs-on: ubuntu-latest
     timeout-minutes: 30

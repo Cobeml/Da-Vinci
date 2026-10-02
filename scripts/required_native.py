@@ -23,7 +23,7 @@ REQUIRED = {
 }
 
 
-def main(structural=False):
+def main(structural=False, mechanism=False):
     images = ("da-vinci-structural:local",) if structural else ("da-vinci-cad:local", "da-vinci-vtol:local")
     tests = ["tests/product/test_structural.py"] if structural else TESTS
     required = (
@@ -35,6 +35,15 @@ def main(structural=False):
         if structural
         else REQUIRED
     )
+    if mechanism:
+        images = ("da-vinci-mujoco:local",)
+        tests = ["tests/product/test_mechanism.py"]
+        required = {
+            "test_native_mechanism_public_routes",
+            "test_native_mechanism_unconverged",
+            "test_native_mechanism_cases[pocketed-pass]",
+            "test_native_mechanism_cases[solid-physical_failure]",
+        }
     for image in images:
         try:
             subprocess.run(
@@ -46,7 +55,7 @@ def main(structural=False):
             )
         except (OSError, subprocess.SubprocessError):
             raise SystemExit(
-                f"Required solver image unavailable: {image}. Run davinci setup --template {'structural' if structural else 'vtol'}; native checks were NOT run."
+                f"Required solver image unavailable: {image}. Run davinci setup --template {'mujoco' if mechanism else 'structural' if structural else 'vtol'}; native checks were NOT run."
             ) from None
     with tempfile.TemporaryDirectory(prefix="davinci-required-native-") as folder:
         report = Path(folder) / "junit.xml"
@@ -66,8 +75,8 @@ def main(structural=False):
             if c.find("skipped") is None and c.find("failure") is None and c.find("error") is None
         }
         missing = required - passed
-        if structural and any(c.find("skipped") is not None for c in cases):
-            raise SystemExit("Structural native tests must execute; skipped physics is not validation")
+        if (structural or mechanism) and any(c.find("skipped") is not None for c in cases):
+            raise SystemExit("Optional native tests must execute; skipped physics is not validation")
         if missing:
             raise SystemExit("Required native tests did not execute: " + ", ".join(sorted(missing)))
         print(
@@ -80,4 +89,6 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--structural", action="store_true", help="Require the optional Gmsh/CalculiX checks")
-    main(parser.parse_args().structural)
+    parser.add_argument("--mechanism", action="store_true", help="Require optional MuJoCo mechanism checks")
+    args = parser.parse_args()
+    main(args.structural, args.mechanism)

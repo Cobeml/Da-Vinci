@@ -42,7 +42,12 @@ class ResourceEstimate(Strict):
 class SimulationSpec(Strict):
     version: Literal[1] = 1
     adapter: Literal[
-        "authored-screen", "sensor-screen", "gripper-screen", "vtol-screen", "calculix-static"
+        "authored-screen",
+        "sensor-screen",
+        "gripper-screen",
+        "vtol-screen",
+        "calculix-static",
+        "mujoco-slider",
     ] = "authored-screen"
     phenomena: list[str] = Field(min_length=1)
     material_model: str = Field(min_length=1)

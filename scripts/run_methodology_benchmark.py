@@ -20,7 +20,11 @@ def main():
     p.add_argument("--output", type=Path, required=True)
     p.add_argument("--driver", choices=["both", "external", "managed"], default="both")
     p.add_argument("--skip-structural", action="store_true")
+    p.add_argument("--suite", choices=["methodology", "mechanism"], default="methodology")
     a = p.parse_args()
+    from davinci.product.mechanism.walkthrough import MechanismBenchmark
+
+    benchmark = MechanismBenchmark if a.suite == "mechanism" else Benchmark
     a.workspace.mkdir(parents=True, exist_ok=True)
     a.output.mkdir(parents=True, exist_ok=True)
     if not (a.workspace / "workspace.yaml").exists():
@@ -41,6 +45,8 @@ def main():
                 sys.executable,
                 "-m",
                 "davinci.product.benchmark_server",
+                "--fixture",
+                a.suite,
                 "--workspace",
                 str(a.workspace.resolve()),
             ],
@@ -62,7 +68,7 @@ def main():
                 raise RuntimeError("Fixture service did not start")
             summaries = []
             for driver in ("external", "managed") if a.driver == "both" else (a.driver,):
-                result = Benchmark(client, driver, a.output / driver).run(structural=not a.skip_structural)
+                result = benchmark(client, driver, a.output / driver).run(structural=not a.skip_structural)
                 summaries.append(result)
                 print(
                     json.dumps(

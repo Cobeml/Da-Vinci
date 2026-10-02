@@ -15,6 +15,9 @@ def main():
 
     assert "site-packages" in Path(davinci.__file__).parts
     assert importlib.util.find_spec("gmsh") is None
+    assert importlib.util.find_spec("mujoco") is None
+    assert files("sandbox").joinpath("Dockerfile.mujoco").is_file()
+    assert "SliderSettings" in schema_catalog()["schemas"]
     assert schema_catalog() == build_catalog()
     assert "RecordMeasurement" in schema_catalog()["schemas"]
     assert files("davinci.product").joinpath("static/docs/methodology/index.html").is_file()

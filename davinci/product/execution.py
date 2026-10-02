@@ -41,6 +41,9 @@ def execution_identity():
             "structural/contracts.py",
             "structural/adapter.py",
             "structural/solver.py",
+            "mechanism/contracts.py",
+            "mechanism/adapter.py",
+            "mechanism/solver.py",
         )
     }
     sources["inspect_regions.py"] = (
@@ -267,6 +270,12 @@ def evaluate_test(runner, step, plan, test, evaluator, runtime):
             # Host-owned solver/deck generation only. Authored evaluators cannot override it.
             inputs = {"_structural.py": source(), "model.step": step, "request.json": json.dumps(request)}
             entrypoint = "/input/_structural.py"
+        elif test.simulation and test.simulation.adapter == "mujoco-slider":
+            from davinci.product.mechanism.adapter import setup, source
+
+            request["mechanism"] = setup(plan, test)
+            inputs = {"_mechanism.py": source(), "model.step": step, "request.json": json.dumps(request)}
+            entrypoint = "/input/_mechanism.py"
         else:
             entrypoint = "/input/_evaluate.py"
         measured = execute(entrypoint, inputs)
@@ -306,7 +315,7 @@ def evaluate_test(runner, step, plan, test, evaluator, runtime):
             }
             expected = {
                 "mesh": (".msh",),
-                "solver_deck": (".inp", ".dat"),
+                "solver_deck": (".inp", ".dat", ".xml"),
                 "fields": (".vtk", ".vtu", ".npz", ".csv"),
                 "convergence": ("convergence.json",),
                 "uncertainty": ("uncertainty.json",),

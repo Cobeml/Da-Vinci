@@ -12,12 +12,14 @@ def build_catalog():
     from davinci.product import measurement_contracts as measurements
     from davinci.product import memory_contracts as memory
     from davinci.product import tool_contracts as tools
+    from davinci.product.mechanism.contracts import SliderSettings
     from davinci.product.memory_api import Capture, Reindex
     from davinci.product.simulation_contracts import AdapterDescriptor, ArtifactManifest, SimulationSpec
     from davinci.product.structural.contracts import StructuralSettings
     from davinci.product.transfers import ContinueExperiment, Handoff
 
     models = [
+        SliderSettings,
         measurements.RecordMeasurement,
         measurements.MeasurementInput,
         measurements.CalibrationFit,

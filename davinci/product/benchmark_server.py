@@ -15,7 +15,11 @@ from davinci.product.methodology import BenchmarkProvider
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--workspace", type=Path, required=True)
+    p.add_argument("--fixture", choices=["methodology", "mechanism"], default="methodology")
     a = p.parse_args()
+    from davinci.product.mechanism.walkthrough import MechanismProvider
+
+    provider = MechanismProvider if a.fixture == "mechanism" else BenchmarkProvider
     a.workspace.mkdir(parents=True, exist_ok=True)
     if not (a.workspace / "workspace.yaml").exists():
         (a.workspace / "workspace.yaml").write_text(
@@ -23,7 +27,7 @@ def main():
         )
     engine = Engine(
         a.workspace,
-        provider=BenchmarkProvider,
+        provider=provider,
         credentials=Settings(_env_file=None, openai_api_key="", mongodb_uri=""),
     )
     with (engine.root / "server.lock").open("a") as lock:
