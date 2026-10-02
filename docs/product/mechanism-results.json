@@ -1,0 +1,605 @@
+{
+  "version": 1,
+  "runs": [
+    {
+      "version": 1,
+      "driver": "external",
+      "image": "sha256:531186d65f0b91991f40d3c66dea7b427e645885ca0235de506d8a6f25497435",
+      "paid_calls": 0,
+      "reasoning": "Scripted external / deterministic managed fixture; not autonomous reasoning evidence",
+      "cases": [
+        {
+          "experiment_id": "experiment-21f2c5cf7fb3005044376ff6",
+          "suite_id": "366fcd0adbd6f69bb51d0dbae50b65a119a875f73cbd43e84b70df4c277e01d7",
+          "acceptance_contract_id": "ceae14faa55314eb56c6c415857d9848dc42b68a9f468934bdd15f556285b61b",
+          "final_metrics": {
+            "mass_g": {
+              "value": 30.585599999999992,
+              "unit": "g",
+              "numerical_error": 1e-07,
+              "uncertainty": 0.0
+            },
+            "tracking_error_m": {
+              "value": 4.753142324176451e-16,
+              "unit": "m",
+              "numerical_error": 9.056273973640644e-05,
+              "uncertainty": 0.0001
+            },
+            "settled_penetration_m": {
+              "value": 4.438802397280835e-06,
+              "unit": "m",
+              "numerical_error": 9.056273973640644e-05,
+              "uncertainty": 0.0001
+            },
+            "equilibrium_error_n": {
+              "value": 1.1102230246251565e-16,
+              "unit": "N",
+              "numerical_error": 1.1102230246251565e-16,
+              "uncertainty": 0.001
+            },
+            "peak_actuation_n": {
+              "value": 0.3261305182202877,
+              "unit": "N",
+              "numerical_error": 1.9516236938244003e-05,
+              "uncertainty": 0.001
+            }
+          },
+          "final_accepted": true,
+          "test_before_candidate": true,
+          "evidence_complete": true,
+          "outcomes": [
+            {
+              "status": "physical_failure",
+              "metrics": {
+                "mass_g": {
+                  "value": 64.8,
+                  "unit": "g",
+                  "numerical_error": 1e-07,
+                  "uncertainty": 0.0
+                },
+                "tracking_error_m": {
+                  "value": 0.050001645782052406,
+                  "unit": "m",
+                  "numerical_error": 9.05627397363995e-05,
+                  "uncertainty": 0.0001
+                },
+                "settled_penetration_m": {
+                  "value": 4.438802397280835e-06,
+                  "unit": "m",
+                  "numerical_error": 9.05627397363995e-05,
+                  "uncertainty": 0.0001
+                },
+                "equilibrium_error_n": {
+                  "value": 0.0,
+                  "unit": "N",
+                  "numerical_error": 1.1102230246251565e-16,
+                  "uncertainty": 0.001
+                },
+                "peak_actuation_n": {
+                  "value": 0.4,
+                  "unit": "N",
+                  "numerical_error": 0.0,
+                  "uncertainty": 0.001
+                }
+              },
+              "accepted": false,
+              "complete": true
+            },
+            {
+              "status": "invalid_setup",
+              "metrics": {},
+              "accepted": false,
+              "complete": false
+            },
+            {
+              "status": "invalid_setup",
+              "metrics": {},
+              "accepted": false,
+              "complete": false
+            },
+            {
+              "status": "pass",
+              "metrics": {
+                "mass_g": {
+                  "value": 30.585599999999992,
+                  "unit": "g",
+                  "numerical_error": 1e-07,
+                  "uncertainty": 0.0
+                },
+                "tracking_error_m": {
+                  "value": 4.753142324176451e-16,
+                  "unit": "m",
+                  "numerical_error": 9.056273973640644e-05,
+                  "uncertainty": 0.0001
+                },
+                "settled_penetration_m": {
+                  "value": 4.438802397280835e-06,
+                  "unit": "m",
+                  "numerical_error": 9.056273973640644e-05,
+                  "uncertainty": 0.0001
+                },
+                "equilibrium_error_n": {
+                  "value": 1.1102230246251565e-16,
+                  "unit": "N",
+                  "numerical_error": 1.1102230246251565e-16,
+                  "uncertainty": 0.001
+                },
+                "peak_actuation_n": {
+                  "value": 0.3261305182202877,
+                  "unit": "N",
+                  "numerical_error": 1.9516236938244003e-05,
+                  "uncertainty": 0.001
+                }
+              },
+              "accepted": true,
+              "complete": true
+            },
+            {
+              "status": "pass",
+              "metrics": {
+                "mass_g": {
+                  "value": 30.585599999999992,
+                  "unit": "g",
+                  "numerical_error": 1e-07,
+                  "uncertainty": 0.0
+                },
+                "tracking_error_m": {
+                  "value": 4.753142324176451e-16,
+                  "unit": "m",
+                  "numerical_error": 9.056273973640644e-05,
+                  "uncertainty": 0.0001
+                },
+                "settled_penetration_m": {
+                  "value": 4.438802397280835e-06,
+                  "unit": "m",
+                  "numerical_error": 9.056273973640644e-05,
+                  "uncertainty": 0.0001
+                },
+                "equilibrium_error_n": {
+                  "value": 1.1102230246251565e-16,
+                  "unit": "N",
+                  "numerical_error": 1.1102230246251565e-16,
+                  "uncertainty": 0.001
+                },
+                "peak_actuation_n": {
+                  "value": 0.3261305182202877,
+                  "unit": "N",
+                  "numerical_error": 1.9516236938244003e-05,
+                  "uncertainty": 0.001
+                }
+              },
+              "accepted": true,
+              "complete": true
+            }
+          ],
+          "repeated_final_metrics": true,
+          "report_file": "experiment-21f2c5cf7fb3005044376ff6.json",
+          "report_sha256": "00e933cc7d609df6f18f184330a6b191bf08aea48a50fb88a22abedb23280b1c"
+        }
+      ],
+      "unavailable": {
+        "version": 2,
+        "experiment_id": "experiment-636368f6f4ab8a22fa025967",
+        "revision": 1,
+        "issues": [],
+        "capabilities": [
+          {
+            "version": 2,
+            "metadata": {},
+            "runtime_id": "560d320bbb6a588819381f93f367b9116f39c8297ad060a19eec610782cdc82d",
+            "test_id": "mechanism",
+            "status": "unavailable",
+            "reason": "An independently verified adapter for the requested phenomena/fidelity",
+            "verification_ids": [],
+            "simulation": {
+              "adapter": {
+                "id": "mujoco-slider",
+                "version": 1,
+                "phenomena": [
+                  "mass",
+                  "rigid_motion",
+                  "normal_contact"
+                ],
+                "material_models": [
+                  "homogeneous_rigid"
+                ],
+                "geometry_assumptions": "Two valid separate solids, horizontal base top and full rectangular carriage bottom, contained vertical envelope path; ideal z guide",
+                "fidelities": [
+                  "timestep_checked_rigid_slider"
+                ],
+                "limitations": [
+                  "Single translating carriage; ideal massless frictionless guide, no hinges or general robot assemblies",
+                  "Homogeneous STEP volume mass/inertia; box collision envelope fills pockets; only validated horizontal stop contact is supported",
+                  "Soft frictionless normal contact with fixed numerical solref/solimp, not measured surface compliance",
+                  "No stress, deformation, fatigue, wear, thermal or fluid evidence",
+                  "Linux CPU native MuJoCo only; no GPU/MJX/Warp or remote executor",
+                  "Empirical timestep sensitivity and declared model allowance are not rigorous error bounds"
+                ],
+                "required_software": {
+                  "cadquery": null,
+                  "numpy": null,
+                  "mujoco": "3.4.0"
+                },
+                "reference_checks": [
+                  "CAD box and pocket mass/inertia",
+                  "Force/mass motion",
+                  "Static normal equilibrium",
+                  "Contact gap/penetration",
+                  "Three timestep levels",
+                  "Unforced free-motion kinetic energy"
+                ],
+                "lifecycle": [
+                  "validate_setup",
+                  "estimate",
+                  "prepare",
+                  "execute",
+                  "extract",
+                  "reference_check"
+                ],
+                "routes": [
+                  "v2"
+                ]
+              },
+              "requirements": [
+                "motion"
+              ],
+              "test_id": "mechanism",
+              "issues": [
+                {
+                  "reason": "unsupported_physics",
+                  "needed": "An independently verified adapter for the requested phenomena/fidelity"
+                }
+              ],
+              "available": false,
+              "probe": {
+                "cpu_cores": 16.0,
+                "memory_bytes": 54620307456,
+                "disk_bytes": 1200010919936,
+                "accelerators": [],
+                "accelerator_probe": "not requested; all shipped adapters use CPU",
+                "backend": "docker",
+                "remote_provisioning": false,
+                "available": true,
+                "software": {
+                  "python": "3.11.16",
+                  "cadquery": "2.8.0",
+                  "numpy": "2.4.6",
+                  "scipy": "1.17.1",
+                  "aerosandbox": null,
+                  "gmsh": null,
+                  "mujoco": "3.4.0",
+                  "xfoil": null,
+                  "calculix": null
+                },
+                "image": "sha256:531186d65f0b91991f40d3c66dea7b427e645885ca0235de506d8a6f25497435"
+              },
+              "estimate": {
+                "cpu_cores": 1.0,
+                "memory_mb": 768,
+                "disk_mb": 32,
+                "wall_seconds": 71.0,
+                "basis": "Two scenarios, three timestep levels: 112000 steps plus CAD import and references",
+                "uncertainty": "Conservative initial CPU throughput estimate; actual timing/steps/RSS archived, no adequacy guarantee"
+              },
+              "approximation_available": [
+                "timestep_checked_rigid_slider"
+              ],
+              "substitution_performed": false,
+              "adequacy": "Reference checks, per-geometry setup and actual execution still required"
+            }
+          }
+        ],
+        "ready_to_freeze": false,
+        "ready_for_draft": true
+      }
+    },
+    {
+      "version": 1,
+      "driver": "managed",
+      "image": "sha256:531186d65f0b91991f40d3c66dea7b427e645885ca0235de506d8a6f25497435",
+      "paid_calls": 0,
+      "reasoning": "Scripted external / deterministic managed fixture; not autonomous reasoning evidence",
+      "cases": [
+        {
+          "experiment_id": "experiment-214f808601b8e6d88294a861",
+          "suite_id": "f7102416153c8a3d2f4647301f6520235c2514abfdd7b4ee431798bc408727b3",
+          "acceptance_contract_id": "ceae14faa55314eb56c6c415857d9848dc42b68a9f468934bdd15f556285b61b",
+          "final_metrics": {
+            "mass_g": {
+              "value": 30.585599999999992,
+              "unit": "g",
+              "numerical_error": 1e-07,
+              "uncertainty": 0.0
+            },
+            "tracking_error_m": {
+              "value": 4.753142324176451e-16,
+              "unit": "m",
+              "numerical_error": 9.056273973640644e-05,
+              "uncertainty": 0.0001
+            },
+            "settled_penetration_m": {
+              "value": 4.438802397280835e-06,
+              "unit": "m",
+              "numerical_error": 9.056273973640644e-05,
+              "uncertainty": 0.0001
+            },
+            "equilibrium_error_n": {
+              "value": 1.1102230246251565e-16,
+              "unit": "N",
+              "numerical_error": 1.1102230246251565e-16,
+              "uncertainty": 0.001
+            },
+            "peak_actuation_n": {
+              "value": 0.3261305182202877,
+              "unit": "N",
+              "numerical_error": 1.9516236938244003e-05,
+              "uncertainty": 0.001
+            }
+          },
+          "final_accepted": true,
+          "test_before_candidate": true,
+          "evidence_complete": true,
+          "outcomes": [
+            {
+              "status": "physical_failure",
+              "metrics": {
+                "mass_g": {
+                  "value": 64.8,
+                  "unit": "g",
+                  "numerical_error": 1e-07,
+                  "uncertainty": 0.0
+                },
+                "tracking_error_m": {
+                  "value": 0.050001645782052406,
+                  "unit": "m",
+                  "numerical_error": 9.05627397363995e-05,
+                  "uncertainty": 0.0001
+                },
+                "settled_penetration_m": {
+                  "value": 4.438802397280835e-06,
+                  "unit": "m",
+                  "numerical_error": 9.05627397363995e-05,
+                  "uncertainty": 0.0001
+                },
+                "equilibrium_error_n": {
+                  "value": 0.0,
+                  "unit": "N",
+                  "numerical_error": 1.1102230246251565e-16,
+                  "uncertainty": 0.001
+                },
+                "peak_actuation_n": {
+                  "value": 0.4,
+                  "unit": "N",
+                  "numerical_error": 0.0,
+                  "uncertainty": 0.001
+                }
+              },
+              "accepted": false,
+              "complete": true
+            },
+            {
+              "status": "invalid_setup",
+              "metrics": {},
+              "accepted": false,
+              "complete": false
+            },
+            {
+              "status": "invalid_setup",
+              "metrics": {},
+              "accepted": false,
+              "complete": false
+            },
+            {
+              "status": "pass",
+              "metrics": {
+                "mass_g": {
+                  "value": 30.585599999999992,
+                  "unit": "g",
+                  "numerical_error": 1e-07,
+                  "uncertainty": 0.0
+                },
+                "tracking_error_m": {
+                  "value": 4.753142324176451e-16,
+                  "unit": "m",
+                  "numerical_error": 9.056273973640644e-05,
+                  "uncertainty": 0.0001
+                },
+                "settled_penetration_m": {
+                  "value": 4.438802397280835e-06,
+                  "unit": "m",
+                  "numerical_error": 9.056273973640644e-05,
+                  "uncertainty": 0.0001
+                },
+                "equilibrium_error_n": {
+                  "value": 1.1102230246251565e-16,
+                  "unit": "N",
+                  "numerical_error": 1.1102230246251565e-16,
+                  "uncertainty": 0.001
+                },
+                "peak_actuation_n": {
+                  "value": 0.3261305182202877,
+                  "unit": "N",
+                  "numerical_error": 1.9516236938244003e-05,
+                  "uncertainty": 0.001
+                }
+              },
+              "accepted": true,
+              "complete": true
+            },
+            {
+              "status": "pass",
+              "metrics": {
+                "mass_g": {
+                  "value": 30.585599999999992,
+                  "unit": "g",
+                  "numerical_error": 1e-07,
+                  "uncertainty": 0.0
+                },
+                "tracking_error_m": {
+                  "value": 4.753142324176451e-16,
+                  "unit": "m",
+                  "numerical_error": 9.056273973640644e-05,
+                  "uncertainty": 0.0001
+                },
+                "settled_penetration_m": {
+                  "value": 4.438802397280835e-06,
+                  "unit": "m",
+                  "numerical_error": 9.056273973640644e-05,
+                  "uncertainty": 0.0001
+                },
+                "equilibrium_error_n": {
+                  "value": 1.1102230246251565e-16,
+                  "unit": "N",
+                  "numerical_error": 1.1102230246251565e-16,
+                  "uncertainty": 0.001
+                },
+                "peak_actuation_n": {
+                  "value": 0.3261305182202877,
+                  "unit": "N",
+                  "numerical_error": 1.9516236938244003e-05,
+                  "uncertainty": 0.001
+                }
+              },
+              "accepted": true,
+              "complete": true
+            }
+          ],
+          "repeated_final_metrics": true,
+          "report_file": "experiment-214f808601b8e6d88294a861.json",
+          "report_sha256": "6b1e9fbd4c4ce60b66d58361c7869908f3af3b343ca5b60998e7b75aea836719"
+        }
+      ],
+      "unavailable": {
+        "version": 2,
+        "experiment_id": "experiment-1bf3d3e167a598bfdb691f17",
+        "revision": 1,
+        "issues": [],
+        "capabilities": [
+          {
+            "version": 2,
+            "metadata": {},
+            "runtime_id": "560d320bbb6a588819381f93f367b9116f39c8297ad060a19eec610782cdc82d",
+            "test_id": "mechanism",
+            "status": "unavailable",
+            "reason": "An independently verified adapter for the requested phenomena/fidelity",
+            "verification_ids": [],
+            "simulation": {
+              "adapter": {
+                "id": "mujoco-slider",
+                "version": 1,
+                "phenomena": [
+                  "mass",
+                  "rigid_motion",
+                  "normal_contact"
+                ],
+                "material_models": [
+                  "homogeneous_rigid"
+                ],
+                "geometry_assumptions": "Two valid separate solids, horizontal base top and full rectangular carriage bottom, contained vertical envelope path; ideal z guide",
+                "fidelities": [
+                  "timestep_checked_rigid_slider"
+                ],
+                "limitations": [
+                  "Single translating carriage; ideal massless frictionless guide, no hinges or general robot assemblies",
+                  "Homogeneous STEP volume mass/inertia; box collision envelope fills pockets; only validated horizontal stop contact is supported",
+                  "Soft frictionless normal contact with fixed numerical solref/solimp, not measured surface compliance",
+                  "No stress, deformation, fatigue, wear, thermal or fluid evidence",
+                  "Linux CPU native MuJoCo only; no GPU/MJX/Warp or remote executor",
+                  "Empirical timestep sensitivity and declared model allowance are not rigorous error bounds"
+                ],
+                "required_software": {
+                  "cadquery": null,
+                  "numpy": null,
+                  "mujoco": "3.4.0"
+                },
+                "reference_checks": [
+                  "CAD box and pocket mass/inertia",
+                  "Force/mass motion",
+                  "Static normal equilibrium",
+                  "Contact gap/penetration",
+                  "Three timestep levels",
+                  "Unforced free-motion kinetic energy"
+                ],
+                "lifecycle": [
+                  "validate_setup",
+                  "estimate",
+                  "prepare",
+                  "execute",
+                  "extract",
+                  "reference_check"
+                ],
+                "routes": [
+                  "v2"
+                ]
+              },
+              "requirements": [
+                "motion"
+              ],
+              "test_id": "mechanism",
+              "issues": [
+                {
+                  "reason": "unsupported_physics",
+                  "needed": "An independently verified adapter for the requested phenomena/fidelity"
+                }
+              ],
+              "available": false,
+              "probe": {
+                "cpu_cores": 16.0,
+                "memory_bytes": 55125991424,
+                "disk_bytes": 1199997353984,
+                "accelerators": [],
+                "accelerator_probe": "not requested; all shipped adapters use CPU",
+                "backend": "docker",
+                "remote_provisioning": false,
+                "available": true,
+                "software": {
+                  "python": "3.11.16",
+                  "cadquery": "2.8.0",
+                  "numpy": "2.4.6",
+                  "scipy": "1.17.1",
+                  "aerosandbox": null,
+                  "gmsh": null,
+                  "mujoco": "3.4.0",
+                  "xfoil": null,
+                  "calculix": null
+                },
+                "image": "sha256:531186d65f0b91991f40d3c66dea7b427e645885ca0235de506d8a6f25497435"
+              },
+              "estimate": {
+                "cpu_cores": 1.0,
+                "memory_mb": 768,
+                "disk_mb": 32,
+                "wall_seconds": 71.0,
+                "basis": "Two scenarios, three timestep levels: 112000 steps plus CAD import and references",
+                "uncertainty": "Conservative initial CPU throughput estimate; actual timing/steps/RSS archived, no adequacy guarantee"
+              },
+              "approximation_available": [
+                "timestep_checked_rigid_slider"
+              ],
+              "substitution_performed": false,
+              "adequacy": "Reference checks, per-geometry setup and actual execution still required"
+            }
+          }
+        ],
+        "ready_to_freeze": false,
+        "ready_for_draft": true
+      }
+    }
+  ],
+  "parity": [
+    {
+      "external": "experiment-21f2c5cf7fb3005044376ff6",
+      "managed": "experiment-214f808601b8e6d88294a861",
+      "same_physical_contract_and_runtime": true,
+      "metrics_match": true,
+      "absolute_tolerance": 1e-06,
+      "relative_tolerance": 1e-08
+    }
+  ],
+  "paid_calls": 0,
+  "synthetic_reasoning": true,
+  "recorded_date": "2026-10-02",
+  "implementation_commit": "54c14ad",
+  "evidence_origin": "Fresh installed wheel outside checkout, Linux native CPU, no host MuJoCo or paid generation",
+  "artifact_archive": "runtime/mechanism-installed-archive (original /tmp/mechanism-installed scope retained; archive, not a relocated runnable workspace)"
+}
