@@ -1,9 +1,9 @@
 include LICENSE THIRD_PARTY_NOTICES.md CONTRIBUTING.md package.json package-lock.json
-recursive-include docs/product *.md
+recursive-include docs/product *.md *.json
 recursive-include ui *.tsx *.ts *.css *.json
 prune ui/.next
 prune ui/out
-include scripts/build_product_ui.mjs scripts/render_product_docs.mjs
+include scripts/build_product_ui.mjs scripts/render_product_docs.mjs scripts/check_product_docs.mjs scripts/check_installed_docs.py
 include scripts/product_browser.py scripts/product_smoke.py scripts/check_external_install.py
 include scripts/required_native.py scripts/check_installed_routes.py
 include scripts/check_installed_structural.py

@@ -9,6 +9,7 @@ const labels:Record<string,string> = {mass_g:"Mass",load_displacement_mm:"Load d
 function number(value:number) { return value.toLocaleString("en-US",{maximumSignificantDigits:3}); }
 function measurement(q:Quantity) {
   // Display resolution cannot suggest accuracy finer than the archived numerical error.
+  if (q.numerical_error > 0 && Math.abs(q.value) < q.numerical_error) return `< ${number(q.numerical_error)} ${q.unit}`;
   const step = q.numerical_error > 0 ? 10 ** Math.floor(Math.log10(q.numerical_error)) : 0;
   const rounded = step ? Math.round(q.value / step)*step : q.value;
   return `${number(rounded)} ${q.unit}`;

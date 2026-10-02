@@ -9,7 +9,8 @@
     "test:e2e": "playwright test",
     "typecheck": "tsc --noEmit -p web/tsconfig.json",
     "build:ui": "next build ui && node scripts/build_product_ui.mjs",
-    "test:product": "playwright test -c playwright.product.config.ts"
+    "test:product": "playwright test -c playwright.product.config.ts",
+    "test:site": "playwright test -c playwright.site.config.ts"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.0",

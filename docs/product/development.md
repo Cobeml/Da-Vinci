@@ -1,6 +1,6 @@
 # Development and release
 
-The product implementation lives in `davinci/product`. The standalone UI is `ui/`; the existing website is `web/`. Both import the product gallery component. Archived study scripts and beta tools are separate from the product execution path.
+The product implementation lives in `davinci/product`. The standalone UI is `ui/`; the existing website is `web/`. Both reuse the product CAD viewer and visual styles; the public site uses typed recorded-demo data rather than live run records. Archived study scripts and beta tools are separate from the product execution path.
 
 ```bash
 uv sync --extra studies
@@ -47,3 +47,13 @@ See [the public lifecycle contracts](lifecycle.md) and [the implementation recor
 The [external route](external-agents.md) is tested with a provider double that raises on construction, including when a dummy key is present. Run its real service/CLI CAD example with `DAVINCI_INTEGRATION=1 uv run pytest tests/product/test_external_cli.py -m integration -q`. The installed schema catalog must match `davinci.product.protocol.build_catalog()`; regenerate `resources/external/schemas.json` when public models change.
 
 The [external-route implementation record](implementation-external.md) lists the executed checks and installed-wheel smoke command.
+
+## Recorded website and documentation
+
+The public gallery leads with native bracket and slider validation, followed by the historical model-driven studies. Builds consume checked-in curated artifacts and never run a solver or model. `python3 scripts/export_recorded_demos.py` explicitly re-exports the reviewed local archives; it needs those archives and is not part of a normal checkout build. The exporter opens SQLite read-only, allowlists artifacts and verifies checksums. Never substitute invented measurements or modify an archived suite to publish a result.
+
+`docs/product/navigation.json` supplies both public and installed documentation navigation. Keep the Markdown navigation block in the user-guide README aligned for GitHub readers. `node scripts/check_product_docs.mjs` checks guide links and anchors. Both outputs preserve JSON evidence downloads and render the lifecycle as accessible HTML without a third-party diagram service.
+
+Website browser tests use port 3215 by default; set `DAVINCI_SITE_URL` to check a separate production server. Website/product traces use separate output directories. New public route files require restarting a running production server after a build.
+
+`npm run build && npm run test:site` starts a fresh isolated website server on port 3225 and runs the 13 recorded-site regressions without a backend. CI runs this separately from the installed-product native browser checks.

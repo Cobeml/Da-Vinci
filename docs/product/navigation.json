@@ -146,6 +146,10 @@
       {
         "slug": "implementation-mechanism",
         "title": "Mechanism implementation record"
+      },
+      {
+        "slug": "implementation-website",
+        "title": "Website and documentation implementation record"
       }
     ]
   }

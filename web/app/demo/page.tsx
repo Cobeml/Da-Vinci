@@ -29,7 +29,7 @@ export default function Page() {
     <header className={s.header}><div><span className={s.eyebrow}>RECORDED WORKSPACE</span><h1>Objects</h1><p>Inspect generated geometry, design revisions and the evidence behind each result.</p></div><a className={s.textLink} href="/docs/quickstart/">Run your own workspace →</a></header>
     <HarnessOverview/>
     <div className={r.section}><h2>Native solver validation examples</h2><p>Actual CAD and solver execution through both drivers. Scripted proposals and deterministic managed fixtures test the workflow; they do not measure autonomous reasoning quality.</p></div>
-    <RecordedModels objects={native}/>
+    <RecordedModels objects={native} wide/>
     <div className={r.section}><h2>Historical model-driven studies</h2><p>Recorded model proposals and engineering screening estimates. These archives precede the current test-first lifecycle.</p></div>
     <RecordedModels objects={historical}/>
     <footer className={s.footer}><span>Read-only demo · no API calls</span><span>Evidence is limited to each study’s tests and assumptions.</span></footer>

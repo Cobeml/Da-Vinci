@@ -321,6 +321,7 @@ export default function ExperimentPanel({
       </section>
       <section className={s.panel} aria-label="Capabilities">
         <h2>Simulation capabilities</h2>
+        <p><a href="/docs/simulation-adapters/">Adapter scope, resources and evidence →</a></p>
         {!capabilities.length && (
           <p>Capabilities have not been checked for this plan.</p>
         )}
@@ -363,6 +364,7 @@ export default function ExperimentPanel({
       </section>
       <details className={s.panel}>
         <summary>Retrieved experience and reflections</summary>
+        <p><a href="/docs/memory/">Experience provenance and retrieval →</a> · <a href="/docs/tool-learning/">Tested tool versions →</a></p>
         <p>
           Lessons are hypotheses unless backed by linked evidence. No passing
           score transfers between tasks.

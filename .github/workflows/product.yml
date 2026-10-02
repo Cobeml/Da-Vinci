@@ -91,6 +91,7 @@ jobs:
       - uses: astral-sh/setup-uv@v6
       - run: uv sync --extra studies --frozen
       - run: npm ci
+      - run: node scripts/check_product_docs.mjs
       - run: npm run build:ui
       - run: uv run pytest -m 'not integration' -q
       - run: npm run build
@@ -100,6 +101,7 @@ jobs:
           uv venv /tmp/wheel-check
           uv pip install --python /tmp/wheel-check/bin/python dist/*.whl
           cd /tmp
+          /tmp/wheel-check/bin/python "$GITHUB_WORKSPACE/scripts/check_installed_docs.py"
           /tmp/wheel-check/bin/davinci external adapters
           /tmp/wheel-check/bin/davinci external schemas
           /tmp/wheel-check/bin/davinci init installed-example --template custom
@@ -122,12 +124,16 @@ jobs:
       - uses: astral-sh/setup-uv@v6
       - run: uv sync --extra studies --frozen
       - run: npm ci
+      - run: node scripts/check_product_docs.mjs
       - run: npm run build:ui
       - run: npx playwright install --with-deps chromium
       - run: uv run davinci setup --template vtol
       - name: Required native physics and route parity (fail if images or checks are missing)
         run: uv run python scripts/required_native.py
       - run: npm run test:product
+      - run: npm run build
+      - name: Recorded website and documentation browser checks (no backend)
+        run: npm run test:site
       - name: Native parity from a freshly installed wheel outside the checkout
         run: |
           uv build --no-build-isolation

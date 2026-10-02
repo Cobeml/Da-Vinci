@@ -10,7 +10,7 @@ export function renderDocument(source, sections = []) {
   renderer.heading = function({tokens, depth, text}) {
     return `<h${depth} id="${headingId(text)}">${this.parser.parseInline(tokens)}</h${depth}>\n`;
   };
-  return marked.parse(source.replace("<!-- documentation-navigation -->", documentationNavigation(sections)), {renderer})
+  return marked.parse(source.replace(/<!-- documentation-navigation -->[\s\S]*?<!-- \/documentation-navigation -->/, documentationNavigation(sections)), {renderer})
     .replace(/href="(?:\.\/)?([a-zA-Z0-9-]+)\.md(#[^"]*)?"/g, (_, slug, anchor = "") => `href="/docs/${slug === "README" ? "" : slug + "/"}${anchor}"`)
     .replace(/href="(?:\.\/)?([a-z-]+\.json)"/g, 'href="/docs/evidence/$1"');
 }
